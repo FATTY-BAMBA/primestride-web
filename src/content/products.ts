@@ -41,7 +41,7 @@ export const products: Product[] = [
         "Live in 7 days",
       ],
       description:
-        "Atlas EIP is the AI-native HR system for Taiwan SMEs still running leave, overtime, and compliance through LINE, Excel, or legacy ERP. Employees file requests in plain language and every submission is auto-checked against current Taiwan labor regulations—so compliance stops being a manual, error-prone scramble and becomes something that just happens in the background.",
+        "Atlas EIP is the AI-native HR system for Taiwan SMEs still running leave, overtime, and compliance through LINE, Excel, or legacy ERP. Employees file requests in plain language and every submission is auto-checked against current Taiwan labor regulations, so compliance stops being a manual, error-prone scramble and becomes something that just happens in the background.",
       whoFor:
         "HR managers and general managers at Taiwan SMEs (20–500 staff) still handling leave, OT, and compliance through LINE, Excel, or a legacy ERP.",
       features: [
@@ -62,7 +62,7 @@ export const products: Product[] = [
         "7 天上線",
       ],
       description:
-        "Atlas EIP 是為台灣中小企業打造的 AI 原生人資系統，取代仍以 LINE、Excel 或舊 ERP 處理請假、加班與合規的方式。員工用自然語言提出申請，每一筆都自動比對現行勞動法規——讓合規不再是容易出錯的人工作業，而是在背景自動完成的事。",
+        "Atlas EIP 是為台灣中小企業打造的 AI 原生人資系統，取代仍以 LINE、Excel 或舊 ERP 處理請假、加班與合規的方式。員工用自然語言提出申請，每一筆都自動比對現行勞動法規，讓合規不再是容易出錯的人工作業，而是在背景自動完成的事。",
       whoFor:
         "仍以 LINE、Excel 或舊 ERP 處理請假、加班與合規的台灣中小企業（20–500 人）人資主管與總經理。",
       features: [
@@ -91,16 +91,16 @@ export const products: Product[] = [
         "Full candidate + AI audio recorded",
       ],
       description:
-        "LyraAI is a real-time voice interview coach. Candidates hold a genuine sub-second voice conversation—training the pacing, clarity, and structure that actually matter in a room—and get scored across ten competencies by a system engineered to resist grade inflation. It's built for Traditional Chinese from the ground up, so the phrasing and conventions reflect how interviews really run in Taiwan.",
+        "LyraAI is a real-time voice interview coach. Candidates hold a genuine sub-second voice conversation, training the pacing, clarity, and structure that actually matter in a room, and get scored across ten competencies by a system engineered to resist grade inflation. It's built for Traditional Chinese from the ground up, so the phrasing and conventions reflect how interviews really run in Taiwan.",
       whoFor:
         "Corporate HR teams standardizing their interviews, universities and bootcamps preparing students, and individual candidates prepping for top-tier interviews.",
       features: [
-        { title: "Real-time voice interview", desc: "Sub-second voice exchange trains pacing, clarity, and structure—not just what you'd type." },
+        { title: "Real-time voice interview", desc: "Sub-second voice exchange trains pacing, clarity, and structure, not just what you'd type." },
         { title: "10-competency framework", desc: "Scores leadership, teamwork, problem-solving, communication, adaptability, and more." },
         { title: "Anti-inflation scoring", desc: "Three layers mean shallow or incomplete answers can't earn inflated scores." },
-        { title: "Full session recording", desc: "Candidate and AI tracks are both recorded—for self-review and HR transparency." },
+        { title: "Full session recording", desc: "Candidate and AI tracks are both recorded, for self-review and HR transparency." },
         { title: "HR upload mode", desc: "Upload a JD and Lyra generates role-specific questions and scoring rubrics." },
-        { title: "Emotional safety", desc: "Detects frustration and alerts HR. The AI never argues—human-in-the-loop by design." },
+        { title: "Emotional safety", desc: "Detects frustration and alerts HR. The AI never argues, human-in-the-loop by design." },
       ],
     },
     zh: {
@@ -112,16 +112,16 @@ export const products: Product[] = [
         "求職者與 AI 全程錄音",
       ],
       description:
-        "LyraAI 是即時語音面試教練。求職者進行真正的次秒級語音對話——訓練在現場真正重要的節奏、清晰度與結構——並由一套刻意抗分數膨脹的系統，就十項能力給予評分。它從底層為繁體中文打造，用語與慣例反映台灣面試的真實情況。",
+        "LyraAI 是即時語音面試教練。求職者進行真正的次秒級語音對話，訓練在現場真正重要的節奏、清晰度與結構，並由一套刻意抗分數膨脹的系統，就十項能力給予評分。它從底層為繁體中文打造，用語與慣例反映台灣面試的真實情況。",
       whoFor:
         "統一面試標準的企業 HR、為學生做準備的大專院校與訓練機構，以及準備頂尖企業面試的個人求職者。",
       features: [
         { title: "即時語音面試", desc: "次秒級語音互動，訓練節奏、清晰度與結構，而非只是打字。" },
         { title: "十項能力框架", desc: "評估領導、團隊合作、問題解決、溝通、應變等能力。" },
         { title: "防虛高評分", desc: "三層機制，讓淺薄或未完成的回答無法取得灌水分數。" },
-        { title: "完整面試錄音", desc: "求職者與 AI 雙軌錄音——供自我複習與 HR 檢視。" },
+        { title: "完整面試錄音", desc: "求職者與 AI 雙軌錄音，供自我複習與 HR 檢視。" },
         { title: "HR 自訂上傳", desc: "上傳職缺，Lyra 產出對應職位的題目與評分標準。" },
-        { title: "情緒安全機制", desc: "偵測挫折並提醒 HR。AI 從不爭辯——以人為本設計。" },
+        { title: "情緒安全機制", desc: "偵測挫折並提醒 HR。AI 從不爭辯，以人為本設計。" },
       ],
     },
   },
@@ -133,7 +133,7 @@ export const products: Product[] = [
     visual: "edu",
     live: true,
     en: {
-      tagline: "Understand how students learn—not just whether they passed.",
+      tagline: "Understand how students learn, not just whether they passed.",
       stats: [
         "9-stage processing pipeline",
         "Per-institution data isolation",
@@ -143,7 +143,7 @@ export const products: Product[] = [
       description:
         "EduSense AI ingests educational video and recorded classes and turns them into a structured intelligence layer for students, teachers, and administrators. On top of the pipeline sits real insight: it classifies which students are thriving and which need urgent support, surfaces the exact knowledge gaps a class shares, and predicts dropout risk early enough to do something about it.",
       whoFor:
-        "Universities, vocational schools, cram schools, and corporate training departments that need to understand how students are learning—not just whether they passed.",
+        "Universities, vocational schools, cram schools, and corporate training departments that need to understand how students are learning, not just whether they passed.",
       features: [
         { title: "Smart chaptering", desc: "Automatically splits class video into natural, topic-based chapters." },
         { title: "Auto notes & Q&A bank", desc: "Generates concise lecture notes and review questions from class content." },
@@ -191,12 +191,12 @@ export const products: Product[] = [
         "Escalates below 0.75 confidence",
       ],
       description:
-        "A 24/7 customer service assistant built for Traditional Chinese from the ground up—not translated from Simplified. It answers instantly, remembers the whole conversation, and knows when it's unsure: below a confidence threshold it hands off to a human. Your team manages the knowledge base in a spreadsheet, so there's no IT queue and no redeployment when content changes.",
+        "A 24/7 customer service assistant built for Traditional Chinese from the ground up, not translated from Simplified. It answers instantly, remembers the whole conversation, and knows when it's unsure: below a confidence threshold it hands off to a human. Your team manages the knowledge base in a spreadsheet, so there's no IT queue and no redeployment when content changes.",
       whoFor:
         "Taiwan retail, service, hospitality, and professional-services businesses whose staff currently spend 3+ hours a day answering the same website enquiries.",
       features: [
-        { title: "24/7 繁中 chatbot", desc: "Built for Traditional Chinese from the ground up—not converted from Simplified." },
-        { title: "0.5-second first response", desc: "SSE streaming delivers the first word in half a second—conversations feel instant." },
+        { title: "24/7 繁中 chatbot", desc: "Built for Traditional Chinese from the ground up, not converted from Simplified." },
+        { title: "0.5-second first response", desc: "SSE streaming delivers the first word in half a second, so conversations feel instant." },
         { title: "Excel-managed knowledge", desc: "Your team updates content in a spreadsheet. No IT, no developer queue." },
         { title: "Confidence-gated escalation", desc: "Below 0.75 confidence, the system automatically escalates to a human." },
         { title: "20-turn memory", desc: "Follow-up questions get coherent, connected answers across the whole chat." },
@@ -212,7 +212,7 @@ export const products: Product[] = [
         "信心度低於 0.75 自動轉真人",
       ],
       description:
-        "24 小時繁體中文原生客服助理——並非由簡中翻譯而來。它即時回應、記得整段對話，也知道自己何時不確定：信心度低於門檻即自動轉接真人。你的團隊以試算表管理知識庫，內容變更不必等 IT、也不需重新部署。",
+        "24 小時繁體中文原生客服助理，並非由簡中翻譯而來。它即時回應、記得整段對話，也知道自己何時不確定：信心度低於門檻即自動轉接真人。你的團隊以試算表管理知識庫，內容變更不必等 IT、也不需重新部署。",
       whoFor:
         "員工每日花 3 小時以上回答相同網站詢問的台灣零售、服務、餐旅與專業服務業。",
       features: [
@@ -241,7 +241,7 @@ export const products: Product[] = [
         "Meta + Google Ads",
       ],
       description:
-        "Pulse puts marketing control inside LINE: send a message and it executes in Meta or Google Ads within seconds. It watches your budgets around the clock and pauses campaigns when CPC spikes, warns you about creative fatigue before ROAS drops, and consolidates every channel into one report that lands automatically every Monday morning—so you stop babysitting dashboards.",
+        "Pulse puts marketing control inside LINE: send a message and it executes in Meta or Google Ads within seconds. It watches your budgets around the clock and pauses campaigns when CPC spikes, warns you about creative fatigue before ROAS drops, and consolidates every channel into one report that lands automatically every Monday morning, so you stop babysitting dashboards.",
       whoFor:
         "Taiwan marketing managers and business owners running Meta and Google campaigns who currently check dashboards manually and miss overnight anomalies.",
       features: [
@@ -249,7 +249,7 @@ export const products: Product[] = [
         { title: "24/7 budget protection", desc: "CPC spikes above your threshold trigger an automatic campaign pause." },
         { title: "Creative fatigue alerts", desc: "Flags fatigue before ROAS drops and triggers variant testing automatically." },
         { title: "Competitor intelligence", desc: "A weekly read on competitor spend trends and messaging shifts." },
-        { title: "Taiwan-native content", desc: "Ad copy tuned for Traditional Chinese—zero Mainland slang." },
+        { title: "Taiwan-native content", desc: "Ad copy tuned for Traditional Chinese, zero Mainland slang." },
         { title: "One Monday report", desc: "GA, Meta, Google, CRM, and email in one report, auto-sent Monday 8am." },
       ],
     },
@@ -262,7 +262,7 @@ export const products: Product[] = [
         "Meta + Google Ads",
       ],
       description:
-        "Pulse 把行銷操控放進 LINE：發一則訊息，幾秒內就在 Meta 或 Google Ads 執行。它全天候監看預算，CPC 飆高時暫停廣告，在 ROAS 下滑前提醒素材疲乏，並把每個通路整合成一份報告，每週一早上自動送達——讓你不再緊盯儀表板。",
+        "Pulse 把行銷操控放進 LINE：發一則訊息，幾秒內就在 Meta 或 Google Ads 執行。它全天候監看預算，CPC 飆高時暫停廣告，在 ROAS 下滑前提醒素材疲乏，並把每個通路整合成一份報告，每週一早上自動送達，讓你不再緊盯儀表板。",
       whoFor:
         "手動查看儀表板、常錯過深夜異常，經營 Meta 與 Google 廣告的台灣行銷主管與企業主。",
       features: [
@@ -291,14 +291,14 @@ export const products: Product[] = [
         "Weekly coverage score",
       ],
       description:
-        "The shared internal knowledge layer every product draws on. Employees ask the way they'd ask a colleague and get answers straight from your SOPs—with the exact document, section, and page cited, auditable in one click. New hires self-serve from day one instead of interrupting seniors, and a weekly coverage score tells you how much of what your team asks the knowledge base can confidently answer.",
+        "The shared internal knowledge layer every product draws on. Employees ask the way they'd ask a colleague and get answers straight from your SOPs, with the exact document, section, and page cited, auditable in one click. New hires self-serve from day one instead of interrupting seniors, and a weekly coverage score tells you how much of what your team asks the knowledge base can confidently answer.",
       whoFor:
         "Companies where employees keep interrupting managers, where critical knowledge lives only in senior staff's heads, and where onboarding drags on for weeks.",
       features: [
-        { title: "Natural-language Q&A", desc: "Employees ask the way they'd ask a colleague—answers come from your SOPs." },
-        { title: "Source-cited answers", desc: "Every answer cites the exact document, section, and page—auditable in one click." },
+        { title: "Natural-language Q&A", desc: "Employees ask the way they'd ask a colleague, answers come from your SOPs." },
+        { title: "Source-cited answers", desc: "Every answer cites the exact document, section, and page, auditable in one click." },
         { title: "Word & PDF ingestion", desc: "Upload manuals and policies; diagrams and flowcharts are indexed alongside text." },
-        { title: "Role-based access", desc: "HR sees HR docs, the factory sees factory SOPs—sensitive policies stay protected." },
+        { title: "Role-based access", desc: "HR sees HR docs and the factory sees factory SOPs, so sensitive policies stay protected." },
         { title: "Onboarding mode", desc: "New hires walk through real company SOPs from day one, self-service." },
         { title: "Coverage score", desc: "A weekly score shows what share of employee questions the base can answer." },
       ],
@@ -312,14 +312,14 @@ export const products: Product[] = [
         "每週知識覆蓋率評分",
       ],
       description:
-        "每項產品共用的內部知識層。員工像問同事一樣提問，直接從你的 SOP 得到答案——並附上確切的文件、章節與頁碼，一鍵即可稽核。新人第一天起就能自助查詢，不必打斷資深同事；每週覆蓋率評分則告訴你，知識庫能有把握回答團隊多少提問。",
+        "每項產品共用的內部知識層。員工像問同事一樣提問，直接從你的 SOP 得到答案，並附上確切的文件、章節與頁碼，一鍵即可稽核。新人第一天起就能自助查詢，不必打斷資深同事；每週覆蓋率評分則告訴你，知識庫能有把握回答團隊多少提問。",
       whoFor:
         "員工不斷打斷主管詢問、關鍵知識只存在資深員工腦中、新人到職要花數週的企業。",
       features: [
-        { title: "自然語言問答", desc: "員工像問同事一樣提問——答案來自你的 SOP。" },
+        { title: "自然語言問答", desc: "員工像問同事一樣提問，答案來自你的 SOP。" },
         { title: "附出處作答", desc: "每個答案引用確切文件、章節與頁碼，一鍵即可稽核。" },
         { title: "Word 與 PDF 接入", desc: "上傳手冊與規範，圖表與流程圖與文字一併索引。" },
-        { title: "角色權限", desc: "人資看人資文件、廠務看廠務 SOP——敏感政策受保護。" },
+        { title: "角色權限", desc: "人資看人資文件、廠務看廠務 SOP，敏感政策受保護。" },
         { title: "到職模式", desc: "新人第一天起透過真實公司 SOP 自助上手。" },
         { title: "覆蓋率評分", desc: "每週評分顯示知識庫能回答多少比例的員工提問。" },
       ],

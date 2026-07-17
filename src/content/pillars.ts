@@ -15,13 +15,13 @@ export const pillars: Pillar[] = [
   },
   {
     char: "發",
-    en: { name: "Talent", domain: "Training & Talent", desc: "Growing people—interview coaching, learning intelligence, competency development.", who: "LyraAI · EduSense AI · live" },
-    zh: { name: "人才培育", domain: "Training & Talent", desc: "培育人才——面試教練、學習智慧、能力發展。", who: "LyraAI · EduSense AI · 已上線" },
+    en: { name: "Talent", domain: "Training & Talent", desc: "Growing people: interview coaching, learning intelligence, competency development.", who: "LyraAI · EduSense AI · live" },
+    zh: { name: "人才培育", domain: "Training & Talent", desc: "培育人才：面試教練、學習智慧、能力發展。", who: "LyraAI · EduSense AI · 已上線" },
   },
   {
     char: "銷",
-    en: { name: "Sales & Service", domain: "Sales & Service", desc: "Winning and keeping customers—24/7 service and marketing that runs itself.", who: "Customer AI · Pulse · live" },
-    zh: { name: "銷售與服務", domain: "Sales & Service", desc: "贏得並留住客戶——24 小時客服與自動運作的行銷。", who: "AI 客服 · Pulse · 已上線" },
+    en: { name: "Sales & Service", domain: "Sales & Service", desc: "Winning and keeping customers, 24/7 service and marketing that runs itself.", who: "Customer AI · Pulse · live" },
+    zh: { name: "銷售與服務", domain: "Sales & Service", desc: "贏得並留住客戶，24 小時客服與自動運作的行銷。", who: "AI 客服 · Pulse · 已上線" },
   },
   {
     char: "跨",

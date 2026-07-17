@@ -9,7 +9,7 @@ const notoTC = Noto_Sans_TC({ subsets: ["latin"], weight: ["400", "500", "700"],
 
 export const metadata: Metadata = {
   title: "PrimeStride AI · 首越人工智慧",
-  description: "One AI-native platform with six live products across five business pillars—where every interaction compounds your company's intelligence.",
+  description: "One AI-native platform with six live products across five business pillars, where every interaction compounds your company's intelligence.",
   metadataBase: new URL("https://www.primestrideai.com"),
 };
 
