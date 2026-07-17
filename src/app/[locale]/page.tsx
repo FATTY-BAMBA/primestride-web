@@ -128,25 +128,13 @@ export default function Home({ params }: { params: { locale: string } }) {
             <h2>{dict.connections.title}</h2>
             <p>{dict.connections.intro}</p>
           </div>
-          <div className="conn">
-            <div className="conn-col live">
-              <h3>{dict.connections.liveTitle}</h3>
-              {dict.connections.live.map((c, i) => (
-                <div className="conn-item" key={i}>
-                  <div className="pair">{c.pair}</div>
-                  <p>{c.p}</p>
-                </div>
-              ))}
-            </div>
-            <div className="conn-col plan">
-              <h3>{dict.connections.planTitle}</h3>
-              {dict.connections.plan.map((c, i) => (
-                <div className="conn-item" key={i}>
-                  <div className="pair">{c.pair}</div>
-                  <p>{c.p}</p>
-                </div>
-              ))}
-            </div>
+          <div className="conn-merged">
+            {[...dict.connections.live, ...dict.connections.plan].map((c, i) => (
+              <div className="conn-item" key={i}>
+                <div className="pair">{c.pair}</div>
+                <p>{c.p}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>

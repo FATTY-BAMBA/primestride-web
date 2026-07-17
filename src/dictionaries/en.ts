@@ -53,7 +53,7 @@ const en = {
     eyebrow: "How it compounds",
     title: "The products already talk to each other.",
     intro:
-      "Some connections are live in production today; others are designed and on the roadmap. Either way, the data you build in one product makes the next one smarter.",
+      "The value isn't six separate tools—it's what happens between them. Build data in one product and it makes the next one smarter.",
     liveTitle: "Live today",
     planTitle: "Designed & planned",
     live: [
@@ -91,6 +91,10 @@ const en = {
     pillarLabel: "Pillar",
     highlights: "Highlights",
     bookConsult: "Book a consult",
+    overview: "Overview",
+    keyFeatures: "Key features",
+    whoForLabel: "Who it's for",
+    atAGlance: "At a glance",
   },
 };
 export default en;

@@ -55,7 +55,7 @@ const zh: Dictionary = {
     eyebrow: "智慧如何累積",
     title: "產品之間，已經在對話。",
     intro:
-      "部分連結今天已在生產環境運作，其餘則已設計並列入藍圖。無論如何，你在一項產品累積的資料，都會讓下一項更聰明。",
+      "價值不在六個各自獨立的工具，而在它們之間——你在一項產品累積的資料，會讓下一項更聰明。",
     liveTitle: "今日已串聯",
     planTitle: "已設計 · 規劃中",
     live: [
@@ -93,6 +93,10 @@ const zh: Dictionary = {
     pillarLabel: "支柱",
     highlights: "重點",
     bookConsult: "預約諮詢",
+    overview: "產品簡介",
+    keyFeatures: "核心功能",
+    whoForLabel: "適合誰",
+    atAGlance: "重點一覽",
   },
 };
 export default zh;
