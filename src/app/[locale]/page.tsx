@@ -113,7 +113,7 @@ export default function Home({ params }: { params: { locale: string } }) {
               </h3>
               <p>{dict.bundle.desc}</p>
             </div>
-            <Link href={`${base}/products/ai-customer-assistant`} className="btn btn-primary">
+            <Link href={`${base}/ai-zhanggui`} className="btn btn-primary">
               {dict.bundle.cta} <span className="chev">›</span>
             </Link>
           </div>
