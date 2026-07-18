@@ -35,7 +35,7 @@ export default function OpengraphImage() {
           <div style={{ fontSize: 76, fontWeight: 800, lineHeight: 1.04, letterSpacing: "-1px" }}>
             One platform. Five pillars.
           </div>
-          <div style={{ fontSize: 76, fontWeight: 800, lineHeight: 1.04, letterSpacing: "-1px", color: "#8f83f2" }}>
+          <div style={{ fontSize: 76, fontWeight: 800, lineHeight: 1.04, letterSpacing: "-1px", color: "#6B5BFF" }}>
             Six products, live today.
           </div>
           <div style={{ fontSize: 31, color: "#a7adba", marginTop: 26 }}>

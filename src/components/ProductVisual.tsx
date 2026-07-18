@@ -5,8 +5,8 @@ const C = {
   ink: "#171B24",
   muted: "#B4BAC6",
   line: "#E3E6EB",
-  live: "#1D9E75",
-  liveTint: "#E1F5EE",
+  live: "#129E74",
+  liveTint: "#E4F5EE",
   amber: "#EF9F27",
   coral: "#E8552B",
   surface: "#FFFFFF",
@@ -157,8 +157,8 @@ function Knowledge() {
       <rect x="66" y="138" width="156" height="8" rx="4" fill={C.irisTint} />
       <rect x="222" y="96" width="172" height="108" rx="14" fill={C.iris} />
       <text x="240" y="126" fontSize="13" fill="#ffffff" style={{ fontFamily: "var(--font-plex)" }}>Answer</text>
-      {bar(240, 138, 138, 7, "#8f83f2")}
-      {bar(240, 152, 110, 7, "#8f83f2")}
+      {bar(240, 138, 138, 7, "rgba(255,255,255,0.55)")}
+      {bar(240, 152, 110, 7, "rgba(255,255,255,0.55)")}
       <rect x="240" y="172" width="70" height="20" rx="10" fill="#ffffff" opacity="0.92" />
       <text x="252" y="186" fontSize="10" fill={C.iris} style={{ fontFamily: "var(--font-plex-mono)" }}>SOP · p.42</text>
       <path d="M222 150 l-14 -8 v16 z" fill={C.iris} />

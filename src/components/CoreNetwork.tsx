@@ -80,7 +80,7 @@ export default function CoreNetwork() {
         ))}
       </g>
 
-      <rect x="202" y="196" width="156" height="78" rx="18" fill="#4a39e8" filter="url(#coreBlur)" opacity="0.55" />
+      <rect x="202" y="196" width="156" height="78" rx="18" fill="#6B5BFF" filter="url(#coreBlur)" opacity="0.55" />
       <rect x="202" y="196" width="156" height="78" rx="18" fill="url(#coreGrad)" />
       <text x={CORE.x} y="230" textAnchor="middle" fontSize="21" fontWeight="700" fill="#ffffff" style={{ fontFamily: "var(--font-bricolage)" }}>Core</text>
       <text x={CORE.x} y="252" textAnchor="middle" fontSize="12" fill="#cdc7ff" style={{ fontFamily: "var(--font-noto-tc)" }}>核心智慧平台</text>
@@ -94,7 +94,7 @@ export default function CoreNetwork() {
               <g filter="url(#nodeShadow)">
                 <rect x={x} y={y} width={n.w} height="46" rx="13" fill="#fff" stroke="#e6e8ee" />
               </g>
-              <circle cx={x + n.w - 14} cy={y + 13} r="3" fill="#1D9E75" />
+              <circle cx={x + n.w - 14} cy={y + 13} r="3" fill="#129E74" />
               <text x={n.cx} y={n.cy + 5} textAnchor="middle">{n.label}</text>
             </g>
           );
