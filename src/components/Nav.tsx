@@ -28,10 +28,13 @@ export default function Nav({ locale, dict }: { locale: Locale; dict: Dictionary
               {l.label}
             </Link>
           ))}
+          <Link href={`${base}/contact`} className="btn btn-primary menu-cta" onClick={() => setOpen(false)}>
+            {dict.nav.bookConsult} <span className="chev">›</span>
+          </Link>
         </nav>
         <div className="nav-right">
           <LangToggle locale={locale} />
-          <Link href={`${base}/contact`} className="btn btn-primary">
+          <Link href={`${base}/contact`} className="btn btn-primary nav-cta">
             {dict.nav.bookConsult} <span className="chev">›</span>
           </Link>
           <button className="burger" aria-label="Menu" onClick={() => setOpen((v) => !v)}>
