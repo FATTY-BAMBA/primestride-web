@@ -16,7 +16,7 @@ export const metadata: Metadata = { title: "Contact · PrimeStride AI" };
       URL, e.g. https://line.me/R/ti/p/@yourid). If you don't have one yet,
       delete the LINE <a> line further down.
    ──────────────────────────────────────────────────────────────────────── */
-const FORMSPREE_ENDPOINT = "https://formspree.io/f/YOUR_FORM_ID";
+const FORMSPREE_ENDPOINT = "https://formspree.io/f/xykrerqj";
 const LINE_URL = "https://line.me/R/ti/p/@primestride";
 
 const content = {
