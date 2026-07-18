@@ -13,7 +13,7 @@ export default function Nav({ locale, dict }: { locale: Locale; dict: Dictionary
     { href: `${base}#pillars`, label: dict.nav.pillars },
     { href: `${base}/products`, label: dict.nav.products },
     { href: `${base}#connections`, label: dict.nav.compounds },
-    { href: `${base}#contact`, label: dict.nav.contact },
+    { href: `${base}/contact`, label: dict.nav.contact },
   ];
 
   return (
@@ -31,7 +31,7 @@ export default function Nav({ locale, dict }: { locale: Locale; dict: Dictionary
         </nav>
         <div className="nav-right">
           <LangToggle locale={locale} />
-          <Link href={`${base}#contact`} className="btn btn-primary">
+          <Link href={`${base}/contact`} className="btn btn-primary">
             {dict.nav.bookConsult} <span className="chev">›</span>
           </Link>
           <button className="burger" aria-label="Menu" onClick={() => setOpen((v) => !v)}>

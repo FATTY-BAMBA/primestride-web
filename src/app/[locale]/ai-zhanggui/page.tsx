@@ -154,7 +154,7 @@ export default function AiZhangguiPage({ params }: { params: { locale: string } 
           <h1>{t.title}</h1>
           <p className="lead">{t.lead}</p>
           <div className="hero-cta">
-            <a href="mailto:hello@primestrideai.com" className="btn btn-primary">{t.cta} <span className="chev">›</span></a>
+            <a href={`${base}/contact`} className="btn btn-primary">{t.cta} <span className="chev">›</span></a>
             <Link href="#modules" className="btn btn-ghost">{t.seeHow}</Link>
           </div>
         </div>
@@ -254,7 +254,7 @@ export default function AiZhangguiPage({ params }: { params: { locale: string } 
           <div>
             <h2 style={{ fontSize: "clamp(1.7rem,3.2vw,2.3rem)", marginBottom: 12 }}>{t.subsidyTitle}</h2>
             <p style={{ color: "var(--muted)", marginBottom: 20 }}>{t.subsidyBody}</p>
-            <a href="mailto:hello@primestrideai.com" className="btn btn-primary">{t.subsidyCta} <span className="chev">›</span></a>
+            <a href={`${base}/contact`} className="btn btn-primary">{t.subsidyCta} <span className="chev">›</span></a>
           </div>
         </div>
       </section>
@@ -267,7 +267,7 @@ export default function AiZhangguiPage({ params }: { params: { locale: string } 
             <div className="who-tags">
               {t.industries.map((x, i) => (<span key={i}>{x}</span>))}
             </div>
-            <a href="mailto:hello@primestrideai.com" className="btn btn-light" style={{ marginTop: 24 }}>{t.cta} <span className="chev">›</span></a>
+            <a href={`${base}/contact`} className="btn btn-light" style={{ marginTop: 24 }}>{t.cta} <span className="chev">›</span></a>
           </div>
         </div>
       </section>

@@ -145,7 +145,7 @@ export default function Home({ params }: { params: { locale: string } }) {
           <h2>{dict.cta.title}</h2>
           <p>{dict.cta.desc}</p>
           <div className="hero-cta">
-            <a href="mailto:hello@primestrideai.com" className="btn btn-light">
+            <a href={`${base}/contact`} className="btn btn-light">
               {dict.cta.primary} <span className="chev">›</span>
             </a>
             <Link href={`${base}/products`} className="btn btn-outline-light">

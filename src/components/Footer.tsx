@@ -28,7 +28,7 @@ export default function Footer({ locale, dict }: { locale: Locale; dict: Diction
           </div>
           <div className="foot-col">
             <h4>{dict.footer.companyTitle}</h4>
-            <Link href={`${base}#contact`}>{dict.footer.contact}</Link>
+            <Link href={`${base}/contact`}>{dict.footer.contact}</Link>
             <Link href="#">{dict.footer.privacy}</Link>
             <a href="mailto:hello@primestrideai.com">hello@primestrideai.com</a>
           </div>
