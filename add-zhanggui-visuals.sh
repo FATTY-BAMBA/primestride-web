@@ -1,3 +1,29 @@
+#!/usr/bin/env bash
+# PrimeStride — AI 掌櫃 page visuals + interactive demos (safe to re-run)
+# Usage: drop this file in the repo root, then:  bash add-zhanggui-visuals.sh
+set -e
+cd "$(dirname "$0")"
+
+dl() { # dl <url> <out> — retry up to 5 times
+  for i in 1 2 3 4 5; do
+    if curl -fsSL --connect-timeout 20 "$1" -o "$2"; then return 0; fi
+    echo "  retry $i for $(basename "$2")"; sleep 2
+  done
+  echo "FAILED to download $2 after 5 tries"; exit 1
+}
+
+echo "→ downloading AI 掌櫃 visuals to public/visuals/"
+mkdir -p public/visuals
+dl "https://www.kimi.com/apiv2-files/sign-obj/kimi-fs%2Ffiles%2Fblob%2F0148cae46dd8faca076726200b678d27d2bd3bcf540f1915c594c90f485087df?filename=zg-hero-lantern.png&sig=bbzPIDkB6-GUqwKGw-ZbsNmGUqQ1MFg14-e0JI32Rq8=&t=o" public/visuals/zg-hero-lantern.png
+dl "https://www.kimi.com/apiv2-files/sign-obj/kimi-fs%2Ffiles%2Fblob%2Fd02bfada207d733ec8b3a6fd5771c17bf05c41eb2851d335eb68bebdb37922fd?filename=zg-hub-wide.png&sig=m0ILlAFMeipIJAwJ5gjtdAhdCR_d0QJee7ya9jvjhbA=&t=o" public/visuals/zg-hub-wide.png
+dl "https://www.kimi.com/apiv2-files/sign-obj/kimi-fs%2Ffiles%2Fblob%2Fdf72a231f233b133c9706ae1af85a0c04d0cc993efb7eae3264ee937a7480d9f?filename=zg-module-assistant.png&sig=ov3qHyIQ6oVrRNQ-0ObticcWHMUTv37TVXU9S8C8JUk=&t=o" public/visuals/zg-module-assistant.png
+dl "https://www.kimi.com/apiv2-files/sign-obj/kimi-fs%2Ffiles%2Fblob%2Fe1cfd7691dc55e037a7ddbb873ff4a025df7e8b8a73e462c45c9e8d0f132ddb1?filename=zg-module-quoting.png&sig=ieIXd6oxGztdb24rU9GYzUHl5OcMY5CMqXi1nTNuFlc=&t=o" public/visuals/zg-module-quoting.png
+dl "https://www.kimi.com/apiv2-files/sign-obj/kimi-fs%2Ffiles%2Fblob%2Fc755f496a10025e6480fb0786aabb83a8dd5ea56dc0b391fddb74c162a29c239?filename=zg-module-workorders.png&sig=UqpKtBLalMlwdNSNE5-7eWmL8rioDu48gRFD_38-ka8=&t=o" public/visuals/zg-module-workorders.png
+dl "https://www.kimi.com/apiv2-files/sign-obj/kimi-fs%2Ffiles%2Fblob%2F754713501bfd3ad5f7c69cf3e40958387204b77bb2cdacb5b033a652318c349f?filename=zg-module-analytics.png&sig=xGjOvaom2JFTpkpWxfrsUX7c5MLzT-_aY4i9j9At394=&t=o" public/visuals/zg-module-analytics.png
+echo "  6 images saved"
+
+echo "→ rewriting src/app/[locale]/ai-zhanggui/page.tsx (hero visual, module images, demo section)"
+cat > "src/app/[locale]/ai-zhanggui/page.tsx" <<'TSX'
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -388,3 +414,62 @@ export default function AiZhangguiPage({ params }: { params: { locale: string } 
     </main>
   );
 }
+TSX
+
+echo "→ appending AI 掌櫃 styles to src/app/globals.css"
+python3 - <<'PY'
+import io
+css_path = "src/app/globals.css"
+css = io.open(css_path, encoding="utf-8").read()
+if ".zg-demo-grid" not in css:
+    css += """
+
+/* ── AI 掌櫃 visuals & demos ────────────────────────── */
+.zg-hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:44px;align-items:center;text-align:left}
+.zg-hero-grid .eyebrow{justify-content:flex-start}
+.zg-hero-grid h1{margin-left:0;margin-right:0}
+.zg-hero-grid .lead{margin-left:0;margin-right:0}
+.zg-hero-grid .hero-cta{justify-content:flex-start}
+.zg-lantern{display:flex;justify-content:center}
+.zg-lantern img{width:100%;max-width:380px;height:auto;filter:drop-shadow(0 34px 54px rgba(61,44,224,.22));animation:heroFloat 7s ease-in-out infinite}
+@media(max-width:860px){.zg-hero-grid{grid-template-columns:1fr;text-align:center}.zg-hero-grid .eyebrow{justify-content:center}.zg-hero-grid h1,.zg-hero-grid .lead{margin-left:auto;margin-right:auto}.zg-hero-grid .hero-cta{justify-content:center}.zg-lantern img{max-width:240px;margin:0 auto}}
+.zg-hub-img{margin-top:26px;border-radius:16px;overflow:hidden;border:1px solid #d9d3ff}
+.zg-hub-img img{width:100%;height:auto;display:block}
+.feat.zg-mod{padding:0;overflow:hidden}
+.zg-mod-img{background:radial-gradient(120% 110% at 50% 0%,#f3f1ff 0%,#ffffff 72%);border-bottom:1px solid var(--line);padding:26px 20px 6px;display:flex;justify-content:center}
+.zg-mod-img img{display:block;transition:transform .35s ease}
+.feat.zg-mod:hover .zg-mod-img img{transform:translateY(-4px) scale(1.02)}
+.feat.zg-mod h3{margin:18px 22px 0}
+.feat.zg-mod p{margin:8px 22px 22px}
+.zg-demo-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start}
+@media(max-width:900px){.zg-demo-grid{grid-template-columns:1fr}}
+.zg-demo-cap{margin-top:16px;font-family:var(--font-plex-mono);font-size:.7rem;letter-spacing:.07em;color:var(--muted);text-align:center}
+.line-phone{max-width:380px;margin:0 auto;background:#8ba3c7;border-radius:28px;border:1px solid var(--line);box-shadow:0 24px 60px rgba(14,17,22,.10);overflow:hidden}
+.line-head{display:flex;align-items:center;gap:10px;background:#fff;padding:12px 16px;border-bottom:1px solid rgba(14,17,22,.08)}
+.line-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--iris),var(--iris-bright));color:#fff;display:flex;align-items:center;justify-content:center;font-size:.9rem;font-weight:700;flex:none}
+.line-name{font-weight:600;font-size:.92rem;display:flex;flex-direction:column;line-height:1.2}
+.line-status{font-family:var(--font-plex-mono);font-size:.62rem;color:var(--live);letter-spacing:.05em}
+.line-body{padding:20px 14px 22px;display:flex;flex-direction:column;gap:10px}
+.msg{max-width:84%;padding:10px 13px;border-radius:14px;font-size:.88rem;line-height:1.5}
+.msg.in{align-self:flex-start;background:#fff;border:1px solid rgba(14,17,22,.08);border-top-left-radius:4px}
+.msg.out{align-self:flex-end;background:#d9f4e3;border:1px solid #bfe8cd;border-top-right-radius:4px}
+.msg .cite{display:block;margin-top:7px;font-size:.68rem;color:var(--iris);font-family:var(--font-plex-mono)}
+.quote-flow{display:flex;flex-direction:column;gap:12px;max-width:440px;margin:0 auto;width:100%}
+.quote-card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px 22px;box-shadow:0 12px 34px rgba(14,17,22,.05)}
+.qc-label{font-family:var(--font-plex-mono);font-size:.66rem;letter-spacing:.12em;color:var(--muted);margin-bottom:12px}
+.quote-card ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}
+.quote-card li{font-size:.92rem;display:flex;align-items:center;gap:9px}
+.quote-card li::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--iris-bright);flex:none}
+.quote-arrow{text-align:center;color:var(--iris);font-size:1.25rem;line-height:1}
+.quote-card.out{border-color:#c7bdfc;background:linear-gradient(160deg,#f6f4ff,#fff)}
+.qc-amt{font-family:var(--font-bricolage);font-weight:700;font-size:1.85rem;color:var(--iris);letter-spacing:-.01em}
+.qc-basis{margin-top:8px;font-size:.82rem;color:var(--muted)}
+"""
+    io.open(css_path, "w", encoding="utf-8").write(css)
+    print(f"  {css_path}: styles appended")
+else:
+    print(f"  {css_path}: styles already present, skipped")
+PY
+
+echo ""
+echo "DONE. Next:  npm run build  &&  git add -A && git commit -m 'AI 掌櫃 page: lantern hero, hub visual, module images, LINE + quoting demos' && git push"
