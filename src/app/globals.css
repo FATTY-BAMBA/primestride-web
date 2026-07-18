@@ -337,3 +337,18 @@ a{color:inherit;text-decoration:none}
 .edu-risk{display:flex;align-items:center;gap:9px;border:1px solid #f3c9b8;background:#fff6f2;border-radius:12px;padding:11px 14px;font-size:.83rem;color:var(--muted);flex-wrap:wrap}
 .edu-risk b{color:var(--ink)}
 .edu-risk .flag{font-family:var(--font-plex-mono);font-size:.6rem;color:#E8552B;border:1px solid #E8552B;border-radius:100px;padding:3px 10px;letter-spacing:.1em;margin-left:auto;white-space:nowrap}
+
+
+/* ── AI Customer Assistant demos ────────────────────── */
+.msg .meta{display:inline-block;margin-top:8px;margin-left:8px;font-family:var(--font-plex-mono);font-size:.62rem;color:#0d8a63;border:1px solid rgba(18,158,116,.55);border-radius:100px;padding:3px 10px;letter-spacing:.05em;background:rgba(255,255,255,.55)}
+.msg .meta.esc{color:#E8552B;border-color:rgba(232,85,43,.55)}
+.ca-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.ca-stat{border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:12px 8px;text-align:center}
+.ca-stat b{display:block;font-family:var(--font-bricolage);font-size:1.4rem;color:var(--iris)}
+.ca-stat span{font-size:.64rem;color:var(--muted)}
+@media(max-width:560px){.ca-stats{grid-template-columns:repeat(2,1fr)}}
+.ca-gaphead{font-family:var(--font-plex-mono);font-size:.66rem;letter-spacing:.12em;color:var(--muted);margin-top:6px}
+.ca-gap{border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:12px 14px}
+.ca-gap-q{font-size:.9rem;font-weight:600;display:flex;justify-content:space-between;gap:10px}
+.ca-n{font-family:var(--font-plex-mono);font-size:.75rem;color:#E8552B;white-space:nowrap}
+.ca-gap-fix{margin-top:6px;font-size:.8rem;color:var(--live)}
