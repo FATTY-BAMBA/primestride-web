@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { copy, type Product } from "@/content/products";
 import type { Locale } from "@/i18n";
 import type { Dictionary } from "@/dictionaries/en";
@@ -15,6 +16,15 @@ export default function ProductCard({
   const c = copy(product, locale);
   return (
     <div className="pcard">
+      <div className="pcard-img">
+        <Image
+          src={product.img}
+          alt={`${product.name} — ${product.zhName}`}
+          width={760}
+          height={620}
+          style={{ width: "78%", height: "auto" }}
+        />
+      </div>
       <div className="pcard-top">
         <span className="pill-tag">{product.pillarTag}</span>
         {product.live && <span className="badge-live">{dict.common.live}</span>}

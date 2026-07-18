@@ -19,6 +19,7 @@ export interface Product {
   zhName: string;
   pillarTag: string;
   visual: string;
+  img: string;
   live: boolean;
   en: ProductCopy;
   zh: ProductCopy;
@@ -31,6 +32,7 @@ export const products: Product[] = [
     zhName: "企業智慧平台 · Enterprise Intelligence",
     pillarTag: "人 · HR",
     visual: "hr",
+    img: "/visuals/product-atlas-eip.png",
     live: true,
     en: {
       tagline: "AI-native HR built for Taiwan's newest labor rules.",
@@ -81,6 +83,7 @@ export const products: Product[] = [
     zhName: "語音面試教練 · Voice Interview Coach",
     pillarTag: "發 · Talent",
     visual: "interview",
+    img: "/visuals/product-lyraai.png",
     live: true,
     en: {
       tagline: "Real voice. Honest scores. Built for Taiwan.",
@@ -131,6 +134,7 @@ export const products: Product[] = [
     zhName: "教育智慧平台 · Learning Intelligence",
     pillarTag: "發 · Talent",
     visual: "edu",
+    img: "/visuals/product-edusense.png",
     live: true,
     en: {
       tagline: "Understand how students learn, not just whether they passed.",
@@ -181,6 +185,7 @@ export const products: Product[] = [
     zhName: "AI 智慧客服助理 · 24/7 Service",
     pillarTag: "銷 · Service",
     visual: "chat",
+    img: "/visuals/product-customer-ai.png",
     live: true,
     en: {
       tagline: "24/7 Traditional-Chinese customer service.",
@@ -231,6 +236,7 @@ export const products: Product[] = [
     zhName: "AI 智慧行銷 · Marketing Intelligence",
     pillarTag: "銷 · Marketing",
     visual: "marketing",
+    img: "/visuals/product-pulse.png",
     live: true,
     en: {
       tagline: "Run Meta & Google ads from LINE.",
@@ -281,6 +287,7 @@ export const products: Product[] = [
     zhName: "AI 知識助理 · Internal Knowledge",
     pillarTag: "跨 · Cross-pillar",
     visual: "knowledge",
+    img: "/visuals/product-knowledge-ai.png",
     live: true,
     en: {
       tagline: "Every answer cited to the exact SOP page.",

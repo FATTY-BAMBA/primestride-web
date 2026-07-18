@@ -3,7 +3,7 @@ import { getDictionary, isLocale, type Locale } from "@/i18n";
 import { notFound } from "next/navigation";
 import { products } from "@/content/products";
 import { pillars, pillarCopy } from "@/content/pillars";
-import CoreNetwork from "@/components/CoreNetwork";
+import Image from "next/image";
 import ProductCard from "@/components/ProductCard";
 
 export default function Home({ params }: { params: { locale: string } }) {
@@ -32,8 +32,15 @@ export default function Home({ params }: { params: { locale: string } }) {
               </Link>
             </div>
           </div>
-          <div>
-            <CoreNetwork />
+          <div className="hero-visual">
+            <Image
+              src="/visuals/hero-core-network.png"
+              alt="PrimeStride Core — one intelligence layer connecting six live products"
+              width={991}
+              height={679}
+              priority
+              style={{ width: "100%", height: "auto" }}
+            />
           </div>
         </div>
       </section>
@@ -127,6 +134,15 @@ export default function Home({ params }: { params: { locale: string } }) {
             <span className="eyebrow">{dict.connections.eyebrow}</span>
             <h2>{dict.connections.title}</h2>
             <p>{dict.connections.intro}</p>
+          </div>
+          <div className="conn-visual">
+            <Image
+              src="/visuals/section-compounds.png"
+              alt="Six product data streams converging into one shared intelligence layer"
+              width={2048}
+              height={1037}
+              style={{ width: "100%", height: "auto" }}
+            />
           </div>
           <div className="conn-merged">
             {[...dict.connections.live, ...dict.connections.plan].map((c, i) => (

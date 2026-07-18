@@ -1,37 +1,46 @@
 #!/usr/bin/env bash
-# PrimeStride — add 3D visuals (hero, product images, compounds section)
+# PrimeStride — add 3D visuals v2 (retry-safe, safe to re-run)
 # Usage: drop this file in the repo root, then:  bash add-visuals.sh
 set -e
 cd "$(dirname "$0")"
 
+dl() { # dl <url> <out> — retry up to 5 times
+  for i in 1 2 3 4 5; do
+    if curl -fsSL --connect-timeout 20 "$1" -o "$2"; then return 0; fi
+    echo "  retry $i for $(basename "$2")"; sleep 2
+  done
+  echo "FAILED to download $2 after 5 tries"; exit 1
+}
+
 echo "→ downloading visuals to public/visuals/"
 mkdir -p public/visuals
-curl -fsSL "https://www.kimi.com/apiv2-files/sign-obj/kimi-fs%2Ffiles%2Fblob%2F1bd05f4d460b0c72b54c9ec4669b01b043b7f6fa2026d69659753baef4319a09?filename=hero-core-network.png&sig=2o_KD_xvWiIGluwbkDVnyWTtbqnCwXCO4Yydxe8lVAY=&t=o" -o public/visuals/hero-core-network.png
-curl -fsSL "https://www.kimi.com/apiv2-files/sign-obj/kimi-fs%2Ffiles%2Fblob%2Fb7af9d40d4d59d2def88bd354f55c1b092227f9f6d7a6c94975ad80a758fd6b7?filename=product-atlas-eip.png&sig=OkhSsJDaiEounBH3O2OTpW63K65PU4Hnwd8lYjQUwZQ=&t=o" -o public/visuals/product-atlas-eip.png
-curl -fsSL "https://www.kimi.com/apiv2-files/sign-obj/kimi-fs%2Ffiles%2Fblob%2F687a4ef18b821c89bb58504359ab1836d575105664d50772ab4c6d2133af9e09?filename=product-lyraai.png&sig=ci5anTu5kEyd9j_jeXJ9gDWP6tzvU3w0RoXzuEFqbEg=&t=o" -o public/visuals/product-lyraai.png
-curl -fsSL "https://www.kimi.com/apiv2-files/sign-obj/kimi-fs%2Ffiles%2Fblob%2F388a51f8d87b19ba92966704338d8bf2f54fe0fcea880bdcf007722569cf40c7?filename=product-edusense.png&sig=TzbksctjPxQdlK8i-HNyCms7HkMJbwCmECaKkCqOoYc=&t=o" -o public/visuals/product-edusense.png
-curl -fsSL "https://www.kimi.com/apiv2-files/sign-obj/kimi-fs%2Ffiles%2Fblob%2F22f948b14004745d34350b8df3e09b2a9385e6677df93c8f8e86588317201de7?filename=product-customer-ai.png&sig=comKZ4GgBWxkPmrnpnSHXDvDAAgTvQJzb2YcwL7ISBM=&t=o" -o public/visuals/product-customer-ai.png
-curl -fsSL "https://www.kimi.com/apiv2-files/sign-obj/kimi-fs%2Ffiles%2Fblob%2Fd3d7a540b9550b093d24bbdc20b0b5b982784319586f9f41f6f3de916df66746?filename=product-pulse.png&sig=o-j5mmNyIWeNDeGoLogYnnxDqd8gd1YoVmKgaSeu94U=&t=o" -o public/visuals/product-pulse.png
-curl -fsSL "https://www.kimi.com/apiv2-files/sign-obj/kimi-fs%2Ffiles%2Fblob%2Fe8acf7d9ccb39331ddcf5ce77433dfaeae07fe1e480ca30905249738d40cdd6f?filename=product-knowledge-ai.png&sig=SYXHuQU0tQRPFQB8DqIspfmmnp8SgG7Rz3u7S46d15g=&t=o" -o public/visuals/product-knowledge-ai.png
-curl -fsSL "https://www.kimi.com/apiv2-files/sign-obj/kimi-fs%2Ffiles%2Fblob%2F35871802fd0cbedf1dc02a91c815a4e008e6cb7907a6e5a9fa5833d95ede52f8?filename=section-compounds.png&sig=V9Pz8C7X5HPnJCazwQJvLfWsCIWwW2fTkPtRfKn1DQQ=&t=o" -o public/visuals/section-compounds.png
+dl "https://www.kimi.com/apiv2-files/sign-obj/kimi-fs%2Ffiles%2Fblob%2F1bd05f4d460b0c72b54c9ec4669b01b043b7f6fa2026d69659753baef4319a09?filename=hero-core-network.png&sig=2o_KD_xvWiIGluwbkDVnyWTtbqnCwXCO4Yydxe8lVAY=&t=o" public/visuals/hero-core-network.png
+dl "https://www.kimi.com/apiv2-files/sign-obj/kimi-fs%2Ffiles%2Fblob%2Fb7af9d40d4d59d2def88bd354f55c1b092227f9f6d7a6c94975ad80a758fd6b7?filename=product-atlas-eip.png&sig=OkhSsJDaiEounBH3O2OTpW63K65PU4Hnwd8lYjQUwZQ=&t=o" public/visuals/product-atlas-eip.png
+dl "https://www.kimi.com/apiv2-files/sign-obj/kimi-fs%2Ffiles%2Fblob%2F687a4ef18b821c89bb58504359ab1836d575105664d50772ab4c6d2133af9e09?filename=product-lyraai.png&sig=ci5anTu5kEyd9j_jeXJ9gDWP6tzvU3w0RoXzuEFqbEg=&t=o" public/visuals/product-lyraai.png
+dl "https://www.kimi.com/apiv2-files/sign-obj/kimi-fs%2Ffiles%2Fblob%2F388a51f8d87b19ba92966704338d8bf2f54fe0fcea880bdcf007722569cf40c7?filename=product-edusense.png&sig=TzbksctjPxQdlK8i-HNyCms7HkMJbwCmECaKkCqOoYc=&t=o" public/visuals/product-edusense.png
+dl "https://www.kimi.com/apiv2-files/sign-obj/kimi-fs%2Ffiles%2Fblob%2F22f948b14004745d34350b8df3e09b2a9385e6677df93c8f8e86588317201de7?filename=product-customer-ai.png&sig=comKZ4GgBWxkPmrnpnSHXDvDAAgTvQJzb2YcwL7ISBM=&t=o" public/visuals/product-customer-ai.png
+dl "https://www.kimi.com/apiv2-files/sign-obj/kimi-fs%2Ffiles%2Fblob%2Fd3d7a540b9550b093d24bbdc20b0b5b982784319586f9f41f6f3de916df66746?filename=product-pulse.png&sig=o-j5mmNyIWeNDeGoLogYnnxDqd8gd1YoVmKgaSeu94U=&t=o" public/visuals/product-pulse.png
+dl "https://www.kimi.com/apiv2-files/sign-obj/kimi-fs%2Ffiles%2Fblob%2Fe8acf7d9ccb39331ddcf5ce77433dfaeae07fe1e480ca30905249738d40cdd6f?filename=product-knowledge-ai.png&sig=SYXHuQU0tQRPFQB8DqIspfmmnp8SgG7Rz3u7S46d15g=&t=o" public/visuals/product-knowledge-ai.png
+dl "https://www.kimi.com/apiv2-files/sign-obj/kimi-fs%2Ffiles%2Fblob%2F35871802fd0cbedf1dc02a91c815a4e008e6cb7907a6e5a9fa5833d95ede52f8?filename=section-compounds.png&sig=V9Pz8C7X5HPnJCazwQJvLfWsCIWwW2fTkPtRfKn1DQQ=&t=o" public/visuals/section-compounds.png
 echo "  8 images saved"
 
 echo "→ patching src/content/products.ts, homepage, product page, globals.css"
 python3 - <<'PY'
 import io, sys
 
-def patch(path, pairs, required=True):
+def patch(path, pairs, done_marker):
     s = io.open(path, encoding="utf-8").read()
+    if done_marker in s:
+        print(f"  {path}: already patched, skipped"); return
     hits = 0
     for a, b in pairs:
         if a in s:
             s = s.replace(a, b, 1); hits += 1
-        elif required:
+        else:
             sys.exit(f"ANCHOR NOT FOUND in {path}: {a[:60]!r} — repo may have changed; aborting safely.")
     io.open(path, "w", encoding="utf-8").write(s)
     print(f"  {path}: {hits} edit(s)")
 
-# 1) products.ts — add img field to interface + each product
 patch("src/content/products.ts", [
     ("  visual: string;\n", "  visual: string;\n  img: string;\n"),
     ('    visual: "hr",',        '    visual: "hr",\n    img: "/visuals/product-atlas-eip.png",'),
@@ -40,9 +49,8 @@ patch("src/content/products.ts", [
     ('    visual: "chat",',      '    visual: "chat",\n    img: "/visuals/product-customer-ai.png",'),
     ('    visual: "marketing",', '    visual: "marketing",\n    img: "/visuals/product-pulse.png",'),
     ('    visual: "knowledge",', '    visual: "knowledge",\n    img: "/visuals/product-knowledge-ai.png",'),
-])
+], done_marker='img: "/visuals/product-atlas-eip.png"')
 
-# 2) homepage — hero swap + compounds section visual
 patch("src/app/[locale]/page.tsx", [
     ('import CoreNetwork from "@/components/CoreNetwork";',
      'import Image from "next/image";'),
@@ -70,9 +78,8 @@ patch("src/app/[locale]/page.tsx", [
             />
           </div>
           <div className="conn-merged">"""),
-])
+], done_marker="hero-visual")
 
-# 3) product detail page — swap abstract SVG mock for the product's 3D visual
 patch("src/app/[locale]/products/[slug]/page.tsx", [
     ('import ProductVisual from "@/components/ProductVisual";',
      'import Image from "next/image";'),
@@ -85,9 +92,8 @@ patch("src/app/[locale]/products/[slug]/page.tsx", [
               priority
               style={{ width: "100%", height: "auto" }}
             />"""),
-])
+], done_marker="product.img")
 
-# 4) globals.css — append visual styles (only if not already added)
 css_path = "src/app/globals.css"
 css = io.open(css_path, encoding="utf-8").read()
 if ".pcard-img" not in css:
@@ -111,7 +117,7 @@ else:
     print(f"  {css_path}: styles already present, skipped")
 PY
 
-echo "→ rewriting src/components/ProductCard.tsx (adds image to every product card)"
+echo "→ writing src/components/ProductCard.tsx (adds image to every product card)"
 cat > src/components/ProductCard.tsx <<'TSX'
 import Link from "next/link";
 import Image from "next/image";

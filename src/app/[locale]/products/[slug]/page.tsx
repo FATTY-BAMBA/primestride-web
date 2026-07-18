@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getDictionary, isLocale, locales, type Locale } from "@/i18n";
 import { products, getProduct, copy } from "@/content/products";
-import ProductVisual from "@/components/ProductVisual";
+import Image from "next/image";
 
 export function generateStaticParams() {
   return locales.flatMap((locale) => products.map((p) => ({ locale, slug: p.slug })));
@@ -42,7 +42,14 @@ export default function ProductPage({ params }: { params: { locale: string; slug
             </Link>
           </div>
           <div className="pd-visual">
-            <ProductVisual variant={product.visual} />
+            <Image
+              src={product.img}
+              alt={`${product.name} — ${product.zhName}`}
+              width={900}
+              height={760}
+              priority
+              style={{ width: "100%", height: "auto" }}
+            />
           </div>
         </div>
       </section>
