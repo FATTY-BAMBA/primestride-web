@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { isLocale, locales, type Locale } from "@/i18n";
@@ -120,7 +121,9 @@ export default function ContactPage({ params }: { params: { locale: string } }) 
           </div>
           <div className="contact-card">
             <h2>{t.formTitle}</h2>
-            <ContactForm endpoint={FORMSPREE_ENDPOINT} labels={t.labels} interestOptions={t.interestOptions} />
+            <Suspense fallback={null}>
+              <ContactForm endpoint={FORMSPREE_ENDPOINT} labels={t.labels} interestOptions={t.interestOptions} />
+            </Suspense>
           </div>
         </div>
       </section>

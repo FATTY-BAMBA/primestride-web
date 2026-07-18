@@ -1,3 +1,13 @@
+#!/usr/bin/env bash
+set -euo pipefail
+if [ ! -f package.json ] || [ ! -d src ]; then
+  echo "Run this from your repo root (the folder with package.json)."; exit 1
+fi
+if [ ! -f 'src/app/[locale]/contact/page.tsx' ]; then
+  echo "Contact page not found — run add-contact-page.sh first."; exit 1
+fi
+echo "→ updating src/components/ContactForm.tsx (adds client-side ?p= pre-select)"
+cat > src/components/ContactForm.tsx <<'TSX_FORM'
 "use client";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
@@ -143,3 +153,41 @@ export default function ContactForm({
     </form>
   );
 }
+TSX_FORM
+echo "→ wrapping the form in Suspense + pointing product links to ?p="
+python3 - <<'PY_EDIT'
+import os
+
+# 1) contact page: add Suspense import + wrap ContactForm (idempotent)
+f = "src/app/[locale]/contact/page.tsx"
+s = open(f, encoding="utf-8").read()
+if "Suspense" not in s:
+    s = s.replace('import { notFound } from "next/navigation";',
+                  'import { Suspense } from "react";\nimport { notFound } from "next/navigation";', 1)
+    s = s.replace(
+        '            <ContactForm endpoint={FORMSPREE_ENDPOINT} labels={t.labels} interestOptions={t.interestOptions} />',
+        '            <Suspense fallback={null}>\n'
+        '              <ContactForm endpoint={FORMSPREE_ENDPOINT} labels={t.labels} interestOptions={t.interestOptions} />\n'
+        '            </Suspense>')
+    open(f, "w", encoding="utf-8").write(s)
+    print("  patched contact page")
+else:
+    print("  contact page already wrapped, skipped")
+
+# 2) product + AI 掌櫃 CTA links carry ?p= (idempotent)
+links = {
+    "src/app/[locale]/products/[slug]/page.tsx": ("${base}/contact", "${base}/contact?p=${product.slug}"),
+    "src/app/[locale]/ai-zhanggui/page.tsx":     ("${base}/contact", "${base}/contact?p=ai-zhanggui"),
+}
+for path, (a, b) in links.items():
+    if not os.path.exists(path):
+        print("  skip (missing):", path); continue
+    t = open(path, encoding="utf-8").read()
+    if "contact?p=" in t:
+        print("  already tagged:", path); continue
+    t = t.replace(a, b)
+    open(path, "w", encoding="utf-8").write(t)
+    print("  tagged links in", path)
+PY_EDIT
+echo ""
+echo "DONE. Next:  npm run build  &&  git add -A && git commit -m 'Pre-select product on consult' && git push"

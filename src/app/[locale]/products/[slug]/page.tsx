@@ -37,7 +37,7 @@ export default function ProductPage({ params }: { params: { locale: string; slug
             <h1>{product.name}</h1>
             <div className="zh">{product.zhName}</div>
             <div className="tag">{c.tagline}</div>
-            <Link href={`${base}/contact`} className="btn btn-primary" style={{ marginTop: 26 }}>
+            <Link href={`${base}/contact?p=${product.slug}`} className="btn btn-primary" style={{ marginTop: 26 }}>
               {dict.common.bookConsult} <span className="chev">›</span>
             </Link>
           </div>
@@ -86,7 +86,7 @@ export default function ProductPage({ params }: { params: { locale: string; slug
           <div className="who-band">
             <span className="eyebrow">{dict.common.whoForLabel}</span>
             <p>{c.whoFor}</p>
-            <Link href={`${base}/contact`} className="btn btn-light" style={{ marginTop: 22 }}>
+            <Link href={`${base}/contact?p=${product.slug}`} className="btn btn-light" style={{ marginTop: 22 }}>
               {dict.common.bookConsult} <span className="chev">›</span>
             </Link>
           </div>
