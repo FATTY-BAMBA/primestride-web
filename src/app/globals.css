@@ -302,3 +302,38 @@ a{color:inherit;text-decoration:none}
 @media(max-width:380px){
   .brand{font-size:1.02rem}
 }
+
+
+/* ── EduSense demos ─────────────────────────────────── */
+.edu-chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.edu-chip{border:1px solid var(--line);background:var(--surface);border-radius:100px;padding:9px 18px;font-size:.85rem;font-weight:600;color:var(--ink)}
+.edu-panel{background:var(--surface);border:1px solid var(--line);border-radius:20px;box-shadow:0 20px 50px rgba(14,17,22,.07);overflow:hidden;max-width:520px;margin:0 auto;width:100%}
+.edu-panel-head{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#fbfaff,#f4f2ff)}
+.edu-dot{width:10px;height:10px;border-radius:50%;background:var(--live);flex:none}
+.edu-panel-title{font-weight:700;font-size:.95rem}
+.edu-panel-sub{margin-left:auto;font-family:var(--font-plex-mono);font-size:.62rem;color:var(--muted);letter-spacing:.06em}
+.edu-chat{padding:20px 18px;display:flex;flex-direction:column;gap:10px;background:#fafaff}
+.edu-msg{max-width:86%;padding:11px 14px;border-radius:14px;font-size:.9rem;line-height:1.55}
+.edu-msg.st{align-self:flex-start;background:#fff;border:1px solid var(--line);border-top-left-radius:4px}
+.edu-msg.ai{align-self:flex-end;background:linear-gradient(135deg,#efedff,#e4e0ff);border:1px solid #d9d3ff;border-top-right-radius:4px}
+.edu-msg .cite{display:block;margin-top:7px;font-size:.68rem;color:var(--iris);font-family:var(--font-plex-mono)}
+.edu-dash{padding:20px 22px;display:flex;flex-direction:column;gap:13px;background:#fafaff}
+.edu-gaphead{font-family:var(--font-plex-mono);font-size:.66rem;letter-spacing:.12em;color:var(--muted)}
+.gap-row{display:grid;grid-template-columns:1fr auto;gap:5px 14px;align-items:center}
+.gap-name{font-size:.9rem;font-weight:600}
+.gap-pct{font-family:var(--font-plex-mono);font-size:.78rem;color:var(--muted)}
+.gap-bar{grid-column:1/-1;height:10px;border-radius:5px;background:#efedff;overflow:hidden}
+.gap-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--iris),var(--iris-bright))}
+.gap-fill.ok{background:linear-gradient(90deg,#129E74,#3fbf95)}
+.gap-fill.warn{background:linear-gradient(90deg,#E8552B,#f0946a)}
+.edu-gapnote{font-size:.8rem;color:#c1492b;background:#fff2ec;border:1px solid #f3c9b8;border-radius:10px;padding:8px 12px}
+.edu-classes{display:flex;gap:10px;flex-wrap:wrap}
+.edu-class{flex:1;min-width:100px;border:1px solid var(--line);background:var(--surface);border-radius:14px;padding:12px 10px;text-align:center}
+.edu-class b{display:block;font-family:var(--font-bricolage);font-size:1.55rem;line-height:1.1}
+.edu-class.ok b{color:var(--live)}
+.edu-class.warn b{color:#E8552B}
+.edu-class.urgent b{color:#c92f2f}
+.edu-class span{font-size:.7rem;color:var(--muted)}
+.edu-risk{display:flex;align-items:center;gap:9px;border:1px solid #f3c9b8;background:#fff6f2;border-radius:12px;padding:11px 14px;font-size:.83rem;color:var(--muted);flex-wrap:wrap}
+.edu-risk b{color:var(--ink)}
+.edu-risk .flag{font-family:var(--font-plex-mono);font-size:.6rem;color:#E8552B;border:1px solid #E8552B;border-radius:100px;padding:3px 10px;letter-spacing:.1em;margin-left:auto;white-space:nowrap}
