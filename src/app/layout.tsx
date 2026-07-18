@@ -11,6 +11,21 @@ export const metadata: Metadata = {
   title: "PrimeStride AI · 首越人工智慧",
   description: "One AI-native platform with six live products across five business pillars, where every interaction compounds your company's intelligence.",
   metadataBase: new URL("https://www.primestrideai.com"),
+  openGraph: {
+    title: "PrimeStride AI · 首越人工智慧",
+    description:
+      "One AI-native platform with six live products across five business pillars, where every interaction compounds your company's intelligence.",
+    url: "https://www.primestrideai.com",
+    siteName: "PrimeStride AI",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "PrimeStride AI · 首越人工智慧",
+    description:
+      "One AI-native platform with six live products across five business pillars, where every interaction compounds your company's intelligence.",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
