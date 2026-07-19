@@ -9,7 +9,7 @@ export function generateStaticParams() {
 }
 
 export const metadata: Metadata = {
-  title: "AI 掌櫃 · SME Operations Platform · PrimeStride AI",
+  title: "AI 營運大腦 · SME Operations Platform · PrimeStride AI",
 };
 
 type Item = { title: string; desc: string };
@@ -17,8 +17,8 @@ type Item = { title: string; desc: string };
 const content = {
   en: {
     eyebrow: "Solution · SME Operations Platform",
-    title: "The shopkeeper who remembers everything, and never clocks out.",
-    lead: "How you look after customers, how you price a job, where every order stands: AI 掌櫃 keeps track of all of it. Your company's know-how becomes an asset you own, not something locked inside a few people's heads.",
+    title: "The operations brain that remembers everything, and never clocks out.",
+    lead: "How you look after customers, how you price a job, where every order stands: AI 營運大腦 keeps track of all of it. Your company's know-how becomes an asset you own, not something locked inside a few people's heads.",
     cta: "Book a free 15-min consult",
     seeHow: "See how it works",
     painEyebrow: "Sound familiar?",
@@ -33,10 +33,10 @@ const content = {
       { title: "Can't hire, can't retain", desc: "In a tight labour market you can't find people, and can't keep the experience." },
       { title: "Knowledge scattered everywhere", desc: "SOPs, LINE chats, quote sheets, notes: nothing lives in one place you can search." },
     ],
-    whatEyebrow: "What is AI 掌櫃",
+    whatEyebrow: "What is AI 營運大腦",
     whatTitle: "One data hub. Your whole operation runs on it.",
     whatBody:
-      "AI 掌櫃 organizes your company's knowledge, SOPs, standards, pricing logic, customer quirks, into a single data hub your company owns forever and that gets smarter the more you use it. Build the data once, and it powers everything below.",
+      "AI 營運大腦 organizes your company's knowledge, SOPs, standards, pricing logic, customer quirks, into a single data hub your company owns forever and that gets smarter the more you use it. Build the data once, and it powers everything below.",
     modulesEyebrow: "Six modules, one data hub",
     modulesTitle: "The same data drives your whole operation.",
     modules: [
@@ -62,7 +62,7 @@ const content = {
     quoteBasis: "Based on 14 similar past quotes · your standard 32% margin",
     quoteCaption: "AI quoting · in minutes, not days · the pricing ruler is yours",
     brainEyebrow: "Not just a chatbot",
-    brainTitle: "A normal chatbot replies. AI 掌櫃 is an operations brain.",
+    brainTitle: "A normal chatbot replies. This is an operations brain.",
     brainBody:
       "Its answers come from your own company's data, with sources you can verify. And the same data hub powers customer service, quoting, work orders, and analytics all at once, build it once, use it everywhere. The asset is yours; it doesn't resign.",
     stepsEyebrow: "Getting started",
@@ -88,13 +88,13 @@ const content = {
     whoEyebrow: "Who it's for",
     whoTitle: "Built for businesses that run on experience.",
     whoBody:
-      "If your company has veterans, repeat customer questions, and gut-feel pricing, AI 掌櫃 fits. No IT department needed, and no ripping out the systems you already use.",
+      "If your company has veterans, repeat customer questions, and gut-feel pricing, AI 營運大腦 fits. No IT department needed, and no ripping out the systems you already use.",
     industries: ["Printing", "Manufacturing", "Processing", "Trading", "Wholesale", "Services"],
   },
   zh: {
     eyebrow: "解決方案 · 中小企業智慧營運平台",
-    title: "一位什麼都記得、隨時都在的掌櫃。",
-    lead: "客戶怎麼顧、價格怎麼抓、每一張單走到哪，他都知道。AI 掌櫃把公司的經驗變成你擁有的資產，而不是鎖在少數人腦袋裡的東西。",
+    title: "一位什麼都記得、隨時都在的營運大腦。",
+    lead: "客戶怎麼顧、價格怎麼抓、每一張單走到哪，他都知道。AI 營運大腦把公司的經驗變成你擁有的資產，而不是鎖在少數人腦袋裡的東西。",
     cta: "預約 15 分鐘免費諮詢",
     seeHow: "看它怎麼運作",
     painEyebrow: "是不是很熟悉？",
@@ -109,10 +109,10 @@ const content = {
       { title: "找不到人，也留不住", desc: "缺工的時代，找不到人，也留不住經驗。" },
       { title: "知識散落各處", desc: "SOP、LINE 對話、報價單、筆記，沒有一個能查得到的地方。" },
     ],
-    whatEyebrow: "AI 掌櫃是什麼",
+    whatEyebrow: "AI 營運大腦是什麼",
     whatTitle: "一個資料中樞，驅動整個營運。",
     whatBody:
-      "AI 掌櫃把公司的知識（SOP、規範、報價邏輯、客戶眉角）整理成一個公司永遠擁有、越用越聰明的資料中樞。資料建一次，下面每個模組都能用。",
+      "AI 營運大腦把公司的知識（SOP、規範、報價邏輯、客戶眉角）整理成一個公司永遠擁有、越用越聰明的資料中樞。資料建一次，下面每個模組都能用。",
     modulesEyebrow: "六大模組，一個資料中樞",
     modulesTitle: "同一份資料，驅動整個營運。",
     modules: [
@@ -138,7 +138,7 @@ const content = {
     quoteBasis: "依據 14 張類似歷史報價 · 標準毛利 32%",
     quoteCaption: "AI 報價 · 幾分鐘，不是幾天 · 那把尺是你的",
     brainEyebrow: "不只是聊天機器人",
-    brainTitle: "一般 chatbot 只是回話；AI 掌櫃是營運大腦。",
+    brainTitle: "一般 chatbot 只是回話；這是一套營運大腦。",
     brainBody:
       "答案來自你公司自己的資料，附上出處可以驗證；同一份資料中樞，同時支撐客服、報價、工單與分析，建一次，處處能用。而且資產是你的，不會跟著任何人離職。",
     stepsEyebrow: "導入方式",
@@ -164,7 +164,7 @@ const content = {
     whoEyebrow: "適合誰",
     whoTitle: "為靠經驗吃飯的企業而生。",
     whoBody:
-      "只要公司有老師傅、有重複的客戶問題、有靠感覺的報價，AI 掌櫃就派得上用場。不需要 IT 部門，也不需要換掉現有系統。",
+      "只要公司有老師傅、有重複的客戶問題、有靠感覺的報價，AI 營運大腦就派得上用場。不需要 IT 部門，也不需要換掉現有系統。",
     industries: ["印刷", "製造", "加工", "貿易", "批發", "服務業"],
   },
 };
@@ -200,7 +200,7 @@ export default function AiZhangguiPage({ params }: { params: { locale: string } 
           <div className="zg-lantern">
             <Image
               src="/visuals/zg-hero-lantern.png"
-              alt="AI 掌櫃 — the shopkeeper's lantern holding your company's data hub"
+              alt="AI 營運大腦 — the lantern holding your company's data hub"
               width={558}
               height={803}
               priority
@@ -280,8 +280,8 @@ export default function AiZhangguiPage({ params }: { params: { locale: string } 
             <div>
               <div className="line-phone">
                 <div className="line-head">
-                  <span className="line-avatar">掌</span>
-                  <span className="line-name">AI 掌櫃<span className="line-status">online · 24/7</span></span>
+                  <span className="line-avatar">營</span>
+                  <span className="line-name">AI 營運大腦<span className="line-status">online · 24/7</span></span>
                 </div>
                 <div className="line-body">
                   <div className="msg in">{t.chat1}</div>

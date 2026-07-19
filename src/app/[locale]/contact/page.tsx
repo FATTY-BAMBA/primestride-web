@@ -48,7 +48,7 @@ const content = {
     },
     interestOptions: [
       { value: "", label: "I'm not sure yet" },
-      { value: "AI 掌櫃", label: "AI 掌櫃 — SME operations platform" },
+      { value: "AI 營運大腦", label: "AI 營運大腦 — SME operations platform" },
       { value: "Atlas EIP", label: "Atlas EIP — HR" },
       { value: "LyraAI", label: "LyraAI — Interview coaching" },
       { value: "EduSense AI", label: "EduSense AI — Education" },
@@ -84,7 +84,7 @@ const content = {
     },
     interestOptions: [
       { value: "", label: "還不確定" },
-      { value: "AI 掌櫃", label: "AI 掌櫃 — 中小企業營運平台" },
+      { value: "AI 營運大腦", label: "AI 營運大腦 — 中小企業營運平台" },
       { value: "Atlas EIP", label: "Atlas EIP — 人資" },
       { value: "LyraAI", label: "LyraAI — 面試教練" },
       { value: "EduSense AI", label: "EduSense AI — 教育" },

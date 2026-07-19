@@ -45,9 +45,9 @@ const en = {
   },
   bundle: {
     tag: "SME bundle",
-    title: "AI 掌櫃",
-    desc: "For smaller teams: AI 掌櫃 packages the customer & knowledge assistants into one SME operations platform: LINE support, quoting, work orders, and analytics on a knowledge hub you own. Government grants may cover most of the cost.",
-    cta: "Explore AI 掌櫃",
+    title: "AI 營運大腦",
+    desc: "For smaller teams: AI 營運大腦 packages the customer & knowledge assistants into one SME operations platform: LINE support, quoting, work orders, and analytics on a knowledge hub you own. Government grants may cover most of the cost.",
+    cta: "Explore AI 營運大腦",
   },
   connections: {
     eyebrow: "How it compounds",

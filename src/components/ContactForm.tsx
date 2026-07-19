@@ -25,7 +25,7 @@ const SLUG_TO_INTEREST: Record<string, string> = {
   "ai-customer-assistant": "AI Customer Assistant",
   pulse: "Pulse",
   "ai-knowledge-assistant": "AI Knowledge Assistant",
-  "ai-zhanggui": "AI 掌櫃",
+  "ai-zhanggui": "AI 營運大腦",
 };
 
 export default function ContactForm({

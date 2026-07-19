@@ -24,7 +24,7 @@ export default function Footer({ locale, dict }: { locale: Locale; dict: Diction
             <Link href={`${base}#platform`}>{dict.footer.howItWorks}</Link>
             <Link href={`${base}#pillars`}>{dict.footer.fivePillars}</Link>
             <Link href={`${base}#connections`}>{dict.footer.compounds}</Link>
-            <Link href={`${base}/ai-zhanggui`}>AI 掌櫃</Link>
+            <Link href={`${base}/ai-zhanggui`}>AI 營運大腦</Link>
           </div>
           <div className="foot-col">
             <h4>{dict.footer.companyTitle}</h4>
