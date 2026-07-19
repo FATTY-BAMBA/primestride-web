@@ -6,7 +6,7 @@ import { products, getProduct, copy } from "@/content/products";
 import Image from "next/image";
 
 export function generateStaticParams() {
-  return locales.flatMap((locale) => products.filter((p) => p.slug !== "edusense-ai" && p.slug !== "ai-customer-assistant").map((p) => ({ locale, slug: p.slug })));
+  return locales.flatMap((locale) => products.filter((p) => !["atlas-eip","lyra-ai","edusense-ai","ai-customer-assistant","pulse","ai-knowledge-assistant"].includes(p.slug)).map((p) => ({ locale, slug: p.slug })));
 }
 
 export function generateMetadata({ params }: { params: { locale: string; slug: string } }): Metadata {
