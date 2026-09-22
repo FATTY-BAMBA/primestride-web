@@ -13,7 +13,7 @@ export default function Nav({ locale, dict }: { locale: Locale; dict: Dictionary
     { href: `${base}#pillars`, label: dict.nav.pillars },
     { href: `${base}/products`, label: dict.nav.products },
     { href: `${base}#connections`, label: dict.nav.compounds },
-    { href: `${base}/contact`, label: dict.nav.contact },
+    { href: `${base}/ai-zhanggui`, label: "AI 營運大腦" },
   ];
 
   return (
@@ -22,7 +22,7 @@ export default function Nav({ locale, dict }: { locale: Locale; dict: Dictionary
         <Link href={base} className="brand">
           <span className="mark"><i /><i /><i /></span> PrimeStride&nbsp;AI <small>首越人工智慧</small>
         </Link>
-        <nav className={`nav-links${open ? " open" : ""}`}>
+        <nav id="main-navigation" aria-label={locale === "zh" ? "主要導覽" : "Main navigation"} className={`nav-links${open ? " open" : ""}`}>
           {links.map((l) => (
             <Link key={l.href} href={l.href} onClick={() => setOpen(false)}>
               {l.label}
@@ -37,7 +37,7 @@ export default function Nav({ locale, dict }: { locale: Locale; dict: Dictionary
           <Link href={`${base}/contact`} className="btn btn-primary nav-cta">
             {dict.nav.bookConsult} <span className="chev">›</span>
           </Link>
-          <button className="burger" aria-label="Menu" onClick={() => setOpen((v) => !v)}>
+          <button className="burger" aria-label={locale === "zh" ? "選單" : "Menu"} aria-expanded={open} aria-controls="main-navigation" onClick={() => setOpen((v) => !v)}>
             <span /><span /><span />
           </button>
         </div>

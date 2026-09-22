@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import OperationsDemo from "@/components/OperationsDemo";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { isLocale, locales, type Locale } from "@/i18n";
@@ -17,10 +18,10 @@ type Item = { title: string; desc: string };
 const content = {
   en: {
     eyebrow: "Solution · SME Operations Platform",
-    title: "The operations brain that remembers everything, and never clocks out.",
+    title: "Your company’s know-how. Working every day.",
     lead: "How you look after customers, how you price a job, where every order stands: AI 營運大腦 keeps track of all of it. Your company's know-how becomes an asset you own, not something locked inside a few people's heads.",
     cta: "Book a free 15-min consult",
-    seeHow: "See how it works",
+    seeHow: "Try the interactive example",
     painEyebrow: "Sound familiar?",
     painTitle: "Is this how your company runs?",
     painIntro:
@@ -47,20 +48,6 @@ const content = {
       { title: "Work orders · 工單／生產", desc: "Every order's status is clear at a glance, printing, awaiting materials, complete." },
       { title: "AI analytics · 數據分析", desc: "Margins, efficiency, and top-selling items, visible to owners anytime, so decisions have a basis." },
     ],
-    demoEyebrow: "See it in action",
-    demoTitle: "What your customers and your team actually see.",
-    chat1: "Hi — 500 A3 posters, when could you deliver?",
-    chat2: "Hi! 500 A3 posters take about 3 working days. Send the file by 3pm today and we can ship Thursday.",
-    chat2cite: "Source: Price & lead-time sheet, p.2",
-    chat3: "And the file specs?",
-    chat4: "PDF or AI, 300 dpi, with 3 mm bleed. Want me to send the checklist here?",
-    chatCaption: "AI customer service on LINE · 24/7 · every answer cites its source",
-    quoteInLabel: "YOU ENTER",
-    quoteItems: ["Size · A3", "Material · 150gsm coated", "Qty · 500"],
-    quoteOutLabel: "AI 報價 SUGGESTS",
-    quoteAmt: "NT$ 6,800 – 7,400",
-    quoteBasis: "Based on 14 similar past quotes · your standard 32% margin",
-    quoteCaption: "AI quoting · in minutes, not days · the pricing ruler is yours",
     brainEyebrow: "Not just a chatbot",
     brainTitle: "A normal chatbot replies. This is an operations brain.",
     brainBody:
@@ -93,10 +80,10 @@ const content = {
   },
   zh: {
     eyebrow: "解決方案 · 中小企業智慧營運平台",
-    title: "一位什麼都記得、隨時都在的營運大腦。",
+    title: "公司的經驗，接手每天的忙。",
     lead: "客戶怎麼顧、價格怎麼抓、每一張單走到哪，他都知道。AI 營運大腦把公司的經驗變成你擁有的資產，而不是鎖在少數人腦袋裡的東西。",
     cta: "預約 15 分鐘免費諮詢",
-    seeHow: "看它怎麼運作",
+    seeHow: "體驗互動示例",
     painEyebrow: "是不是很熟悉？",
     painTitle: "你的公司，是不是也這樣？",
     painIntro:
@@ -123,20 +110,6 @@ const content = {
       { title: "工單／生產管理", desc: "每一張單的狀態一目瞭然，列印中、待補件、已完成。" },
       { title: "AI 數據分析", desc: "毛利、效率、熱門品項，老闆隨時看得見，決策有依據。" },
     ],
-    demoEyebrow: "實際看一下",
-    demoTitle: "客戶和員工，實際看到的樣子。",
-    chat1: "老闆，500 張 A3 海報，什麼時候可以交？",
-    chat2: "您好！500 張 A3 海報約 3 個工作天。今天下午 3 點前傳檔，週四可以出貨。",
-    chat2cite: "出自：報價與交期表 p.2",
-    chat3: "那檔案規格呢？",
-    chat4: "PDF 或 AI 檔，300dpi，含 3mm 出血。需要我把收檔清單傳給您嗎？",
-    chatCaption: "LINE AI 客服 · 24/7 · 每個答案都有出處",
-    quoteInLabel: "你輸入",
-    quoteItems: ["尺寸 · A3", "材質 · 150g 銅版紙", "數量 · 500"],
-    quoteOutLabel: "AI 報價建議",
-    quoteAmt: "NT$ 6,800 – 7,400",
-    quoteBasis: "依據 14 張類似歷史報價 · 標準毛利 32%",
-    quoteCaption: "AI 報價 · 幾分鐘，不是幾天 · 那把尺是你的",
     brainEyebrow: "不只是聊天機器人",
     brainTitle: "一般 chatbot 只是回話；這是一套營運大腦。",
     brainBody:
@@ -190,11 +163,12 @@ export default function AiZhangguiPage({ params }: { params: { locale: string } 
         <div className="wrap zg-hero-grid">
           <div>
             <span className="eyebrow">{t.eyebrow}</span>
+            <div><span className="zg-live-label">{locale === "zh" ? "六大模組，現已上線" : "Six modules. All live today."}</span></div>
             <h1>{t.title}</h1>
             <p className="lead">{t.lead}</p>
             <div className="hero-cta">
               <a href={`${base}/contact?p=ai-zhanggui`} className="btn btn-primary">{t.cta} <span className="chev">›</span></a>
-              <Link href="#modules" className="btn btn-ghost">{t.seeHow}</Link>
+              <Link href="#demo" className="btn btn-ghost">{t.seeHow}</Link>
             </div>
           </div>
           <div className="zg-lantern">
@@ -209,6 +183,8 @@ export default function AiZhangguiPage({ params }: { params: { locale: string } 
           </div>
         </div>
       </section>
+
+      <OperationsDemo locale={locale} />
 
       <section className="block pd-features">
         <div className="wrap">
@@ -266,49 +242,6 @@ export default function AiZhangguiPage({ params }: { params: { locale: string } 
                 <p>{m.desc}</p>
               </div>
             ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="block" id="demo" style={{ paddingTop: 0 }}>
-        <div className="wrap">
-          <div className="sec-head">
-            <span className="eyebrow">{t.demoEyebrow}</span>
-            <h2>{t.demoTitle}</h2>
-          </div>
-          <div className="zg-demo-grid">
-            <div>
-              <div className="line-phone">
-                <div className="line-head">
-                  <span className="line-avatar">營</span>
-                  <span className="line-name">AI 營運大腦<span className="line-status">online · 24/7</span></span>
-                </div>
-                <div className="line-body">
-                  <div className="msg in">{t.chat1}</div>
-                  <div className="msg out">{t.chat2}<span className="cite">{t.chat2cite}</span></div>
-                  <div className="msg in">{t.chat3}</div>
-                  <div className="msg out">{t.chat4}</div>
-                </div>
-              </div>
-              <p className="zg-demo-cap">{t.chatCaption}</p>
-            </div>
-            <div>
-              <div className="quote-flow">
-                <div className="quote-card">
-                  <div className="qc-label">{t.quoteInLabel}</div>
-                  <ul>
-                    {t.quoteItems.map((q, i) => (<li key={i}>{q}</li>))}
-                  </ul>
-                </div>
-                <div className="quote-arrow">↓</div>
-                <div className="quote-card out">
-                  <div className="qc-label">{t.quoteOutLabel}</div>
-                  <div className="qc-amt">{t.quoteAmt}</div>
-                  <div className="qc-basis">{t.quoteBasis}</div>
-                </div>
-              </div>
-              <p className="zg-demo-cap">{t.quoteCaption}</p>
-            </div>
           </div>
         </div>
       </section>
