@@ -8,7 +8,7 @@ export default function OperationsSpotlight({ locale }: { locale: Locale }) {
       <div>
         <span className="eyebrow">{zh ? "六大模組已上線 · AI 營運大腦" : "Six live modules · AI 營運大腦"}</span>
         <h2 id="operations-spotlight-title">{zh ? "公司的經驗，接手每天的忙。" : "Put your company’s know-how to work."}</h2>
-        <p>{zh ? "從 LINE 客服到報價建議，把資深同事的經驗變成團隊隨時查得到、用得上的知識。" : "From LINE replies to quote suggestions, turn experienced colleagues’ knowledge into something the whole team can use."}</p>
+        <p>{zh ? "現有資料不用先整理，我們負責盤點與建置，讓公司的經驗支援客戶回覆、報價與工單追蹤。" : "Bring your existing data as it is. We organize and set it up to support customer replies, quoting and order tracking."}</p>
         <Link className="btn btn-primary" href={`/${locale}/ai-zhanggui#demo`}>{zh ? "體驗一筆訂單的流程" : "Explore one customer job"}<span aria-hidden="true"> ↗</span></Link>
       </div>
       <div className="operations-preview">

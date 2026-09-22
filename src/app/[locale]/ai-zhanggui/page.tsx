@@ -18,9 +18,9 @@ type Item = { title: string; desc: string };
 const content = {
   en: {
     eyebrow: "Solution · SME Operations Platform",
-    title: "Your company’s know-how. Working every day.",
-    lead: "How you look after customers, how you price a job, where every order stands: AI 營運大腦 keeps track of all of it. Your company's know-how becomes an asset you own, not something locked inside a few people's heads.",
-    cta: "Book a free 15-min consult",
+    title: "Bring your data as it is. We’ll handle the preparation.",
+    lead: "Your existing quote sheets, spreadsheets, SOPs and work notes are enough to start. PrimeStride handles the review, organization and setup, turning your company’s knowledge into support for customer replies, quoting and order tracking.",
+    cta: "Talk through your existing workflow",
     seeHow: "Try the interactive example",
     painEyebrow: "Sound familiar?",
     painTitle: "Is this how your company runs?",
@@ -43,7 +43,7 @@ const content = {
     modules: [
       { title: "Knowledge management · 知識管理", desc: "Your veterans' experience becomes a searchable asset, every answer cites its source (document, section, page)." },
       { title: "AI knowledge assistant · 知識助理", desc: "Staff look up SOPs and standards internally, so new hires ramp up without interrupting seniors." },
-      { title: "AI customer service · AI 客服", desc: "Answers customers on LINE around the clock, lead times, specs, file requirements, instantly." },
+      { title: "AI customer service · AI 客服", desc: "Answers customer questions about lead times, specifications and file requirements using company knowledge. LINE is one application; the response channel is chosen around your workflow." },
       { title: "AI quoting · AI 報價", desc: "Generates a quote suggestion by size, material, and quantity in minutes. The pricing ruler is no longer in one head." },
       { title: "Work orders · 工單／生產", desc: "Every order's status is clear at a glance, printing, awaiting materials, complete." },
       { title: "AI analytics · 數據分析", desc: "Margins, efficiency, and top-selling items, visible to owners anytime, so decisions have a basis." },
@@ -52,12 +52,12 @@ const content = {
     brainTitle: "A normal chatbot replies. This is an operations brain.",
     brainBody:
       "Its answers come from your own company's data, with sources you can verify. And the same data hub powers customer service, quoting, work orders, and analytics all at once, build it once, use it everywhere. The asset is yours; it doesn't resign.",
-    stepsEyebrow: "Getting started",
-    stepsTitle: "Up and running in three steps.",
+    stepsEyebrow: "We handle the preparation",
+    stepsTitle: "You bring the existing files. We do the setup.",
     steps: [
-      { when: "1–2 weeks", title: "Collect", desc: "We gather your existing documents, notes, LINE chat history, and quote sheets. There's no need to change how your team already works." },
-      { when: "Build", title: "Build the hub", desc: "AI organizes it into your company's own data hub, with sensitive data isolated and access tiered by role." },
-      { when: "Apply", title: "Go live", desc: "Start with the module you'll feel most, most clients begin with LINE support or knowledge lookup, then open up quoting, work orders, and analytics." },
+      { when: "You provide", title: "Hand over what you have", desc: "Start with the quote sheets, Excel files, SOPs and notes you already use. No templates to fill in, reformatting or new database to prepare." },
+      { when: "We handle", title: "Review, organize and build", desc: "We inventory the material, organize the knowledge and configure the relevant modules. We identify gaps and bring you specific questions instead of a data-cleaning assignment." },
+      { when: "We confirm together", title: "Check the rules and go live", desc: "Your team confirms the pricing rules and workflow details that need your judgment. We handle setup and validation for the modules you choose. All six modules are live." },
     ],
     proofStat1: "of repetitive customer questions handled automatically, production-verified",
     proofStat2: "customer response, uninterrupted",
@@ -80,9 +80,9 @@ const content = {
   },
   zh: {
     eyebrow: "解決方案 · 中小企業智慧營運平台",
-    title: "公司的經驗，接手每天的忙。",
-    lead: "客戶怎麼顧、價格怎麼抓、每一張單走到哪，他都知道。AI 營運大腦把公司的經驗變成你擁有的資產，而不是鎖在少數人腦袋裡的東西。",
-    cta: "預約 15 分鐘免費諮詢",
+    title: "資料不用先整理，照原樣交給我們。",
+    lead: "現有的報價單、Excel、SOP、工作筆記，不用先改格式，也不用重新建檔。PrimeStride 負責盤點、整理與建置，讓公司的經驗支援客戶回覆、報價與工單追蹤。",
+    cta: "聊聊你現在怎麼做",
     seeHow: "體驗互動示例",
     painEyebrow: "是不是很熟悉？",
     painTitle: "你的公司，是不是也這樣？",
@@ -105,7 +105,7 @@ const content = {
     modules: [
       { title: "知識管理", desc: "老師傅的經驗變成問得到、找得到的資產，有答案，也有出處（文件・章節・頁碼）。" },
       { title: "AI 知識助理", desc: "員工內部查詢 SOP 與規範，新人上手更快，不用一直問資深同事。" },
-      { title: "AI 客服", desc: "在 LINE 上 24 小時回答客戶，交期、規格、收檔規範，即問即答。" },
+      { title: "AI 客服", desc: "依公司知識回答交期、規格與收檔要求等客戶問題。LINE 是其中一種應用，回覆管道依你的實際工作流程安排。" },
       { title: "AI 報價", desc: "依尺寸、材質、數量，幾分鐘產出報價建議。報價的那把尺，不再只在一個人心裡。" },
       { title: "工單／生產管理", desc: "每一張單的狀態一目瞭然，列印中、待補件、已完成。" },
       { title: "AI 數據分析", desc: "毛利、效率、熱門品項，老闆隨時看得見，決策有依據。" },
@@ -114,12 +114,12 @@ const content = {
     brainTitle: "一般 chatbot 只是回話；這是一套營運大腦。",
     brainBody:
       "答案來自你公司自己的資料，附上出處可以驗證；同一份資料中樞，同時支撐客服、報價、工單與分析，建一次，處處能用。而且資產是你的，不會跟著任何人離職。",
-    stepsEyebrow: "導入方式",
-    stepsTitle: "三步驟，順利上線。",
+    stepsEyebrow: "整理工作，我們來",
+    stepsTitle: "你提供現有資料，我們負責整理到上線。",
     steps: [
-      { when: "1–2 週", title: "收錄", desc: "把現有文件、筆記、LINE 對話紀錄與報價單整理收錄，不需要改變現有工作習慣。" },
-      { when: "建檔", title: "建立資料中樞", desc: "AI 整理成公司專屬的資料中樞，敏感資料隔離，權限分級。" },
-      { when: "應用", title: "開始應用", desc: "從最有感的模組開始，多數客戶從 LINE 客服或知識查詢起步，再逐步打開報價、工單與分析。" },
+      { when: "你提供", title: "現有資料，原樣交給我們", desc: "平常用的報價單、Excel、SOP 與工作筆記，就能開始。不必填新範本、轉換格式，也不用先建資料庫。" },
+      { when: "我們負責", title: "盤點、整理與建置", desc: "由我們盤點資料、整理知識並設定適合的模組。遇到缺漏，我們提出具體問題，不會把資料整理作業丟回給你。" },
+      { when: "一起確認", title: "確認關鍵規則，開始使用", desc: "你確認需要專業判斷的報價規則與作業細節，我們負責設定與驗證。六大模組皆已上線，依你的需求選擇導入範圍。" },
     ],
     proofStat1: "重複性客戶問題自動處理，實證數據",
     proofStat2: "客服回應，24 小時不間斷",
@@ -180,6 +180,25 @@ export default function AiZhangguiPage({ params }: { params: { locale: string } 
               priority
               style={{ width: "100%", height: "auto" }}
             />
+          </div>
+        </div>
+      </section>
+
+      <section className="block" id="onboarding">
+        <div className="wrap">
+          <div className="sec-head">
+            <span className="eyebrow">{t.stepsEyebrow}</span>
+            <h2>{t.stepsTitle}</h2>
+          </div>
+          <div className="steps">
+            {t.steps.map((s, i) => (
+              <div className="step" key={i}>
+                <div className="n">{`0${i + 1}`}</div>
+                <div className="when">{s.when}</div>
+                <h3>{s.title}</h3>
+                <p>{s.desc}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -254,24 +273,7 @@ export default function AiZhangguiPage({ params }: { params: { locale: string } 
         </div>
       </section>
 
-      <section className="block">
-        <div className="wrap">
-          <div className="sec-head">
-            <span className="eyebrow">{t.stepsEyebrow}</span>
-            <h2>{t.stepsTitle}</h2>
-          </div>
-          <div className="steps">
-            {t.steps.map((s, i) => (
-              <div className="step" key={i}>
-                <div className="n">{`0${i + 1}`}</div>
-                <div className="when">{s.when}</div>
-                <h3>{s.title}</h3>
-                <p>{s.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+
 
       <section className="block">
         <div className="wrap">
