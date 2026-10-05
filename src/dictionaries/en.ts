@@ -44,9 +44,9 @@ const en = {
     intro: "Every product below is in production with real users. Start with one, and the shared core does the rest over time.",
   },
   bundle: {
-    tag: "SME bundle",
+    tag: "SME operations platform",
     title: "AI 營運大腦",
-    desc: "For smaller teams: AI 營運大腦 packages the customer & knowledge assistants into one SME operations platform: LINE support, quoting, work orders, and analytics on a knowledge hub you own. Government grants may cover most of the cost.",
+    desc: "One company knowledge hub supporting an AI knowledge assistant, customer service, quoting, work orders and analytics. Bring your existing files; PrimeStride handles the preparation and setup, starting with one workflow.",
     cta: "Explore AI 營運大腦",
   },
   connections: {

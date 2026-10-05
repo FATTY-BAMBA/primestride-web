@@ -7,7 +7,7 @@ import type { Locale } from "@/i18n";
 const copy = {
   en: {
     eyebrow: "Explore the workflow", title: "One customer question. See what happens next.",
-    intro: "Follow a printing job through four modules, using the same company knowledge.",
+    intro: "Follow a printing job through four steps, using the same company knowledge.",
     sample: "Interactive example · Sample data", business: "Printing studio", job: "500 A3 posters · 150gsm coated paper",
     steps: ["Find the knowledge", "Answer the customer", "Review the quote", "See job status"],
     headings: ["Start with what your team already knows.", "Give customers an answer they can trust.", "Bring the pricing knowledge into view.", "Give everyone a clear view of the job."],
@@ -24,12 +24,12 @@ const copy = {
     quoteLabel: "Suggested range", quote: "NT$ 6,800–7,400", quoteBasis: "Illustrative range from the existing product example. A real quote depends on your company’s pricing rules.",
     review: "Human review", checks: ["Confirm material and quantity", "Check margin and delivery date", "Approve before sharing with the customer"],
     order: "Sample order · PS-0500", states: ["Artwork review", "Production", "Ready"], current: "Awaiting artwork approval", nextAction: "Next action: confirm the customer’s print-ready file.",
-    next: "Next step", restart: "Start again", footer: "All six modules are live. This walkthrough uses sample data and does not send messages or create orders.",
-    cta: "Show me this with my business",
+    next: "Next step", restart: "Start again", footer: "This walkthrough uses sample data and does not send messages or create orders.",
+    cta: "Let’s talk about your workflow",
   },
   zh: {
     eyebrow: "互動體驗", title: "從客戶的一個問題，看見接下來每一步。",
-    intro: "以一筆印刷訂單為例，看看同一份公司知識如何支援四個模組。",
+    intro: "以一筆印刷訂單為例，看看同一份公司知識如何支援接單到生產的四個步驟。",
     sample: "互動示例 · 示範資料", business: "印刷工作室", job: "500 張 A3 海報 · 150g 銅版紙",
     steps: ["找到公司知識", "回覆客戶詢問", "審核報價建議", "查看工單進度"],
     headings: ["從團隊已經累積的經驗開始。", "給客戶有依據的回答。", "讓報價的依據看得見。", "讓每個人都掌握訂單進度。"],
@@ -46,8 +46,8 @@ const copy = {
     quoteLabel: "建議價格區間", quote: "NT$ 6,800–7,400", quoteBasis: "沿用產品頁範例的示意價格。實際報價須依貴公司的價格規則計算。",
     review: "由人員確認", checks: ["確認材質與數量", "檢查毛利與交期", "核准後再提供給客戶"],
     order: "示範工單 · PS-0500", states: ["確認稿件", "製作中", "可出貨"], current: "等待稿件確認", nextAction: "下一步：確認客戶提供的完稿檔案。",
-    next: "看下一步", restart: "重新體驗", footer: "六大模組皆已上線。此體驗使用示範資料，不會傳送訊息或建立實際訂單。",
-    cta: "看看我的公司如何應用",
+    next: "看下一步", restart: "重新體驗", footer: "此體驗使用示範資料，不會傳送訊息或建立實際訂單。",
+    cta: "聊聊你的工作流程",
   },
 };
 
