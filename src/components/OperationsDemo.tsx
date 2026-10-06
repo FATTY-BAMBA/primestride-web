@@ -55,11 +55,12 @@ export default function OperationsDemo({ locale }: { locale: Locale }) {
   const [step, setStep] = useState(0);
   const panelId = useId();
   const t = copy[locale];
+  const productName = locale === "zh" ? "AI 營運大腦" : "StrideBrain";
   return <section className="block operations-demo-section" id="demo" aria-labelledby="operations-demo-title">
     <div className="wrap">
       <div className="sec-head"><span className="eyebrow">{t.eyebrow}</span><h2 id="operations-demo-title">{t.title}</h2><p>{t.intro}</p></div>
       <div className="operations-demo">
-        <div className="demo-topbar"><strong>AI 營運大腦</strong><span>{t.sample}</span></div>
+        <div className="demo-topbar"><strong>{productName}</strong><span>{t.sample}</span></div>
         <div className="demo-steps" role="group" aria-label={locale === "zh" ? "選擇流程步驟" : "Select a workflow step"}>
           {t.steps.map((label, index) => <button type="button" key={label} aria-pressed={step === index} aria-controls={panelId}
             className={step === index ? "is-selected" : ""} onClick={() => setStep(index)}><span>0{index + 1}</span>{label}</button>)}
@@ -67,13 +68,13 @@ export default function OperationsDemo({ locale }: { locale: Locale }) {
         <div className="demo-workspace">
           <aside className="demo-context"><span className="demo-kicker">{t.business}</span><h3>{t.job}</h3>
             <div className="demo-progress" aria-hidden="true">{t.steps.map((label, index) => <div key={label} className={step === index ? "is-selected" : ""}><span>{index + 1}</span>{label}</div>)}</div>
-            <Link href={`/${locale}/contact?p=ai-zhanggui`} className="demo-contact">{t.cta} <span aria-hidden="true">↗</span></Link>
+            <Link href={`/${locale}/contact?p=stridebrain`} className="demo-contact">{t.cta} <span aria-hidden="true">↗</span></Link>
           </aside>
           <div className="demo-main" id={panelId} aria-live="polite" aria-atomic="true">
             <div className="demo-panel" key={step}>
               <h3>{t.headings[step]}</h3><p className="demo-description">{t.descriptions[step]}</p>
               {step === 0 && <div className="demo-documents">{t.docs.map((doc, index) => <div className="demo-document" key={doc}><span className="document-icon" aria-hidden="true">{index === 2 ? "XLS" : "PDF"}</span><div><strong>{doc}</strong><span>{t.docMeta[index]}</span></div></div>)}</div>}
-              {step === 1 && <div className="demo-conversation"><div className="demo-question">{t.question}</div><div className="demo-answer"><strong>AI 營運大腦</strong><p>{t.answer}</p><details><summary>{t.source}</summary><p>{t.excerpt}</p></details></div></div>}
+              {step === 1 && <div className="demo-conversation"><div className="demo-question">{t.question}</div><div className="demo-answer"><strong>{productName}</strong><p>{t.answer}</p><details><summary>{t.source}</summary><p>{t.excerpt}</p></details></div></div>}
               {step === 2 && <div className="demo-quote"><span className="demo-kicker">{t.quoteLabel}</span><strong className="demo-price">{t.quote}</strong><p>{t.quoteBasis}</p><div className="demo-review"><strong>{t.review}</strong><ul>{t.checks.map((check) => <li key={check}>{check}</li>)}</ul></div></div>}
               {step === 3 && <div className="demo-order"><span className="demo-kicker">{t.order}</span><strong>{t.current}</strong><ol>{t.states.map((state, index) => <li key={state} className={index === 0 ? "is-selected" : ""}><span aria-hidden="true">0{index + 1}</span>{state}</li>)}</ol><p>{t.nextAction}</p></div>}
             </div>

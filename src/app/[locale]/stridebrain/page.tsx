@@ -12,12 +12,14 @@ export function generateStaticParams() {
 
 const content = {
   en: {
-    metaTitle: "AI 營運大腦 | SME Operations Platform | PrimeStride AI",
+    metaTitle: "StrideBrain | SME Operations Platform | PrimeStride AI",
+    productName: "StrideBrain",
+    productAlias: "AI 營運大腦",
     metaDescription: "One company knowledge hub supporting an AI knowledge assistant, customer service, quoting, work orders and analytics. Bring your existing files; PrimeStride handles the preparation and setup.",
     eyebrow: "The operations platform for SMEs",
     endorsement: "Built by PrimeStride AI",
     promise: "Put your company’s knowledge to work.",
-    lead: "Give your team a shared foundation for answers, quotes and job tracking. AI 營運大腦 connects five applications to the knowledge your business already has.",
+    lead: "Give your team a shared foundation for answers, quotes and job tracking. StrideBrain connects five applications to the knowledge your business already has.",
     cta: "Let’s talk about your workflow",
     seeHow: "Explore one customer job",
     prep: "Bring your files as they are. We handle the preparation and setup.",
@@ -71,13 +73,15 @@ const content = {
       { question: "Is this only for printing businesses?", answer: "No. Printing is the example in the walkthrough. The same approach can support manufacturing, interior design, trading and other SMEs. The documents, rules and workflow are specific to each business." },
       { question: "Can government grants support the rollout?", answer: "We can discuss whether a relevant programme is worth checking. Eligibility, eligible solutions, application dates and approval must be confirmed against the current programme requirements. Grants are not guaranteed or assumed in the proposed cost." },
     ],
-    closingEyebrow: "AI 營運大腦 · By PrimeStride AI",
+    closingEyebrow: "StrideBrain · By PrimeStride AI",
     closingTitle: "Start with the work that keeps getting stuck.",
-    closingBody: "Bring one recurring question, quote or handoff. Tell us how you handle it today. Together, we’ll identify where AI 營運大腦 can help and what your first rollout should include.",
+    closingBody: "Bring one recurring question, quote or handoff. Tell us how you handle it today. Together, we’ll identify where StrideBrain can help and what your first rollout should include.",
     closingNote: "No polished project brief needed. Your existing workflow is enough to start.",
   },
   zh: {
-    metaTitle: "AI 營運大腦｜中小企業智慧營運平台｜首越人工智慧",
+    metaTitle: "AI 營運大腦 StrideBrain｜中小企業智慧營運平台｜首越人工智慧",
+    productName: "AI 營運大腦",
+    productAlias: "StrideBrain",
     metaDescription: "一個企業知識中樞，支援 AI 知識助理、AI 客服、AI 報價、工單／生產管理與 AI 數據分析。現有資料原樣交給我們，由 PrimeStride 首越人工智慧負責整理與建置。",
     eyebrow: "為中小企業打造的智慧營運平台",
     endorsement: "由 PrimeStride AI 首越人工智慧打造",
@@ -156,13 +160,13 @@ type PageProps = { params: { locale: string } };
 export function generateMetadata({ params }: PageProps): Metadata {
   if (!isLocale(params.locale)) return {};
   const t = content[params.locale];
-  const url = `https://www.primestrideai.com/${params.locale}/ai-zhanggui`;
+  const url = `https://www.primestrideai.com/${params.locale}/stridebrain`;
   return {
     title: t.metaTitle,
     description: t.metaDescription,
     alternates: {
       canonical: url,
-      languages: { en: "/en/ai-zhanggui", "zh-TW": "/zh/ai-zhanggui" },
+      languages: { en: "/en/stridebrain", "zh-TW": "/zh/stridebrain" },
     },
     openGraph: {
       title: t.metaTitle,
@@ -176,11 +180,11 @@ export function generateMetadata({ params }: PageProps): Metadata {
   };
 }
 
-export default function AiZhangguiPage({ params }: PageProps) {
+export default function StrideBrainPage({ params }: PageProps) {
   if (!isLocale(params.locale)) notFound();
   const locale = params.locale;
   const t = content[locale];
-  const contactHref = `/${locale}/contact?p=ai-zhanggui`;
+  const contactHref = `/${locale}/contact?p=stridebrain`;
 
   return (
     <main className="operations-product">
@@ -188,7 +192,8 @@ export default function AiZhangguiPage({ params }: PageProps) {
         <div className="wrap ops-hero-grid">
           <div className="ops-hero-copy">
             <span className="eyebrow">{t.eyebrow}</span>
-            <h1 id="ops-product-title">AI 營運大腦</h1>
+            <h1 id="ops-product-title">{t.productName}</h1>
+            <p className="ops-product-alias">{t.productAlias}</p>
             <p className="ops-endorsement">{t.endorsement}</p>
             <p className="ops-promise">{t.promise}</p>
             <p className="ops-lead">{t.lead}</p>

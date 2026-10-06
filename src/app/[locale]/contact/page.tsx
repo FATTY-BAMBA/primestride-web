@@ -48,7 +48,7 @@ const content = {
     },
     interestOptions: [
       { value: "", label: "I'm not sure yet" },
-      { value: "AI 營運大腦", label: "AI 營運大腦 — SME operations platform" },
+      { value: "AI 營運大腦", label: "StrideBrain — SME operations platform" },
       { value: "Atlas EIP", label: "Atlas EIP — HR" },
       { value: "LyraAI", label: "LyraAI — Interview coaching" },
       { value: "EduSense AI", label: "EduSense AI — Education" },
