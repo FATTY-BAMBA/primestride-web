@@ -6,10 +6,10 @@ export default function OperationsSpotlight({ locale }: { locale: Locale }) {
   return <section className="operations-spotlight" aria-labelledby="operations-spotlight-title">
     <div className="wrap operations-spotlight-grid">
       <div>
-        <span className="eyebrow">{zh ? "AI 營運大腦 · 中小企業營運平台" : "AI 營運大腦 · SME operations platform"}</span>
+        <span className="eyebrow">{zh ? "AI 營運大腦 · 中小企業營運平台" : "StrideBrain · SME operations platform"}</span>
         <h2 id="operations-spotlight-title">{zh ? "公司的經驗，接手每天的忙。" : "Put your company’s know-how to work."}</h2>
         <p>{zh ? "一個企業知識中樞，支援五大營運應用。現有資料原樣交給我們，讓公司的經驗支援客戶回覆、報價與工單追蹤。" : "One company knowledge hub supporting five applications. Bring your existing files; we organize and set them up to support answers, quotes and job tracking."}</p>
-        <Link className="btn btn-primary" href={`/${locale}/ai-zhanggui#demo`}>{zh ? "體驗一筆訂單的流程" : "Explore one customer job"}<span aria-hidden="true"> ↗</span></Link>
+        <Link className="btn btn-primary" href={`/${locale}/stridebrain#demo`}>{zh ? "體驗一筆訂單的流程" : "Explore one customer job"}<span aria-hidden="true"> ↗</span></Link>
       </div>
       <div className="operations-preview">
         <div className="operations-preview-head"><span>{zh ? "印刷業情境" : "A printing business"}</span><span>{zh ? "詢問 → 報價 → 生產" : "Enquiry → Quote → Production"}</span></div>

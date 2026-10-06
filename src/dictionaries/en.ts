@@ -45,9 +45,9 @@ const en = {
   },
   bundle: {
     tag: "SME operations platform",
-    title: "AI 營運大腦",
+    title: "StrideBrain",
     desc: "One company knowledge hub supporting an AI knowledge assistant, customer service, quoting, work orders and analytics. Bring your existing files; PrimeStride handles the preparation and setup, starting with one workflow.",
-    cta: "Explore AI 營運大腦",
+    cta: "Explore StrideBrain",
   },
   connections: {
     eyebrow: "How it compounds",

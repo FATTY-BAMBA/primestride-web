@@ -41,6 +41,14 @@ src/
 - **Pillars**: `src/content/pillars.ts`.
 - **UI strings** (nav, section headings, CTAs): `src/dictionaries/en.ts` and `zh.ts` — keep the two in the same shape.
 
+## StrideBrain / AI 營運大腦
+
+- English product name: **StrideBrain**. Chinese product name: **AI 營運大腦**. PrimeStride AI is the company.
+- Product pages: `/en/stridebrain` and `/zh/stridebrain`. Content and social images live in `src/app/[locale]/stridebrain/`.
+- `/stridebrain` is a short share link to the English page. Old `ai-zhanggui` page and image URLs permanently redirect to their new counterparts, retaining query parameters.
+- Product enquiries use `?p=stridebrain`; the old `?p=ai-zhanggui` alias still works. The submitted interest value remains `AI 營運大腦` so existing enquiry handling stays compatible.
+- Product social previews bundle their Latin and Traditional Chinese fonts locally to avoid runtime font downloads. Noto Sans regular comes from Next.js's bundled OG font; the bold Latin subset comes from `notofonts/noto-fonts` (`hinted/ttf/NotoSans/NotoSans-Bold.ttf`). License notices are in `public/fonts/`.
+
 ## Deploy to Vercel (GitHub flow)
 
 1. Push this folder to a new GitHub repo:

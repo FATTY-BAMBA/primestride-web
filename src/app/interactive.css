@@ -2,7 +2,7 @@
 :where(a, button, summary):focus-visible { outline: 3px solid var(--iris); outline-offset: 5px; }
 section[id] { scroll-margin-top: 90px; }
 .nav-links { gap: 1.35rem; }
-.nav-links a[href$="/ai-zhanggui"] { color: var(--iris); }
+.nav-links a[href$="/stridebrain"] { color: var(--iris); }
 /* Keep the artwork separate from the controls so both remain readable. */
 .core-explorer { min-width: 0; }
 .core-caption { display: flex; justify-content: space-between; gap: 12px; padding: 0 4px; font-size: .75rem; letter-spacing: .04em; color: var(--muted); font-family: var(--font-plex-mono); }

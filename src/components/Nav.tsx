@@ -13,7 +13,7 @@ export default function Nav({ locale, dict }: { locale: Locale; dict: Dictionary
     { href: `${base}#pillars`, label: dict.nav.pillars },
     { href: `${base}/products`, label: dict.nav.products },
     { href: `${base}#connections`, label: dict.nav.compounds },
-    { href: `${base}/ai-zhanggui`, label: "AI 營運大腦" },
+    { href: `${base}/stridebrain`, label: locale === "zh" ? "AI 營運大腦" : "StrideBrain" },
   ];
 
   return (
