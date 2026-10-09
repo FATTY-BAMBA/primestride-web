@@ -1,7 +1,7 @@
 import Link from "next/link";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import StrideBrainOrbit from "@/components/StrideBrainOrbit";
 import OperationsDemo from "@/components/OperationsDemo";
 import { isLocale, locales } from "@/i18n";
 import "./operations.css";
@@ -147,14 +147,6 @@ const content = {
   },
 };
 
-const appImages = [
-  "/visuals/zg-module-assistant.png",
-  "/visuals/product-customer-ai.png",
-  "/visuals/zg-module-quoting.png",
-  "/visuals/zg-module-workorders.png",
-  "/visuals/zg-module-analytics.png",
-];
-
 type PageProps = { params: { locale: string } };
 
 export function generateMetadata({ params }: PageProps): Metadata {
@@ -188,7 +180,7 @@ export default function StrideBrainPage({ params }: PageProps) {
 
   return (
     <main className="operations-product">
-      <section className="ops-hero" aria-labelledby="ops-product-title">
+      <section className="hero ops-hero" aria-labelledby="ops-product-title">
         <div className="wrap ops-hero-grid">
           <div className="ops-hero-copy">
             <span className="eyebrow">{t.eyebrow}</span>
@@ -203,12 +195,7 @@ export default function StrideBrainPage({ params }: PageProps) {
             </div>
             <p className="ops-prep">{t.prep}</p>
           </div>
-          <div className="ops-hero-visual">
-            <span className="ops-visual-label">{t.visualLabel}</span>
-            <Image src="/visuals/zg-hero-lantern.png" alt="" width={558} height={803} sizes="(max-width: 600px) 190px, 270px" priority className="ops-lantern" />
-            <div className="ops-source-tags">{t.visualSources.map((source) => <span key={source}>{source}</span>)}</div>
-            <p>{t.visualOutcome}</p>
-          </div>
+          <StrideBrainOrbit locale={locale} />
         </div>
         <div className="wrap"><div className="ops-availability"><span className="ops-live-dot" aria-hidden="true" />{t.live}<Link href="#modules">{locale === "zh" ? "看完整產品" : "See the complete product"}<span aria-hidden="true"> ↓</span></Link></div></div>
       </section>
@@ -227,14 +214,7 @@ export default function StrideBrainPage({ params }: PageProps) {
             <div><span className="ops-hub-label">{t.hubLabel}</span><h3>{t.hubTitle}</h3><div className="ops-hub-tags">{t.hubTags.map((tag) => <span key={tag}>{tag}</span>)}</div></div>
             <p>{t.hubBody}</p>
           </div>
-          <div className="ops-apps">
-            {t.apps.map((app, index) => (
-              <article className="ops-app" key={app.title}>
-                <div className="ops-app-art"><Image src={appImages[index]} alt="" width={180} height={150} sizes="(max-width: 600px) 80px, 120px" /></div>
-                <div><span className="ops-app-task">{app.task}</span><h3>{app.title}</h3><p>{app.desc}</p></div>
-              </article>
-            ))}
-          </div>
+          <StrideBrainOrbit locale={locale} explorer />
         </div>
       </section>
 
