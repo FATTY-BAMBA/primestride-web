@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import StrideBrainOrbit from "@/components/StrideBrainOrbit";
 import OperationsDemo from "@/components/OperationsDemo";
 import { isLocale, locales } from "@/i18n";
 import "./operations.css";
@@ -203,12 +204,7 @@ export default function StrideBrainPage({ params }: PageProps) {
             </div>
             <p className="ops-prep">{t.prep}</p>
           </div>
-          <div className="ops-hero-visual">
-            <span className="ops-visual-label">{t.visualLabel}</span>
-            <Image src="/visuals/zg-hero-lantern.png" alt="" width={558} height={803} sizes="(max-width: 600px) 190px, 270px" priority className="ops-lantern" />
-            <div className="ops-source-tags">{t.visualSources.map((source) => <span key={source}>{source}</span>)}</div>
-            <p>{t.visualOutcome}</p>
-          </div>
+          <StrideBrainOrbit locale={locale} />
         </div>
         <div className="wrap"><div className="ops-availability"><span className="ops-live-dot" aria-hidden="true" />{t.live}<Link href="#modules">{locale === "zh" ? "看完整產品" : "See the complete product"}<span aria-hidden="true"> ↓</span></Link></div></div>
       </section>
