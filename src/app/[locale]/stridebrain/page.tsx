@@ -180,7 +180,7 @@ export default function StrideBrainPage({ params }: PageProps) {
 
   return (
     <main className="operations-product">
-      <section className="ops-hero" aria-labelledby="ops-product-title">
+      <section className="hero ops-hero" aria-labelledby="ops-product-title">
         <div className="wrap ops-hero-grid">
           <div className="ops-hero-copy">
             <span className="eyebrow">{t.eyebrow}</span>
