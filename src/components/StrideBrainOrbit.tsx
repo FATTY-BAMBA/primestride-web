@@ -27,9 +27,7 @@ export default function StrideBrainOrbit({ locale, explorer = false }: { locale:
   const t = copy[locale];
   const panelId = useId();
   const [active, setActive] = useState(0);
-  const [paused, setPaused] = useState(false);
-  return <div className={`sb-system${explorer ? " sb-explorer" : ""}${paused ? " is-paused" : ""}`} style={{ "--selection": `${active * -72}deg`, "--selection-counter": `${active * 72}deg` } as CSSProperties}>
-    {!explorer && <div className="sb-system-top"><span>STRIDEBRAIN / 01—05</span><button type="button" onClick={() => setPaused(p => !p)} aria-pressed={paused}>{paused ? t.play : t.pause}<span aria-hidden="true">{paused ? " ▷" : " Ⅱ"}</span></button></div>}
+  return <div className={`sb-system${explorer ? " sb-explorer" : ""}`} style={{ "--selection": `${active * -72}deg`, "--selection-counter": `${active * 72}deg` } as CSSProperties}>
     {!explorer && <div className="sb-orbit-scene" aria-hidden="true">
       <div className="sb-track" /><div className="sb-track sb-track-inner" />
       <div className="sb-core"><div className="sb-core-symbol"><i /><i /><i /></div><strong>{t.hub}</strong><span>{t.sub}</span></div>
