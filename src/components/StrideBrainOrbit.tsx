@@ -8,14 +8,14 @@ import type { Locale } from "@/i18n";
 const images = ["zg-module-assistant.png", "product-customer-ai.png", "zg-module-quoting.png", "zg-module-workorders.png", "zg-module-analytics.png"];
 const copy = {
   en: {
-    hub: "Company knowledge", sub: "One shared foundation", label: "Explore the five applications", pause: "Pause motion", play: "Resume motion", sample: "Illustrative workflow", source: "Your documents. Your rules.",
+    hub: "Company knowledge", sub: "One shared foundation", label: "Explore the five applications", pause: "Pause motion", play: "Resume motion", sample: "Sample demonstration", source: "Your documents. Your rules.",
     apps: ["Knowledge assistant", "Customer service", "Quoting", "Work orders", "Analytics"],
     titles: ["An answer with its source.", "A reply grounded in your business.", "A quote ready for human review.", "The next action, in view.", "Your operations, in context."],
     bodies: ["Find specifications and SOPs in the knowledge your team already has.", "Use the same confirmed knowledge to answer a customer’s question.", "Bring requirements and pricing rules together before approval.", "Carry confirmed details forward and see what the job still needs.", "Explore margins and trends using the operational data available."],
     tags: ["Source available", "Company context", "Approval required", "Track the next step", "Available business data"],
   },
   zh: {
-    hub: "企業知識中樞", sub: "團隊共同的知識基礎", label: "探索五大營運應用", pause: "暫停動畫", play: "繼續動畫", sample: "工作流程示意", source: "你的文件，你的業務規則。",
+    hub: "企業知識中樞", sub: "團隊共同的知識基礎", label: "探索五大營運應用", pause: "暫停動畫", play: "繼續動畫", sample: "示範資料", source: "你的文件，你的業務規則。",
     apps: ["知識助理", "AI 客服", "AI 報價", "工單管理", "數據分析"],
     titles: ["有答案，也有出處。", "讓客戶收到有依據的回答。", "準備報價，交由團隊確認。", "下一步要做什麼，一目了然。", "讓營運資料，成為判斷依據。"],
     bodies: ["從團隊既有的知識，查詢規格、SOP 與過往經驗。", "用同一份確認過的公司知識，回覆客戶的日常詢問。", "整合需求與報價規則，核對確認後再交給客戶。", "延續已確認的資訊，掌握工單進度與待補事項。", "依可用的營運資料，檢視毛利、效率與品項趨勢。"],
@@ -30,19 +30,32 @@ export default function StrideBrainOrbit({ locale, explorer = false }: { locale:
   const [paused, setPaused] = useState(false);
   const [reduced, setReduced] = useState(true);
   const svgRef = useRef<SVGSVGElement>(null);
+  const sceneRef = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(true);
+  const [documentHidden, setDocumentHidden] = useState(false);
   const gradientId = useId();
   useEffect(() => {
+    if (explorer) return;
     const query = window.matchMedia("(prefers-reduced-motion: reduce)");
     const update = () => setReduced(query.matches);
     update(); query.addEventListener("change", update);
     return () => query.removeEventListener("change", update);
-  }, []);
+  }, [explorer]);
   useEffect(() => {
-    if (paused || reduced) svgRef.current?.pauseAnimations();
+    if (explorer) return;
+    const update = () => setDocumentHidden(document.hidden);
+    update();
+    document.addEventListener("visibilitychange", update);
+    const observer = new IntersectionObserver(([entry]) => setVisible(entry.isIntersecting));
+    if (sceneRef.current) observer.observe(sceneRef.current);
+    return () => { observer.disconnect(); document.removeEventListener("visibilitychange", update); };
+  }, [explorer]);
+  useEffect(() => {
+    if (paused || reduced || !visible || documentHidden) svgRef.current?.pauseAnimations();
     else svgRef.current?.unpauseAnimations();
-  }, [paused, reduced]);
+  }, [paused, reduced, visible, documentHidden]);
   return <div className={`sb-system${explorer ? " sb-explorer" : " sb-arc-hero"}`}>
-    {!explorer && <div className="sb-arc-scene">
+    {!explorer && <div className="sb-arc-scene" ref={sceneRef}>
       <svg ref={svgRef} className="sb-arc-svg" viewBox="0 0 600 440" aria-hidden="true">
         <defs><linearGradient id={gradientId} x1="0" y1="1" x2="1" y2="0"><stop offset="0" stopColor="#f0edf6"/><stop offset=".48" stopColor="#d5cee5"/><stop offset="1" stopColor="#eeeaf7"/></linearGradient></defs>
         <path d="M 110 610 C 55 225 330 20 760 40" fill="none" stroke={`url(#${gradientId})`} strokeWidth="112" />
