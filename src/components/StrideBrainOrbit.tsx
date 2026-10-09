@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, type CSSProperties } from "react";
+import { useId, useState, type CSSProperties } from "react";
 import Image from "next/image";
+import StrideBrainSample from "./StrideBrainSample";
 import type { Locale } from "@/i18n";
 
 const images = ["zg-module-assistant.png", "product-customer-ai.png", "zg-module-quoting.png", "zg-module-workorders.png", "zg-module-analytics.png"];
@@ -22,21 +23,22 @@ const copy = {
   },
 };
 
-export default function StrideBrainOrbit({ locale }: { locale: Locale }) {
+export default function StrideBrainOrbit({ locale, explorer = false }: { locale: Locale; explorer?: boolean }) {
   const t = copy[locale];
+  const panelId = useId();
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
-  return <div className={`sb-system${paused ? " is-paused" : ""}`}>
-    <div className="sb-system-top"><span>STRIDEBRAIN / 01—05</span><button type="button" onClick={() => setPaused(p => !p)} aria-pressed={paused}>{paused ? t.play : t.pause}<span aria-hidden="true">{paused ? " ▷" : " Ⅱ"}</span></button></div>
-    <div className="sb-orbit-scene" aria-hidden="true">
+  return <div className={`sb-system${explorer ? " sb-explorer" : ""}${paused ? " is-paused" : ""}`} style={{ "--selection": `${active * -72}deg`, "--selection-counter": `${active * 72}deg` } as CSSProperties}>
+    {!explorer && <div className="sb-system-top"><span>STRIDEBRAIN / 01—05</span><button type="button" onClick={() => setPaused(p => !p)} aria-pressed={paused}>{paused ? t.play : t.pause}<span aria-hidden="true">{paused ? " ▷" : " Ⅱ"}</span></button></div>}
+    {!explorer && <div className="sb-orbit-scene" aria-hidden="true">
       <div className="sb-track" /><div className="sb-track sb-track-inner" />
       <div className="sb-core"><div className="sb-core-symbol"><i /><i /><i /></div><strong>{t.hub}</strong><span>{t.sub}</span></div>
       <div className="sb-orbit">
         {images.map((src, i) => <div className="sb-arm" key={src} style={{ "--angle": `${i * 72}deg`, "--counter": `${i * -72}deg` } as CSSProperties}><div className="sb-satellite"><div className={`sb-icon${active === i ? " is-active" : ""}`}><Image src={`/visuals/${src}`} alt="" width={80} height={80} sizes="80px" priority={i === 0} /></div></div></div>)}
       </div>
       <span className="sb-source-note">{t.source}</span>
-    </div>
-    <div className="sb-app-selector" role="group" aria-label={t.label}>{t.apps.map((name, i) => <button type="button" key={name} aria-pressed={active === i} aria-controls="sb-application-preview" onClick={() => setActive(i)}><span>0{i + 1}</span>{name}</button>)}</div>
-    <div id="sb-application-preview" className="sb-preview" aria-live="polite" aria-atomic="true"><div className="sb-preview-content" key={active}><div className="sb-preview-top"><span>{t.sample}</span><span>0{active + 1} / 05</span></div><h3>{t.titles[active]}</h3><p>{t.bodies[active]}</p><span className="sb-proof"><span aria-hidden="true">↳</span> {t.tags[active]}</span></div></div>
+    </div>}
+    <div className="sb-app-selector" role="group" aria-label={t.label}>{t.apps.map((name, i) => <button type="button" key={name} aria-pressed={active === i} aria-controls={panelId} onClick={() => setActive(i)}><span>0{i + 1}</span>{explorer && <Image src={`/visuals/${images[i]}`} alt="" width={56} height={56} />}<strong>{name}</strong>{explorer && <small>{t.bodies[i]}</small>}</button>)}</div>
+    <div id={panelId} className="sb-preview" aria-live="polite" aria-atomic="true"><div className="sb-preview-content" key={active}><div className="sb-preview-top"><span>{t.sample}</span><span>0{active + 1} / 05</span></div><h3>{t.titles[active]}</h3><StrideBrainSample locale={locale} active={active} /><span className="sb-proof"><span aria-hidden="true">↳</span> {t.tags[active]}</span></div></div>
   </div>;
 }

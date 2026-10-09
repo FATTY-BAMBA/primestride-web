@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import StrideBrainOrbit from "@/components/StrideBrainOrbit";
@@ -148,14 +147,6 @@ const content = {
   },
 };
 
-const appImages = [
-  "/visuals/zg-module-assistant.png",
-  "/visuals/product-customer-ai.png",
-  "/visuals/zg-module-quoting.png",
-  "/visuals/zg-module-workorders.png",
-  "/visuals/zg-module-analytics.png",
-];
-
 type PageProps = { params: { locale: string } };
 
 export function generateMetadata({ params }: PageProps): Metadata {
@@ -223,14 +214,7 @@ export default function StrideBrainPage({ params }: PageProps) {
             <div><span className="ops-hub-label">{t.hubLabel}</span><h3>{t.hubTitle}</h3><div className="ops-hub-tags">{t.hubTags.map((tag) => <span key={tag}>{tag}</span>)}</div></div>
             <p>{t.hubBody}</p>
           </div>
-          <div className="ops-apps">
-            {t.apps.map((app, index) => (
-              <article className="ops-app" key={app.title}>
-                <div className="ops-app-art"><Image src={appImages[index]} alt="" width={180} height={150} sizes="(max-width: 600px) 80px, 120px" /></div>
-                <div><span className="ops-app-task">{app.task}</span><h3>{app.title}</h3><p>{app.desc}</p></div>
-              </article>
-            ))}
-          </div>
+          <StrideBrainOrbit locale={locale} explorer />
         </div>
       </section>
 
