@@ -55,7 +55,7 @@ export default function StrideBrainOrbit({ locale, explorer = false }: { locale:
           </g>
         </g>)}
       </svg>
-      <div className="sb-arc-caption"><span>{t.sub}</span><strong>{t.hub}</strong><p>{t.source}</p><div className="sb-arc-count"><b>01</b><span>{locale === "zh" ? "知識中樞" : "Knowledge hub"}</span><b>05</b><span>{locale === "zh" ? "營運應用" : "Applications"}</span></div></div>
+      <div className="sb-arc-caption"><strong>{t.hub}</strong><p>{locale === "zh" ? "讓每個應用，都有共同依據。" : "Shared knowledge. Connected work."}</p></div>
       {!reduced && <button type="button" className="sb-motion-toggle" aria-label={paused ? t.play : t.pause} title={paused ? t.play : t.pause} aria-pressed={paused} onClick={() => setPaused(p => !p)}>{paused ? "▷" : "Ⅱ"}</button>}
     </div>}
     <div className="sb-app-selector" role="group" aria-label={t.label}>{t.apps.map((name, i) => <button type="button" key={name} aria-pressed={active === i} aria-controls={panelId} onClick={() => setActive(i)}><span>0{i + 1}</span>{explorer && <Image src={`/visuals/${images[i]}`} alt="" width={56} height={56} />}<strong>{name}</strong>{explorer && <small>{t.bodies[i]}</small>}</button>)}</div>

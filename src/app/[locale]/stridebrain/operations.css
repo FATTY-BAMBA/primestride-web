@@ -272,13 +272,9 @@
 .operations-product .ops-hero-copy { padding-top: 36px; }
 .sb-arc-scene { position: relative; height: 380px; overflow: hidden; margin: -16px -24px 0 0; }
 .sb-arc-svg { display: block; width: 100%; height: 100%; overflow: hidden; }
-.sb-arc-caption { position: absolute; left: 48%; top: 44%; right: 0; }
-.sb-arc-caption > span { color: var(--muted); font-size: .7rem; }
-.sb-arc-caption > strong { display: block; font-family: var(--font-bricolage),var(--font-noto-tc),sans-serif; font-size: 1.55rem; line-height: 1.15; margin: 10px 0; max-width: 12ch; }
-.sb-arc-caption > p { color: var(--muted); font-size: .75rem; }
-.sb-arc-count { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 6px 12px; margin-top: 20px; }
-.sb-arc-count b { font-family: var(--font-bricolage); font-size: 1.4rem; font-weight: 600; color: var(--iris); }
-.sb-arc-count span { font-size: .7rem; color: var(--muted); }
+.sb-arc-caption { position: absolute; left: 65%; top: 61%; width: 48%; transform: translate(-50%, -50%); text-align: center; }
+.sb-arc-caption > strong { display: block; font-family: var(--font-bricolage),var(--font-noto-tc),sans-serif; font-size: 1.55rem; line-height: 1.2; margin: 0; text-wrap: balance; }
+.sb-arc-caption > p { color: var(--muted); font-size: .82rem; line-height: 1.6; margin: 12px auto 0; max-width: 24ch; text-wrap: balance; }
 .sb-arc-hero .sb-preview { min-height: 0; padding: 20px 22px; box-shadow: 0 14px 35px -24px #30235f60; }
 .sb-arc-hero .sb-preview h3 { font-size: 1.15rem; }
 .sb-arc-hero .sb-app-selector { margin: 12px 0; }
@@ -291,9 +287,8 @@
 @media(max-width: 400px) {
  .sb-arc-scene { height: 285px; }
  .sb-arc-caption > strong { font-size: 1.15rem; }
- .sb-arc-count { margin-top: 12px; gap: 3px 8px; }
- .sb-arc-caption > span,.sb-arc-caption > p,.sb-arc-count span { font-size: .6rem; }
- .sb-arc-count b { font-size: 1.1rem; }
 }
 @media(hover: none) { .sb-motion-toggle { opacity: .65; } }
 @media(prefers-reduced-motion: reduce) { .sb-motion-toggle { transition: none; } }
+
+@media(max-width: 400px) { .sb-arc-caption > p { font-size: .72rem; margin-top: 8px; } }
