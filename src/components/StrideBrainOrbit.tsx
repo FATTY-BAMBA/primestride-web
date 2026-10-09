@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState, type CSSProperties } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import Image from "next/image";
 import StrideBrainSample from "./StrideBrainSample";
 import type { Locale } from "@/i18n";
@@ -27,16 +27,38 @@ export default function StrideBrainOrbit({ locale, explorer = false }: { locale:
   const t = copy[locale];
   const panelId = useId();
   const [active, setActive] = useState(0);
-  return <div className={`sb-system${explorer ? " sb-explorer" : ""}`} style={{ "--selection": `${active * -72}deg`, "--selection-counter": `${active * 72}deg` } as CSSProperties}>
-    {!explorer && <div className="sb-orbit-scene" aria-hidden="true">
-      <div className="sb-track" /><div className="sb-track sb-track-inner" />
-      <div className="sb-core"><div className="sb-core-symbol"><i /><i /><i /></div><strong>{t.hub}</strong><span>{t.sub}</span></div>
-      <div className="sb-orbit">
-        {images.map((src, i) => <div className="sb-arm" key={src} style={{ "--angle": `${i * 72}deg`, "--counter": `${i * -72}deg` } as CSSProperties}><div className="sb-satellite"><div className={`sb-icon${active === i ? " is-active" : ""}`}><Image src={`/visuals/${src}`} alt="" width={80} height={80} sizes="80px" priority={i === 0} /></div></div></div>)}
-      </div>
-      <span className="sb-source-note">{t.source}</span>
+  const [paused, setPaused] = useState(false);
+  const [reduced, setReduced] = useState(true);
+  const svgRef = useRef<SVGSVGElement>(null);
+  const gradientId = useId();
+  useEffect(() => {
+    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setReduced(query.matches);
+    update(); query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+  useEffect(() => {
+    if (paused || reduced) svgRef.current?.pauseAnimations();
+    else svgRef.current?.unpauseAnimations();
+  }, [paused, reduced]);
+  return <div className={`sb-system${explorer ? " sb-explorer" : " sb-arc-hero"}`}>
+    {!explorer && <div className="sb-arc-scene">
+      <svg ref={svgRef} className="sb-arc-svg" viewBox="0 0 600 440" aria-hidden="true">
+        <defs><linearGradient id={gradientId} x1="0" y1="1" x2="1" y2="0"><stop offset="0" stopColor="#f0edf6"/><stop offset=".48" stopColor="#d5cee5"/><stop offset="1" stopColor="#eeeaf7"/></linearGradient></defs>
+        <path d="M 110 610 C 55 225 330 20 760 40" fill="none" stroke={`url(#${gradientId})`} strokeWidth="112" />
+        <path d="M 53 610 C 0 190 330 -39 760 -16" fill="none" stroke="#fff" strokeOpacity=".75" strokeWidth="2" />
+        {images.map((src,i) => <g key={src}>
+          {!reduced && <animateMotion path="M 110 610 C 55 225 330 20 760 40" dur="22s" begin={`${-i * 4.4}s`} repeatCount="indefinite" calcMode="paced" />}
+          <g transform={reduced ? `translate(${[108,165,294,460,620][i]} ${[398,240,118,65,44][i]})` : undefined}>
+            <rect x="-40" y="-40" width="80" height="80" rx="23" fill={active===i ? "#eee8ff" : "#faf9fd"} stroke={active===i ? "#8d78eb" : "#ffffff"} strokeWidth="2" />
+            <image href={`/visuals/${src}`} x="-36" y="-36" width="72" height="72" />
+          </g>
+        </g>)}
+      </svg>
+      <div className="sb-arc-caption"><span>{t.sub}</span><strong>{t.hub}</strong><p>{t.source}</p><div className="sb-arc-count"><b>01</b><span>{locale === "zh" ? "知識中樞" : "Knowledge hub"}</span><b>05</b><span>{locale === "zh" ? "營運應用" : "Applications"}</span></div></div>
+      {!reduced && <button type="button" className="sb-motion-toggle" aria-label={paused ? t.play : t.pause} title={paused ? t.play : t.pause} aria-pressed={paused} onClick={() => setPaused(p => !p)}>{paused ? "▷" : "Ⅱ"}</button>}
     </div>}
     <div className="sb-app-selector" role="group" aria-label={t.label}>{t.apps.map((name, i) => <button type="button" key={name} aria-pressed={active === i} aria-controls={panelId} onClick={() => setActive(i)}><span>0{i + 1}</span>{explorer && <Image src={`/visuals/${images[i]}`} alt="" width={56} height={56} />}<strong>{name}</strong>{explorer && <small>{t.bodies[i]}</small>}</button>)}</div>
-    <div id={panelId} className="sb-preview" aria-live="polite" aria-atomic="true"><div className="sb-preview-content" key={active}><div className="sb-preview-top"><span>{t.sample}</span><span>0{active + 1} / 05</span></div><h3>{t.titles[active]}</h3><StrideBrainSample locale={locale} active={active} /><span className="sb-proof"><span aria-hidden="true">↳</span> {t.tags[active]}</span></div></div>
+    <div id={panelId} className="sb-preview" aria-live="polite" aria-atomic="true"><div className="sb-preview-content" key={active}><div className="sb-preview-top"><span>{t.sample}</span><span>0{active + 1} / 05</span></div><h3>{t.titles[active]}</h3>{explorer ? <StrideBrainSample locale={locale} active={active} /> : <p>{t.bodies[active]}</p>}<span className="sb-proof"><span aria-hidden="true">↳</span> {t.tags[active]}</span></div></div>
   </div>;
 }
