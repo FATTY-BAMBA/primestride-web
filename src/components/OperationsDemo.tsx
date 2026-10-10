@@ -8,12 +8,14 @@ const copy = {
   en: {
     eyebrow: "Explore the workflow", title: "One customer question. See what happens next.",
     intro: "Follow a printing job through four steps, using the same company knowledge.",
-    sample: "Interactive example · Sample data", business: "Printing studio", job: "500 A3 posters · 150gsm coated paper",
+    sample: "Interactive example · Sample data", business: "Printing studio · PS-0500", job: "500 A3 posters",
+    brief: "The same job, every step", specLabels: ["Size / quantity", "Paper", "Production"], specValues: ["A3 / 500 copies", "150gsm coated paper", "3 working days after approval"],
+    statusLabel: "In this step", statuses: ["Find the relevant documents", "Prepare a sourced reply", "Review the suggested price", "Confirm the print-ready file"],
     steps: ["Find the knowledge", "Answer the customer", "Review the quote", "See job status"],
     headings: ["Start with what your team already knows.", "Give customers an answer they can trust.", "Bring the pricing knowledge into view.", "Give everyone a clear view of the job."],
     descriptions: [
       "Give us your existing files as they are. We organize the specifications, lead times and past quotes so your team can use them. The documents below illustrate the organized result.",
-      "A source-backed reply answers the customer’s question. LINE is one possible setting for this example; the knowledge is not tied to one messaging channel.",
+      "Use company knowledge wherever your team works: in an internal workspace, a website or a messaging channel. We agree the connections during setup. Expand the source below to check this reply.",
       "A quote suggestion brings the requirements and past pricing together for your team to review.",
       "An example order shows how staff can see its current stage and what still needs attention.",
     ],
@@ -21,7 +23,7 @@ const copy = {
     question: "Hi — 500 A3 posters. What’s the lead time, and what file do you need?",
     answer: "The standard lead time is 3 working days after artwork approval. Please send a PDF or AI file at 300 dpi, with 3 mm bleed.",
     source: "Inspect the sample source", excerpt: "Price & lead-time sheet, p.2: A3, 500 copies — standard production: 3 working days after artwork approval. Artwork checklist, p.1: PDF/AI, 300 dpi, 3 mm bleed.",
-    quoteLabel: "Suggested range", quote: "NT$ 6,800–7,400", quoteBasis: "Illustrative range from the existing product example. A real quote depends on your company’s pricing rules.",
+    quoteLabel: "Suggested range", quote: "NT$ 6,800–7,400", quoteBasis: "Sample price for 500 A3 posters on 150gsm coated paper. Your quotes use your company’s pricing rules and require team approval.",
     review: "Human review", checks: ["Confirm material and quantity", "Check margin and delivery date", "Approve before sharing with the customer"],
     order: "Sample order · PS-0500", states: ["Artwork review", "Production", "Ready"], current: "Awaiting artwork approval", nextAction: "Next action: confirm the customer’s print-ready file.",
     next: "Next step", restart: "Start again", footer: "This walkthrough uses sample data and does not send messages or create orders.",
@@ -30,12 +32,14 @@ const copy = {
   zh: {
     eyebrow: "互動體驗", title: "從客戶的一個問題，看見接下來每一步。",
     intro: "以一筆印刷訂單為例，看看同一份公司知識如何支援接單到生產的四個步驟。",
-    sample: "互動示例 · 示範資料", business: "印刷工作室", job: "500 張 A3 海報 · 150g 銅版紙",
+    sample: "互動示例 · 示範資料", business: "印刷工作室 · PS-0500", job: "500 張 A3 海報",
+    brief: "每一步，都是同一筆訂單", specLabels: ["尺寸／數量", "紙材", "標準製作時間"], specValues: ["A3／500 張", "150g 銅版紙", "稿件確認後 3 個工作天"],
+    statusLabel: "這一步的重點", statuses: ["查找相關規格與交期", "準備有出處的回覆", "審核建議價格", "確認客戶的完稿檔案"],
     steps: ["找到公司知識", "回覆客戶詢問", "審核報價建議", "查看工單進度"],
     headings: ["從團隊已經累積的經驗開始。", "給客戶有依據的回答。", "讓報價的依據看得見。", "讓每個人都掌握訂單進度。"],
     descriptions: [
       "現有資料原樣交給我們，由我們整理規格、交期與歷史報價，讓團隊直接查用。下方為整理後的資料示例。",
-      "依公司文件回答客戶問題，團隊可以展開查看原始出處。LINE 是其中一種應用情境，公司知識不侷限於單一通訊管道。",
+      "在內部工作台、網站或通訊管道，都能運用同一份公司知識；實際串接方式於導入時確認。展開下方來源，就能核對這則回覆的依據。",
       "把需求與歷史價格整理成報價建議，交由團隊確認。",
       "用一筆示範工單，看看員工如何掌握目前進度與待辦事項。",
     ],
@@ -43,7 +47,7 @@ const copy = {
     question: "你好，500 張 A3 海報，交期多久？需要什麼檔案？",
     answer: "稿件確認後，標準交期為 3 個工作天。請提供 PDF 或 AI 檔，解析度 300 dpi，並保留 3 mm 出血。",
     source: "查看示範出處", excerpt: "報價與交期表，第 2 頁：A3、500 張，稿件確認後標準製作時間為 3 個工作天。收檔規範，第 1 頁：PDF／AI、300 dpi、3 mm 出血。",
-    quoteLabel: "建議價格區間", quote: "NT$ 6,800–7,400", quoteBasis: "沿用產品頁範例的示意價格。實際報價須依貴公司的價格規則計算。",
+    quoteLabel: "建議價格區間", quote: "NT$ 6,800–7,400", quoteBasis: "此為 500 張 A3、150g 銅版紙的示範價格。實際報價依貴公司的價格規則計算，經團隊確認後再提供給客戶。",
     review: "由人員確認", checks: ["確認材質與數量", "檢查毛利與交期", "核准後再提供給客戶"],
     order: "示範工單 · PS-0500", states: ["確認稿件", "製作中", "可出貨"], current: "等待稿件確認", nextAction: "下一步：確認客戶提供的完稿檔案。",
     next: "看下一步", restart: "重新體驗", footer: "此體驗使用示範資料，不會傳送訊息或建立實際訂單。",
@@ -67,7 +71,9 @@ export default function OperationsDemo({ locale }: { locale: Locale }) {
         </div>
         <div className="demo-workspace">
           <aside className="demo-context"><span className="demo-kicker">{t.business}</span><h3>{t.job}</h3>
-            <div className="demo-progress" aria-hidden="true">{t.steps.map((label, index) => <div key={label} className={step === index ? "is-selected" : ""}><span>{index + 1}</span>{label}</div>)}</div>
+            <p className="demo-brief-label">{t.brief}</p>
+            <dl className="demo-job-specs">{t.specLabels.map((label, index) => <div key={label}><dt>{label}</dt><dd>{t.specValues[index]}</dd></div>)}</dl>
+            <div className="demo-step-context"><span>{t.statusLabel}</span><strong>{t.statuses[step]}</strong></div>
             <Link href={`/${locale}/contact?p=stridebrain`} className="demo-contact">{t.cta} <span aria-hidden="true">↗</span></Link>
           </aside>
           <div className="demo-main" id={panelId} aria-live="polite" aria-atomic="true">
