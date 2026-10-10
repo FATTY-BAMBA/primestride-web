@@ -22,7 +22,8 @@ const content = {
     lead: "Give your team a shared foundation for answers, quotes and job tracking. StrideBrain connects five applications to the knowledge your business already has.",
     cta: "Let’s talk about your workflow",
     seeHow: "Explore one customer job",
-    prep: "Bring your files as they are. We handle the preparation and setup.",
+    prepTitle: "No data cleanup needed to get started.",
+    prep: "Send the Excel files, PDFs and SOPs you already use. We handle the review, organization and setup.",
     live: "Knowledge hub + five applications · Live today",
     visualLabel: "Your company’s shared knowledge",
     visualSources: ["SOPs", "Pricing rules", "Work records"],
@@ -89,7 +90,8 @@ const content = {
     lead: "把公司知識集中起來，讓團隊查得到、回得出、接得上。AI 營運大腦以同一個知識中樞，支援從內部查詢、客戶回覆到報價與生產的日常工作。",
     cta: "聊聊你的工作流程",
     seeHow: "體驗一筆訂單的流程",
-    prep: "現有資料原樣交給我們，整理與建置由我們負責。",
+    prepTitle: "資料不用先整理，原樣交給我們。",
+    prep: "現有的 Excel、PDF、SOP 就能開始。盤點、整理與建置，由首越負責。",
     live: "知識中樞＋五大應用，現已上線",
     visualLabel: "全公司的共同知識依據",
     visualSources: ["作業規範", "報價規則", "工作紀錄"],
@@ -193,7 +195,7 @@ export default function StrideBrainPage({ params }: PageProps) {
               <Link href={contactHref} className="btn btn-primary">{t.cta}<span aria-hidden="true">↗</span></Link>
               <Link href="#demo" className="btn btn-ghost">{t.seeHow}<span aria-hidden="true">↓</span></Link>
             </div>
-            <p className="ops-prep">{t.prep}</p>
+            <div className="ops-prep"><span className="ops-prep-mark" aria-hidden="true">↳</span><div><strong>{t.prepTitle}</strong><p>{t.prep}</p></div></div>
           </div>
           <StrideBrainOrbit locale={locale} />
         </div>
