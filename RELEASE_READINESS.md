@@ -8,7 +8,7 @@ Status: design refinement in a draft review branch; not promoted to production. 
 - Rename the walkthrough CTA to “See an order in action” / “看看一筆訂單如何運作”.
 - Increase source-chip, application-label, sample-metadata and answer text sizes and contrast.
 - Use a lighter knowledge hub and a stronger result panel; group answers with their expandable source. The customer-service example now exposes its existing lead-time source as well.
-- Group SOPs, pricing and work records inside the knowledge hub. Containment communicates their shared foundation without a top connector that appears to single out Pricing; source labels wrap on narrow screens.
+- Keep the standalone knowledge hub and omit the illustrative SOPs, Pricing and Work records labels, plus the upper connector, as requested after reviewing the grouped-card exploration.
 - At 480px and below, place application selectors in two centered rows instead of shrinking five labels into one row. Preserve readable touch targets and reduced-motion styles.
 - This follow-up uses `feat/stridebrain-hero-readability`, based on `372544a`, because the previously reviewed refinement branch is now associated with the production project alias.
 
