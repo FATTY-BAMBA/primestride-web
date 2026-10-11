@@ -21,7 +21,7 @@ const content = {
     promise: "Put your company’s knowledge to work.",
     lead: "Give your team a shared foundation for answers, quotes and job tracking. StrideBrain connects five applications to the knowledge your business already has.",
     cta: "Let’s talk about your workflow",
-    seeHow: "Explore one customer job",
+    seeHow: "See an order in action",
     prepTitle: "No data cleanup needed to get started.",
     prep: "Send the Excel files, PDFs and SOPs you already use. We handle the review, organization and setup.",
     live: "Knowledge hub + five applications · Live today",
@@ -89,7 +89,7 @@ const content = {
     promise: "讓公司的經驗，接上每天的營運。",
     lead: "把公司知識集中起來，讓團隊查得到、回得出、接得上。AI 營運大腦以同一個知識中樞，支援從內部查詢、客戶回覆到報價與生產的日常工作。",
     cta: "聊聊你的工作流程",
-    seeHow: "體驗一筆訂單的流程",
+    seeHow: "看看一筆訂單如何運作",
     prepTitle: "資料不用先整理，原樣交給我們。",
     prep: "現有的 Excel、PDF、SOP 就能開始。盤點、整理與建置，由首越負責。",
     live: "知識中樞＋五大應用，現已上線",
@@ -187,9 +187,8 @@ export default function StrideBrainPage({ params }: PageProps) {
           <div className="ops-hero-copy">
             <span className="eyebrow">{t.eyebrow}</span>
             <h1 id="ops-product-title">{t.productName}</h1>
-            <p className="ops-product-alias">{t.productAlias}</p>
-            <p className="ops-endorsement">{t.endorsement}</p>
             <p className="ops-promise">{t.promise}</p>
+            <p className="ops-product-identity"><span className="ops-product-alias">{t.productAlias}</span><span className="ops-endorsement">{t.endorsement}</span></p>
             <p className="ops-lead">{t.lead}</p>
             <div className="hero-cta">
               <Link href={contactHref} className="btn btn-primary">{t.cta}<span aria-hidden="true">↗</span></Link>
