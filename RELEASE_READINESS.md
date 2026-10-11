@@ -1,6 +1,16 @@
 # StrideBrain release readiness
 
-Status: design refinement in a draft review branch; not promoted to production. Updated 2026-10-10.
+Status: design refinement in a draft review branch; not promoted to production. Updated 2026-10-11.
+
+## October 11 refinement
+
+- Place the benefit immediately below the product title and combine the alternate product name with the company endorsement.
+- Rename the walkthrough CTA to “See an order in action” / “看看一筆訂單如何運作”.
+- Increase source-chip, application-label, sample-metadata and answer text sizes and contrast.
+- Use a stronger result panel and group answers with their expandable source. The customer-service example now exposes its existing lead-time source as well. After visual review, restore the original deep-plum hub finish, white title and lavender icon/subtitle while retaining the larger readable text.
+- Keep the standalone knowledge hub and omit the illustrative SOPs, Pricing and Work records labels, plus the upper connector, as requested after reviewing the grouped-card exploration.
+- At 480px and below, place application selectors in two centered rows instead of shrinking five labels into one row. Preserve readable touch targets and reduced-motion styles.
+- This follow-up uses `feat/stridebrain-hero-readability`, based on `372544a`, because the previously reviewed refinement branch is now associated with the production project alias.
 
 ## Candidate scope
 
@@ -18,13 +28,18 @@ Status: design refinement in a draft review branch; not promoted to production. 
 - `git diff --check` passed.
 - React review: one local selection state per explorer, stable application keys, unique panel IDs, native disclosure controls, no effects/timers/listeners, no new dependencies.
 - Accessible source controls and application selectors have visible focus styling; selectors retain `aria-pressed`, `aria-controls` and a polite result announcement.
+- The user-supplied Vercel share link unlocked the exact `d844d5d` preview. Desktop browser checks passed for the English and Chinese hero and language navigation at a 1363px viewport, with no document-level horizontal overflow.
+- Exercised all five English hero applications, English source disclosures, all four order-walkthrough steps and reset. Job PS-0500 and its specifications persist across the walkthrough. The secondary CTA reaches `#demo`.
+- Checked Chinese customer-service source expansion and the detailed quoting application. Native source controls and application buttons respond to Enter; the two explorers keep independent selections.
+- Inspected deployed animation styles: connector signal runs once for 0.7s; result entry runs once for 0.35s. Application selections settle on the expected result. Reduced-motion behavior is code-reviewed, not browser-emulated.
+- The Chinese consultation CTA reaches the form with StrideBrain preselected. No form was submitted.
 
 ## Preview limitations and release checks
 
-- Exact-candidate browser verification remains pending. The cloud browser cannot reach this workspace's localhost, and the connected Vercel account is denied access to the `prime-stride-ai` deployment scope. No protection settings were changed.
-- Verify Chinese and English at desktop, tablet and 320px/390px mobile widths. Check the five application labels, stable result height, source expansion, persistent order brief, keyboard operation, reduced motion and overflow.
-- Walk through all five applications and all four order steps. The job specifications must remain unchanged; step navigation must not imply that an actual quote was approved or an order created.
-- Check the contact CTA preselects StrideBrain. Contact delivery remains untested; no submission was sent.
+- Preview access is resolved through the share link; no protection settings were changed. The available browser API has no viewport resizing or reduced-motion emulation, so tablet/phone visual and touch checks remain pending.
+- Responsive code review confirms the single-column hero below 800px, centered 3+2 application layout below 480px, 44px minimum source controls, wrapping metadata, simplified mobile connectors and reduced-motion overrides. This is not a substitute for a rendered 320px/390px and tablet check.
+- At those widths, check long English application labels, work-order stages, source expansion, result-height changes, persistent order brief and horizontal overflow. Test reduced-motion preference on a browser/device that can emulate it.
+- Contact delivery remains untested; no submission was sent.
 - Existing shared-footer Privacy Policy link is `#`; it still needs an approved destination.
 
 ## Deployment and rollback
