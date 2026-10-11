@@ -39,10 +39,12 @@ export default function StrideBrainOrbit({ locale, explorer = false }: { locale:
   return <div className={`sb-system${explorer ? " sb-explorer" : " sb-connected-hero"}`}>
     {!explorer && <div className="sb-knowledge-scene">
       <div className="sb-scene-heading"><span>StrideBrain</span><span>{t.source}</span></div>
-      <div className="sb-source-chips">{t.sources.map(source => <span key={source}>{source}</span>)}</div>
       <div className="sb-knowledge-core">
-        <span className="sb-core-mark"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" aria-hidden="true"><path d="M16 4 28 10 16 16 4 10Z M4 16l12 6 12-6M4 22l12 6 12-6" /></svg></span>
-        <div><strong>{t.hub}</strong><span>{t.sub}</span></div>
+        <div className="sb-knowledge-identity">
+          <span className="sb-core-mark"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" aria-hidden="true"><path d="M16 4 28 10 16 16 4 10Z M4 16l12 6 12-6M4 22l12 6 12-6" /></svg></span>
+          <div><strong>{t.hub}</strong><span>{t.sub}</span></div>
+        </div>
+        <div className="sb-source-chips">{t.sources.map(source => <span key={source}>{source}</span>)}</div>
       </div>
       <svg className="sb-connectors" viewBox="0 0 500 46" preserveAspectRatio="none" aria-hidden="true">
         <path d="M250 0V20 M50 46V20H450V46 M150 20V46 M250 20V46 M350 20V46" />
