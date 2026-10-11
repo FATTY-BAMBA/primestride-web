@@ -188,7 +188,7 @@ export const products: Product[] = [
     img: "/visuals/product-customer-ai.png",
     live: true,
     en: {
-      tagline: "24/7 Traditional-Chinese customer service.",
+      tagline: "24/7 customer service, across languages.",
       stats: [
         "70%+ automation rate, production-verified",
         "0.5-sec first-token response",
@@ -196,11 +196,11 @@ export const products: Product[] = [
         "Escalates below 0.75 confidence",
       ],
       description:
-        "A 24/7 customer service assistant built for Traditional Chinese from the ground up, not translated from Simplified. It answers instantly, remembers the whole conversation, and knows when it's unsure: below a confidence threshold it hands off to a human. Your team manages the knowledge base in a spreadsheet, so there's no IT queue and no redeployment when content changes.",
+        "A multilingual customer service assistant grounded in your company’s knowledge, with language coverage configured for your customers. It answers instantly, remembers the whole conversation, and knows when it's unsure: below a confidence threshold it hands off to a human. Your team manages the knowledge base in a spreadsheet, so there's no IT queue and no redeployment when content changes.",
       whoFor:
-        "Taiwan retail, service, hospitality, and professional-services businesses whose staff currently spend 3+ hours a day answering the same website enquiries.",
+        "Retail, service, hospitality, and professional-services teams handling repeated customer enquiries across languages.",
       features: [
-        { title: "24/7 繁中 chatbot", desc: "Built for Traditional Chinese from the ground up, not converted from Simplified." },
+        { title: "Multilingual conversations", desc: "Serve customers in multiple languages, including Traditional Chinese. Language coverage is configured for your audience." },
         { title: "0.5-second first response", desc: "SSE streaming delivers the first word in half a second, so conversations feel instant." },
         { title: "Excel-managed knowledge", desc: "Your team updates content in a spreadsheet. No IT, no developer queue." },
         { title: "Confidence-gated escalation", desc: "Below 0.75 confidence, the system automatically escalates to a human." },
@@ -209,7 +209,7 @@ export const products: Product[] = [
       ],
     },
     zh: {
-      tagline: "24 小時繁體中文客服。",
+      tagline: "24 小時多語言客服。",
       stats: [
         "70%+ 自動化率，實證數據",
         "0.5 秒首字回應",
@@ -217,11 +217,11 @@ export const products: Product[] = [
         "信心度低於 0.75 自動轉真人",
       ],
       description:
-        "24 小時繁體中文原生客服助理，並非由簡中翻譯而來。它即時回應、記得整段對話，也知道自己何時不確定：信心度低於門檻即自動轉接真人。你的團隊以試算表管理知識庫，內容變更不必等 IT、也不需重新部署。",
+        "以公司知識為依據的多語言客服助理，依你的客戶需求設定支援語言。它即時回應、記得整段對話，也知道自己何時不確定：信心度低於門檻即自動轉接真人。你的團隊以試算表管理知識庫，內容變更不必等 IT、也不需重新部署。",
       whoFor:
-        "員工每日花 3 小時以上回答相同網站詢問的台灣零售、服務、餐旅與專業服務業。",
+        "需要以不同語言處理重複客戶詢問的零售、服務、餐旅與專業服務團隊。",
       features: [
-        { title: "24/7 繁中客服", desc: "繁體中文原生打造，並非由簡中轉換而來。" },
+        { title: "多語言客服", desc: "支援包含繁體中文在內的多語言服務，依客群需求設定語言範圍。" },
         { title: "0.5 秒首字回應", desc: "SSE 串流讓首字在半秒內出現，對話即時流暢。" },
         { title: "Excel 知識庫", desc: "團隊用試算表更新內容，不需 IT、不需重新部署。" },
         { title: "信心度轉真人", desc: "信心度低於 0.75 時，系統自動轉接真人。" },
