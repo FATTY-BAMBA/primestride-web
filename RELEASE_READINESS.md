@@ -7,7 +7,7 @@ Status: design refinement in a draft review branch; not promoted to production. 
 - Place the benefit immediately below the product title and combine the alternate product name with the company endorsement.
 - Rename the walkthrough CTA to “See an order in action” / “看看一筆訂單如何運作”.
 - Increase source-chip, application-label, sample-metadata and answer text sizes and contrast.
-- Use a lighter knowledge hub and a stronger result panel; group answers with their expandable source. The customer-service example now exposes its existing lead-time source as well.
+- Use a stronger result panel and group answers with their expandable source. The customer-service example now exposes its existing lead-time source as well. After visual review, restore the original deep-plum hub finish, white title and lavender icon/subtitle while retaining the larger readable text.
 - Keep the standalone knowledge hub and omit the illustrative SOPs, Pricing and Work records labels, plus the upper connector, as requested after reviewing the grouped-card exploration.
 - At 480px and below, place application selectors in two centered rows instead of shrinking five labels into one row. Preserve readable touch targets and reduced-motion styles.
 - This follow-up uses `feat/stridebrain-hero-readability`, based on `372544a`, because the previously reviewed refinement branch is now associated with the production project alias.

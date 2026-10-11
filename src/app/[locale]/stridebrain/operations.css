@@ -234,11 +234,11 @@
 .sb-connected-hero { padding: 22px; border: 1px solid #dcd7e9; border-radius: 24px; background: radial-gradient(ellipse at 50% 12%, #efebfa 0, transparent 58%), #f9f8fc; box-shadow: 0 24px 70px -42px #31245240, inset 0 1px 0 #fff; }
 .sb-scene-heading { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 5px 12px; font-size: .75rem; color: #5c526b; }
 .sb-scene-heading > span:first-child { font-family: var(--font-bricolage),sans-serif; font-size: .85rem; font-weight: 600; color: var(--ink); }
-.sb-knowledge-core { position: relative; display: flex; align-items: center; justify-content: center; gap: 12px; width: fit-content; max-width: 100%; margin: 23px auto 0; padding: 14px 22px; border: 1px solid #c7b9e7; border-radius: 15px; color: #34254f; background: linear-gradient(130deg, #f0eafb, #e9e2f6); box-shadow: 0 6px 18px -12px #30204440, inset 0 1px 0 #fff; }
-.sb-core-mark { display: flex; align-items: center; justify-content: center; flex: none; width: 40px; height: 40px; color: var(--iris); background: #ffffffb3; border: 1px solid #d7cbed; border-radius: 10px; }
+.sb-knowledge-core { position: relative; display: flex; align-items: center; justify-content: center; gap: 12px; width: fit-content; max-width: 100%; margin: 23px auto 0; padding: 14px 22px; border: 1px solid #6756a0; border-radius: 15px; color: #fff; background: linear-gradient(130deg, #352b50, #211c30); box-shadow: 0 10px 24px -12px #30204480, inset 0 1px 0 #ffffff20; }
+.sb-core-mark { display: flex; align-items: center; justify-content: center; flex: none; width: 40px; height: 40px; color: #d6c9ff; background: #ffffff0d; border: 1px solid #ffffff20; border-radius: 10px; }
 .sb-core-mark svg { width: 28px; height: 28px; }
 .sb-knowledge-core strong { display: block; font-size: 1.02rem; font-weight: 600; }
-.sb-knowledge-core > div > span { display: block; font-size: .75rem; color: #665478; margin-top: 3px; }
+.sb-knowledge-core > div > span { display: block; font-size: .75rem; color: #c9bedf; margin-top: 3px; }
 .sb-connectors { display: block; width: 100%; height: 34px; overflow: visible; }
 .sb-connectors path { fill: none; stroke: #d7cfe6; stroke-width: 1; vector-effect: non-scaling-stroke; }
 .sb-connectors .is-active { stroke: #8a73c4; stroke-width: 1.5; }
