@@ -7,6 +7,7 @@ import ProductCard from "@/components/ProductCard";
 import CoreNetwork from "@/components/CoreNetwork";
 import ConnectionExplorer from "@/components/ConnectionExplorer";
 import OperationsSpotlight from "@/components/OperationsSpotlight";
+import "./home.css";
 
 export default function Home({ params }: { params: { locale: string } }) {
   if (!isLocale(params.locale)) notFound();
@@ -15,13 +16,13 @@ export default function Home({ params }: { params: { locale: string } }) {
   const base = `/${locale}`;
 
   return (
-    <main>
+    <main className="home-page">
       {/* HERO */}
-      <section className="hero">
+      <section className="hero" aria-labelledby="home-title">
         <div className="wrap hero-grid">
-          <div>
+          <div className="home-hero-copy">
             <span className="eyebrow">{dict.hero.eyebrow}</span>
-            <h1>
+            <h1 id="home-title">
               {dict.hero.title} <span className="accent">{dict.hero.titleAccent}</span>
             </h1>
             <p className="lead">{dict.hero.lead}</p>
@@ -33,6 +34,7 @@ export default function Home({ params }: { params: { locale: string } }) {
                 {dict.hero.ctaSecondary}
               </Link>
             </div>
+            <p className="home-hero-note"><span aria-hidden="true">↳</span>{locale === "zh" ? "從一個真正需要改善的工作流程開始。" : "Start with the workflow that needs it most."}</p>
           </div>
           <CoreNetwork locale={locale} nodes={products.map((product) => ({
             slug: product.slug,
@@ -55,18 +57,25 @@ export default function Home({ params }: { params: { locale: string } }) {
       </div>
 
       {/* PLATFORM */}
-      <section className="block arch" id="platform">
+      <section className="block arch home-platform" id="platform">
         <div className="wrap">
-          <span className="eyebrow">{dict.platform.eyebrow}</span>
-          <h2>{dict.platform.title}</h2>
-          <p>{dict.platform.intro}</p>
-          <div className="row">
-            {dict.platform.boxes.map((b, i) => (
-              <div className="box" key={i}>
-                <h3>{b.h}</h3>
-                <p>{b.p}</p>
+          <div className="home-platform-panel">
+            <div className="home-platform-intro">
+              <div>
+                <span className="eyebrow">{dict.platform.eyebrow}</span>
+                <h2>{dict.platform.title}</h2>
               </div>
-            ))}
+              <p>{dict.platform.intro}</p>
+            </div>
+            <div className="row">
+              {dict.platform.boxes.map((b, i) => (
+                <div className="box" key={i}>
+                  <span className="home-section-index" aria-hidden="true">0{i + 1}</span>
+                  <h3>{b.h}</h3>
+                  <p>{b.p}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
