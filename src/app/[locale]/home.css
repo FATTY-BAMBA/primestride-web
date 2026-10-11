@@ -6,6 +6,7 @@
 .home-page .eyebrow { font-size: .72rem; letter-spacing: .13em; }
 .home-page .hero h1 { font-size: clamp(2.6rem, 4.65vw, 4rem); line-height: 1.08; letter-spacing: -.045em; max-width: 11ch; margin-top: 24px; text-wrap: balance; }
 .home-page .hero h1 .accent { display: block; color: #493576; }
+.home-page:lang(zh-Hant) .hero h1 { max-width: none; font-size: clamp(2.3rem, 4.1vw, 3.5rem); line-height: 1.25; letter-spacing: -.035em; }
 .home-page .hero p.lead { font-size: 1.08rem; line-height: 1.8; max-width: 43ch; margin: 26px 0 30px; color: #626071; }
 .home-page .hero-cta { gap: 12px; }
 .home-page .btn { min-height: 48px; border-radius: 10px; }
@@ -33,7 +34,7 @@
 .home-page .core-node-top svg { width: 21px; height: 21px; flex: none; }
 .home-page .core-node-index { font-size: .62rem; opacity: 1; color: #8c809c; }
 .home-page .core-node strong { font-size: .82rem; font-weight: 600; line-height: 1.4; }
-.home-page .core-node small { margin-top: 4px; font-size: .67rem; font-weight: 400; line-height: 1.4; color: #74687e; }
+.home-page .core-node small { margin-top: 4px; font-size: .75rem; font-weight: 400; line-height: 1.4; color: #6c5e78; }
 .home-page .core-node:hover { background: #f7f4fd; border-color: #ab96d3; }
 .home-page .core-node.is-selected { border-color: #7657b8; background: #eee8fa; color: #36214f; box-shadow: 0 0 0 1px #7657b817; }
 .home-page .core-node.is-selected .core-node-top { color: #593494; }
@@ -120,7 +121,7 @@
   .home-page .core-explorer { padding: 19px; }
   .home-page .core-node { padding-inline: 9px; }
   .home-page .core-node strong { font-size: .77rem; }
-  .home-page .core-node small { font-size: .65rem; }
+  .home-page .core-node small { font-size: .72rem; }
 }
 @media (max-width: 960px) {
   .home-page .hero-grid { grid-template-columns: 1fr; gap: 36px; }
@@ -129,7 +130,7 @@
   .home-page .hero p.lead { max-width: 54ch; }
   .home-page .core-explorer { max-width: 640px; width: 100%; padding: 24px; }
   .home-page .core-node strong { font-size: .86rem; }
-  .home-page .core-node small { font-size: .72rem; }
+  .home-page .core-node small { font-size: .75rem; }
   .home-page .sec-head { gap: 18px 32px; }
   .home-page .home-platform-panel { padding: 32px; }
   .home-page .home-platform-intro { grid-template-columns: 1fr; gap: 24px; }
@@ -141,6 +142,7 @@
 @media (max-width: 640px) {
   .home-page .hero { padding: 34px 0 42px; }
   .home-page .hero h1 { font-size: clamp(2.5rem, 9vw, 3.2rem); margin-top: 20px; max-width: 12ch; }
+  .home-page:lang(zh-Hant) .hero h1 { font-size: clamp(2rem, 8vw, 3rem); }
   .home-page .hero p.lead { font-size: 1rem; margin-block: 22px 26px; }
   .home-page .hero-cta { gap: 10px; }
   .home-page .hero-cta .btn { justify-content: center; }
@@ -188,7 +190,7 @@
   .home-page .core-foundation-heading strong { font-size: 1.05rem; }
   .home-page .core-node { padding: 11px 9px; }
   .home-page .core-node strong { font-size: .78rem; }
-  .home-page .core-node small { font-size: .68rem; }
+  .home-page .core-node small { font-size: .72rem; }
   .home-page .core-detail { padding: 15px; min-height: 220px; }
   .home-page .operations-preview-head { padding-inline: 18px; }
   .home-page .operations-preview .operations-question { margin-inline: 18px; }

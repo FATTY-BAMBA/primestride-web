@@ -16,7 +16,7 @@ export default function Home({ params }: { params: { locale: string } }) {
   const base = `/${locale}`;
 
   return (
-    <main className="home-page">
+    <main className="home-page" lang={locale === "zh" ? "zh-Hant" : "en"}>
       {/* HERO */}
       <section className="hero" aria-labelledby="home-title">
         <div className="wrap hero-grid">
