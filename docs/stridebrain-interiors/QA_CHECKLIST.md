@@ -11,7 +11,7 @@
 - [ ] Replace generic starter content with deep scenario-rich records and PDF/XLSX examples.
 
 ## Browser-based functional tests
-- [ ] All nine nav sections render without errors.
+- [ ] All ten nav sections render without errors.
 - [ ] Overview counts match Project/Work/Approval views.
 - [ ] Knowledge full-text search, kind filter and source inspector work.
 - [ ] Project details include the correct linked documents, quotes and work orders.
@@ -24,10 +24,12 @@
 - [ ] Latest quote total is not double counted as multiple revisions.
 - [ ] Activity audit reflects simulated actions.
 - [ ] Reset clears browser decisions and restores initial values.
-- [ ] Desktop/mobile sizes, touch and keyboard reviewed.
+- [ ] Desktop/mobile sizes, touch and keyboard reviewed; modal source inspector on narrow viewports requires runtime verification.
 
 ## Website promise parity (unmet in first scaffold)
-- [ ] AI Customer Service sample reply with source citation and approval.
+- [x] AI Customer Service scaffold supports cited Traditional Chinese/English replies, local approval, and copy without sending.
+- [ ] Run browser-based tests of response edit invalidation and approval persistence.
+- [ ] Connect approved production customer-service channels and access control.
 - [ ] Real PDF/Excel ingestion with evidence and pages.
 - [ ] Multi-user database persistence, tenant isolation and RBAC.
 - [ ] Live AI reasoning bound to tenant records and source rules.
