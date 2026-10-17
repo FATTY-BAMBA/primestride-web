@@ -30,7 +30,7 @@ Product page: https://www.primestrideai.com/en/stridebrain
 |---|---|---|
 | Company knowledge hub | Source-indexed synthetic records, full-text search, inspector, download | Real ingestion of PDF/XLSX/DOCX, chunking, approved revisions, citations to page/section |
 | Knowledge Assistant | Rule-based sample retrieval and source links | Grounded LLM with evaluation, confidence/abstention, access controls |
-| AI Customer Service | Not yet shipped | Drafting screen using confirmed project facts; source notes, human review, no auto-send |
+| AI Customer Service | Bilingual sample drafting with cited sources, editable response, browser-only approval and copy (no sending) | Real user roles, customer channels, verified permissions and delivery tracking |
 | AI Quoting | Deterministic sample calculator; revision history; margin and tax | Itemized quote engine, real supplier/product catalog, tax/discount rules, export and approvals |
 | Work Orders | Linked task directory and browser-persistent status updates | Database, assignments, dependencies, revisions, notifications and audit |
 | Data Analytics | Derived portfolio totals from latest sample quote versions | Real margin actuals, multi-period comparisons, reproducible metrics |
@@ -64,11 +64,12 @@ Do not merge demo code into the public site or describe it as production ready w
 1. Show owner overview and sources.
 2. Ask Copilot what needs attention.
 3. Open PRJ-101 and inspect current Materials Schedule and Supplier Quotation documents.
-4. Navigate to Quoting and change the example direct cost or target margin.
-5. Attempt commit before approval and observe the block.
-6. Simulate supplier, owner and client gates in sequence.
-7. Commit and verify WO-VAR-101 appears in Work Orders and analytics reflects the approved variation.
-8. Reset demo to restore initial state.
+4. Open Customer Service. Prepare a cited Traditional Chinese reply, review it, and confirm it cannot be sent from the demo.
+5. Navigate to Quoting and change the example direct cost or target margin.
+6. Attempt commit before approval and observe the block.
+7. Simulate supplier, owner and client gates in sequence.
+8. Commit and verify WO-VAR-101 appears in Work Orders and analytics reflects the approved variation.
+9. Reset demo to restore initial state.
 
 ## 7. MVP exit gates
 - Exact reproducible math and no invented operational claims.
