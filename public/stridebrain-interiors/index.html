@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#122733">
+<meta name="description" content="StrideBrain for interior-design operations: a source-linked, interactive, synthetic demonstration by PrimeStride AI.">
+<title>StrideBrain · Horizon Atelier Flagship Demo</title>
+<link rel="stylesheet" href="./app.css">
+</head>
+<body>
+<div class="app-shell" id="app">
+  <aside class="sidebar" aria-label="Workspace navigation">
+    <div class="brand-lockup">
+      <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+      <div><strong>StrideBrain</strong><small>BY PRIMESTRIDE AI</small></div>
+    </div>
+    <div class="workspace-switcher"><span class="workspace-avatar">禾</span><span class="workspace-name"><strong>Horizon Atelier</strong><small>禾序空間設計 · Sample firm</small></span><span class="chevron">⌄</span></div>
+    <p class="nav-section-label">WORKSPACE</p>
+    <nav class="nav-items" id="nav">
+      <button type="button" data-action="nav" data-value="overview"><span class="nav-glyph">◫</span>Overview</button>
+      <button type="button" data-action="nav" data-value="copilot"><span class="nav-glyph">✦</span>StrideBrain Copilot</button>
+      <button type="button" data-action="nav" data-value="projects"><span class="nav-glyph">▤</span>Projects</button>
+      <button type="button" data-action="nav" data-value="knowledge"><span class="nav-glyph">▧</span>Knowledge hub</button>
+      <button type="button" data-action="nav" data-value="quotes"><span class="nav-glyph">⌗</span>Quotations</button>
+      <button type="button" data-action="nav" data-value="work"><span class="nav-glyph">☷</span>Work orders</button>
+      <button type="button" data-action="nav" data-value="suppliers"><span class="nav-glyph">▥</span>Suppliers</button>
+      <button type="button" data-action="nav" data-value="approvals"><span class="nav-glyph">◇</span>Approvals</button>
+      <button type="button" data-action="nav" data-value="analytics"><span class="nav-glyph">▥</span>Analytics</button>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="demo-status"><span class="pulse-dot"></span><strong>DEMO DATA ACTIVE</strong><small>Not connected to customers or suppliers</small></div>
+      <button type="button" class="reset-btn" data-action="reset">↺ Reset demo changes</button>
+      <div class="sidebar-profile"><span class="profile-icon">ML</span><span><strong>Mei Lin</strong><small>Owner · Demo role</small></span></div>
+    </div>
+  </aside>
+  <div class="work-column">
+    <header class="topbar">
+      <div class="breadcrumb"><span>Horizon Atelier</span><span class="crumb-divider">/</span><strong id="active-crumb">Overview</strong></div>
+      <div class="top-actions"><span class="syn-label"><i></i> SYNTHETIC ENVIRONMENT</span><button type="button" class="top-menu" data-action="nav" data-value="knowledge">Search knowledge ↗</button></div>
+    </header>
+    <main class="main" id="main" tabindex="-1"><div class="loading-screen"><div class="loader-ring"></div><h2>Preparing the operations workspace</h2><p>Loading the fictional company knowledge and records…</p></div></main>
+  </div>
+  <aside class="inspector" aria-label="Context and source evidence" id="inspector"></aside>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script src="./app.js" defer></script>
+</body>
+</html>
