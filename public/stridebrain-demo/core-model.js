@@ -84,10 +84,10 @@ export class WorkspaceModel{
     return this.seed.projects.filter(p=>!q||[p.id,p.name,p.type,p.city,p.manager,p.description||""].join(" ").toLowerCase().includes(q));
   }
 }
-function defaults(pack){return {variation:{cost:pack.scenario.cost,margin:pack.scenario.margin,supplier:false,owner:false,customer:false,committed:false},tasks:{},approvals:{},customerDraft:{lang:"zh",text:"",reviewed:false,reviewedAt:null},audit:[]};}
+function defaults(pack){return {variation:{cost:pack.scenario.cost,margin:pack.scenario.margin,supplier:false,owner:false,customer:false,committed:false},tasks:{},approvals:{},customerDraft:{lang:"zh",text:"",reviewed:false,reviewedAt:null},feedback:[],audit:[]};}
 export function loadDemoState(pack){
  const fresh=defaults(pack);try{const old=JSON.parse(localStorage.getItem("stridebrain-demo-v2-"+pack.id)||"null");if(!old)return fresh;
-  return {variation:{...fresh.variation,...old.variation},tasks:old.tasks||{},approvals:old.approvals||{},customerDraft:{...fresh.customerDraft,...old.customerDraft},audit:Array.isArray(old.audit)?old.audit:[]};
+  return {variation:{...fresh.variation,...old.variation},tasks:old.tasks||{},approvals:old.approvals||{},customerDraft:{...fresh.customerDraft,...old.customerDraft},feedback:Array.isArray(old.feedback)?old.feedback:[],audit:Array.isArray(old.audit)?old.audit:[]};
  }catch{return fresh;}
 }
 export function saveDemoState(pack,state){try{localStorage.setItem("stridebrain-demo-v2-"+pack.id,JSON.stringify(state));return true;}catch{return false;}}
@@ -130,4 +130,20 @@ export function reviewCustomerDraft(state){
  if(!state.customerDraft.text.trim())return {ok:false,reason:"Prepare or write a draft first."};
  state.customerDraft.reviewed=true;state.customerDraft.reviewedAt=new Date().toISOString();
  event(state,"Demo reviewer accepted the customer response draft (not sent).");return {ok:true};
+}
+
+export function recordFeedback(state,kind,sourceId,note){
+ const kindOk=["Helpful","Needs review"].includes(kind);
+ if(!kindOk)return {ok:false,reason:"Invalid feedback type"};
+ const record={id:"FB-"+Date.now().toString(36)+"-"+String(state.feedback.length+1),kind,sourceId:sourceId||null,note:String(note||"").slice(0,1000),status:kind==="Helpful"?"Recorded":"Open",createdAt:new Date().toISOString()};
+ state.feedback.unshift(record);
+ event(state,"Knowledge feedback "+record.id+" captured; "+record.status.toLowerCase()+".");
+ return {ok:true,record};
+}
+export function markFeedbackReviewed(state,id){
+ const item=state.feedback.find(f=>f.id===id);
+ if(!item)return {ok:false,reason:"Feedback not found."};
+ item.status="Reviewed";item.reviewedAt=new Date().toISOString();
+ event(state,"Feedback "+id+" reviewed. Original source document remains unchanged.");
+ return {ok:true};
 }
