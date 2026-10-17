@@ -1,0 +1,3499 @@
+{
+  "meta": {
+    "company": "晴川印務 · Clearprint Studio",
+    "name": "StrideBrain | Printing SME Demo",
+    "mode": "SYNTHETIC_DEMO",
+    "generatedFor": "PrimeStride AI",
+    "date": "2026-10-18",
+    "currency": "TWD",
+    "taxAssumption": 0.05,
+    "disclaimer": "Fictional print studio, jobs and quotes. No real supplier API, job automation, email/LINE integration or model inference.",
+    "counts": {
+      "projects": 8,
+      "documents": 114,
+      "suppliers": 8,
+      "quotes": 24,
+      "workOrders": 64,
+      "approvals": 24,
+      "activity": 96
+    }
+  },
+  "projects": [
+    {
+      "id": "JOB-201",
+      "name": "民權海報 · Minquan Poster Run",
+      "city": "Taipei",
+      "type": "Commercial print",
+      "stage": "Prepress approval",
+      "budget": 28500,
+      "progress": 36,
+      "manager": "Lin Yu",
+      "client": "Sample Buyer 01",
+      "targetDate": "2026-11-02",
+      "lastReviewed": "2026-10-17",
+      "description": "500 A3 posters"
+    },
+    {
+      "id": "JOB-202",
+      "name": "春山型錄 · Spring Catalog",
+      "city": "Taipei",
+      "type": "Catalog",
+      "stage": "In production",
+      "budget": 62000,
+      "progress": 65,
+      "manager": "Chen Yi",
+      "client": "Sample Buyer 02",
+      "targetDate": "2026-11-03",
+      "lastReviewed": "2026-10-17",
+      "description": "800 A4 catalogs"
+    },
+    {
+      "id": "JOB-203",
+      "name": "咖啡包裝 · Coffee Packaging",
+      "city": "New Taipei",
+      "type": "Packaging",
+      "stage": "Quotation review",
+      "budget": 98000,
+      "progress": 18,
+      "manager": "Tsai Wen",
+      "client": "Sample Buyer 03",
+      "targetDate": "2026-11-04",
+      "lastReviewed": "2026-10-17",
+      "description": "2,000 paper sleeves"
+    },
+    {
+      "id": "JOB-204",
+      "name": "展場輸出 · Exhibition Graphics",
+      "city": "Taipei",
+      "type": "Large format",
+      "stage": "In production",
+      "budget": 146000,
+      "progress": 74,
+      "manager": "Lin Yu",
+      "client": "Sample Buyer 04",
+      "targetDate": "2026-11-05",
+      "lastReviewed": "2026-10-17",
+      "description": "Large format event display"
+    },
+    {
+      "id": "JOB-205",
+      "name": "年度手冊 · Annual Handbook",
+      "city": "Taoyuan",
+      "type": "Booklet",
+      "stage": "Prepress approval",
+      "budget": 84500,
+      "progress": 43,
+      "manager": "Chen Yi",
+      "client": "Sample Buyer 05",
+      "targetDate": "2026-11-06",
+      "lastReviewed": "2026-10-17",
+      "description": "1,200 company booklets"
+    },
+    {
+      "id": "JOB-206",
+      "name": "標籤改版 · Label Refresh",
+      "city": "Taichung",
+      "type": "Labels",
+      "stage": "Handover",
+      "budget": 31500,
+      "progress": 93,
+      "manager": "Tsai Wen",
+      "client": "Sample Buyer 06",
+      "targetDate": "2026-11-07",
+      "lastReviewed": "2026-10-17",
+      "description": "6,000 product labels"
+    },
+    {
+      "id": "JOB-207",
+      "name": "喜帖印製 · Invitation Suite",
+      "city": "Taipei",
+      "type": "Stationery",
+      "stage": "Quotation review",
+      "budget": 52600,
+      "progress": 29,
+      "manager": "Lin Yu",
+      "client": "Sample Buyer 07",
+      "targetDate": "2026-11-08",
+      "lastReviewed": "2026-10-17",
+      "description": "350 invitation sets"
+    },
+    {
+      "id": "JOB-208",
+      "name": "門市菜單 · Retail Menus",
+      "city": "New Taipei",
+      "type": "Commercial print",
+      "stage": "In production",
+      "budget": 41000,
+      "progress": 61,
+      "manager": "Chen Yi",
+      "client": "Sample Buyer 08",
+      "targetDate": "2026-11-09",
+      "lastReviewed": "2026-10-17",
+      "description": "400 laminated menus"
+    }
+  ],
+  "documents": [
+    {
+      "id": "PRDOC-2001",
+      "projectId": "JOB-201",
+      "title": "Client brief · 民權海報 · Minquan Poster Run",
+      "kind": "Client brief",
+      "version": "v2.0",
+      "status": "Approved",
+      "owner": "Lin Yu",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Client brief — 民權海報 · Minquan Poster Run\n\nDocument ID: PRDOC-2001\nJob: JOB-201\nVersion: v2.0\nReview status: Approved\nOwner: Lin Yu\nDate: 2026-10-17\n\n## Job context\n- Customer order: 500 A3 posters.\n- Sample job budget: NT$28,500.\n- Workflow stage: Prepress approval; sample completion: 36%.\n\n## Working instructions\nConfirm physical quantities, proof version, customer acceptance, and timing before authorizing production.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2002",
+      "projectId": "JOB-201",
+      "title": "Artwork checklist · 民權海報 · Minquan Poster Run",
+      "kind": "Artwork checklist",
+      "version": "v1.2",
+      "status": "Approved",
+      "owner": "Lin Yu",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Artwork checklist — 民權海報 · Minquan Poster Run\n\nDocument ID: PRDOC-2002\nJob: JOB-201\nVersion: v1.2\nReview status: Approved\nOwner: Lin Yu\nDate: 2026-10-17\n\n## Job context\n- Customer order: 500 A3 posters.\n- Sample job budget: NT$28,500.\n- Workflow stage: Prepress approval; sample completion: 36%.\n\n## Working instructions\nArtwork PDF/AI, 300 dpi at placed size; A3 final trim with 3 mm bleed. Convert fonts to outlines or embed, verify color profile and proof consistency.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2003",
+      "projectId": "JOB-201",
+      "title": "Production specification · 民權海報 · Minquan Poster Run",
+      "kind": "Production specification",
+      "version": "v1.3",
+      "status": "Approved",
+      "owner": "Lin Yu",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Production specification — 民權海報 · Minquan Poster Run\n\nDocument ID: PRDOC-2003\nJob: JOB-201\nVersion: v1.3\nReview status: Approved\nOwner: Lin Yu\nDate: 2026-10-17\n\n## Job context\n- Customer order: 500 A3 posters.\n- Sample job budget: NT$28,500.\n- Workflow stage: Prepress approval; sample completion: 36%.\n\n## Working instructions\nConfirm physical quantities, proof version, customer acceptance, and timing before authorizing production.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2004",
+      "projectId": "JOB-201",
+      "title": "Paper stock sheet · 民權海報 · Minquan Poster Run",
+      "kind": "Paper stock sheet",
+      "version": "v1.4",
+      "status": "Approved",
+      "owner": "Lin Yu",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Paper stock sheet — 民權海報 · Minquan Poster Run\n\nDocument ID: PRDOC-2004\nJob: JOB-201\nVersion: v1.4\nReview status: Approved\nOwner: Lin Yu\nDate: 2026-10-17\n\n## Job context\n- Customer order: 500 A3 posters.\n- Sample job budget: NT$28,500.\n- Workflow stage: Prepress approval; sample completion: 36%.\n\n## Working instructions\nApproved baseline: 150gsm coated paper for 500 A3 posters. Requested alternative: FSC-type recycled 170gsm stock (illustrative, certification unverified). Incremental total direct cost of stock substitution = NT$2,400. Do not release production until supplier availability and customer proof are confirmed.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2005",
+      "projectId": "JOB-201",
+      "title": "Print proof record · 民權海報 · Minquan Poster Run",
+      "kind": "Print proof record",
+      "version": "v1.1",
+      "status": "Approved",
+      "owner": "Lin Yu",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Print proof record — 民權海報 · Minquan Poster Run\n\nDocument ID: PRDOC-2005\nJob: JOB-201\nVersion: v1.1\nReview status: Approved\nOwner: Lin Yu\nDate: 2026-10-17\n\n## Job context\n- Customer order: 500 A3 posters.\n- Sample job budget: NT$28,500.\n- Workflow stage: Prepress approval; sample completion: 36%.\n\n## Working instructions\nProof files are version-controlled; verbal approval is not sufficient to start a press run. Preserve approved file version and sign-off record.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2006",
+      "projectId": "JOB-201",
+      "title": "Customer meeting notes · 民權海報 · Minquan Poster Run",
+      "kind": "Customer meeting notes",
+      "version": "v2.0",
+      "status": "Approved",
+      "owner": "Lin Yu",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Customer meeting notes — 民權海報 · Minquan Poster Run\n\nDocument ID: PRDOC-2006\nJob: JOB-201\nVersion: v2.0\nReview status: Approved\nOwner: Lin Yu\nDate: 2026-10-17\n\n## Job context\n- Customer order: 500 A3 posters.\n- Sample job budget: NT$28,500.\n- Workflow stage: Prepress approval; sample completion: 36%.\n\n## Working instructions\nCustomer asks whether 500 A3 posters can be printed on recycled 170gsm paper. Requires revised margin calculation, stock and proof confirmation. No revised dispatch date can be promised yet.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2007",
+      "projectId": "JOB-201",
+      "title": "Supplier quote · 民權海報 · Minquan Poster Run",
+      "kind": "Supplier quote",
+      "version": "v1.3",
+      "status": "Pending review",
+      "owner": "Lin Yu",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Supplier quote — 民權海報 · Minquan Poster Run\n\nDocument ID: PRDOC-2007\nJob: JOB-201\nVersion: v1.3\nReview status: Pending review\nOwner: Lin Yu\nDate: 2026-10-17\n\n## Job context\n- Customer order: 500 A3 posters.\n- Sample job budget: NT$28,500.\n- Workflow stage: Prepress approval; sample completion: 36%.\n\n## Working instructions\nSample quotation for recycled paper substitution: material uplift NT$1,500; setup/changeover NT$500; possible finishing/handling NT$400; total incremental direct cost NT$2,400. Supplier delivery and certification require written verification.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2008",
+      "projectId": "JOB-201",
+      "title": "Quotation record · 民權海報 · Minquan Poster Run",
+      "kind": "Quotation record",
+      "version": "v1.4",
+      "status": "Approved",
+      "owner": "Lin Yu",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Quotation record — 民權海報 · Minquan Poster Run\n\nDocument ID: PRDOC-2008\nJob: JOB-201\nVersion: v1.4\nReview status: Approved\nOwner: Lin Yu\nDate: 2026-10-17\n\n## Job context\n- Customer order: 500 A3 posters.\n- Sample job budget: NT$28,500.\n- Workflow stage: Prepress approval; sample completion: 36%.\n\n## Working instructions\nMargin is computed as (pre-tax quote - direct cost) / pre-tax quote. Pricing is a synthetic commercial illustration.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2009",
+      "projectId": "JOB-201",
+      "title": "Production job ticket · 民權海報 · Minquan Poster Run",
+      "kind": "Production job ticket",
+      "version": "v1.1",
+      "status": "Approved",
+      "owner": "Lin Yu",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Production job ticket — 民權海報 · Minquan Poster Run\n\nDocument ID: PRDOC-2009\nJob: JOB-201\nVersion: v1.1\nReview status: Approved\nOwner: Lin Yu\nDate: 2026-10-17\n\n## Job context\n- Customer order: 500 A3 posters.\n- Sample job budget: NT$28,500.\n- Workflow stage: Prepress approval; sample completion: 36%.\n\n## Working instructions\nProduction tickets inherit the signed proof, material stock, quantity, due date and assigned work center.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2010",
+      "projectId": "JOB-201",
+      "title": "Press schedule · 民權海報 · Minquan Poster Run",
+      "kind": "Press schedule",
+      "version": "v1.2",
+      "status": "Approved",
+      "owner": "Lin Yu",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Press schedule — 民權海報 · Minquan Poster Run\n\nDocument ID: PRDOC-2010\nJob: JOB-201\nVersion: v1.2\nReview status: Approved\nOwner: Lin Yu\nDate: 2026-10-17\n\n## Job context\n- Customer order: 500 A3 posters.\n- Sample job budget: NT$28,500.\n- Workflow stage: Prepress approval; sample completion: 36%.\n\n## Working instructions\nDo not promise ship dates without confirmed stock, proof clearance, press capacity and finishing slots.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2011",
+      "projectId": "JOB-201",
+      "title": "Delivery instruction · 民權海報 · Minquan Poster Run",
+      "kind": "Delivery instruction",
+      "version": "v2.0",
+      "status": "Approved",
+      "owner": "Lin Yu",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Delivery instruction — 民權海報 · Minquan Poster Run\n\nDocument ID: PRDOC-2011\nJob: JOB-201\nVersion: v2.0\nReview status: Approved\nOwner: Lin Yu\nDate: 2026-10-17\n\n## Job context\n- Customer order: 500 A3 posters.\n- Sample job budget: NT$28,500.\n- Workflow stage: Prepress approval; sample completion: 36%.\n\n## Working instructions\nConfirm physical quantities, proof version, customer acceptance, and timing before authorizing production.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2012",
+      "projectId": "JOB-201",
+      "title": "Quality inspection · 民權海報 · Minquan Poster Run",
+      "kind": "Quality inspection",
+      "version": "v1.4",
+      "status": "Approved",
+      "owner": "Lin Yu",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Quality inspection — 民權海報 · Minquan Poster Run\n\nDocument ID: PRDOC-2012\nJob: JOB-201\nVersion: v1.4\nReview status: Approved\nOwner: Lin Yu\nDate: 2026-10-17\n\n## Job context\n- Customer order: 500 A3 posters.\n- Sample job budget: NT$28,500.\n- Workflow stage: Prepress approval; sample completion: 36%.\n\n## Working instructions\nConfirm physical quantities, proof version, customer acceptance, and timing before authorizing production.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2013",
+      "projectId": "JOB-202",
+      "title": "Client brief · 春山型錄 · Spring Catalog",
+      "kind": "Client brief",
+      "version": "v2.0",
+      "status": "Approved",
+      "owner": "Chen Yi",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Client brief — 春山型錄 · Spring Catalog\n\nDocument ID: PRDOC-2013\nJob: JOB-202\nVersion: v2.0\nReview status: Approved\nOwner: Chen Yi\nDate: 2026-10-17\n\n## Job context\n- Customer order: 800 A4 catalogs.\n- Sample job budget: NT$62,000.\n- Workflow stage: In production; sample completion: 65%.\n\n## Working instructions\nConfirm physical quantities, proof version, customer acceptance, and timing before authorizing production.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2014",
+      "projectId": "JOB-202",
+      "title": "Artwork checklist · 春山型錄 · Spring Catalog",
+      "kind": "Artwork checklist",
+      "version": "v1.3",
+      "status": "Approved",
+      "owner": "Chen Yi",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Artwork checklist — 春山型錄 · Spring Catalog\n\nDocument ID: PRDOC-2014\nJob: JOB-202\nVersion: v1.3\nReview status: Approved\nOwner: Chen Yi\nDate: 2026-10-17\n\n## Job context\n- Customer order: 800 A4 catalogs.\n- Sample job budget: NT$62,000.\n- Workflow stage: In production; sample completion: 65%.\n\n## Working instructions\nArtwork PDF/AI, 300 dpi at placed size; A3 final trim with 3 mm bleed. Convert fonts to outlines or embed, verify color profile and proof consistency.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2015",
+      "projectId": "JOB-202",
+      "title": "Production specification · 春山型錄 · Spring Catalog",
+      "kind": "Production specification",
+      "version": "v1.4",
+      "status": "Approved",
+      "owner": "Chen Yi",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Production specification — 春山型錄 · Spring Catalog\n\nDocument ID: PRDOC-2015\nJob: JOB-202\nVersion: v1.4\nReview status: Approved\nOwner: Chen Yi\nDate: 2026-10-17\n\n## Job context\n- Customer order: 800 A4 catalogs.\n- Sample job budget: NT$62,000.\n- Workflow stage: In production; sample completion: 65%.\n\n## Working instructions\nConfirm physical quantities, proof version, customer acceptance, and timing before authorizing production.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2016",
+      "projectId": "JOB-202",
+      "title": "Paper stock sheet · 春山型錄 · Spring Catalog",
+      "kind": "Paper stock sheet",
+      "version": "v1.1",
+      "status": "Approved",
+      "owner": "Chen Yi",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Paper stock sheet — 春山型錄 · Spring Catalog\n\nDocument ID: PRDOC-2016\nJob: JOB-202\nVersion: v1.1\nReview status: Approved\nOwner: Chen Yi\nDate: 2026-10-17\n\n## Job context\n- Customer order: 800 A4 catalogs.\n- Sample job budget: NT$62,000.\n- Workflow stage: In production; sample completion: 65%.\n\n## Working instructions\nRequested stock, GSM, finish, yield and available inventory must align with the production job ticket. Supplier lead times are not live.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2017",
+      "projectId": "JOB-202",
+      "title": "Print proof record · 春山型錄 · Spring Catalog",
+      "kind": "Print proof record",
+      "version": "v1.2",
+      "status": "Approved",
+      "owner": "Chen Yi",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Print proof record — 春山型錄 · Spring Catalog\n\nDocument ID: PRDOC-2017\nJob: JOB-202\nVersion: v1.2\nReview status: Approved\nOwner: Chen Yi\nDate: 2026-10-17\n\n## Job context\n- Customer order: 800 A4 catalogs.\n- Sample job budget: NT$62,000.\n- Workflow stage: In production; sample completion: 65%.\n\n## Working instructions\nProof files are version-controlled; verbal approval is not sufficient to start a press run. Preserve approved file version and sign-off record.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2018",
+      "projectId": "JOB-202",
+      "title": "Customer meeting notes · 春山型錄 · Spring Catalog",
+      "kind": "Customer meeting notes",
+      "version": "v2.0",
+      "status": "Approved",
+      "owner": "Chen Yi",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Customer meeting notes — 春山型錄 · Spring Catalog\n\nDocument ID: PRDOC-2018\nJob: JOB-202\nVersion: v2.0\nReview status: Approved\nOwner: Chen Yi\nDate: 2026-10-17\n\n## Job context\n- Customer order: 800 A4 catalogs.\n- Sample job budget: NT$62,000.\n- Workflow stage: In production; sample completion: 65%.\n\n## Working instructions\nConfirm physical quantities, proof version, customer acceptance, and timing before authorizing production.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2019",
+      "projectId": "JOB-202",
+      "title": "Supplier quote · 春山型錄 · Spring Catalog",
+      "kind": "Supplier quote",
+      "version": "v1.4",
+      "status": "Pending review",
+      "owner": "Chen Yi",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Supplier quote — 春山型錄 · Spring Catalog\n\nDocument ID: PRDOC-2019\nJob: JOB-202\nVersion: v1.4\nReview status: Pending review\nOwner: Chen Yi\nDate: 2026-10-17\n\n## Job context\n- Customer order: 800 A4 catalogs.\n- Sample job budget: NT$62,000.\n- Workflow stage: In production; sample completion: 65%.\n\n## Working instructions\nAll sample supplier costs in this data pack are fictional, not an API feed or a vendor offer.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2020",
+      "projectId": "JOB-202",
+      "title": "Quotation record · 春山型錄 · Spring Catalog",
+      "kind": "Quotation record",
+      "version": "v1.1",
+      "status": "Approved",
+      "owner": "Chen Yi",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Quotation record — 春山型錄 · Spring Catalog\n\nDocument ID: PRDOC-2020\nJob: JOB-202\nVersion: v1.1\nReview status: Approved\nOwner: Chen Yi\nDate: 2026-10-17\n\n## Job context\n- Customer order: 800 A4 catalogs.\n- Sample job budget: NT$62,000.\n- Workflow stage: In production; sample completion: 65%.\n\n## Working instructions\nMargin is computed as (pre-tax quote - direct cost) / pre-tax quote. Pricing is a synthetic commercial illustration.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2021",
+      "projectId": "JOB-202",
+      "title": "Production job ticket · 春山型錄 · Spring Catalog",
+      "kind": "Production job ticket",
+      "version": "v1.2",
+      "status": "Approved",
+      "owner": "Chen Yi",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Production job ticket — 春山型錄 · Spring Catalog\n\nDocument ID: PRDOC-2021\nJob: JOB-202\nVersion: v1.2\nReview status: Approved\nOwner: Chen Yi\nDate: 2026-10-17\n\n## Job context\n- Customer order: 800 A4 catalogs.\n- Sample job budget: NT$62,000.\n- Workflow stage: In production; sample completion: 65%.\n\n## Working instructions\nProduction tickets inherit the signed proof, material stock, quantity, due date and assigned work center.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2022",
+      "projectId": "JOB-202",
+      "title": "Press schedule · 春山型錄 · Spring Catalog",
+      "kind": "Press schedule",
+      "version": "v1.3",
+      "status": "Approved",
+      "owner": "Chen Yi",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Press schedule — 春山型錄 · Spring Catalog\n\nDocument ID: PRDOC-2022\nJob: JOB-202\nVersion: v1.3\nReview status: Approved\nOwner: Chen Yi\nDate: 2026-10-17\n\n## Job context\n- Customer order: 800 A4 catalogs.\n- Sample job budget: NT$62,000.\n- Workflow stage: In production; sample completion: 65%.\n\n## Working instructions\nDo not promise ship dates without confirmed stock, proof clearance, press capacity and finishing slots.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2023",
+      "projectId": "JOB-202",
+      "title": "Delivery instruction · 春山型錄 · Spring Catalog",
+      "kind": "Delivery instruction",
+      "version": "v2.0",
+      "status": "Approved",
+      "owner": "Chen Yi",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Delivery instruction — 春山型錄 · Spring Catalog\n\nDocument ID: PRDOC-2023\nJob: JOB-202\nVersion: v2.0\nReview status: Approved\nOwner: Chen Yi\nDate: 2026-10-17\n\n## Job context\n- Customer order: 800 A4 catalogs.\n- Sample job budget: NT$62,000.\n- Workflow stage: In production; sample completion: 65%.\n\n## Working instructions\nConfirm physical quantities, proof version, customer acceptance, and timing before authorizing production.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2024",
+      "projectId": "JOB-202",
+      "title": "Quality inspection · 春山型錄 · Spring Catalog",
+      "kind": "Quality inspection",
+      "version": "v1.1",
+      "status": "Approved",
+      "owner": "Chen Yi",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Quality inspection — 春山型錄 · Spring Catalog\n\nDocument ID: PRDOC-2024\nJob: JOB-202\nVersion: v1.1\nReview status: Approved\nOwner: Chen Yi\nDate: 2026-10-17\n\n## Job context\n- Customer order: 800 A4 catalogs.\n- Sample job budget: NT$62,000.\n- Workflow stage: In production; sample completion: 65%.\n\n## Working instructions\nConfirm physical quantities, proof version, customer acceptance, and timing before authorizing production.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2025",
+      "projectId": "JOB-203",
+      "title": "Client brief · 咖啡包裝 · Coffee Packaging",
+      "kind": "Client brief",
+      "version": "v2.0",
+      "status": "Approved",
+      "owner": "Tsai Wen",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Client brief — 咖啡包裝 · Coffee Packaging\n\nDocument ID: PRDOC-2025\nJob: JOB-203\nVersion: v2.0\nReview status: Approved\nOwner: Tsai Wen\nDate: 2026-10-17\n\n## Job context\n- Customer order: 2,000 paper sleeves.\n- Sample job budget: NT$98,000.\n- Workflow stage: Quotation review; sample completion: 18%.\n\n## Working instructions\nConfirm physical quantities, proof version, customer acceptance, and timing before authorizing production.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2026",
+      "projectId": "JOB-203",
+      "title": "Artwork checklist · 咖啡包裝 · Coffee Packaging",
+      "kind": "Artwork checklist",
+      "version": "v1.4",
+      "status": "Approved",
+      "owner": "Tsai Wen",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Artwork checklist — 咖啡包裝 · Coffee Packaging\n\nDocument ID: PRDOC-2026\nJob: JOB-203\nVersion: v1.4\nReview status: Approved\nOwner: Tsai Wen\nDate: 2026-10-17\n\n## Job context\n- Customer order: 2,000 paper sleeves.\n- Sample job budget: NT$98,000.\n- Workflow stage: Quotation review; sample completion: 18%.\n\n## Working instructions\nArtwork PDF/AI, 300 dpi at placed size; A3 final trim with 3 mm bleed. Convert fonts to outlines or embed, verify color profile and proof consistency.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2027",
+      "projectId": "JOB-203",
+      "title": "Production specification · 咖啡包裝 · Coffee Packaging",
+      "kind": "Production specification",
+      "version": "v1.1",
+      "status": "Approved",
+      "owner": "Tsai Wen",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Production specification — 咖啡包裝 · Coffee Packaging\n\nDocument ID: PRDOC-2027\nJob: JOB-203\nVersion: v1.1\nReview status: Approved\nOwner: Tsai Wen\nDate: 2026-10-17\n\n## Job context\n- Customer order: 2,000 paper sleeves.\n- Sample job budget: NT$98,000.\n- Workflow stage: Quotation review; sample completion: 18%.\n\n## Working instructions\nConfirm physical quantities, proof version, customer acceptance, and timing before authorizing production.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2028",
+      "projectId": "JOB-203",
+      "title": "Paper stock sheet · 咖啡包裝 · Coffee Packaging",
+      "kind": "Paper stock sheet",
+      "version": "v1.2",
+      "status": "Approved",
+      "owner": "Tsai Wen",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Paper stock sheet — 咖啡包裝 · Coffee Packaging\n\nDocument ID: PRDOC-2028\nJob: JOB-203\nVersion: v1.2\nReview status: Approved\nOwner: Tsai Wen\nDate: 2026-10-17\n\n## Job context\n- Customer order: 2,000 paper sleeves.\n- Sample job budget: NT$98,000.\n- Workflow stage: Quotation review; sample completion: 18%.\n\n## Working instructions\nRequested stock, GSM, finish, yield and available inventory must align with the production job ticket. Supplier lead times are not live.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2029",
+      "projectId": "JOB-203",
+      "title": "Print proof record · 咖啡包裝 · Coffee Packaging",
+      "kind": "Print proof record",
+      "version": "v1.3",
+      "status": "Approved",
+      "owner": "Tsai Wen",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Print proof record — 咖啡包裝 · Coffee Packaging\n\nDocument ID: PRDOC-2029\nJob: JOB-203\nVersion: v1.3\nReview status: Approved\nOwner: Tsai Wen\nDate: 2026-10-17\n\n## Job context\n- Customer order: 2,000 paper sleeves.\n- Sample job budget: NT$98,000.\n- Workflow stage: Quotation review; sample completion: 18%.\n\n## Working instructions\nProof files are version-controlled; verbal approval is not sufficient to start a press run. Preserve approved file version and sign-off record.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2030",
+      "projectId": "JOB-203",
+      "title": "Customer meeting notes · 咖啡包裝 · Coffee Packaging",
+      "kind": "Customer meeting notes",
+      "version": "v2.0",
+      "status": "Approved",
+      "owner": "Tsai Wen",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Customer meeting notes — 咖啡包裝 · Coffee Packaging\n\nDocument ID: PRDOC-2030\nJob: JOB-203\nVersion: v2.0\nReview status: Approved\nOwner: Tsai Wen\nDate: 2026-10-17\n\n## Job context\n- Customer order: 2,000 paper sleeves.\n- Sample job budget: NT$98,000.\n- Workflow stage: Quotation review; sample completion: 18%.\n\n## Working instructions\nConfirm physical quantities, proof version, customer acceptance, and timing before authorizing production.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2031",
+      "projectId": "JOB-203",
+      "title": "Supplier quote · 咖啡包裝 · Coffee Packaging",
+      "kind": "Supplier quote",
+      "version": "v1.1",
+      "status": "Pending review",
+      "owner": "Tsai Wen",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Supplier quote — 咖啡包裝 · Coffee Packaging\n\nDocument ID: PRDOC-2031\nJob: JOB-203\nVersion: v1.1\nReview status: Pending review\nOwner: Tsai Wen\nDate: 2026-10-17\n\n## Job context\n- Customer order: 2,000 paper sleeves.\n- Sample job budget: NT$98,000.\n- Workflow stage: Quotation review; sample completion: 18%.\n\n## Working instructions\nAll sample supplier costs in this data pack are fictional, not an API feed or a vendor offer.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2032",
+      "projectId": "JOB-203",
+      "title": "Quotation record · 咖啡包裝 · Coffee Packaging",
+      "kind": "Quotation record",
+      "version": "v1.2",
+      "status": "Approved",
+      "owner": "Tsai Wen",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Quotation record — 咖啡包裝 · Coffee Packaging\n\nDocument ID: PRDOC-2032\nJob: JOB-203\nVersion: v1.2\nReview status: Approved\nOwner: Tsai Wen\nDate: 2026-10-17\n\n## Job context\n- Customer order: 2,000 paper sleeves.\n- Sample job budget: NT$98,000.\n- Workflow stage: Quotation review; sample completion: 18%.\n\n## Working instructions\nMargin is computed as (pre-tax quote - direct cost) / pre-tax quote. Pricing is a synthetic commercial illustration.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2033",
+      "projectId": "JOB-203",
+      "title": "Production job ticket · 咖啡包裝 · Coffee Packaging",
+      "kind": "Production job ticket",
+      "version": "v1.3",
+      "status": "Approved",
+      "owner": "Tsai Wen",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Production job ticket — 咖啡包裝 · Coffee Packaging\n\nDocument ID: PRDOC-2033\nJob: JOB-203\nVersion: v1.3\nReview status: Approved\nOwner: Tsai Wen\nDate: 2026-10-17\n\n## Job context\n- Customer order: 2,000 paper sleeves.\n- Sample job budget: NT$98,000.\n- Workflow stage: Quotation review; sample completion: 18%.\n\n## Working instructions\nProduction tickets inherit the signed proof, material stock, quantity, due date and assigned work center.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2034",
+      "projectId": "JOB-203",
+      "title": "Press schedule · 咖啡包裝 · Coffee Packaging",
+      "kind": "Press schedule",
+      "version": "v1.4",
+      "status": "Approved",
+      "owner": "Tsai Wen",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Press schedule — 咖啡包裝 · Coffee Packaging\n\nDocument ID: PRDOC-2034\nJob: JOB-203\nVersion: v1.4\nReview status: Approved\nOwner: Tsai Wen\nDate: 2026-10-17\n\n## Job context\n- Customer order: 2,000 paper sleeves.\n- Sample job budget: NT$98,000.\n- Workflow stage: Quotation review; sample completion: 18%.\n\n## Working instructions\nDo not promise ship dates without confirmed stock, proof clearance, press capacity and finishing slots.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2035",
+      "projectId": "JOB-203",
+      "title": "Delivery instruction · 咖啡包裝 · Coffee Packaging",
+      "kind": "Delivery instruction",
+      "version": "v2.0",
+      "status": "Approved",
+      "owner": "Tsai Wen",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Delivery instruction — 咖啡包裝 · Coffee Packaging\n\nDocument ID: PRDOC-2035\nJob: JOB-203\nVersion: v2.0\nReview status: Approved\nOwner: Tsai Wen\nDate: 2026-10-17\n\n## Job context\n- Customer order: 2,000 paper sleeves.\n- Sample job budget: NT$98,000.\n- Workflow stage: Quotation review; sample completion: 18%.\n\n## Working instructions\nConfirm physical quantities, proof version, customer acceptance, and timing before authorizing production.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2036",
+      "projectId": "JOB-203",
+      "title": "Quality inspection · 咖啡包裝 · Coffee Packaging",
+      "kind": "Quality inspection",
+      "version": "v1.2",
+      "status": "Approved",
+      "owner": "Tsai Wen",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Quality inspection — 咖啡包裝 · Coffee Packaging\n\nDocument ID: PRDOC-2036\nJob: JOB-203\nVersion: v1.2\nReview status: Approved\nOwner: Tsai Wen\nDate: 2026-10-17\n\n## Job context\n- Customer order: 2,000 paper sleeves.\n- Sample job budget: NT$98,000.\n- Workflow stage: Quotation review; sample completion: 18%.\n\n## Working instructions\nConfirm physical quantities, proof version, customer acceptance, and timing before authorizing production.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2037",
+      "projectId": "JOB-204",
+      "title": "Client brief · 展場輸出 · Exhibition Graphics",
+      "kind": "Client brief",
+      "version": "v2.0",
+      "status": "Approved",
+      "owner": "Lin Yu",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Client brief — 展場輸出 · Exhibition Graphics\n\nDocument ID: PRDOC-2037\nJob: JOB-204\nVersion: v2.0\nReview status: Approved\nOwner: Lin Yu\nDate: 2026-10-17\n\n## Job context\n- Customer order: Large format event display.\n- Sample job budget: NT$146,000.\n- Workflow stage: In production; sample completion: 74%.\n\n## Working instructions\nConfirm physical quantities, proof version, customer acceptance, and timing before authorizing production.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2038",
+      "projectId": "JOB-204",
+      "title": "Artwork checklist · 展場輸出 · Exhibition Graphics",
+      "kind": "Artwork checklist",
+      "version": "v1.1",
+      "status": "Approved",
+      "owner": "Lin Yu",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Artwork checklist — 展場輸出 · Exhibition Graphics\n\nDocument ID: PRDOC-2038\nJob: JOB-204\nVersion: v1.1\nReview status: Approved\nOwner: Lin Yu\nDate: 2026-10-17\n\n## Job context\n- Customer order: Large format event display.\n- Sample job budget: NT$146,000.\n- Workflow stage: In production; sample completion: 74%.\n\n## Working instructions\nArtwork PDF/AI, 300 dpi at placed size; A3 final trim with 3 mm bleed. Convert fonts to outlines or embed, verify color profile and proof consistency.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2039",
+      "projectId": "JOB-204",
+      "title": "Production specification · 展場輸出 · Exhibition Graphics",
+      "kind": "Production specification",
+      "version": "v1.2",
+      "status": "Approved",
+      "owner": "Lin Yu",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Production specification — 展場輸出 · Exhibition Graphics\n\nDocument ID: PRDOC-2039\nJob: JOB-204\nVersion: v1.2\nReview status: Approved\nOwner: Lin Yu\nDate: 2026-10-17\n\n## Job context\n- Customer order: Large format event display.\n- Sample job budget: NT$146,000.\n- Workflow stage: In production; sample completion: 74%.\n\n## Working instructions\nConfirm physical quantities, proof version, customer acceptance, and timing before authorizing production.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2040",
+      "projectId": "JOB-204",
+      "title": "Paper stock sheet · 展場輸出 · Exhibition Graphics",
+      "kind": "Paper stock sheet",
+      "version": "v1.3",
+      "status": "Approved",
+      "owner": "Lin Yu",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Paper stock sheet — 展場輸出 · Exhibition Graphics\n\nDocument ID: PRDOC-2040\nJob: JOB-204\nVersion: v1.3\nReview status: Approved\nOwner: Lin Yu\nDate: 2026-10-17\n\n## Job context\n- Customer order: Large format event display.\n- Sample job budget: NT$146,000.\n- Workflow stage: In production; sample completion: 74%.\n\n## Working instructions\nRequested stock, GSM, finish, yield and available inventory must align with the production job ticket. Supplier lead times are not live.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2041",
+      "projectId": "JOB-204",
+      "title": "Print proof record · 展場輸出 · Exhibition Graphics",
+      "kind": "Print proof record",
+      "version": "v1.4",
+      "status": "Approved",
+      "owner": "Lin Yu",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Print proof record — 展場輸出 · Exhibition Graphics\n\nDocument ID: PRDOC-2041\nJob: JOB-204\nVersion: v1.4\nReview status: Approved\nOwner: Lin Yu\nDate: 2026-10-17\n\n## Job context\n- Customer order: Large format event display.\n- Sample job budget: NT$146,000.\n- Workflow stage: In production; sample completion: 74%.\n\n## Working instructions\nProof files are version-controlled; verbal approval is not sufficient to start a press run. Preserve approved file version and sign-off record.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2042",
+      "projectId": "JOB-204",
+      "title": "Customer meeting notes · 展場輸出 · Exhibition Graphics",
+      "kind": "Customer meeting notes",
+      "version": "v2.0",
+      "status": "Approved",
+      "owner": "Lin Yu",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Customer meeting notes — 展場輸出 · Exhibition Graphics\n\nDocument ID: PRDOC-2042\nJob: JOB-204\nVersion: v2.0\nReview status: Approved\nOwner: Lin Yu\nDate: 2026-10-17\n\n## Job context\n- Customer order: Large format event display.\n- Sample job budget: NT$146,000.\n- Workflow stage: In production; sample completion: 74%.\n\n## Working instructions\nConfirm physical quantities, proof version, customer acceptance, and timing before authorizing production.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2043",
+      "projectId": "JOB-204",
+      "title": "Supplier quote · 展場輸出 · Exhibition Graphics",
+      "kind": "Supplier quote",
+      "version": "v1.2",
+      "status": "Pending review",
+      "owner": "Lin Yu",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Supplier quote — 展場輸出 · Exhibition Graphics\n\nDocument ID: PRDOC-2043\nJob: JOB-204\nVersion: v1.2\nReview status: Pending review\nOwner: Lin Yu\nDate: 2026-10-17\n\n## Job context\n- Customer order: Large format event display.\n- Sample job budget: NT$146,000.\n- Workflow stage: In production; sample completion: 74%.\n\n## Working instructions\nAll sample supplier costs in this data pack are fictional, not an API feed or a vendor offer.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2044",
+      "projectId": "JOB-204",
+      "title": "Quotation record · 展場輸出 · Exhibition Graphics",
+      "kind": "Quotation record",
+      "version": "v1.3",
+      "status": "Approved",
+      "owner": "Lin Yu",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Quotation record — 展場輸出 · Exhibition Graphics\n\nDocument ID: PRDOC-2044\nJob: JOB-204\nVersion: v1.3\nReview status: Approved\nOwner: Lin Yu\nDate: 2026-10-17\n\n## Job context\n- Customer order: Large format event display.\n- Sample job budget: NT$146,000.\n- Workflow stage: In production; sample completion: 74%.\n\n## Working instructions\nMargin is computed as (pre-tax quote - direct cost) / pre-tax quote. Pricing is a synthetic commercial illustration.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2045",
+      "projectId": "JOB-204",
+      "title": "Production job ticket · 展場輸出 · Exhibition Graphics",
+      "kind": "Production job ticket",
+      "version": "v1.4",
+      "status": "Approved",
+      "owner": "Lin Yu",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Production job ticket — 展場輸出 · Exhibition Graphics\n\nDocument ID: PRDOC-2045\nJob: JOB-204\nVersion: v1.4\nReview status: Approved\nOwner: Lin Yu\nDate: 2026-10-17\n\n## Job context\n- Customer order: Large format event display.\n- Sample job budget: NT$146,000.\n- Workflow stage: In production; sample completion: 74%.\n\n## Working instructions\nProduction tickets inherit the signed proof, material stock, quantity, due date and assigned work center.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2046",
+      "projectId": "JOB-204",
+      "title": "Press schedule · 展場輸出 · Exhibition Graphics",
+      "kind": "Press schedule",
+      "version": "v1.1",
+      "status": "Approved",
+      "owner": "Lin Yu",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Press schedule — 展場輸出 · Exhibition Graphics\n\nDocument ID: PRDOC-2046\nJob: JOB-204\nVersion: v1.1\nReview status: Approved\nOwner: Lin Yu\nDate: 2026-10-17\n\n## Job context\n- Customer order: Large format event display.\n- Sample job budget: NT$146,000.\n- Workflow stage: In production; sample completion: 74%.\n\n## Working instructions\nDo not promise ship dates without confirmed stock, proof clearance, press capacity and finishing slots.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2047",
+      "projectId": "JOB-204",
+      "title": "Delivery instruction · 展場輸出 · Exhibition Graphics",
+      "kind": "Delivery instruction",
+      "version": "v2.0",
+      "status": "Approved",
+      "owner": "Lin Yu",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Delivery instruction — 展場輸出 · Exhibition Graphics\n\nDocument ID: PRDOC-2047\nJob: JOB-204\nVersion: v2.0\nReview status: Approved\nOwner: Lin Yu\nDate: 2026-10-17\n\n## Job context\n- Customer order: Large format event display.\n- Sample job budget: NT$146,000.\n- Workflow stage: In production; sample completion: 74%.\n\n## Working instructions\nConfirm physical quantities, proof version, customer acceptance, and timing before authorizing production.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2048",
+      "projectId": "JOB-204",
+      "title": "Quality inspection · 展場輸出 · Exhibition Graphics",
+      "kind": "Quality inspection",
+      "version": "v1.3",
+      "status": "Approved",
+      "owner": "Lin Yu",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Quality inspection — 展場輸出 · Exhibition Graphics\n\nDocument ID: PRDOC-2048\nJob: JOB-204\nVersion: v1.3\nReview status: Approved\nOwner: Lin Yu\nDate: 2026-10-17\n\n## Job context\n- Customer order: Large format event display.\n- Sample job budget: NT$146,000.\n- Workflow stage: In production; sample completion: 74%.\n\n## Working instructions\nConfirm physical quantities, proof version, customer acceptance, and timing before authorizing production.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2049",
+      "projectId": "JOB-205",
+      "title": "Client brief · 年度手冊 · Annual Handbook",
+      "kind": "Client brief",
+      "version": "v2.0",
+      "status": "Approved",
+      "owner": "Chen Yi",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Client brief — 年度手冊 · Annual Handbook\n\nDocument ID: PRDOC-2049\nJob: JOB-205\nVersion: v2.0\nReview status: Approved\nOwner: Chen Yi\nDate: 2026-10-17\n\n## Job context\n- Customer order: 1,200 company booklets.\n- Sample job budget: NT$84,500.\n- Workflow stage: Prepress approval; sample completion: 43%.\n\n## Working instructions\nConfirm physical quantities, proof version, customer acceptance, and timing before authorizing production.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2050",
+      "projectId": "JOB-205",
+      "title": "Artwork checklist · 年度手冊 · Annual Handbook",
+      "kind": "Artwork checklist",
+      "version": "v1.2",
+      "status": "Approved",
+      "owner": "Chen Yi",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Artwork checklist — 年度手冊 · Annual Handbook\n\nDocument ID: PRDOC-2050\nJob: JOB-205\nVersion: v1.2\nReview status: Approved\nOwner: Chen Yi\nDate: 2026-10-17\n\n## Job context\n- Customer order: 1,200 company booklets.\n- Sample job budget: NT$84,500.\n- Workflow stage: Prepress approval; sample completion: 43%.\n\n## Working instructions\nArtwork PDF/AI, 300 dpi at placed size; A3 final trim with 3 mm bleed. Convert fonts to outlines or embed, verify color profile and proof consistency.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2051",
+      "projectId": "JOB-205",
+      "title": "Production specification · 年度手冊 · Annual Handbook",
+      "kind": "Production specification",
+      "version": "v1.3",
+      "status": "Approved",
+      "owner": "Chen Yi",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Production specification — 年度手冊 · Annual Handbook\n\nDocument ID: PRDOC-2051\nJob: JOB-205\nVersion: v1.3\nReview status: Approved\nOwner: Chen Yi\nDate: 2026-10-17\n\n## Job context\n- Customer order: 1,200 company booklets.\n- Sample job budget: NT$84,500.\n- Workflow stage: Prepress approval; sample completion: 43%.\n\n## Working instructions\nConfirm physical quantities, proof version, customer acceptance, and timing before authorizing production.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2052",
+      "projectId": "JOB-205",
+      "title": "Paper stock sheet · 年度手冊 · Annual Handbook",
+      "kind": "Paper stock sheet",
+      "version": "v1.4",
+      "status": "Approved",
+      "owner": "Chen Yi",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Paper stock sheet — 年度手冊 · Annual Handbook\n\nDocument ID: PRDOC-2052\nJob: JOB-205\nVersion: v1.4\nReview status: Approved\nOwner: Chen Yi\nDate: 2026-10-17\n\n## Job context\n- Customer order: 1,200 company booklets.\n- Sample job budget: NT$84,500.\n- Workflow stage: Prepress approval; sample completion: 43%.\n\n## Working instructions\nRequested stock, GSM, finish, yield and available inventory must align with the production job ticket. Supplier lead times are not live.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2053",
+      "projectId": "JOB-205",
+      "title": "Print proof record · 年度手冊 · Annual Handbook",
+      "kind": "Print proof record",
+      "version": "v1.1",
+      "status": "Approved",
+      "owner": "Chen Yi",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Print proof record — 年度手冊 · Annual Handbook\n\nDocument ID: PRDOC-2053\nJob: JOB-205\nVersion: v1.1\nReview status: Approved\nOwner: Chen Yi\nDate: 2026-10-17\n\n## Job context\n- Customer order: 1,200 company booklets.\n- Sample job budget: NT$84,500.\n- Workflow stage: Prepress approval; sample completion: 43%.\n\n## Working instructions\nProof files are version-controlled; verbal approval is not sufficient to start a press run. Preserve approved file version and sign-off record.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2054",
+      "projectId": "JOB-205",
+      "title": "Customer meeting notes · 年度手冊 · Annual Handbook",
+      "kind": "Customer meeting notes",
+      "version": "v2.0",
+      "status": "Approved",
+      "owner": "Chen Yi",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Customer meeting notes — 年度手冊 · Annual Handbook\n\nDocument ID: PRDOC-2054\nJob: JOB-205\nVersion: v2.0\nReview status: Approved\nOwner: Chen Yi\nDate: 2026-10-17\n\n## Job context\n- Customer order: 1,200 company booklets.\n- Sample job budget: NT$84,500.\n- Workflow stage: Prepress approval; sample completion: 43%.\n\n## Working instructions\nConfirm physical quantities, proof version, customer acceptance, and timing before authorizing production.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2055",
+      "projectId": "JOB-205",
+      "title": "Supplier quote · 年度手冊 · Annual Handbook",
+      "kind": "Supplier quote",
+      "version": "v1.3",
+      "status": "Pending review",
+      "owner": "Chen Yi",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Supplier quote — 年度手冊 · Annual Handbook\n\nDocument ID: PRDOC-2055\nJob: JOB-205\nVersion: v1.3\nReview status: Pending review\nOwner: Chen Yi\nDate: 2026-10-17\n\n## Job context\n- Customer order: 1,200 company booklets.\n- Sample job budget: NT$84,500.\n- Workflow stage: Prepress approval; sample completion: 43%.\n\n## Working instructions\nAll sample supplier costs in this data pack are fictional, not an API feed or a vendor offer.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2056",
+      "projectId": "JOB-205",
+      "title": "Quotation record · 年度手冊 · Annual Handbook",
+      "kind": "Quotation record",
+      "version": "v1.4",
+      "status": "Approved",
+      "owner": "Chen Yi",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Quotation record — 年度手冊 · Annual Handbook\n\nDocument ID: PRDOC-2056\nJob: JOB-205\nVersion: v1.4\nReview status: Approved\nOwner: Chen Yi\nDate: 2026-10-17\n\n## Job context\n- Customer order: 1,200 company booklets.\n- Sample job budget: NT$84,500.\n- Workflow stage: Prepress approval; sample completion: 43%.\n\n## Working instructions\nMargin is computed as (pre-tax quote - direct cost) / pre-tax quote. Pricing is a synthetic commercial illustration.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2057",
+      "projectId": "JOB-205",
+      "title": "Production job ticket · 年度手冊 · Annual Handbook",
+      "kind": "Production job ticket",
+      "version": "v1.1",
+      "status": "Approved",
+      "owner": "Chen Yi",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Production job ticket — 年度手冊 · Annual Handbook\n\nDocument ID: PRDOC-2057\nJob: JOB-205\nVersion: v1.1\nReview status: Approved\nOwner: Chen Yi\nDate: 2026-10-17\n\n## Job context\n- Customer order: 1,200 company booklets.\n- Sample job budget: NT$84,500.\n- Workflow stage: Prepress approval; sample completion: 43%.\n\n## Working instructions\nProduction tickets inherit the signed proof, material stock, quantity, due date and assigned work center.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2058",
+      "projectId": "JOB-205",
+      "title": "Press schedule · 年度手冊 · Annual Handbook",
+      "kind": "Press schedule",
+      "version": "v1.2",
+      "status": "Approved",
+      "owner": "Chen Yi",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Press schedule — 年度手冊 · Annual Handbook\n\nDocument ID: PRDOC-2058\nJob: JOB-205\nVersion: v1.2\nReview status: Approved\nOwner: Chen Yi\nDate: 2026-10-17\n\n## Job context\n- Customer order: 1,200 company booklets.\n- Sample job budget: NT$84,500.\n- Workflow stage: Prepress approval; sample completion: 43%.\n\n## Working instructions\nDo not promise ship dates without confirmed stock, proof clearance, press capacity and finishing slots.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2059",
+      "projectId": "JOB-205",
+      "title": "Delivery instruction · 年度手冊 · Annual Handbook",
+      "kind": "Delivery instruction",
+      "version": "v2.0",
+      "status": "Approved",
+      "owner": "Chen Yi",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Delivery instruction — 年度手冊 · Annual Handbook\n\nDocument ID: PRDOC-2059\nJob: JOB-205\nVersion: v2.0\nReview status: Approved\nOwner: Chen Yi\nDate: 2026-10-17\n\n## Job context\n- Customer order: 1,200 company booklets.\n- Sample job budget: NT$84,500.\n- Workflow stage: Prepress approval; sample completion: 43%.\n\n## Working instructions\nConfirm physical quantities, proof version, customer acceptance, and timing before authorizing production.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2060",
+      "projectId": "JOB-205",
+      "title": "Quality inspection · 年度手冊 · Annual Handbook",
+      "kind": "Quality inspection",
+      "version": "v1.4",
+      "status": "Approved",
+      "owner": "Chen Yi",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Quality inspection — 年度手冊 · Annual Handbook\n\nDocument ID: PRDOC-2060\nJob: JOB-205\nVersion: v1.4\nReview status: Approved\nOwner: Chen Yi\nDate: 2026-10-17\n\n## Job context\n- Customer order: 1,200 company booklets.\n- Sample job budget: NT$84,500.\n- Workflow stage: Prepress approval; sample completion: 43%.\n\n## Working instructions\nConfirm physical quantities, proof version, customer acceptance, and timing before authorizing production.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2061",
+      "projectId": "JOB-206",
+      "title": "Client brief · 標籤改版 · Label Refresh",
+      "kind": "Client brief",
+      "version": "v2.0",
+      "status": "Approved",
+      "owner": "Tsai Wen",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Client brief — 標籤改版 · Label Refresh\n\nDocument ID: PRDOC-2061\nJob: JOB-206\nVersion: v2.0\nReview status: Approved\nOwner: Tsai Wen\nDate: 2026-10-17\n\n## Job context\n- Customer order: 6,000 product labels.\n- Sample job budget: NT$31,500.\n- Workflow stage: Handover; sample completion: 93%.\n\n## Working instructions\nConfirm physical quantities, proof version, customer acceptance, and timing before authorizing production.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2062",
+      "projectId": "JOB-206",
+      "title": "Artwork checklist · 標籤改版 · Label Refresh",
+      "kind": "Artwork checklist",
+      "version": "v1.3",
+      "status": "Approved",
+      "owner": "Tsai Wen",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Artwork checklist — 標籤改版 · Label Refresh\n\nDocument ID: PRDOC-2062\nJob: JOB-206\nVersion: v1.3\nReview status: Approved\nOwner: Tsai Wen\nDate: 2026-10-17\n\n## Job context\n- Customer order: 6,000 product labels.\n- Sample job budget: NT$31,500.\n- Workflow stage: Handover; sample completion: 93%.\n\n## Working instructions\nArtwork PDF/AI, 300 dpi at placed size; A3 final trim with 3 mm bleed. Convert fonts to outlines or embed, verify color profile and proof consistency.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2063",
+      "projectId": "JOB-206",
+      "title": "Production specification · 標籤改版 · Label Refresh",
+      "kind": "Production specification",
+      "version": "v1.4",
+      "status": "Approved",
+      "owner": "Tsai Wen",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Production specification — 標籤改版 · Label Refresh\n\nDocument ID: PRDOC-2063\nJob: JOB-206\nVersion: v1.4\nReview status: Approved\nOwner: Tsai Wen\nDate: 2026-10-17\n\n## Job context\n- Customer order: 6,000 product labels.\n- Sample job budget: NT$31,500.\n- Workflow stage: Handover; sample completion: 93%.\n\n## Working instructions\nConfirm physical quantities, proof version, customer acceptance, and timing before authorizing production.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2064",
+      "projectId": "JOB-206",
+      "title": "Paper stock sheet · 標籤改版 · Label Refresh",
+      "kind": "Paper stock sheet",
+      "version": "v1.1",
+      "status": "Approved",
+      "owner": "Tsai Wen",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Paper stock sheet — 標籤改版 · Label Refresh\n\nDocument ID: PRDOC-2064\nJob: JOB-206\nVersion: v1.1\nReview status: Approved\nOwner: Tsai Wen\nDate: 2026-10-17\n\n## Job context\n- Customer order: 6,000 product labels.\n- Sample job budget: NT$31,500.\n- Workflow stage: Handover; sample completion: 93%.\n\n## Working instructions\nRequested stock, GSM, finish, yield and available inventory must align with the production job ticket. Supplier lead times are not live.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2065",
+      "projectId": "JOB-206",
+      "title": "Print proof record · 標籤改版 · Label Refresh",
+      "kind": "Print proof record",
+      "version": "v1.2",
+      "status": "Approved",
+      "owner": "Tsai Wen",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Print proof record — 標籤改版 · Label Refresh\n\nDocument ID: PRDOC-2065\nJob: JOB-206\nVersion: v1.2\nReview status: Approved\nOwner: Tsai Wen\nDate: 2026-10-17\n\n## Job context\n- Customer order: 6,000 product labels.\n- Sample job budget: NT$31,500.\n- Workflow stage: Handover; sample completion: 93%.\n\n## Working instructions\nProof files are version-controlled; verbal approval is not sufficient to start a press run. Preserve approved file version and sign-off record.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2066",
+      "projectId": "JOB-206",
+      "title": "Customer meeting notes · 標籤改版 · Label Refresh",
+      "kind": "Customer meeting notes",
+      "version": "v2.0",
+      "status": "Approved",
+      "owner": "Tsai Wen",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Customer meeting notes — 標籤改版 · Label Refresh\n\nDocument ID: PRDOC-2066\nJob: JOB-206\nVersion: v2.0\nReview status: Approved\nOwner: Tsai Wen\nDate: 2026-10-17\n\n## Job context\n- Customer order: 6,000 product labels.\n- Sample job budget: NT$31,500.\n- Workflow stage: Handover; sample completion: 93%.\n\n## Working instructions\nConfirm physical quantities, proof version, customer acceptance, and timing before authorizing production.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2067",
+      "projectId": "JOB-206",
+      "title": "Supplier quote · 標籤改版 · Label Refresh",
+      "kind": "Supplier quote",
+      "version": "v1.4",
+      "status": "Pending review",
+      "owner": "Tsai Wen",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Supplier quote — 標籤改版 · Label Refresh\n\nDocument ID: PRDOC-2067\nJob: JOB-206\nVersion: v1.4\nReview status: Pending review\nOwner: Tsai Wen\nDate: 2026-10-17\n\n## Job context\n- Customer order: 6,000 product labels.\n- Sample job budget: NT$31,500.\n- Workflow stage: Handover; sample completion: 93%.\n\n## Working instructions\nAll sample supplier costs in this data pack are fictional, not an API feed or a vendor offer.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2068",
+      "projectId": "JOB-206",
+      "title": "Quotation record · 標籤改版 · Label Refresh",
+      "kind": "Quotation record",
+      "version": "v1.1",
+      "status": "Approved",
+      "owner": "Tsai Wen",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Quotation record — 標籤改版 · Label Refresh\n\nDocument ID: PRDOC-2068\nJob: JOB-206\nVersion: v1.1\nReview status: Approved\nOwner: Tsai Wen\nDate: 2026-10-17\n\n## Job context\n- Customer order: 6,000 product labels.\n- Sample job budget: NT$31,500.\n- Workflow stage: Handover; sample completion: 93%.\n\n## Working instructions\nMargin is computed as (pre-tax quote - direct cost) / pre-tax quote. Pricing is a synthetic commercial illustration.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2069",
+      "projectId": "JOB-206",
+      "title": "Production job ticket · 標籤改版 · Label Refresh",
+      "kind": "Production job ticket",
+      "version": "v1.2",
+      "status": "Approved",
+      "owner": "Tsai Wen",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Production job ticket — 標籤改版 · Label Refresh\n\nDocument ID: PRDOC-2069\nJob: JOB-206\nVersion: v1.2\nReview status: Approved\nOwner: Tsai Wen\nDate: 2026-10-17\n\n## Job context\n- Customer order: 6,000 product labels.\n- Sample job budget: NT$31,500.\n- Workflow stage: Handover; sample completion: 93%.\n\n## Working instructions\nProduction tickets inherit the signed proof, material stock, quantity, due date and assigned work center.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2070",
+      "projectId": "JOB-206",
+      "title": "Press schedule · 標籤改版 · Label Refresh",
+      "kind": "Press schedule",
+      "version": "v1.3",
+      "status": "Approved",
+      "owner": "Tsai Wen",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Press schedule — 標籤改版 · Label Refresh\n\nDocument ID: PRDOC-2070\nJob: JOB-206\nVersion: v1.3\nReview status: Approved\nOwner: Tsai Wen\nDate: 2026-10-17\n\n## Job context\n- Customer order: 6,000 product labels.\n- Sample job budget: NT$31,500.\n- Workflow stage: Handover; sample completion: 93%.\n\n## Working instructions\nDo not promise ship dates without confirmed stock, proof clearance, press capacity and finishing slots.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2071",
+      "projectId": "JOB-206",
+      "title": "Delivery instruction · 標籤改版 · Label Refresh",
+      "kind": "Delivery instruction",
+      "version": "v2.0",
+      "status": "Approved",
+      "owner": "Tsai Wen",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Delivery instruction — 標籤改版 · Label Refresh\n\nDocument ID: PRDOC-2071\nJob: JOB-206\nVersion: v2.0\nReview status: Approved\nOwner: Tsai Wen\nDate: 2026-10-17\n\n## Job context\n- Customer order: 6,000 product labels.\n- Sample job budget: NT$31,500.\n- Workflow stage: Handover; sample completion: 93%.\n\n## Working instructions\nConfirm physical quantities, proof version, customer acceptance, and timing before authorizing production.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2072",
+      "projectId": "JOB-206",
+      "title": "Quality inspection · 標籤改版 · Label Refresh",
+      "kind": "Quality inspection",
+      "version": "v1.1",
+      "status": "Approved",
+      "owner": "Tsai Wen",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Quality inspection — 標籤改版 · Label Refresh\n\nDocument ID: PRDOC-2072\nJob: JOB-206\nVersion: v1.1\nReview status: Approved\nOwner: Tsai Wen\nDate: 2026-10-17\n\n## Job context\n- Customer order: 6,000 product labels.\n- Sample job budget: NT$31,500.\n- Workflow stage: Handover; sample completion: 93%.\n\n## Working instructions\nConfirm physical quantities, proof version, customer acceptance, and timing before authorizing production.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2073",
+      "projectId": "JOB-207",
+      "title": "Client brief · 喜帖印製 · Invitation Suite",
+      "kind": "Client brief",
+      "version": "v2.0",
+      "status": "Approved",
+      "owner": "Lin Yu",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Client brief — 喜帖印製 · Invitation Suite\n\nDocument ID: PRDOC-2073\nJob: JOB-207\nVersion: v2.0\nReview status: Approved\nOwner: Lin Yu\nDate: 2026-10-17\n\n## Job context\n- Customer order: 350 invitation sets.\n- Sample job budget: NT$52,600.\n- Workflow stage: Quotation review; sample completion: 29%.\n\n## Working instructions\nConfirm physical quantities, proof version, customer acceptance, and timing before authorizing production.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2074",
+      "projectId": "JOB-207",
+      "title": "Artwork checklist · 喜帖印製 · Invitation Suite",
+      "kind": "Artwork checklist",
+      "version": "v1.4",
+      "status": "Approved",
+      "owner": "Lin Yu",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Artwork checklist — 喜帖印製 · Invitation Suite\n\nDocument ID: PRDOC-2074\nJob: JOB-207\nVersion: v1.4\nReview status: Approved\nOwner: Lin Yu\nDate: 2026-10-17\n\n## Job context\n- Customer order: 350 invitation sets.\n- Sample job budget: NT$52,600.\n- Workflow stage: Quotation review; sample completion: 29%.\n\n## Working instructions\nArtwork PDF/AI, 300 dpi at placed size; A3 final trim with 3 mm bleed. Convert fonts to outlines or embed, verify color profile and proof consistency.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2075",
+      "projectId": "JOB-207",
+      "title": "Production specification · 喜帖印製 · Invitation Suite",
+      "kind": "Production specification",
+      "version": "v1.1",
+      "status": "Approved",
+      "owner": "Lin Yu",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Production specification — 喜帖印製 · Invitation Suite\n\nDocument ID: PRDOC-2075\nJob: JOB-207\nVersion: v1.1\nReview status: Approved\nOwner: Lin Yu\nDate: 2026-10-17\n\n## Job context\n- Customer order: 350 invitation sets.\n- Sample job budget: NT$52,600.\n- Workflow stage: Quotation review; sample completion: 29%.\n\n## Working instructions\nConfirm physical quantities, proof version, customer acceptance, and timing before authorizing production.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2076",
+      "projectId": "JOB-207",
+      "title": "Paper stock sheet · 喜帖印製 · Invitation Suite",
+      "kind": "Paper stock sheet",
+      "version": "v1.2",
+      "status": "Approved",
+      "owner": "Lin Yu",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Paper stock sheet — 喜帖印製 · Invitation Suite\n\nDocument ID: PRDOC-2076\nJob: JOB-207\nVersion: v1.2\nReview status: Approved\nOwner: Lin Yu\nDate: 2026-10-17\n\n## Job context\n- Customer order: 350 invitation sets.\n- Sample job budget: NT$52,600.\n- Workflow stage: Quotation review; sample completion: 29%.\n\n## Working instructions\nRequested stock, GSM, finish, yield and available inventory must align with the production job ticket. Supplier lead times are not live.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2077",
+      "projectId": "JOB-207",
+      "title": "Print proof record · 喜帖印製 · Invitation Suite",
+      "kind": "Print proof record",
+      "version": "v1.3",
+      "status": "Approved",
+      "owner": "Lin Yu",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Print proof record — 喜帖印製 · Invitation Suite\n\nDocument ID: PRDOC-2077\nJob: JOB-207\nVersion: v1.3\nReview status: Approved\nOwner: Lin Yu\nDate: 2026-10-17\n\n## Job context\n- Customer order: 350 invitation sets.\n- Sample job budget: NT$52,600.\n- Workflow stage: Quotation review; sample completion: 29%.\n\n## Working instructions\nProof files are version-controlled; verbal approval is not sufficient to start a press run. Preserve approved file version and sign-off record.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2078",
+      "projectId": "JOB-207",
+      "title": "Customer meeting notes · 喜帖印製 · Invitation Suite",
+      "kind": "Customer meeting notes",
+      "version": "v2.0",
+      "status": "Approved",
+      "owner": "Lin Yu",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Customer meeting notes — 喜帖印製 · Invitation Suite\n\nDocument ID: PRDOC-2078\nJob: JOB-207\nVersion: v2.0\nReview status: Approved\nOwner: Lin Yu\nDate: 2026-10-17\n\n## Job context\n- Customer order: 350 invitation sets.\n- Sample job budget: NT$52,600.\n- Workflow stage: Quotation review; sample completion: 29%.\n\n## Working instructions\nConfirm physical quantities, proof version, customer acceptance, and timing before authorizing production.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2079",
+      "projectId": "JOB-207",
+      "title": "Supplier quote · 喜帖印製 · Invitation Suite",
+      "kind": "Supplier quote",
+      "version": "v1.1",
+      "status": "Pending review",
+      "owner": "Lin Yu",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Supplier quote — 喜帖印製 · Invitation Suite\n\nDocument ID: PRDOC-2079\nJob: JOB-207\nVersion: v1.1\nReview status: Pending review\nOwner: Lin Yu\nDate: 2026-10-17\n\n## Job context\n- Customer order: 350 invitation sets.\n- Sample job budget: NT$52,600.\n- Workflow stage: Quotation review; sample completion: 29%.\n\n## Working instructions\nAll sample supplier costs in this data pack are fictional, not an API feed or a vendor offer.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2080",
+      "projectId": "JOB-207",
+      "title": "Quotation record · 喜帖印製 · Invitation Suite",
+      "kind": "Quotation record",
+      "version": "v1.2",
+      "status": "Approved",
+      "owner": "Lin Yu",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Quotation record — 喜帖印製 · Invitation Suite\n\nDocument ID: PRDOC-2080\nJob: JOB-207\nVersion: v1.2\nReview status: Approved\nOwner: Lin Yu\nDate: 2026-10-17\n\n## Job context\n- Customer order: 350 invitation sets.\n- Sample job budget: NT$52,600.\n- Workflow stage: Quotation review; sample completion: 29%.\n\n## Working instructions\nMargin is computed as (pre-tax quote - direct cost) / pre-tax quote. Pricing is a synthetic commercial illustration.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2081",
+      "projectId": "JOB-207",
+      "title": "Production job ticket · 喜帖印製 · Invitation Suite",
+      "kind": "Production job ticket",
+      "version": "v1.3",
+      "status": "Approved",
+      "owner": "Lin Yu",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Production job ticket — 喜帖印製 · Invitation Suite\n\nDocument ID: PRDOC-2081\nJob: JOB-207\nVersion: v1.3\nReview status: Approved\nOwner: Lin Yu\nDate: 2026-10-17\n\n## Job context\n- Customer order: 350 invitation sets.\n- Sample job budget: NT$52,600.\n- Workflow stage: Quotation review; sample completion: 29%.\n\n## Working instructions\nProduction tickets inherit the signed proof, material stock, quantity, due date and assigned work center.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2082",
+      "projectId": "JOB-207",
+      "title": "Press schedule · 喜帖印製 · Invitation Suite",
+      "kind": "Press schedule",
+      "version": "v1.4",
+      "status": "Approved",
+      "owner": "Lin Yu",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Press schedule — 喜帖印製 · Invitation Suite\n\nDocument ID: PRDOC-2082\nJob: JOB-207\nVersion: v1.4\nReview status: Approved\nOwner: Lin Yu\nDate: 2026-10-17\n\n## Job context\n- Customer order: 350 invitation sets.\n- Sample job budget: NT$52,600.\n- Workflow stage: Quotation review; sample completion: 29%.\n\n## Working instructions\nDo not promise ship dates without confirmed stock, proof clearance, press capacity and finishing slots.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2083",
+      "projectId": "JOB-207",
+      "title": "Delivery instruction · 喜帖印製 · Invitation Suite",
+      "kind": "Delivery instruction",
+      "version": "v2.0",
+      "status": "Approved",
+      "owner": "Lin Yu",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Delivery instruction — 喜帖印製 · Invitation Suite\n\nDocument ID: PRDOC-2083\nJob: JOB-207\nVersion: v2.0\nReview status: Approved\nOwner: Lin Yu\nDate: 2026-10-17\n\n## Job context\n- Customer order: 350 invitation sets.\n- Sample job budget: NT$52,600.\n- Workflow stage: Quotation review; sample completion: 29%.\n\n## Working instructions\nConfirm physical quantities, proof version, customer acceptance, and timing before authorizing production.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2084",
+      "projectId": "JOB-207",
+      "title": "Quality inspection · 喜帖印製 · Invitation Suite",
+      "kind": "Quality inspection",
+      "version": "v1.2",
+      "status": "Approved",
+      "owner": "Lin Yu",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Quality inspection — 喜帖印製 · Invitation Suite\n\nDocument ID: PRDOC-2084\nJob: JOB-207\nVersion: v1.2\nReview status: Approved\nOwner: Lin Yu\nDate: 2026-10-17\n\n## Job context\n- Customer order: 350 invitation sets.\n- Sample job budget: NT$52,600.\n- Workflow stage: Quotation review; sample completion: 29%.\n\n## Working instructions\nConfirm physical quantities, proof version, customer acceptance, and timing before authorizing production.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2085",
+      "projectId": "JOB-208",
+      "title": "Client brief · 門市菜單 · Retail Menus",
+      "kind": "Client brief",
+      "version": "v2.0",
+      "status": "Approved",
+      "owner": "Chen Yi",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Client brief — 門市菜單 · Retail Menus\n\nDocument ID: PRDOC-2085\nJob: JOB-208\nVersion: v2.0\nReview status: Approved\nOwner: Chen Yi\nDate: 2026-10-17\n\n## Job context\n- Customer order: 400 laminated menus.\n- Sample job budget: NT$41,000.\n- Workflow stage: In production; sample completion: 61%.\n\n## Working instructions\nConfirm physical quantities, proof version, customer acceptance, and timing before authorizing production.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2086",
+      "projectId": "JOB-208",
+      "title": "Artwork checklist · 門市菜單 · Retail Menus",
+      "kind": "Artwork checklist",
+      "version": "v1.1",
+      "status": "Approved",
+      "owner": "Chen Yi",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Artwork checklist — 門市菜單 · Retail Menus\n\nDocument ID: PRDOC-2086\nJob: JOB-208\nVersion: v1.1\nReview status: Approved\nOwner: Chen Yi\nDate: 2026-10-17\n\n## Job context\n- Customer order: 400 laminated menus.\n- Sample job budget: NT$41,000.\n- Workflow stage: In production; sample completion: 61%.\n\n## Working instructions\nArtwork PDF/AI, 300 dpi at placed size; A3 final trim with 3 mm bleed. Convert fonts to outlines or embed, verify color profile and proof consistency.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2087",
+      "projectId": "JOB-208",
+      "title": "Production specification · 門市菜單 · Retail Menus",
+      "kind": "Production specification",
+      "version": "v1.2",
+      "status": "Approved",
+      "owner": "Chen Yi",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Production specification — 門市菜單 · Retail Menus\n\nDocument ID: PRDOC-2087\nJob: JOB-208\nVersion: v1.2\nReview status: Approved\nOwner: Chen Yi\nDate: 2026-10-17\n\n## Job context\n- Customer order: 400 laminated menus.\n- Sample job budget: NT$41,000.\n- Workflow stage: In production; sample completion: 61%.\n\n## Working instructions\nConfirm physical quantities, proof version, customer acceptance, and timing before authorizing production.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2088",
+      "projectId": "JOB-208",
+      "title": "Paper stock sheet · 門市菜單 · Retail Menus",
+      "kind": "Paper stock sheet",
+      "version": "v1.3",
+      "status": "Approved",
+      "owner": "Chen Yi",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Paper stock sheet — 門市菜單 · Retail Menus\n\nDocument ID: PRDOC-2088\nJob: JOB-208\nVersion: v1.3\nReview status: Approved\nOwner: Chen Yi\nDate: 2026-10-17\n\n## Job context\n- Customer order: 400 laminated menus.\n- Sample job budget: NT$41,000.\n- Workflow stage: In production; sample completion: 61%.\n\n## Working instructions\nRequested stock, GSM, finish, yield and available inventory must align with the production job ticket. Supplier lead times are not live.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2089",
+      "projectId": "JOB-208",
+      "title": "Print proof record · 門市菜單 · Retail Menus",
+      "kind": "Print proof record",
+      "version": "v1.4",
+      "status": "Approved",
+      "owner": "Chen Yi",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Print proof record — 門市菜單 · Retail Menus\n\nDocument ID: PRDOC-2089\nJob: JOB-208\nVersion: v1.4\nReview status: Approved\nOwner: Chen Yi\nDate: 2026-10-17\n\n## Job context\n- Customer order: 400 laminated menus.\n- Sample job budget: NT$41,000.\n- Workflow stage: In production; sample completion: 61%.\n\n## Working instructions\nProof files are version-controlled; verbal approval is not sufficient to start a press run. Preserve approved file version and sign-off record.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2090",
+      "projectId": "JOB-208",
+      "title": "Customer meeting notes · 門市菜單 · Retail Menus",
+      "kind": "Customer meeting notes",
+      "version": "v2.0",
+      "status": "Approved",
+      "owner": "Chen Yi",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Customer meeting notes — 門市菜單 · Retail Menus\n\nDocument ID: PRDOC-2090\nJob: JOB-208\nVersion: v2.0\nReview status: Approved\nOwner: Chen Yi\nDate: 2026-10-17\n\n## Job context\n- Customer order: 400 laminated menus.\n- Sample job budget: NT$41,000.\n- Workflow stage: In production; sample completion: 61%.\n\n## Working instructions\nConfirm physical quantities, proof version, customer acceptance, and timing before authorizing production.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2091",
+      "projectId": "JOB-208",
+      "title": "Supplier quote · 門市菜單 · Retail Menus",
+      "kind": "Supplier quote",
+      "version": "v1.2",
+      "status": "Pending review",
+      "owner": "Chen Yi",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Supplier quote — 門市菜單 · Retail Menus\n\nDocument ID: PRDOC-2091\nJob: JOB-208\nVersion: v1.2\nReview status: Pending review\nOwner: Chen Yi\nDate: 2026-10-17\n\n## Job context\n- Customer order: 400 laminated menus.\n- Sample job budget: NT$41,000.\n- Workflow stage: In production; sample completion: 61%.\n\n## Working instructions\nAll sample supplier costs in this data pack are fictional, not an API feed or a vendor offer.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2092",
+      "projectId": "JOB-208",
+      "title": "Quotation record · 門市菜單 · Retail Menus",
+      "kind": "Quotation record",
+      "version": "v1.3",
+      "status": "Approved",
+      "owner": "Chen Yi",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Quotation record — 門市菜單 · Retail Menus\n\nDocument ID: PRDOC-2092\nJob: JOB-208\nVersion: v1.3\nReview status: Approved\nOwner: Chen Yi\nDate: 2026-10-17\n\n## Job context\n- Customer order: 400 laminated menus.\n- Sample job budget: NT$41,000.\n- Workflow stage: In production; sample completion: 61%.\n\n## Working instructions\nMargin is computed as (pre-tax quote - direct cost) / pre-tax quote. Pricing is a synthetic commercial illustration.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2093",
+      "projectId": "JOB-208",
+      "title": "Production job ticket · 門市菜單 · Retail Menus",
+      "kind": "Production job ticket",
+      "version": "v1.4",
+      "status": "Approved",
+      "owner": "Chen Yi",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Production job ticket — 門市菜單 · Retail Menus\n\nDocument ID: PRDOC-2093\nJob: JOB-208\nVersion: v1.4\nReview status: Approved\nOwner: Chen Yi\nDate: 2026-10-17\n\n## Job context\n- Customer order: 400 laminated menus.\n- Sample job budget: NT$41,000.\n- Workflow stage: In production; sample completion: 61%.\n\n## Working instructions\nProduction tickets inherit the signed proof, material stock, quantity, due date and assigned work center.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2094",
+      "projectId": "JOB-208",
+      "title": "Press schedule · 門市菜單 · Retail Menus",
+      "kind": "Press schedule",
+      "version": "v1.1",
+      "status": "Approved",
+      "owner": "Chen Yi",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Press schedule — 門市菜單 · Retail Menus\n\nDocument ID: PRDOC-2094\nJob: JOB-208\nVersion: v1.1\nReview status: Approved\nOwner: Chen Yi\nDate: 2026-10-17\n\n## Job context\n- Customer order: 400 laminated menus.\n- Sample job budget: NT$41,000.\n- Workflow stage: In production; sample completion: 61%.\n\n## Working instructions\nDo not promise ship dates without confirmed stock, proof clearance, press capacity and finishing slots.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2095",
+      "projectId": "JOB-208",
+      "title": "Delivery instruction · 門市菜單 · Retail Menus",
+      "kind": "Delivery instruction",
+      "version": "v2.0",
+      "status": "Approved",
+      "owner": "Chen Yi",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Delivery instruction — 門市菜單 · Retail Menus\n\nDocument ID: PRDOC-2095\nJob: JOB-208\nVersion: v2.0\nReview status: Approved\nOwner: Chen Yi\nDate: 2026-10-17\n\n## Job context\n- Customer order: 400 laminated menus.\n- Sample job budget: NT$41,000.\n- Workflow stage: In production; sample completion: 61%.\n\n## Working instructions\nConfirm physical quantities, proof version, customer acceptance, and timing before authorizing production.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRDOC-2096",
+      "projectId": "JOB-208",
+      "title": "Quality inspection · 門市菜單 · Retail Menus",
+      "kind": "Quality inspection",
+      "version": "v1.3",
+      "status": "Approved",
+      "owner": "Chen Yi",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print job document",
+      "body": "# Quality inspection — 門市菜單 · Retail Menus\n\nDocument ID: PRDOC-2096\nJob: JOB-208\nVersion: v1.3\nReview status: Approved\nOwner: Chen Yi\nDate: 2026-10-17\n\n## Job context\n- Customer order: 400 laminated menus.\n- Sample job budget: NT$41,000.\n- Workflow stage: In production; sample completion: 61%.\n\n## Working instructions\nConfirm physical quantities, proof version, customer acceptance, and timing before authorizing production.\n\n## Source and release controls\n- Use the latest approved proof and associated order before production.\n- Any material substitution needs source evidence, margin review and explicit authorization.\n- Escalate incomplete artwork, unconfirmed cost and scheduling conflicts.\n- Keep traceable issue/version ID for any revision.\n\n## Demo disclosure\nThis is a fictional print-shop operating document. No vendor price, customer record, certification or stock level is live.\n"
+    },
+    {
+      "id": "PRSTD-201",
+      "projectId": null,
+      "title": "Artwork version approvals · Company standard",
+      "kind": "Company policy",
+      "version": "v1.1",
+      "status": "Approved",
+      "owner": "Operations",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print-shop policy",
+      "body": "# Artwork version approvals\n\nPolicy: PRSTD-201\nVersion: v1.1\n\n## Required checks\nVerify the job identity, latest approved specification, quotation revision and responsible sign-off. If any source is missing, refer the decision for review; do not generate fabricated stock, pricing, certification or delivery facts.\n\n## Approval principle\nA customer inquiry can generate a proposed response, but production work or customer commitments require a reviewed record. Preserve the decision log.\n\n## Example applicability\nPrint job JOB-201: recycled paper substitution requires material availability, recalculated price and written customer approval before updating the print ticket.\n\nAll policies are fictional demo examples.\n"
+    },
+    {
+      "id": "PRSTD-202",
+      "projectId": null,
+      "title": "Paper stock certification checks · Company standard",
+      "kind": "Company policy",
+      "version": "v1.1",
+      "status": "Approved",
+      "owner": "Operations",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print-shop policy",
+      "body": "# Paper stock certification checks\n\nPolicy: PRSTD-202\nVersion: v1.1\n\n## Required checks\nVerify the job identity, latest approved specification, quotation revision and responsible sign-off. If any source is missing, refer the decision for review; do not generate fabricated stock, pricing, certification or delivery facts.\n\n## Approval principle\nA customer inquiry can generate a proposed response, but production work or customer commitments require a reviewed record. Preserve the decision log.\n\n## Example applicability\nPrint job JOB-201: recycled paper substitution requires material availability, recalculated price and written customer approval before updating the print ticket.\n\nAll policies are fictional demo examples.\n"
+    },
+    {
+      "id": "PRSTD-203",
+      "projectId": null,
+      "title": "Quoted margin calculation · Company standard",
+      "kind": "Company policy",
+      "version": "v1.1",
+      "status": "Approved",
+      "owner": "Operations",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print-shop policy",
+      "body": "# Quoted margin calculation\n\nPolicy: PRSTD-203\nVersion: v1.1\n\n## Required checks\nVerify the job identity, latest approved specification, quotation revision and responsible sign-off. If any source is missing, refer the decision for review; do not generate fabricated stock, pricing, certification or delivery facts.\n\n## Approval principle\nA customer inquiry can generate a proposed response, but production work or customer commitments require a reviewed record. Preserve the decision log.\n\n## Example applicability\nPrint job JOB-201: recycled paper substitution requires material availability, recalculated price and written customer approval before updating the print ticket.\n\nAll policies are fictional demo examples.\n"
+    },
+    {
+      "id": "PRSTD-204",
+      "projectId": null,
+      "title": "Prepress file acceptance · Company standard",
+      "kind": "Company policy",
+      "version": "v1.1",
+      "status": "Approved",
+      "owner": "Operations",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print-shop policy",
+      "body": "# Prepress file acceptance\n\nPolicy: PRSTD-204\nVersion: v1.1\n\n## Required checks\nVerify the job identity, latest approved specification, quotation revision and responsible sign-off. If any source is missing, refer the decision for review; do not generate fabricated stock, pricing, certification or delivery facts.\n\n## Approval principle\nA customer inquiry can generate a proposed response, but production work or customer commitments require a reviewed record. Preserve the decision log.\n\n## Example applicability\nPrint job JOB-201: recycled paper substitution requires material availability, recalculated price and written customer approval before updating the print ticket.\n\nAll policies are fictional demo examples.\n"
+    },
+    {
+      "id": "PRSTD-205",
+      "projectId": null,
+      "title": "CMYK color management · Company standard",
+      "kind": "Company policy",
+      "version": "v1.1",
+      "status": "Approved",
+      "owner": "Operations",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print-shop policy",
+      "body": "# CMYK color management\n\nPolicy: PRSTD-205\nVersion: v1.1\n\n## Required checks\nVerify the job identity, latest approved specification, quotation revision and responsible sign-off. If any source is missing, refer the decision for review; do not generate fabricated stock, pricing, certification or delivery facts.\n\n## Approval principle\nA customer inquiry can generate a proposed response, but production work or customer commitments require a reviewed record. Preserve the decision log.\n\n## Example applicability\nPrint job JOB-201: recycled paper substitution requires material availability, recalculated price and written customer approval before updating the print ticket.\n\nAll policies are fictional demo examples.\n"
+    },
+    {
+      "id": "PRSTD-206",
+      "projectId": null,
+      "title": "Proof sign-off requirement · Company standard",
+      "kind": "Company policy",
+      "version": "v1.1",
+      "status": "Approved",
+      "owner": "Operations",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print-shop policy",
+      "body": "# Proof sign-off requirement\n\nPolicy: PRSTD-206\nVersion: v1.1\n\n## Required checks\nVerify the job identity, latest approved specification, quotation revision and responsible sign-off. If any source is missing, refer the decision for review; do not generate fabricated stock, pricing, certification or delivery facts.\n\n## Approval principle\nA customer inquiry can generate a proposed response, but production work or customer commitments require a reviewed record. Preserve the decision log.\n\n## Example applicability\nPrint job JOB-201: recycled paper substitution requires material availability, recalculated price and written customer approval before updating the print ticket.\n\nAll policies are fictional demo examples.\n"
+    },
+    {
+      "id": "PRSTD-207",
+      "projectId": null,
+      "title": "Production sequencing · Company standard",
+      "kind": "Company policy",
+      "version": "v1.1",
+      "status": "Approved",
+      "owner": "Operations",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print-shop policy",
+      "body": "# Production sequencing\n\nPolicy: PRSTD-207\nVersion: v1.1\n\n## Required checks\nVerify the job identity, latest approved specification, quotation revision and responsible sign-off. If any source is missing, refer the decision for review; do not generate fabricated stock, pricing, certification or delivery facts.\n\n## Approval principle\nA customer inquiry can generate a proposed response, but production work or customer commitments require a reviewed record. Preserve the decision log.\n\n## Example applicability\nPrint job JOB-201: recycled paper substitution requires material availability, recalculated price and written customer approval before updating the print ticket.\n\nAll policies are fictional demo examples.\n"
+    },
+    {
+      "id": "PRSTD-208",
+      "projectId": null,
+      "title": "Lamination and finish checks · Company standard",
+      "kind": "Company policy",
+      "version": "v1.1",
+      "status": "Approved",
+      "owner": "Operations",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print-shop policy",
+      "body": "# Lamination and finish checks\n\nPolicy: PRSTD-208\nVersion: v1.1\n\n## Required checks\nVerify the job identity, latest approved specification, quotation revision and responsible sign-off. If any source is missing, refer the decision for review; do not generate fabricated stock, pricing, certification or delivery facts.\n\n## Approval principle\nA customer inquiry can generate a proposed response, but production work or customer commitments require a reviewed record. Preserve the decision log.\n\n## Example applicability\nPrint job JOB-201: recycled paper substitution requires material availability, recalculated price and written customer approval before updating the print ticket.\n\nAll policies are fictional demo examples.\n"
+    },
+    {
+      "id": "PRSTD-209",
+      "projectId": null,
+      "title": "Customer reply protocol · Company standard",
+      "kind": "Company policy",
+      "version": "v1.1",
+      "status": "Approved",
+      "owner": "Operations",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print-shop policy",
+      "body": "# Customer reply protocol\n\nPolicy: PRSTD-209\nVersion: v1.1\n\n## Required checks\nVerify the job identity, latest approved specification, quotation revision and responsible sign-off. If any source is missing, refer the decision for review; do not generate fabricated stock, pricing, certification or delivery facts.\n\n## Approval principle\nA customer inquiry can generate a proposed response, but production work or customer commitments require a reviewed record. Preserve the decision log.\n\n## Example applicability\nPrint job JOB-201: recycled paper substitution requires material availability, recalculated price and written customer approval before updating the print ticket.\n\nAll policies are fictional demo examples.\n"
+    },
+    {
+      "id": "PRSTD-210",
+      "projectId": null,
+      "title": "Outsourced services approval · Company standard",
+      "kind": "Company policy",
+      "version": "v1.1",
+      "status": "Approved",
+      "owner": "Operations",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print-shop policy",
+      "body": "# Outsourced services approval\n\nPolicy: PRSTD-210\nVersion: v1.1\n\n## Required checks\nVerify the job identity, latest approved specification, quotation revision and responsible sign-off. If any source is missing, refer the decision for review; do not generate fabricated stock, pricing, certification or delivery facts.\n\n## Approval principle\nA customer inquiry can generate a proposed response, but production work or customer commitments require a reviewed record. Preserve the decision log.\n\n## Example applicability\nPrint job JOB-201: recycled paper substitution requires material availability, recalculated price and written customer approval before updating the print ticket.\n\nAll policies are fictional demo examples.\n"
+    },
+    {
+      "id": "PRSTD-211",
+      "projectId": null,
+      "title": "Dispatch and packing · Company standard",
+      "kind": "Company policy",
+      "version": "v1.1",
+      "status": "Approved",
+      "owner": "Operations",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print-shop policy",
+      "body": "# Dispatch and packing\n\nPolicy: PRSTD-211\nVersion: v1.1\n\n## Required checks\nVerify the job identity, latest approved specification, quotation revision and responsible sign-off. If any source is missing, refer the decision for review; do not generate fabricated stock, pricing, certification or delivery facts.\n\n## Approval principle\nA customer inquiry can generate a proposed response, but production work or customer commitments require a reviewed record. Preserve the decision log.\n\n## Example applicability\nPrint job JOB-201: recycled paper substitution requires material availability, recalculated price and written customer approval before updating the print ticket.\n\nAll policies are fictional demo examples.\n"
+    },
+    {
+      "id": "PRSTD-212",
+      "projectId": null,
+      "title": "Invoice and tax display · Company standard",
+      "kind": "Company policy",
+      "version": "v1.1",
+      "status": "Approved",
+      "owner": "Operations",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print-shop policy",
+      "body": "# Invoice and tax display\n\nPolicy: PRSTD-212\nVersion: v1.1\n\n## Required checks\nVerify the job identity, latest approved specification, quotation revision and responsible sign-off. If any source is missing, refer the decision for review; do not generate fabricated stock, pricing, certification or delivery facts.\n\n## Approval principle\nA customer inquiry can generate a proposed response, but production work or customer commitments require a reviewed record. Preserve the decision log.\n\n## Example applicability\nPrint job JOB-201: recycled paper substitution requires material availability, recalculated price and written customer approval before updating the print ticket.\n\nAll policies are fictional demo examples.\n"
+    },
+    {
+      "id": "PRSTD-213",
+      "projectId": null,
+      "title": "Production safety controls · Company standard",
+      "kind": "Company policy",
+      "version": "v1.1",
+      "status": "Approved",
+      "owner": "Operations",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print-shop policy",
+      "body": "# Production safety controls\n\nPolicy: PRSTD-213\nVersion: v1.1\n\n## Required checks\nVerify the job identity, latest approved specification, quotation revision and responsible sign-off. If any source is missing, refer the decision for review; do not generate fabricated stock, pricing, certification or delivery facts.\n\n## Approval principle\nA customer inquiry can generate a proposed response, but production work or customer commitments require a reviewed record. Preserve the decision log.\n\n## Example applicability\nPrint job JOB-201: recycled paper substitution requires material availability, recalculated price and written customer approval before updating the print ticket.\n\nAll policies are fictional demo examples.\n"
+    },
+    {
+      "id": "PRSTD-214",
+      "projectId": null,
+      "title": "Material substitutions · Company standard",
+      "kind": "Company policy",
+      "version": "v1.1",
+      "status": "Approved",
+      "owner": "Operations",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print-shop policy",
+      "body": "# Material substitutions\n\nPolicy: PRSTD-214\nVersion: v1.1\n\n## Required checks\nVerify the job identity, latest approved specification, quotation revision and responsible sign-off. If any source is missing, refer the decision for review; do not generate fabricated stock, pricing, certification or delivery facts.\n\n## Approval principle\nA customer inquiry can generate a proposed response, but production work or customer commitments require a reviewed record. Preserve the decision log.\n\n## Example applicability\nPrint job JOB-201: recycled paper substitution requires material availability, recalculated price and written customer approval before updating the print ticket.\n\nAll policies are fictional demo examples.\n"
+    },
+    {
+      "id": "PRSTD-215",
+      "projectId": null,
+      "title": "Delivery exceptions · Company standard",
+      "kind": "Company policy",
+      "version": "v1.1",
+      "status": "Approved",
+      "owner": "Operations",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print-shop policy",
+      "body": "# Delivery exceptions\n\nPolicy: PRSTD-215\nVersion: v1.1\n\n## Required checks\nVerify the job identity, latest approved specification, quotation revision and responsible sign-off. If any source is missing, refer the decision for review; do not generate fabricated stock, pricing, certification or delivery facts.\n\n## Approval principle\nA customer inquiry can generate a proposed response, but production work or customer commitments require a reviewed record. Preserve the decision log.\n\n## Example applicability\nPrint job JOB-201: recycled paper substitution requires material availability, recalculated price and written customer approval before updating the print ticket.\n\nAll policies are fictional demo examples.\n"
+    },
+    {
+      "id": "PRSTD-216",
+      "projectId": null,
+      "title": "Client complaints · Company standard",
+      "kind": "Company policy",
+      "version": "v1.1",
+      "status": "Approved",
+      "owner": "Operations",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print-shop policy",
+      "body": "# Client complaints\n\nPolicy: PRSTD-216\nVersion: v1.1\n\n## Required checks\nVerify the job identity, latest approved specification, quotation revision and responsible sign-off. If any source is missing, refer the decision for review; do not generate fabricated stock, pricing, certification or delivery facts.\n\n## Approval principle\nA customer inquiry can generate a proposed response, but production work or customer commitments require a reviewed record. Preserve the decision log.\n\n## Example applicability\nPrint job JOB-201: recycled paper substitution requires material availability, recalculated price and written customer approval before updating the print ticket.\n\nAll policies are fictional demo examples.\n"
+    },
+    {
+      "id": "PRSTD-217",
+      "projectId": null,
+      "title": "Machine maintenance · Company standard",
+      "kind": "Company policy",
+      "version": "v1.1",
+      "status": "Approved",
+      "owner": "Operations",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print-shop policy",
+      "body": "# Machine maintenance\n\nPolicy: PRSTD-217\nVersion: v1.1\n\n## Required checks\nVerify the job identity, latest approved specification, quotation revision and responsible sign-off. If any source is missing, refer the decision for review; do not generate fabricated stock, pricing, certification or delivery facts.\n\n## Approval principle\nA customer inquiry can generate a proposed response, but production work or customer commitments require a reviewed record. Preserve the decision log.\n\n## Example applicability\nPrint job JOB-201: recycled paper substitution requires material availability, recalculated price and written customer approval before updating the print ticket.\n\nAll policies are fictional demo examples.\n"
+    },
+    {
+      "id": "PRSTD-218",
+      "projectId": null,
+      "title": "Sustainable materials claims · Company standard",
+      "kind": "Company policy",
+      "version": "v1.1",
+      "status": "Approved",
+      "owner": "Operations",
+      "date": "2026-10-17",
+      "sourceType": "Synthetic print-shop policy",
+      "body": "# Sustainable materials claims\n\nPolicy: PRSTD-218\nVersion: v1.1\n\n## Required checks\nVerify the job identity, latest approved specification, quotation revision and responsible sign-off. If any source is missing, refer the decision for review; do not generate fabricated stock, pricing, certification or delivery facts.\n\n## Approval principle\nA customer inquiry can generate a proposed response, but production work or customer commitments require a reviewed record. Preserve the decision log.\n\n## Example applicability\nPrint job JOB-201: recycled paper substitution requires material availability, recalculated price and written customer approval before updating the print ticket.\n\nAll policies are fictional demo examples.\n"
+    }
+  ],
+  "suppliers": [
+    {
+      "id": "PRSUP-001",
+      "name": "Paper Valley",
+      "category": "Paper stock",
+      "sampleUnitPrice": 2180,
+      "leadTimeDays": 7,
+      "priceChecked": "2026-10-10",
+      "dataStatus": "Fictional sample supplier",
+      "region": "Taipei"
+    },
+    {
+      "id": "PRSUP-002",
+      "name": "Offset Craft",
+      "category": "Offset plates",
+      "sampleUnitPrice": 1650,
+      "leadTimeDays": 5,
+      "priceChecked": "2026-10-11",
+      "dataStatus": "Fictional sample supplier",
+      "region": "New Taipei"
+    },
+    {
+      "id": "PRSUP-003",
+      "name": "InkWorks",
+      "category": "CMYK inks",
+      "sampleUnitPrice": 3200,
+      "leadTimeDays": 3,
+      "priceChecked": "2026-10-12",
+      "dataStatus": "Fictional sample supplier",
+      "region": "Taichung"
+    },
+    {
+      "id": "PRSUP-004",
+      "name": "Finishing Studio",
+      "category": "Lamination",
+      "sampleUnitPrice": 2250,
+      "leadTimeDays": 6,
+      "priceChecked": "2026-10-13",
+      "dataStatus": "Fictional sample supplier",
+      "region": "Taipei"
+    },
+    {
+      "id": "PRSUP-005",
+      "name": "Bind & Fold",
+      "category": "Bookbinding",
+      "sampleUnitPrice": 4800,
+      "leadTimeDays": 8,
+      "priceChecked": "2026-10-14",
+      "dataStatus": "Fictional sample supplier",
+      "region": "New Taipei"
+    },
+    {
+      "id": "PRSUP-006",
+      "name": "Delivery Link",
+      "category": "Freight and shipping",
+      "sampleUnitPrice": 1500,
+      "leadTimeDays": 3,
+      "priceChecked": "2026-10-15",
+      "dataStatus": "Fictional sample supplier",
+      "region": "Taichung"
+    },
+    {
+      "id": "PRSUP-007",
+      "name": "EcoPaper House",
+      "category": "Recycled paper",
+      "sampleUnitPrice": 4600,
+      "leadTimeDays": 10,
+      "priceChecked": "2026-10-16",
+      "dataStatus": "Fictional sample supplier",
+      "region": "Taipei"
+    },
+    {
+      "id": "PRSUP-008",
+      "name": "PrintSafe",
+      "category": "Packaging supplies",
+      "sampleUnitPrice": 820,
+      "leadTimeDays": 4,
+      "priceChecked": "2026-10-17",
+      "dataStatus": "Fictional sample supplier",
+      "region": "New Taipei"
+    }
+  ],
+  "quotes": [
+    {
+      "id": "PRQ-2001",
+      "projectId": "JOB-201",
+      "revision": 1,
+      "title": "Initial estimate",
+      "status": "Superseded",
+      "directCost": 15390,
+      "grossMarginTarget": 0.2,
+      "amountExTax": 19238,
+      "tax": 962,
+      "totalWithTax": 20200,
+      "lastUpdated": "2026-10-17",
+      "sourceDocId": "PRDOC-2007",
+      "isLatest": false
+    },
+    {
+      "id": "PRQ-2002",
+      "projectId": "JOB-201",
+      "revision": 2,
+      "title": "Customer revision",
+      "status": "Superseded",
+      "directCost": 16530,
+      "grossMarginTarget": 0.225,
+      "amountExTax": 21329,
+      "tax": 1066,
+      "totalWithTax": 22395,
+      "lastUpdated": "2026-10-17",
+      "sourceDocId": "PRDOC-2007",
+      "isLatest": false
+    },
+    {
+      "id": "PRQ-2003",
+      "projectId": "JOB-201",
+      "revision": 3,
+      "title": "Current proposed quote",
+      "status": "Needs review",
+      "directCost": 17670,
+      "grossMarginTarget": 0.25,
+      "amountExTax": 23560,
+      "tax": 1178,
+      "totalWithTax": 24738,
+      "lastUpdated": "2026-10-17",
+      "sourceDocId": "PRDOC-2007",
+      "isLatest": true
+    },
+    {
+      "id": "PRQ-2004",
+      "projectId": "JOB-202",
+      "revision": 1,
+      "title": "Initial estimate",
+      "status": "Superseded",
+      "directCost": 33480,
+      "grossMarginTarget": 0.225,
+      "amountExTax": 43200,
+      "tax": 2160,
+      "totalWithTax": 45360,
+      "lastUpdated": "2026-10-17",
+      "sourceDocId": "PRDOC-2019",
+      "isLatest": false
+    },
+    {
+      "id": "PRQ-2005",
+      "projectId": "JOB-202",
+      "revision": 2,
+      "title": "Customer revision",
+      "status": "Superseded",
+      "directCost": 35960,
+      "grossMarginTarget": 0.25,
+      "amountExTax": 47947,
+      "tax": 2397,
+      "totalWithTax": 50344,
+      "lastUpdated": "2026-10-17",
+      "sourceDocId": "PRDOC-2019",
+      "isLatest": false
+    },
+    {
+      "id": "PRQ-2006",
+      "projectId": "JOB-202",
+      "revision": 3,
+      "title": "Current proposed quote",
+      "status": "Needs review",
+      "directCost": 38440,
+      "grossMarginTarget": 0.275,
+      "amountExTax": 53021,
+      "tax": 2651,
+      "totalWithTax": 55672,
+      "lastUpdated": "2026-10-17",
+      "sourceDocId": "PRDOC-2019",
+      "isLatest": true
+    },
+    {
+      "id": "PRQ-2007",
+      "projectId": "JOB-203",
+      "revision": 1,
+      "title": "Initial estimate",
+      "status": "Superseded",
+      "directCost": 52920,
+      "grossMarginTarget": 0.25,
+      "amountExTax": 70560,
+      "tax": 3528,
+      "totalWithTax": 74088,
+      "lastUpdated": "2026-10-17",
+      "sourceDocId": "PRDOC-2031",
+      "isLatest": false
+    },
+    {
+      "id": "PRQ-2008",
+      "projectId": "JOB-203",
+      "revision": 2,
+      "title": "Customer revision",
+      "status": "Superseded",
+      "directCost": 56840,
+      "grossMarginTarget": 0.275,
+      "amountExTax": 78400,
+      "tax": 3920,
+      "totalWithTax": 82320,
+      "lastUpdated": "2026-10-17",
+      "sourceDocId": "PRDOC-2031",
+      "isLatest": false
+    },
+    {
+      "id": "PRQ-2009",
+      "projectId": "JOB-203",
+      "revision": 3,
+      "title": "Current proposed quote",
+      "status": "Needs review",
+      "directCost": 60760,
+      "grossMarginTarget": 0.2,
+      "amountExTax": 75950,
+      "tax": 3798,
+      "totalWithTax": 79748,
+      "lastUpdated": "2026-10-17",
+      "sourceDocId": "PRDOC-2031",
+      "isLatest": true
+    },
+    {
+      "id": "PRQ-2010",
+      "projectId": "JOB-204",
+      "revision": 1,
+      "title": "Initial estimate",
+      "status": "Superseded",
+      "directCost": 78840,
+      "grossMarginTarget": 0.275,
+      "amountExTax": 108745,
+      "tax": 5437,
+      "totalWithTax": 114182,
+      "lastUpdated": "2026-10-17",
+      "sourceDocId": "PRDOC-2043",
+      "isLatest": false
+    },
+    {
+      "id": "PRQ-2011",
+      "projectId": "JOB-204",
+      "revision": 2,
+      "title": "Customer revision",
+      "status": "Superseded",
+      "directCost": 84680,
+      "grossMarginTarget": 0.2,
+      "amountExTax": 105850,
+      "tax": 5293,
+      "totalWithTax": 111143,
+      "lastUpdated": "2026-10-17",
+      "sourceDocId": "PRDOC-2043",
+      "isLatest": false
+    },
+    {
+      "id": "PRQ-2012",
+      "projectId": "JOB-204",
+      "revision": 3,
+      "title": "Current proposed quote",
+      "status": "Needs review",
+      "directCost": 90520,
+      "grossMarginTarget": 0.225,
+      "amountExTax": 116800,
+      "tax": 5840,
+      "totalWithTax": 122640,
+      "lastUpdated": "2026-10-17",
+      "sourceDocId": "PRDOC-2043",
+      "isLatest": true
+    },
+    {
+      "id": "PRQ-2013",
+      "projectId": "JOB-205",
+      "revision": 1,
+      "title": "Initial estimate",
+      "status": "Superseded",
+      "directCost": 45630,
+      "grossMarginTarget": 0.2,
+      "amountExTax": 57038,
+      "tax": 2852,
+      "totalWithTax": 59890,
+      "lastUpdated": "2026-10-17",
+      "sourceDocId": "PRDOC-2055",
+      "isLatest": false
+    },
+    {
+      "id": "PRQ-2014",
+      "projectId": "JOB-205",
+      "revision": 2,
+      "title": "Customer revision",
+      "status": "Superseded",
+      "directCost": 49010,
+      "grossMarginTarget": 0.225,
+      "amountExTax": 63239,
+      "tax": 3162,
+      "totalWithTax": 66401,
+      "lastUpdated": "2026-10-17",
+      "sourceDocId": "PRDOC-2055",
+      "isLatest": false
+    },
+    {
+      "id": "PRQ-2015",
+      "projectId": "JOB-205",
+      "revision": 3,
+      "title": "Current proposed quote",
+      "status": "Needs review",
+      "directCost": 52390,
+      "grossMarginTarget": 0.25,
+      "amountExTax": 69853,
+      "tax": 3493,
+      "totalWithTax": 73346,
+      "lastUpdated": "2026-10-17",
+      "sourceDocId": "PRDOC-2055",
+      "isLatest": true
+    },
+    {
+      "id": "PRQ-2016",
+      "projectId": "JOB-206",
+      "revision": 1,
+      "title": "Initial estimate",
+      "status": "Superseded",
+      "directCost": 17010,
+      "grossMarginTarget": 0.225,
+      "amountExTax": 21948,
+      "tax": 1097,
+      "totalWithTax": 23045,
+      "lastUpdated": "2026-10-17",
+      "sourceDocId": "PRDOC-2067",
+      "isLatest": false
+    },
+    {
+      "id": "PRQ-2017",
+      "projectId": "JOB-206",
+      "revision": 2,
+      "title": "Customer revision",
+      "status": "Superseded",
+      "directCost": 18270,
+      "grossMarginTarget": 0.25,
+      "amountExTax": 24360,
+      "tax": 1218,
+      "totalWithTax": 25578,
+      "lastUpdated": "2026-10-17",
+      "sourceDocId": "PRDOC-2067",
+      "isLatest": false
+    },
+    {
+      "id": "PRQ-2018",
+      "projectId": "JOB-206",
+      "revision": 3,
+      "title": "Current proposed quote",
+      "status": "Needs review",
+      "directCost": 19530,
+      "grossMarginTarget": 0.275,
+      "amountExTax": 26938,
+      "tax": 1347,
+      "totalWithTax": 28285,
+      "lastUpdated": "2026-10-17",
+      "sourceDocId": "PRDOC-2067",
+      "isLatest": true
+    },
+    {
+      "id": "PRQ-2019",
+      "projectId": "JOB-207",
+      "revision": 1,
+      "title": "Initial estimate",
+      "status": "Superseded",
+      "directCost": 28400,
+      "grossMarginTarget": 0.25,
+      "amountExTax": 37867,
+      "tax": 1893,
+      "totalWithTax": 39760,
+      "lastUpdated": "2026-10-17",
+      "sourceDocId": "PRDOC-2079",
+      "isLatest": false
+    },
+    {
+      "id": "PRQ-2020",
+      "projectId": "JOB-207",
+      "revision": 2,
+      "title": "Customer revision",
+      "status": "Superseded",
+      "directCost": 30510,
+      "grossMarginTarget": 0.275,
+      "amountExTax": 42083,
+      "tax": 2104,
+      "totalWithTax": 44187,
+      "lastUpdated": "2026-10-17",
+      "sourceDocId": "PRDOC-2079",
+      "isLatest": false
+    },
+    {
+      "id": "PRQ-2021",
+      "projectId": "JOB-207",
+      "revision": 3,
+      "title": "Current proposed quote",
+      "status": "Needs review",
+      "directCost": 32610,
+      "grossMarginTarget": 0.2,
+      "amountExTax": 40763,
+      "tax": 2038,
+      "totalWithTax": 42801,
+      "lastUpdated": "2026-10-17",
+      "sourceDocId": "PRDOC-2079",
+      "isLatest": true
+    },
+    {
+      "id": "PRQ-2022",
+      "projectId": "JOB-208",
+      "revision": 1,
+      "title": "Initial estimate",
+      "status": "Superseded",
+      "directCost": 22140,
+      "grossMarginTarget": 0.275,
+      "amountExTax": 30538,
+      "tax": 1527,
+      "totalWithTax": 32065,
+      "lastUpdated": "2026-10-17",
+      "sourceDocId": "PRDOC-2091",
+      "isLatest": false
+    },
+    {
+      "id": "PRQ-2023",
+      "projectId": "JOB-208",
+      "revision": 2,
+      "title": "Customer revision",
+      "status": "Superseded",
+      "directCost": 23780,
+      "grossMarginTarget": 0.2,
+      "amountExTax": 29725,
+      "tax": 1486,
+      "totalWithTax": 31211,
+      "lastUpdated": "2026-10-17",
+      "sourceDocId": "PRDOC-2091",
+      "isLatest": false
+    },
+    {
+      "id": "PRQ-2024",
+      "projectId": "JOB-208",
+      "revision": 3,
+      "title": "Current proposed quote",
+      "status": "Needs review",
+      "directCost": 25420,
+      "grossMarginTarget": 0.225,
+      "amountExTax": 32800,
+      "tax": 1640,
+      "totalWithTax": 34440,
+      "lastUpdated": "2026-10-17",
+      "sourceDocId": "PRDOC-2091",
+      "isLatest": true
+    }
+  ],
+  "workOrders": [
+    {
+      "id": "PRWO-2001",
+      "projectId": "JOB-201",
+      "title": "Artwork validation",
+      "owner": "Lin Yu",
+      "status": "Upcoming",
+      "dueDate": "2026-10-18",
+      "blockedBy": null,
+      "sourceDocId": "PRDOC-2001"
+    },
+    {
+      "id": "PRWO-2002",
+      "projectId": "JOB-201",
+      "title": "Material order",
+      "owner": "Lin Yu",
+      "status": "In progress",
+      "dueDate": "2026-10-19",
+      "blockedBy": null,
+      "sourceDocId": "PRDOC-2002"
+    },
+    {
+      "id": "PRWO-2003",
+      "projectId": "JOB-201",
+      "title": "Proof review",
+      "owner": "Lin Yu",
+      "status": "Blocked",
+      "dueDate": "2026-10-20",
+      "blockedBy": "Awaiting approved artwork/material stock confirmation",
+      "sourceDocId": "PRDOC-2003"
+    },
+    {
+      "id": "PRWO-2004",
+      "projectId": "JOB-201",
+      "title": "Press setup",
+      "owner": "Lin Yu",
+      "status": "Complete",
+      "dueDate": "2026-10-21",
+      "blockedBy": null,
+      "sourceDocId": "PRDOC-2004"
+    },
+    {
+      "id": "PRWO-2005",
+      "projectId": "JOB-201",
+      "title": "Production run",
+      "owner": "Lin Yu",
+      "status": "Upcoming",
+      "dueDate": "2026-10-22",
+      "blockedBy": null,
+      "sourceDocId": "PRDOC-2005"
+    },
+    {
+      "id": "PRWO-2006",
+      "projectId": "JOB-201",
+      "title": "Finishing",
+      "owner": "Lin Yu",
+      "status": "In progress",
+      "dueDate": "2026-10-23",
+      "blockedBy": null,
+      "sourceDocId": "PRDOC-2006"
+    },
+    {
+      "id": "PRWO-2007",
+      "projectId": "JOB-201",
+      "title": "Quality check",
+      "owner": "Lin Yu",
+      "status": "Blocked",
+      "dueDate": "2026-10-24",
+      "blockedBy": "Awaiting approved artwork/material stock confirmation",
+      "sourceDocId": "PRDOC-2007"
+    },
+    {
+      "id": "PRWO-2008",
+      "projectId": "JOB-201",
+      "title": "Delivery coordination",
+      "owner": "Lin Yu",
+      "status": "Complete",
+      "dueDate": "2026-10-25",
+      "blockedBy": null,
+      "sourceDocId": "PRDOC-2008"
+    },
+    {
+      "id": "PRWO-2009",
+      "projectId": "JOB-202",
+      "title": "Artwork validation",
+      "owner": "Chen Yi",
+      "status": "In progress",
+      "dueDate": "2026-10-19",
+      "blockedBy": null,
+      "sourceDocId": "PRDOC-2013"
+    },
+    {
+      "id": "PRWO-2010",
+      "projectId": "JOB-202",
+      "title": "Material order",
+      "owner": "Chen Yi",
+      "status": "Blocked",
+      "dueDate": "2026-10-20",
+      "blockedBy": "Awaiting approved artwork/material stock confirmation",
+      "sourceDocId": "PRDOC-2014"
+    },
+    {
+      "id": "PRWO-2011",
+      "projectId": "JOB-202",
+      "title": "Proof review",
+      "owner": "Chen Yi",
+      "status": "Complete",
+      "dueDate": "2026-10-21",
+      "blockedBy": null,
+      "sourceDocId": "PRDOC-2015"
+    },
+    {
+      "id": "PRWO-2012",
+      "projectId": "JOB-202",
+      "title": "Press setup",
+      "owner": "Chen Yi",
+      "status": "Upcoming",
+      "dueDate": "2026-10-22",
+      "blockedBy": null,
+      "sourceDocId": "PRDOC-2016"
+    },
+    {
+      "id": "PRWO-2013",
+      "projectId": "JOB-202",
+      "title": "Production run",
+      "owner": "Chen Yi",
+      "status": "In progress",
+      "dueDate": "2026-10-23",
+      "blockedBy": null,
+      "sourceDocId": "PRDOC-2017"
+    },
+    {
+      "id": "PRWO-2014",
+      "projectId": "JOB-202",
+      "title": "Finishing",
+      "owner": "Chen Yi",
+      "status": "Blocked",
+      "dueDate": "2026-10-24",
+      "blockedBy": "Awaiting approved artwork/material stock confirmation",
+      "sourceDocId": "PRDOC-2018"
+    },
+    {
+      "id": "PRWO-2015",
+      "projectId": "JOB-202",
+      "title": "Quality check",
+      "owner": "Chen Yi",
+      "status": "Complete",
+      "dueDate": "2026-10-25",
+      "blockedBy": null,
+      "sourceDocId": "PRDOC-2019"
+    },
+    {
+      "id": "PRWO-2016",
+      "projectId": "JOB-202",
+      "title": "Delivery coordination",
+      "owner": "Chen Yi",
+      "status": "Upcoming",
+      "dueDate": "2026-10-26",
+      "blockedBy": null,
+      "sourceDocId": "PRDOC-2020"
+    },
+    {
+      "id": "PRWO-2017",
+      "projectId": "JOB-203",
+      "title": "Artwork validation",
+      "owner": "Tsai Wen",
+      "status": "Blocked",
+      "dueDate": "2026-10-20",
+      "blockedBy": "Awaiting approved artwork/material stock confirmation",
+      "sourceDocId": "PRDOC-2025"
+    },
+    {
+      "id": "PRWO-2018",
+      "projectId": "JOB-203",
+      "title": "Material order",
+      "owner": "Tsai Wen",
+      "status": "Complete",
+      "dueDate": "2026-10-21",
+      "blockedBy": null,
+      "sourceDocId": "PRDOC-2026"
+    },
+    {
+      "id": "PRWO-2019",
+      "projectId": "JOB-203",
+      "title": "Proof review",
+      "owner": "Tsai Wen",
+      "status": "Upcoming",
+      "dueDate": "2026-10-22",
+      "blockedBy": null,
+      "sourceDocId": "PRDOC-2027"
+    },
+    {
+      "id": "PRWO-2020",
+      "projectId": "JOB-203",
+      "title": "Press setup",
+      "owner": "Tsai Wen",
+      "status": "In progress",
+      "dueDate": "2026-10-23",
+      "blockedBy": null,
+      "sourceDocId": "PRDOC-2028"
+    },
+    {
+      "id": "PRWO-2021",
+      "projectId": "JOB-203",
+      "title": "Production run",
+      "owner": "Tsai Wen",
+      "status": "Blocked",
+      "dueDate": "2026-10-24",
+      "blockedBy": "Awaiting approved artwork/material stock confirmation",
+      "sourceDocId": "PRDOC-2029"
+    },
+    {
+      "id": "PRWO-2022",
+      "projectId": "JOB-203",
+      "title": "Finishing",
+      "owner": "Tsai Wen",
+      "status": "Complete",
+      "dueDate": "2026-10-25",
+      "blockedBy": null,
+      "sourceDocId": "PRDOC-2030"
+    },
+    {
+      "id": "PRWO-2023",
+      "projectId": "JOB-203",
+      "title": "Quality check",
+      "owner": "Tsai Wen",
+      "status": "Upcoming",
+      "dueDate": "2026-10-26",
+      "blockedBy": null,
+      "sourceDocId": "PRDOC-2031"
+    },
+    {
+      "id": "PRWO-2024",
+      "projectId": "JOB-203",
+      "title": "Delivery coordination",
+      "owner": "Tsai Wen",
+      "status": "In progress",
+      "dueDate": "2026-10-27",
+      "blockedBy": null,
+      "sourceDocId": "PRDOC-2032"
+    },
+    {
+      "id": "PRWO-2025",
+      "projectId": "JOB-204",
+      "title": "Artwork validation",
+      "owner": "Lin Yu",
+      "status": "Complete",
+      "dueDate": "2026-10-21",
+      "blockedBy": null,
+      "sourceDocId": "PRDOC-2037"
+    },
+    {
+      "id": "PRWO-2026",
+      "projectId": "JOB-204",
+      "title": "Material order",
+      "owner": "Lin Yu",
+      "status": "Upcoming",
+      "dueDate": "2026-10-22",
+      "blockedBy": null,
+      "sourceDocId": "PRDOC-2038"
+    },
+    {
+      "id": "PRWO-2027",
+      "projectId": "JOB-204",
+      "title": "Proof review",
+      "owner": "Lin Yu",
+      "status": "In progress",
+      "dueDate": "2026-10-23",
+      "blockedBy": null,
+      "sourceDocId": "PRDOC-2039"
+    },
+    {
+      "id": "PRWO-2028",
+      "projectId": "JOB-204",
+      "title": "Press setup",
+      "owner": "Lin Yu",
+      "status": "Blocked",
+      "dueDate": "2026-10-24",
+      "blockedBy": "Awaiting approved artwork/material stock confirmation",
+      "sourceDocId": "PRDOC-2040"
+    },
+    {
+      "id": "PRWO-2029",
+      "projectId": "JOB-204",
+      "title": "Production run",
+      "owner": "Lin Yu",
+      "status": "Complete",
+      "dueDate": "2026-10-25",
+      "blockedBy": null,
+      "sourceDocId": "PRDOC-2041"
+    },
+    {
+      "id": "PRWO-2030",
+      "projectId": "JOB-204",
+      "title": "Finishing",
+      "owner": "Lin Yu",
+      "status": "Upcoming",
+      "dueDate": "2026-10-26",
+      "blockedBy": null,
+      "sourceDocId": "PRDOC-2042"
+    },
+    {
+      "id": "PRWO-2031",
+      "projectId": "JOB-204",
+      "title": "Quality check",
+      "owner": "Lin Yu",
+      "status": "In progress",
+      "dueDate": "2026-10-27",
+      "blockedBy": null,
+      "sourceDocId": "PRDOC-2043"
+    },
+    {
+      "id": "PRWO-2032",
+      "projectId": "JOB-204",
+      "title": "Delivery coordination",
+      "owner": "Lin Yu",
+      "status": "Blocked",
+      "dueDate": "2026-10-28",
+      "blockedBy": "Awaiting approved artwork/material stock confirmation",
+      "sourceDocId": "PRDOC-2044"
+    },
+    {
+      "id": "PRWO-2033",
+      "projectId": "JOB-205",
+      "title": "Artwork validation",
+      "owner": "Chen Yi",
+      "status": "Upcoming",
+      "dueDate": "2026-10-22",
+      "blockedBy": null,
+      "sourceDocId": "PRDOC-2049"
+    },
+    {
+      "id": "PRWO-2034",
+      "projectId": "JOB-205",
+      "title": "Material order",
+      "owner": "Chen Yi",
+      "status": "In progress",
+      "dueDate": "2026-10-23",
+      "blockedBy": null,
+      "sourceDocId": "PRDOC-2050"
+    },
+    {
+      "id": "PRWO-2035",
+      "projectId": "JOB-205",
+      "title": "Proof review",
+      "owner": "Chen Yi",
+      "status": "Blocked",
+      "dueDate": "2026-10-24",
+      "blockedBy": "Awaiting approved artwork/material stock confirmation",
+      "sourceDocId": "PRDOC-2051"
+    },
+    {
+      "id": "PRWO-2036",
+      "projectId": "JOB-205",
+      "title": "Press setup",
+      "owner": "Chen Yi",
+      "status": "Complete",
+      "dueDate": "2026-10-25",
+      "blockedBy": null,
+      "sourceDocId": "PRDOC-2052"
+    },
+    {
+      "id": "PRWO-2037",
+      "projectId": "JOB-205",
+      "title": "Production run",
+      "owner": "Chen Yi",
+      "status": "Upcoming",
+      "dueDate": "2026-10-26",
+      "blockedBy": null,
+      "sourceDocId": "PRDOC-2053"
+    },
+    {
+      "id": "PRWO-2038",
+      "projectId": "JOB-205",
+      "title": "Finishing",
+      "owner": "Chen Yi",
+      "status": "In progress",
+      "dueDate": "2026-10-27",
+      "blockedBy": null,
+      "sourceDocId": "PRDOC-2054"
+    },
+    {
+      "id": "PRWO-2039",
+      "projectId": "JOB-205",
+      "title": "Quality check",
+      "owner": "Chen Yi",
+      "status": "Blocked",
+      "dueDate": "2026-10-28",
+      "blockedBy": "Awaiting approved artwork/material stock confirmation",
+      "sourceDocId": "PRDOC-2055"
+    },
+    {
+      "id": "PRWO-2040",
+      "projectId": "JOB-205",
+      "title": "Delivery coordination",
+      "owner": "Chen Yi",
+      "status": "Complete",
+      "dueDate": "2026-10-29",
+      "blockedBy": null,
+      "sourceDocId": "PRDOC-2056"
+    },
+    {
+      "id": "PRWO-2041",
+      "projectId": "JOB-206",
+      "title": "Artwork validation",
+      "owner": "Tsai Wen",
+      "status": "In progress",
+      "dueDate": "2026-10-23",
+      "blockedBy": null,
+      "sourceDocId": "PRDOC-2061"
+    },
+    {
+      "id": "PRWO-2042",
+      "projectId": "JOB-206",
+      "title": "Material order",
+      "owner": "Tsai Wen",
+      "status": "Blocked",
+      "dueDate": "2026-10-24",
+      "blockedBy": "Awaiting approved artwork/material stock confirmation",
+      "sourceDocId": "PRDOC-2062"
+    },
+    {
+      "id": "PRWO-2043",
+      "projectId": "JOB-206",
+      "title": "Proof review",
+      "owner": "Tsai Wen",
+      "status": "Complete",
+      "dueDate": "2026-10-25",
+      "blockedBy": null,
+      "sourceDocId": "PRDOC-2063"
+    },
+    {
+      "id": "PRWO-2044",
+      "projectId": "JOB-206",
+      "title": "Press setup",
+      "owner": "Tsai Wen",
+      "status": "Upcoming",
+      "dueDate": "2026-10-26",
+      "blockedBy": null,
+      "sourceDocId": "PRDOC-2064"
+    },
+    {
+      "id": "PRWO-2045",
+      "projectId": "JOB-206",
+      "title": "Production run",
+      "owner": "Tsai Wen",
+      "status": "In progress",
+      "dueDate": "2026-10-27",
+      "blockedBy": null,
+      "sourceDocId": "PRDOC-2065"
+    },
+    {
+      "id": "PRWO-2046",
+      "projectId": "JOB-206",
+      "title": "Finishing",
+      "owner": "Tsai Wen",
+      "status": "Blocked",
+      "dueDate": "2026-10-28",
+      "blockedBy": "Awaiting approved artwork/material stock confirmation",
+      "sourceDocId": "PRDOC-2066"
+    },
+    {
+      "id": "PRWO-2047",
+      "projectId": "JOB-206",
+      "title": "Quality check",
+      "owner": "Tsai Wen",
+      "status": "Complete",
+      "dueDate": "2026-10-29",
+      "blockedBy": null,
+      "sourceDocId": "PRDOC-2067"
+    },
+    {
+      "id": "PRWO-2048",
+      "projectId": "JOB-206",
+      "title": "Delivery coordination",
+      "owner": "Tsai Wen",
+      "status": "Upcoming",
+      "dueDate": "2026-10-18",
+      "blockedBy": null,
+      "sourceDocId": "PRDOC-2068"
+    },
+    {
+      "id": "PRWO-2049",
+      "projectId": "JOB-207",
+      "title": "Artwork validation",
+      "owner": "Lin Yu",
+      "status": "Blocked",
+      "dueDate": "2026-10-24",
+      "blockedBy": "Awaiting approved artwork/material stock confirmation",
+      "sourceDocId": "PRDOC-2073"
+    },
+    {
+      "id": "PRWO-2050",
+      "projectId": "JOB-207",
+      "title": "Material order",
+      "owner": "Lin Yu",
+      "status": "Complete",
+      "dueDate": "2026-10-25",
+      "blockedBy": null,
+      "sourceDocId": "PRDOC-2074"
+    },
+    {
+      "id": "PRWO-2051",
+      "projectId": "JOB-207",
+      "title": "Proof review",
+      "owner": "Lin Yu",
+      "status": "Upcoming",
+      "dueDate": "2026-10-26",
+      "blockedBy": null,
+      "sourceDocId": "PRDOC-2075"
+    },
+    {
+      "id": "PRWO-2052",
+      "projectId": "JOB-207",
+      "title": "Press setup",
+      "owner": "Lin Yu",
+      "status": "In progress",
+      "dueDate": "2026-10-27",
+      "blockedBy": null,
+      "sourceDocId": "PRDOC-2076"
+    },
+    {
+      "id": "PRWO-2053",
+      "projectId": "JOB-207",
+      "title": "Production run",
+      "owner": "Lin Yu",
+      "status": "Blocked",
+      "dueDate": "2026-10-28",
+      "blockedBy": "Awaiting approved artwork/material stock confirmation",
+      "sourceDocId": "PRDOC-2077"
+    },
+    {
+      "id": "PRWO-2054",
+      "projectId": "JOB-207",
+      "title": "Finishing",
+      "owner": "Lin Yu",
+      "status": "Complete",
+      "dueDate": "2026-10-29",
+      "blockedBy": null,
+      "sourceDocId": "PRDOC-2078"
+    },
+    {
+      "id": "PRWO-2055",
+      "projectId": "JOB-207",
+      "title": "Quality check",
+      "owner": "Lin Yu",
+      "status": "Upcoming",
+      "dueDate": "2026-10-18",
+      "blockedBy": null,
+      "sourceDocId": "PRDOC-2079"
+    },
+    {
+      "id": "PRWO-2056",
+      "projectId": "JOB-207",
+      "title": "Delivery coordination",
+      "owner": "Lin Yu",
+      "status": "In progress",
+      "dueDate": "2026-10-19",
+      "blockedBy": null,
+      "sourceDocId": "PRDOC-2080"
+    },
+    {
+      "id": "PRWO-2057",
+      "projectId": "JOB-208",
+      "title": "Artwork validation",
+      "owner": "Chen Yi",
+      "status": "Complete",
+      "dueDate": "2026-10-25",
+      "blockedBy": null,
+      "sourceDocId": "PRDOC-2085"
+    },
+    {
+      "id": "PRWO-2058",
+      "projectId": "JOB-208",
+      "title": "Material order",
+      "owner": "Chen Yi",
+      "status": "Upcoming",
+      "dueDate": "2026-10-26",
+      "blockedBy": null,
+      "sourceDocId": "PRDOC-2086"
+    },
+    {
+      "id": "PRWO-2059",
+      "projectId": "JOB-208",
+      "title": "Proof review",
+      "owner": "Chen Yi",
+      "status": "In progress",
+      "dueDate": "2026-10-27",
+      "blockedBy": null,
+      "sourceDocId": "PRDOC-2087"
+    },
+    {
+      "id": "PRWO-2060",
+      "projectId": "JOB-208",
+      "title": "Press setup",
+      "owner": "Chen Yi",
+      "status": "Blocked",
+      "dueDate": "2026-10-28",
+      "blockedBy": "Awaiting approved artwork/material stock confirmation",
+      "sourceDocId": "PRDOC-2088"
+    },
+    {
+      "id": "PRWO-2061",
+      "projectId": "JOB-208",
+      "title": "Production run",
+      "owner": "Chen Yi",
+      "status": "Complete",
+      "dueDate": "2026-10-29",
+      "blockedBy": null,
+      "sourceDocId": "PRDOC-2089"
+    },
+    {
+      "id": "PRWO-2062",
+      "projectId": "JOB-208",
+      "title": "Finishing",
+      "owner": "Chen Yi",
+      "status": "Upcoming",
+      "dueDate": "2026-10-18",
+      "blockedBy": null,
+      "sourceDocId": "PRDOC-2090"
+    },
+    {
+      "id": "PRWO-2063",
+      "projectId": "JOB-208",
+      "title": "Quality check",
+      "owner": "Chen Yi",
+      "status": "In progress",
+      "dueDate": "2026-10-19",
+      "blockedBy": null,
+      "sourceDocId": "PRDOC-2091"
+    },
+    {
+      "id": "PRWO-2064",
+      "projectId": "JOB-208",
+      "title": "Delivery coordination",
+      "owner": "Chen Yi",
+      "status": "Blocked",
+      "dueDate": "2026-10-20",
+      "blockedBy": "Awaiting approved artwork/material stock confirmation",
+      "sourceDocId": "PRDOC-2092"
+    }
+  ],
+  "approvals": [
+    {
+      "id": "PRAPR-2001",
+      "projectId": "JOB-201",
+      "title": "Artwork proof acceptance",
+      "status": "Approved",
+      "requestedBy": "Lin Yu",
+      "requestedAt": "2026-10-16",
+      "sourceDocId": "PRDOC-2005"
+    },
+    {
+      "id": "PRAPR-2002",
+      "projectId": "JOB-201",
+      "title": "Material selection",
+      "status": "Pending",
+      "requestedBy": "Lin Yu",
+      "requestedAt": "2026-10-16",
+      "sourceDocId": "PRDOC-2004"
+    },
+    {
+      "id": "PRAPR-2003",
+      "projectId": "JOB-201",
+      "title": "Revised quotation",
+      "status": "Pending",
+      "requestedBy": "Lin Yu",
+      "requestedAt": "2026-10-16",
+      "sourceDocId": "PRDOC-2008"
+    },
+    {
+      "id": "PRAPR-2004",
+      "projectId": "JOB-202",
+      "title": "Artwork proof acceptance",
+      "status": "Pending",
+      "requestedBy": "Chen Yi",
+      "requestedAt": "2026-10-16",
+      "sourceDocId": "PRDOC-2017"
+    },
+    {
+      "id": "PRAPR-2005",
+      "projectId": "JOB-202",
+      "title": "Material selection",
+      "status": "Pending",
+      "requestedBy": "Chen Yi",
+      "requestedAt": "2026-10-16",
+      "sourceDocId": "PRDOC-2016"
+    },
+    {
+      "id": "PRAPR-2006",
+      "projectId": "JOB-202",
+      "title": "Revised quotation",
+      "status": "Approved",
+      "requestedBy": "Chen Yi",
+      "requestedAt": "2026-10-16",
+      "sourceDocId": "PRDOC-2020"
+    },
+    {
+      "id": "PRAPR-2007",
+      "projectId": "JOB-203",
+      "title": "Artwork proof acceptance",
+      "status": "Pending",
+      "requestedBy": "Tsai Wen",
+      "requestedAt": "2026-10-16",
+      "sourceDocId": "PRDOC-2029"
+    },
+    {
+      "id": "PRAPR-2008",
+      "projectId": "JOB-203",
+      "title": "Material selection",
+      "status": "Approved",
+      "requestedBy": "Tsai Wen",
+      "requestedAt": "2026-10-16",
+      "sourceDocId": "PRDOC-2028"
+    },
+    {
+      "id": "PRAPR-2009",
+      "projectId": "JOB-203",
+      "title": "Revised quotation",
+      "status": "Pending",
+      "requestedBy": "Tsai Wen",
+      "requestedAt": "2026-10-16",
+      "sourceDocId": "PRDOC-2032"
+    },
+    {
+      "id": "PRAPR-2010",
+      "projectId": "JOB-204",
+      "title": "Artwork proof acceptance",
+      "status": "Approved",
+      "requestedBy": "Lin Yu",
+      "requestedAt": "2026-10-16",
+      "sourceDocId": "PRDOC-2041"
+    },
+    {
+      "id": "PRAPR-2011",
+      "projectId": "JOB-204",
+      "title": "Material selection",
+      "status": "Pending",
+      "requestedBy": "Lin Yu",
+      "requestedAt": "2026-10-16",
+      "sourceDocId": "PRDOC-2040"
+    },
+    {
+      "id": "PRAPR-2012",
+      "projectId": "JOB-204",
+      "title": "Revised quotation",
+      "status": "Pending",
+      "requestedBy": "Lin Yu",
+      "requestedAt": "2026-10-16",
+      "sourceDocId": "PRDOC-2044"
+    },
+    {
+      "id": "PRAPR-2013",
+      "projectId": "JOB-205",
+      "title": "Artwork proof acceptance",
+      "status": "Pending",
+      "requestedBy": "Chen Yi",
+      "requestedAt": "2026-10-16",
+      "sourceDocId": "PRDOC-2053"
+    },
+    {
+      "id": "PRAPR-2014",
+      "projectId": "JOB-205",
+      "title": "Material selection",
+      "status": "Pending",
+      "requestedBy": "Chen Yi",
+      "requestedAt": "2026-10-16",
+      "sourceDocId": "PRDOC-2052"
+    },
+    {
+      "id": "PRAPR-2015",
+      "projectId": "JOB-205",
+      "title": "Revised quotation",
+      "status": "Approved",
+      "requestedBy": "Chen Yi",
+      "requestedAt": "2026-10-16",
+      "sourceDocId": "PRDOC-2056"
+    },
+    {
+      "id": "PRAPR-2016",
+      "projectId": "JOB-206",
+      "title": "Artwork proof acceptance",
+      "status": "Pending",
+      "requestedBy": "Tsai Wen",
+      "requestedAt": "2026-10-16",
+      "sourceDocId": "PRDOC-2065"
+    },
+    {
+      "id": "PRAPR-2017",
+      "projectId": "JOB-206",
+      "title": "Material selection",
+      "status": "Approved",
+      "requestedBy": "Tsai Wen",
+      "requestedAt": "2026-10-16",
+      "sourceDocId": "PRDOC-2064"
+    },
+    {
+      "id": "PRAPR-2018",
+      "projectId": "JOB-206",
+      "title": "Revised quotation",
+      "status": "Pending",
+      "requestedBy": "Tsai Wen",
+      "requestedAt": "2026-10-16",
+      "sourceDocId": "PRDOC-2068"
+    },
+    {
+      "id": "PRAPR-2019",
+      "projectId": "JOB-207",
+      "title": "Artwork proof acceptance",
+      "status": "Approved",
+      "requestedBy": "Lin Yu",
+      "requestedAt": "2026-10-16",
+      "sourceDocId": "PRDOC-2077"
+    },
+    {
+      "id": "PRAPR-2020",
+      "projectId": "JOB-207",
+      "title": "Material selection",
+      "status": "Pending",
+      "requestedBy": "Lin Yu",
+      "requestedAt": "2026-10-16",
+      "sourceDocId": "PRDOC-2076"
+    },
+    {
+      "id": "PRAPR-2021",
+      "projectId": "JOB-207",
+      "title": "Revised quotation",
+      "status": "Pending",
+      "requestedBy": "Lin Yu",
+      "requestedAt": "2026-10-16",
+      "sourceDocId": "PRDOC-2080"
+    },
+    {
+      "id": "PRAPR-2022",
+      "projectId": "JOB-208",
+      "title": "Artwork proof acceptance",
+      "status": "Pending",
+      "requestedBy": "Chen Yi",
+      "requestedAt": "2026-10-16",
+      "sourceDocId": "PRDOC-2089"
+    },
+    {
+      "id": "PRAPR-2023",
+      "projectId": "JOB-208",
+      "title": "Material selection",
+      "status": "Pending",
+      "requestedBy": "Chen Yi",
+      "requestedAt": "2026-10-16",
+      "sourceDocId": "PRDOC-2088"
+    },
+    {
+      "id": "PRAPR-2024",
+      "projectId": "JOB-208",
+      "title": "Revised quotation",
+      "status": "Approved",
+      "requestedBy": "Chen Yi",
+      "requestedAt": "2026-10-16",
+      "sourceDocId": "PRDOC-2092"
+    }
+  ],
+  "activity": [
+    {
+      "id": "PREVT-2001",
+      "projectId": "JOB-201",
+      "kind": "Proof request logged",
+      "at": "2026-10-06",
+      "sourceDocId": "PRDOC-2001"
+    },
+    {
+      "id": "PREVT-2002",
+      "projectId": "JOB-201",
+      "kind": "Artwork revision recorded",
+      "at": "2026-10-07",
+      "sourceDocId": "PRDOC-2002"
+    },
+    {
+      "id": "PREVT-2003",
+      "projectId": "JOB-201",
+      "kind": "Material estimate checked",
+      "at": "2026-10-08",
+      "sourceDocId": "PRDOC-2003"
+    },
+    {
+      "id": "PREVT-2004",
+      "projectId": "JOB-201",
+      "kind": "Quotation version created",
+      "at": "2026-10-09",
+      "sourceDocId": "PRDOC-2004"
+    },
+    {
+      "id": "PREVT-2005",
+      "projectId": "JOB-201",
+      "kind": "Production scheduling reviewed",
+      "at": "2026-10-10",
+      "sourceDocId": "PRDOC-2005"
+    },
+    {
+      "id": "PREVT-2006",
+      "projectId": "JOB-201",
+      "kind": "Customer sign-off pending",
+      "at": "2026-10-11",
+      "sourceDocId": "PRDOC-2006"
+    },
+    {
+      "id": "PREVT-2007",
+      "projectId": "JOB-201",
+      "kind": "Cost exception flagged",
+      "at": "2026-10-12",
+      "sourceDocId": "PRDOC-2007"
+    },
+    {
+      "id": "PREVT-2008",
+      "projectId": "JOB-201",
+      "kind": "Press slot requested",
+      "at": "2026-10-13",
+      "sourceDocId": "PRDOC-2008"
+    },
+    {
+      "id": "PREVT-2009",
+      "projectId": "JOB-201",
+      "kind": "Supplier lead time pending",
+      "at": "2026-10-14",
+      "sourceDocId": "PRDOC-2009"
+    },
+    {
+      "id": "PREVT-2010",
+      "projectId": "JOB-201",
+      "kind": "Quality review noted",
+      "at": "2026-10-15",
+      "sourceDocId": "PRDOC-2010"
+    },
+    {
+      "id": "PREVT-2011",
+      "projectId": "JOB-201",
+      "kind": "Production update recorded",
+      "at": "2026-10-16",
+      "sourceDocId": "PRDOC-2011"
+    },
+    {
+      "id": "PREVT-2012",
+      "projectId": "JOB-201",
+      "kind": "Delivery plan reviewed",
+      "at": "2026-10-17",
+      "sourceDocId": "PRDOC-2012"
+    },
+    {
+      "id": "PREVT-2013",
+      "projectId": "JOB-202",
+      "kind": "Proof request logged",
+      "at": "2026-10-07",
+      "sourceDocId": "PRDOC-2013"
+    },
+    {
+      "id": "PREVT-2014",
+      "projectId": "JOB-202",
+      "kind": "Artwork revision recorded",
+      "at": "2026-10-08",
+      "sourceDocId": "PRDOC-2014"
+    },
+    {
+      "id": "PREVT-2015",
+      "projectId": "JOB-202",
+      "kind": "Material estimate checked",
+      "at": "2026-10-09",
+      "sourceDocId": "PRDOC-2015"
+    },
+    {
+      "id": "PREVT-2016",
+      "projectId": "JOB-202",
+      "kind": "Quotation version created",
+      "at": "2026-10-10",
+      "sourceDocId": "PRDOC-2016"
+    },
+    {
+      "id": "PREVT-2017",
+      "projectId": "JOB-202",
+      "kind": "Production scheduling reviewed",
+      "at": "2026-10-11",
+      "sourceDocId": "PRDOC-2017"
+    },
+    {
+      "id": "PREVT-2018",
+      "projectId": "JOB-202",
+      "kind": "Customer sign-off pending",
+      "at": "2026-10-12",
+      "sourceDocId": "PRDOC-2018"
+    },
+    {
+      "id": "PREVT-2019",
+      "projectId": "JOB-202",
+      "kind": "Cost exception flagged",
+      "at": "2026-10-13",
+      "sourceDocId": "PRDOC-2019"
+    },
+    {
+      "id": "PREVT-2020",
+      "projectId": "JOB-202",
+      "kind": "Press slot requested",
+      "at": "2026-10-14",
+      "sourceDocId": "PRDOC-2020"
+    },
+    {
+      "id": "PREVT-2021",
+      "projectId": "JOB-202",
+      "kind": "Supplier lead time pending",
+      "at": "2026-10-15",
+      "sourceDocId": "PRDOC-2021"
+    },
+    {
+      "id": "PREVT-2022",
+      "projectId": "JOB-202",
+      "kind": "Quality review noted",
+      "at": "2026-10-16",
+      "sourceDocId": "PRDOC-2022"
+    },
+    {
+      "id": "PREVT-2023",
+      "projectId": "JOB-202",
+      "kind": "Production update recorded",
+      "at": "2026-10-17",
+      "sourceDocId": "PRDOC-2023"
+    },
+    {
+      "id": "PREVT-2024",
+      "projectId": "JOB-202",
+      "kind": "Delivery plan reviewed",
+      "at": "2026-10-06",
+      "sourceDocId": "PRDOC-2024"
+    },
+    {
+      "id": "PREVT-2025",
+      "projectId": "JOB-203",
+      "kind": "Proof request logged",
+      "at": "2026-10-08",
+      "sourceDocId": "PRDOC-2025"
+    },
+    {
+      "id": "PREVT-2026",
+      "projectId": "JOB-203",
+      "kind": "Artwork revision recorded",
+      "at": "2026-10-09",
+      "sourceDocId": "PRDOC-2026"
+    },
+    {
+      "id": "PREVT-2027",
+      "projectId": "JOB-203",
+      "kind": "Material estimate checked",
+      "at": "2026-10-10",
+      "sourceDocId": "PRDOC-2027"
+    },
+    {
+      "id": "PREVT-2028",
+      "projectId": "JOB-203",
+      "kind": "Quotation version created",
+      "at": "2026-10-11",
+      "sourceDocId": "PRDOC-2028"
+    },
+    {
+      "id": "PREVT-2029",
+      "projectId": "JOB-203",
+      "kind": "Production scheduling reviewed",
+      "at": "2026-10-12",
+      "sourceDocId": "PRDOC-2029"
+    },
+    {
+      "id": "PREVT-2030",
+      "projectId": "JOB-203",
+      "kind": "Customer sign-off pending",
+      "at": "2026-10-13",
+      "sourceDocId": "PRDOC-2030"
+    },
+    {
+      "id": "PREVT-2031",
+      "projectId": "JOB-203",
+      "kind": "Cost exception flagged",
+      "at": "2026-10-14",
+      "sourceDocId": "PRDOC-2031"
+    },
+    {
+      "id": "PREVT-2032",
+      "projectId": "JOB-203",
+      "kind": "Press slot requested",
+      "at": "2026-10-15",
+      "sourceDocId": "PRDOC-2032"
+    },
+    {
+      "id": "PREVT-2033",
+      "projectId": "JOB-203",
+      "kind": "Supplier lead time pending",
+      "at": "2026-10-16",
+      "sourceDocId": "PRDOC-2033"
+    },
+    {
+      "id": "PREVT-2034",
+      "projectId": "JOB-203",
+      "kind": "Quality review noted",
+      "at": "2026-10-17",
+      "sourceDocId": "PRDOC-2034"
+    },
+    {
+      "id": "PREVT-2035",
+      "projectId": "JOB-203",
+      "kind": "Production update recorded",
+      "at": "2026-10-06",
+      "sourceDocId": "PRDOC-2035"
+    },
+    {
+      "id": "PREVT-2036",
+      "projectId": "JOB-203",
+      "kind": "Delivery plan reviewed",
+      "at": "2026-10-07",
+      "sourceDocId": "PRDOC-2036"
+    },
+    {
+      "id": "PREVT-2037",
+      "projectId": "JOB-204",
+      "kind": "Proof request logged",
+      "at": "2026-10-09",
+      "sourceDocId": "PRDOC-2037"
+    },
+    {
+      "id": "PREVT-2038",
+      "projectId": "JOB-204",
+      "kind": "Artwork revision recorded",
+      "at": "2026-10-10",
+      "sourceDocId": "PRDOC-2038"
+    },
+    {
+      "id": "PREVT-2039",
+      "projectId": "JOB-204",
+      "kind": "Material estimate checked",
+      "at": "2026-10-11",
+      "sourceDocId": "PRDOC-2039"
+    },
+    {
+      "id": "PREVT-2040",
+      "projectId": "JOB-204",
+      "kind": "Quotation version created",
+      "at": "2026-10-12",
+      "sourceDocId": "PRDOC-2040"
+    },
+    {
+      "id": "PREVT-2041",
+      "projectId": "JOB-204",
+      "kind": "Production scheduling reviewed",
+      "at": "2026-10-13",
+      "sourceDocId": "PRDOC-2041"
+    },
+    {
+      "id": "PREVT-2042",
+      "projectId": "JOB-204",
+      "kind": "Customer sign-off pending",
+      "at": "2026-10-14",
+      "sourceDocId": "PRDOC-2042"
+    },
+    {
+      "id": "PREVT-2043",
+      "projectId": "JOB-204",
+      "kind": "Cost exception flagged",
+      "at": "2026-10-15",
+      "sourceDocId": "PRDOC-2043"
+    },
+    {
+      "id": "PREVT-2044",
+      "projectId": "JOB-204",
+      "kind": "Press slot requested",
+      "at": "2026-10-16",
+      "sourceDocId": "PRDOC-2044"
+    },
+    {
+      "id": "PREVT-2045",
+      "projectId": "JOB-204",
+      "kind": "Supplier lead time pending",
+      "at": "2026-10-17",
+      "sourceDocId": "PRDOC-2045"
+    },
+    {
+      "id": "PREVT-2046",
+      "projectId": "JOB-204",
+      "kind": "Quality review noted",
+      "at": "2026-10-06",
+      "sourceDocId": "PRDOC-2046"
+    },
+    {
+      "id": "PREVT-2047",
+      "projectId": "JOB-204",
+      "kind": "Production update recorded",
+      "at": "2026-10-07",
+      "sourceDocId": "PRDOC-2047"
+    },
+    {
+      "id": "PREVT-2048",
+      "projectId": "JOB-204",
+      "kind": "Delivery plan reviewed",
+      "at": "2026-10-08",
+      "sourceDocId": "PRDOC-2048"
+    },
+    {
+      "id": "PREVT-2049",
+      "projectId": "JOB-205",
+      "kind": "Proof request logged",
+      "at": "2026-10-10",
+      "sourceDocId": "PRDOC-2049"
+    },
+    {
+      "id": "PREVT-2050",
+      "projectId": "JOB-205",
+      "kind": "Artwork revision recorded",
+      "at": "2026-10-11",
+      "sourceDocId": "PRDOC-2050"
+    },
+    {
+      "id": "PREVT-2051",
+      "projectId": "JOB-205",
+      "kind": "Material estimate checked",
+      "at": "2026-10-12",
+      "sourceDocId": "PRDOC-2051"
+    },
+    {
+      "id": "PREVT-2052",
+      "projectId": "JOB-205",
+      "kind": "Quotation version created",
+      "at": "2026-10-13",
+      "sourceDocId": "PRDOC-2052"
+    },
+    {
+      "id": "PREVT-2053",
+      "projectId": "JOB-205",
+      "kind": "Production scheduling reviewed",
+      "at": "2026-10-14",
+      "sourceDocId": "PRDOC-2053"
+    },
+    {
+      "id": "PREVT-2054",
+      "projectId": "JOB-205",
+      "kind": "Customer sign-off pending",
+      "at": "2026-10-15",
+      "sourceDocId": "PRDOC-2054"
+    },
+    {
+      "id": "PREVT-2055",
+      "projectId": "JOB-205",
+      "kind": "Cost exception flagged",
+      "at": "2026-10-16",
+      "sourceDocId": "PRDOC-2055"
+    },
+    {
+      "id": "PREVT-2056",
+      "projectId": "JOB-205",
+      "kind": "Press slot requested",
+      "at": "2026-10-17",
+      "sourceDocId": "PRDOC-2056"
+    },
+    {
+      "id": "PREVT-2057",
+      "projectId": "JOB-205",
+      "kind": "Supplier lead time pending",
+      "at": "2026-10-06",
+      "sourceDocId": "PRDOC-2057"
+    },
+    {
+      "id": "PREVT-2058",
+      "projectId": "JOB-205",
+      "kind": "Quality review noted",
+      "at": "2026-10-07",
+      "sourceDocId": "PRDOC-2058"
+    },
+    {
+      "id": "PREVT-2059",
+      "projectId": "JOB-205",
+      "kind": "Production update recorded",
+      "at": "2026-10-08",
+      "sourceDocId": "PRDOC-2059"
+    },
+    {
+      "id": "PREVT-2060",
+      "projectId": "JOB-205",
+      "kind": "Delivery plan reviewed",
+      "at": "2026-10-09",
+      "sourceDocId": "PRDOC-2060"
+    },
+    {
+      "id": "PREVT-2061",
+      "projectId": "JOB-206",
+      "kind": "Proof request logged",
+      "at": "2026-10-11",
+      "sourceDocId": "PRDOC-2061"
+    },
+    {
+      "id": "PREVT-2062",
+      "projectId": "JOB-206",
+      "kind": "Artwork revision recorded",
+      "at": "2026-10-12",
+      "sourceDocId": "PRDOC-2062"
+    },
+    {
+      "id": "PREVT-2063",
+      "projectId": "JOB-206",
+      "kind": "Material estimate checked",
+      "at": "2026-10-13",
+      "sourceDocId": "PRDOC-2063"
+    },
+    {
+      "id": "PREVT-2064",
+      "projectId": "JOB-206",
+      "kind": "Quotation version created",
+      "at": "2026-10-14",
+      "sourceDocId": "PRDOC-2064"
+    },
+    {
+      "id": "PREVT-2065",
+      "projectId": "JOB-206",
+      "kind": "Production scheduling reviewed",
+      "at": "2026-10-15",
+      "sourceDocId": "PRDOC-2065"
+    },
+    {
+      "id": "PREVT-2066",
+      "projectId": "JOB-206",
+      "kind": "Customer sign-off pending",
+      "at": "2026-10-16",
+      "sourceDocId": "PRDOC-2066"
+    },
+    {
+      "id": "PREVT-2067",
+      "projectId": "JOB-206",
+      "kind": "Cost exception flagged",
+      "at": "2026-10-17",
+      "sourceDocId": "PRDOC-2067"
+    },
+    {
+      "id": "PREVT-2068",
+      "projectId": "JOB-206",
+      "kind": "Press slot requested",
+      "at": "2026-10-06",
+      "sourceDocId": "PRDOC-2068"
+    },
+    {
+      "id": "PREVT-2069",
+      "projectId": "JOB-206",
+      "kind": "Supplier lead time pending",
+      "at": "2026-10-07",
+      "sourceDocId": "PRDOC-2069"
+    },
+    {
+      "id": "PREVT-2070",
+      "projectId": "JOB-206",
+      "kind": "Quality review noted",
+      "at": "2026-10-08",
+      "sourceDocId": "PRDOC-2070"
+    },
+    {
+      "id": "PREVT-2071",
+      "projectId": "JOB-206",
+      "kind": "Production update recorded",
+      "at": "2026-10-09",
+      "sourceDocId": "PRDOC-2071"
+    },
+    {
+      "id": "PREVT-2072",
+      "projectId": "JOB-206",
+      "kind": "Delivery plan reviewed",
+      "at": "2026-10-10",
+      "sourceDocId": "PRDOC-2072"
+    },
+    {
+      "id": "PREVT-2073",
+      "projectId": "JOB-207",
+      "kind": "Proof request logged",
+      "at": "2026-10-12",
+      "sourceDocId": "PRDOC-2073"
+    },
+    {
+      "id": "PREVT-2074",
+      "projectId": "JOB-207",
+      "kind": "Artwork revision recorded",
+      "at": "2026-10-13",
+      "sourceDocId": "PRDOC-2074"
+    },
+    {
+      "id": "PREVT-2075",
+      "projectId": "JOB-207",
+      "kind": "Material estimate checked",
+      "at": "2026-10-14",
+      "sourceDocId": "PRDOC-2075"
+    },
+    {
+      "id": "PREVT-2076",
+      "projectId": "JOB-207",
+      "kind": "Quotation version created",
+      "at": "2026-10-15",
+      "sourceDocId": "PRDOC-2076"
+    },
+    {
+      "id": "PREVT-2077",
+      "projectId": "JOB-207",
+      "kind": "Production scheduling reviewed",
+      "at": "2026-10-16",
+      "sourceDocId": "PRDOC-2077"
+    },
+    {
+      "id": "PREVT-2078",
+      "projectId": "JOB-207",
+      "kind": "Customer sign-off pending",
+      "at": "2026-10-17",
+      "sourceDocId": "PRDOC-2078"
+    },
+    {
+      "id": "PREVT-2079",
+      "projectId": "JOB-207",
+      "kind": "Cost exception flagged",
+      "at": "2026-10-06",
+      "sourceDocId": "PRDOC-2079"
+    },
+    {
+      "id": "PREVT-2080",
+      "projectId": "JOB-207",
+      "kind": "Press slot requested",
+      "at": "2026-10-07",
+      "sourceDocId": "PRDOC-2080"
+    },
+    {
+      "id": "PREVT-2081",
+      "projectId": "JOB-207",
+      "kind": "Supplier lead time pending",
+      "at": "2026-10-08",
+      "sourceDocId": "PRDOC-2081"
+    },
+    {
+      "id": "PREVT-2082",
+      "projectId": "JOB-207",
+      "kind": "Quality review noted",
+      "at": "2026-10-09",
+      "sourceDocId": "PRDOC-2082"
+    },
+    {
+      "id": "PREVT-2083",
+      "projectId": "JOB-207",
+      "kind": "Production update recorded",
+      "at": "2026-10-10",
+      "sourceDocId": "PRDOC-2083"
+    },
+    {
+      "id": "PREVT-2084",
+      "projectId": "JOB-207",
+      "kind": "Delivery plan reviewed",
+      "at": "2026-10-11",
+      "sourceDocId": "PRDOC-2084"
+    },
+    {
+      "id": "PREVT-2085",
+      "projectId": "JOB-208",
+      "kind": "Proof request logged",
+      "at": "2026-10-13",
+      "sourceDocId": "PRDOC-2085"
+    },
+    {
+      "id": "PREVT-2086",
+      "projectId": "JOB-208",
+      "kind": "Artwork revision recorded",
+      "at": "2026-10-14",
+      "sourceDocId": "PRDOC-2086"
+    },
+    {
+      "id": "PREVT-2087",
+      "projectId": "JOB-208",
+      "kind": "Material estimate checked",
+      "at": "2026-10-15",
+      "sourceDocId": "PRDOC-2087"
+    },
+    {
+      "id": "PREVT-2088",
+      "projectId": "JOB-208",
+      "kind": "Quotation version created",
+      "at": "2026-10-16",
+      "sourceDocId": "PRDOC-2088"
+    },
+    {
+      "id": "PREVT-2089",
+      "projectId": "JOB-208",
+      "kind": "Production scheduling reviewed",
+      "at": "2026-10-17",
+      "sourceDocId": "PRDOC-2089"
+    },
+    {
+      "id": "PREVT-2090",
+      "projectId": "JOB-208",
+      "kind": "Customer sign-off pending",
+      "at": "2026-10-06",
+      "sourceDocId": "PRDOC-2090"
+    },
+    {
+      "id": "PREVT-2091",
+      "projectId": "JOB-208",
+      "kind": "Cost exception flagged",
+      "at": "2026-10-07",
+      "sourceDocId": "PRDOC-2091"
+    },
+    {
+      "id": "PREVT-2092",
+      "projectId": "JOB-208",
+      "kind": "Press slot requested",
+      "at": "2026-10-08",
+      "sourceDocId": "PRDOC-2092"
+    },
+    {
+      "id": "PREVT-2093",
+      "projectId": "JOB-208",
+      "kind": "Supplier lead time pending",
+      "at": "2026-10-09",
+      "sourceDocId": "PRDOC-2093"
+    },
+    {
+      "id": "PREVT-2094",
+      "projectId": "JOB-208",
+      "kind": "Quality review noted",
+      "at": "2026-10-10",
+      "sourceDocId": "PRDOC-2094"
+    },
+    {
+      "id": "PREVT-2095",
+      "projectId": "JOB-208",
+      "kind": "Production update recorded",
+      "at": "2026-10-11",
+      "sourceDocId": "PRDOC-2095"
+    },
+    {
+      "id": "PREVT-2096",
+      "projectId": "JOB-208",
+      "kind": "Delivery plan reviewed",
+      "at": "2026-10-12",
+      "sourceDocId": "PRDOC-2096"
+    }
+  ],
+  "featuredVariation": {
+    "projectId": "JOB-201",
+    "name": "Recycled-paper substitution",
+    "incrementalDirectCost": 2400,
+    "targetGrossMargin": 0.3,
+    "tax": 0.05,
+    "supplierConfirmed": false,
+    "clientApproved": false,
+    "ownerApproved": false,
+    "sourceDocIds": [
+      "PRDOC-2004",
+      "PRDOC-2007",
+      "PRSTD-201",
+      "PRSTD-203"
+    ]
+  }
+}
