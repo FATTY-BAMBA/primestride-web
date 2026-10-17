@@ -38,7 +38,12 @@ async function loadIndustry(id){
  $("main").innerHTML='<div class="loading-screen"><div class="loader-ring"></div><h2>Opening '+e(next.short)+'</h2><p>Connecting an industry pack to the shared operating workspace…</p></div>';
  try{
   const result=await fetch(next.dataset,{cache:"no-store"});if(!result.ok)throw Error("Dataset unavailable: "+result.status);
-  const seed=await result.json();const verified=new WorkspaceModel(seed,next);
+  const seed=await result.json();
+  const extra=await fetch("./seeds/source-enrichment.json",{cache:"no-store"});
+  if(!extra.ok)throw Error("Enriched source data unavailable: "+extra.status);
+  const enriched=await extra.json();const overrides=enriched[next.id]||{};
+  for(const document of seed.documents){if(Object.prototype.hasOwnProperty.call(overrides,document.id))document.body=overrides[document.id];}
+  const verified=new WorkspaceModel(seed,next);
   pack=next;model=verified;state=loadDemoState(pack);
   view={page:"overview",projectId:pack.scenario.projectId,projectDetail:false,docId:null,quoteId:null,chat:[],search:"",filter:"all",pageIndex:0};
   const url=new URL(location.href);url.searchParams.set("industry",pack.id);history.replaceState({industry:pack.id},"",url);
