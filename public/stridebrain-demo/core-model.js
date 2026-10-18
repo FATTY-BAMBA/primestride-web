@@ -122,6 +122,10 @@ export function approveVariationGate(state,gate,model){
 export function commitVariation(state,model){
  const v=state.variation;if(v.committed)return {ok:false,reason:"Variation already committed."};
  if(!v.supplier||!v.owner||!v.customer)return {ok:false,reason:"Supplier verification, owner approval and customer acceptance are all required."};
+ const readiness=state.readiness||{},assessment=readiness.assessment;
+ if(!assessment)return {ok:false,reason:"Record the current industry readiness assessment in Operational checks before releasing this change."};
+ if(assessment.counts?.hold>0||assessment.status!=="READY_FOR_HUMAN_REVIEW")return {ok:false,reason:"The operational assessment still contains blocking information gaps; resolve them and record an updated assessment."};
+ if(JSON.stringify(assessment.inputs)!==JSON.stringify(readiness.inputs))return {ok:false,reason:"The readiness inputs changed since the last recorded assessment; assess them again."};
  v.committed=true;event(state,"Variation committed to demo work orders as "+model.pack.scenario.newWorkId);
  return {ok:true,workOrderId:model.pack.scenario.newWorkId};
 }
