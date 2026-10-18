@@ -2,11 +2,11 @@
 
 ## Static and domain checks (2026-10-18)
 ✅ 2 sample industry datasets loaded and validated through WorkspaceModel.
-✅ Interior: 12 project records / 204 knowledge sources / 60 quotation versions / 120 work items / 48 approvals.
-✅ Printing: 8 job records / 114 sources / 24 quotation versions / 64 work items / 24 approvals.
+✅ Interior: 12 project records / 204 base knowledge sources plus 16 historical sources / 60 quotation versions / 120 work items / 48 approvals.
+✅ Printing: 8 job records / 114 base sources plus 16 historical sources / 24 quotation versions / 64 work items / 24 approvals.
 ✅ Exactly one latest quotation per project/job.
 ✅ All quote, task, approval and activity evidence links resolve to known source IDs.
-✅ All 22 module render functions produced output with no evaluation exceptions.
+✅ All 24 module render functions produced output with no evaluation exceptions.
 ✅ Four sample questions per industry produced sample answers and resolvable citations.
 ✅ Inspector and source dialog templates rendered for both industries.
 ✅ Simulated commit is refused before supplier/owner/customer review.
@@ -31,3 +31,11 @@
 
 ## Claim discipline
 The preview is a synthetic prototype, NOT an LLM, live RAG system, multi-tenant server, supplier integration or production customer deployment. Business value must be validated in actual pilot workflows.
+
+## Historical quotation module
+- [x] 16 fabricated past-cost precedents per pack (13 synthetic cost-complete each); 32 source documents.
+- [x] Insufficient history refuses rather than invents a quote.
+- [x] Unit costs and totals reconcile for interior and printing sample estimates.
+- [x] Contextual past-project quote access in Copilot and Quotations.
+- [ ] Manual confirmation of draft creation, review, invalidation and export in a browser.
+- [ ] Production cost source verification, secure tenant data, real document intake, PDF quotes.
