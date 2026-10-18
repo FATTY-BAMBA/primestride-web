@@ -126,3 +126,26 @@ export function detachSandboxPrecedent(history,model,recordId){
   model.bySource.delete(item.sourceDocId);
   return {ok:true};
 }
+
+
+/**
+ * These mappings are suggestions only. A reviewer must confirm the industry code
+ * and attest that their hypothetical cost scenario includes all direct costs.
+ */
+export function suggestCostCodes(report,history,industry){
+ const codes=new Set(history.costCodes.map(c=>c.id));
+ const rules=industry==="printing"?[
+  [/prepress|proof|打樣|印前/i,"prepress"],[/paper|stock|substrate|紙材|紙張/i,"paper"],
+  [/print|press|poster|海報|印刷/i,"printing"],[/finish|laminat|coating|binding|裝訂|加工/i,"finishing"],
+  [/pack|包裝/i,"packing"],[/deliver|freight|ship|運送|配送/i,"delivery"]
+ ]:[
+  [/measure|plan|design|survey|丈量|設計/i,"design"],[/demol|拆除|清運/i,"demolition"],
+  [/cabinet|carpent|quartz|stone|slab|millwork|木作|櫥櫃|石英/i,"carpentry"],
+  [/light|electric|wiring|燈|電/i,"electrical"],[/plumb|bath|pipe|水電|管/i,"plumbing"],
+  [/floor|tile|地板|磁磚/i,"flooring"],[/paint|wall finish|油漆|塗料/i,"painting"],
+  [/coord|site admin|management|工務|管理/i,"coordination"]
+ ];
+ const mapped={};
+ for(const c of report?.candidates||[]){if(c.reviewStatus!=="approved")continue;const guess=rules.find(([regex,k])=>regex.test(c.description)&&codes.has(k));mapped[c.id]=guess?guess[1]:"unmapped";}
+ return mapped;
+}
