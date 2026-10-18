@@ -53,3 +53,15 @@ The preview is a synthetic prototype, NOT an LLM, live RAG system, multi-tenant 
 - [ ] Public-source freshness recheck and legal/professional applicability review before launch.
 - [ ] Real private company accounts and cross-organization RLS/access-control security tests; schema design only.
 - [ ] Real customer PDF, Excel, historical actual-cost imports and production AI evaluations.
+
+
+## v0.4 readiness gates and business artifacts
+- [x] Source-level tests verify 14 module screens × 2 industry packs, readiness citations, and release-gate refusal/approval.
+- [x] Interior initial sample: 5 holds + 2 review flags; printing initial sample: 6 holds + 1 review flag.
+- [x] Quote commitment is now refused without a current recorded readiness assessment, even after simulated commercial approval.
+- [x] Change commitment is blocked with unresolved readiness holds; one successful commit only after clear recorded screening and commercial gates.
+- [x] Linked review task creation validated with a resolvable source.
+- [x] Four CSV files and two printable HTML review sheets committed.
+- [ ] Run actual browser QA smoke harness and inspect asset HTTP loads.
+- [ ] Human review of desktop/mobile layout, keyboard UX and realistic workflow transitions.
+- [ ] Real PDF/Excel ingestion, supplier current pricing, authenticated professional sign-offs and customer sending.
