@@ -80,12 +80,20 @@ function snapshot(industry){
  const blocked=seed.workOrders.filter(w=>w.status==="Blocked");
  const pending=seed.approvals.filter(a=>a.status==="Pending");
  const total=latest.reduce((v,q)=>v+Number(q.amountExTax||0),0);
+ const costs=latest.reduce((v,q)=>v+Number(q.directCost||0),0);
+ const asOf=seed.meta.date||dateLabel;
+ const recordedSent=seed.quotes.filter(q=>q.status==="Sent"&&q.lastUpdated===asOf);
+ const recordedSentSum=recordedSent.reduce((v,q)=>v+Number(q.amountExTax||0),0);
  return {
  isSynthetic:true,asOf:dateLabel,company:seed.meta.company,industry,
  projectCount:seed.projects.length,documentCount:seed.documents.length,
  pendingApprovals:pending.length,blockedWorkOrders:blocked.length,
  quoteVersionCount:seed.quotes.length,currentDraftQuoteCount:latest.length,
  sumOfLatestDraftQuotesExTax:total,
+ draftQuoteDirectCosts:costs,
+ weightedDraftQuoteGrossMarginPct:total>0?Math.round((total-costs)/total*1000)/10:null,
+ quoteVersionsMarkedSentOnSnapshotDate:recordedSent.length,
+ proposedPreTaxValueMarkedSentOnSnapshotDate:recordedSentSum,
  warning:"These are seeded illustrative records as of 2026-10-18, NOT today's live transactions, recognized revenue, actual profit or customer cash flow.",
  sourceIds:distinct([...pending.slice(0,3).map(a=>a.sourceDocId),...blocked.slice(0,3).map(w=>w.sourceDocId)])
  };
@@ -161,7 +169,7 @@ function workflow(industry,query){
 }
 /** tool schemas are STRICT. The model cannot authorize mutations through these functions. */
 const tools=[
- {name:"operations_snapshot",description:"Fetch current seeded demo business overview: recorded project count, pending approvals, blocked tasks, sum of latest draft quotes. Never use for live today numbers.",properties:{}},
+ {name:"operations_snapshot",description:"Fetch fictional metrics as of the seed date: projects, pending approvals, blockers, quote versions marked Sent, sum of latest draft quotes, and weighted proposed gross margin. Never use for live today data.",properties:{}},
  {name:"search_projects",description:"Search projects/jobs by name, city, manager, stage or ID in the selected fictional company.",properties:{query:{type:"string"}}},
  {name:"get_project",description:"Get one matching project/job, sample tasks, approvals, documents and latest draft quote.",properties:{project_id:{type:"string"}}},
  {name:"get_quote",description:"Get current draft quotation and version history for a project/job. Exact deterministic recorded values, not revenue.",properties:{project_id:{type:"string"}}},
