@@ -66,12 +66,12 @@ export function createSandboxPrecedent(report,history,form){
   if(history.records.some(r=>r.id===id)||history.documents.some(d=>d.id===sourceDocId))return {ok:false,issues:["This source file was already added to the session. Clear it before importing a replacement."]};
   const q=preview.quantity,lines=preview.lines.map(x=>({
     code:x.code,label:history.costCodes.find(c=>c.id===x.code)?.label||x.code,
-    quantity:q,unit:history.unit,unitCost:x.actualCost/q,actualCost:Math.round(x.actualCost),
+    quantity:q,unit:history.unit,unitCost:x.actualCost/q,actualCost:Math.round(x.actualCost*100)/100,
     originalSourceRefs:x.refs.slice(),originalDescriptions:x.description.slice()
   }));
   // historicalEstimate uses an exact integer total. Rounded ledger lines may differ by
   // cents, so financial reconciliation occurs on rounded line extended amounts only.
-  const directCost=lines.reduce((n,x)=>n+x.actualCost,0);
+  const directCost=Math.round(lines.reduce((n,x)=>n+x.actualCost,0)*100)/100;
   const netQuote=Math.round(directCost/.75);
   const record={
     id,sourceDocId,title:form.title.trim().slice(0,120),category:form.category,tier:form.tier,location:form.location,
