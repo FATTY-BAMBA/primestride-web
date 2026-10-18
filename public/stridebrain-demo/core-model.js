@@ -84,10 +84,10 @@ export class WorkspaceModel{
     return this.seed.projects.filter(p=>!q||[p.id,p.name,p.type,p.city,p.manager,p.description||""].join(" ").toLowerCase().includes(q));
   }
 }
-function defaults(pack){return {variation:{cost:pack.scenario.cost,margin:pack.scenario.margin,supplier:false,owner:false,customer:false,committed:false},tasks:{},approvals:{},customerDraft:{lang:"zh",text:"",reviewed:false,reviewedAt:null},feedback:[],audit:[]};}
+function defaults(pack){return {variation:{cost:pack.scenario.cost,margin:pack.scenario.margin,supplier:false,owner:false,customer:false,committed:false},tasks:{},approvals:{},customerDraft:{lang:"zh",text:"",reviewed:false,reviewedAt:null},historyRequest:null,historyDraft:null,feedback:[],audit:[]};}
 export function loadDemoState(pack){
  const fresh=defaults(pack);try{const old=JSON.parse(localStorage.getItem("stridebrain-demo-v2-"+pack.id)||"null");if(!old)return fresh;
-  return {variation:{...fresh.variation,...old.variation},tasks:old.tasks||{},approvals:old.approvals||{},customerDraft:{...fresh.customerDraft,...old.customerDraft},feedback:Array.isArray(old.feedback)?old.feedback:[],audit:Array.isArray(old.audit)?old.audit:[]};
+  return {variation:{...fresh.variation,...old.variation},tasks:old.tasks||{},approvals:old.approvals||{},customerDraft:{...fresh.customerDraft,...old.customerDraft},historyRequest:old.historyRequest||null,historyDraft:old.historyDraft||null,feedback:Array.isArray(old.feedback)?old.feedback:[],audit:Array.isArray(old.audit)?old.audit:[]};
  }catch{return fresh;}
 }
 export function saveDemoState(pack,state){try{localStorage.setItem("stridebrain-demo-v2-"+pack.id,JSON.stringify(state));return true;}catch{return false;}}
