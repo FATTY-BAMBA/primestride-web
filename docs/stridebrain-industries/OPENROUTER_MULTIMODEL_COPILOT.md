@@ -70,3 +70,8 @@ Future tasks: privacy/data-processing and ZDR review for each OpenRouter routing
 
 ## Current limitations
 This is **not a publicly usable multi-model business agent**. Live OpenRouter/OpenAI requests were NOT executed in development because no private provider credentials or staff gate have been configured. Tests use mocked provider responses and synthetic company tools; visual browser/keyboard review remains to be completed. The model chooser and five business prompt chips are implemented in the static preview. No real company information or business action is connected.
+
+
+## Direct chat preview and browser UI tests
+Append &view=copilot to /stridebrain-demo/index.html?industry=interior (or printing) to open the conversation-first screen directly without changing the default Overview.
+The browser QA page is /stridebrain-demo/copilot-ui-qa.html. It loads each sample industry in a same-origin iframe, verifies five quick actions and three contextual suggestions, checks model options and text preservation, runs a Follow-ups response, checks New conversation and ensures sample mode does not call a paid provider. A real authenticated-browser QA pass is still required.
