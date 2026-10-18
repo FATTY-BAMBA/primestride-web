@@ -3,24 +3,26 @@ import {WorkspaceModel,money,calculateVariation,escapeHtml as e,loadDemoState,sa
 import {overview,copilot,projects,knowledge,renderInspector,renderSourceModal} from "./views-primary.js";
 import {service,quotes,work,suppliers,approvals,analytics,learning} from "./views-operations.js";
 import {exampleAnswer} from "./assistant-rules.js";
+import {historyView} from "./views-history.js";
+import {validateHistory,historicalDefaults,safeRequest,historicalEstimate,estimateMarkdown} from "./historical-estimator.js";
 const $=id=>document.getElementById(id);
 const requested=new URLSearchParams(location.search).get("industry")||"interior";
-let pack=getPack(requested),model=null,state=null,toastHandle=null;
+let pack=getPack(requested),model=null,state=null,historyData=null,toastHandle=null;
 let view={page:"overview",projectId:null,projectDetail:false,docId:null,quoteId:null,chat:[],search:"",filter:"all",pageIndex:0};
 function toast(message){
  const el=$("toast");el.textContent=message;el.classList.add("visible");
  if(toastHandle)clearTimeout(toastHandle);toastHandle=setTimeout(()=>el.classList.remove("visible"),3500);
 }
-function context(){return {model,pack,state,view};}
+function context(){return {model,pack,state,view,history:historyData};}
 function save(){if(!saveDemoState(pack,state))toast("Browser storage unavailable. Changes may not survive a refresh.");}
 function setPage(page,reset=true){
  view.page=page;if(reset){view.search="";view.filter="all";view.pageIndex=0;}
  render();window.scrollTo({top:0,behavior:"smooth"});
 }
-function pageTitle(){return view.page==="projects"?pack.projectLabel:view.page==="quotes"?pack.quoteLabel:view.page==="work"?pack.orderLabel:{overview:"Overview",copilot:"StrideBrain Copilot",knowledge:"Knowledge hub",service:"Customer service",suppliers:"Suppliers",approvals:"Approvals",analytics:"Analytics",learning:"Learning & feedback"}[view.page]||"Overview";}
+function pageTitle(){return view.page==="projects"?pack.projectLabel:view.page==="quotes"?pack.quoteLabel:view.page==="work"?pack.orderLabel:{overview:"Overview",copilot:"StrideBrain Copilot",knowledge:"Knowledge hub",service:"Customer service",suppliers:"Suppliers",approvals:"Approvals",analytics:"Analytics",learning:"Learning & feedback",history:"Historical estimates"}[view.page]||"Overview";}
 function render(){
  if(!model)return;
- const mapping={overview,copilot,projects,knowledge,service,quotes,work,suppliers,approvals,analytics,learning};
+ const mapping={overview,copilot,projects,knowledge,service,quotes,work,suppliers,approvals,analytics,learning,history:historyView};
  $("main").innerHTML=(mapping[view.page]||overview)(context());
  $("inspector").innerHTML=renderInspector(context());
  $("page-name").textContent=pageTitle();
@@ -34,7 +36,7 @@ function updateShell(){
  document.title="StrideBrain · "+pack.companyEn+" | SME Demo";
 }
 async function loadIndustry(id){
- const next=getPack(id),previous={pack,model,state,view};
+ const next=getPack(id),previous={pack,model,state,view,historyData};
  $("main").innerHTML='<div class="loading-screen"><div class="loader-ring"></div><h2>Opening '+e(next.short)+'</h2><p>Connecting an industry pack to the shared operating workspace…</p></div>';
  try{
   const result=await fetch(next.dataset,{cache:"no-store"});if(!result.ok)throw Error("Dataset unavailable: "+result.status);
@@ -43,13 +45,19 @@ async function loadIndustry(id){
   if(!extra.ok)throw Error("Enriched source data unavailable: "+extra.status);
   const enriched=await extra.json();const overrides=enriched[next.id]||{};
   for(const document of seed.documents){if(Object.prototype.hasOwnProperty.call(overrides,document.id))document.body=overrides[document.id];}
+  const historyResponse=await fetch("./seeds/historical-"+next.id+".json",{cache:"no-store"});
+  if(!historyResponse.ok)throw Error("Historical record pack unavailable: "+historyResponse.status);
+  const historyPack=await historyResponse.json();validateHistory(historyPack);
+  const existing=new Set(seed.documents.map(d=>d.id));
+  for(const document of historyPack.documents){if(!existing.has(document.id))seed.documents.push(document);}
   const verified=new WorkspaceModel(seed,next);
-  pack=next;model=verified;state=loadDemoState(pack);
+  pack=next;model=verified;historyData=historyPack;state=loadDemoState(pack);
+  state.historyRequest=safeRequest(historyData,state.historyRequest||historicalDefaults(historyData));
   view={page:"overview",projectId:pack.scenario.projectId,projectDetail:false,docId:null,quoteId:null,chat:[],search:"",filter:"all",pageIndex:0};
   const url=new URL(location.href);url.searchParams.set("industry",pack.id);history.replaceState({industry:pack.id},"",url);
   updateShell();render();toast(pack.name+" template loaded · "+model.seed.documents.length+" example source records.");
  }catch(error){
-  pack=previous.pack;model=previous.model;state=previous.state;view=previous.view;
+  pack=previous.pack;model=previous.model;state=previous.state;historyData=previous.historyData;view=previous.view;
   if(model){updateShell();render();toast("Could not load the selected industry: "+error.message);}
   else $("main").innerHTML='<div class="panel"><h2>Demo could not start</h2><p>'+e(error.message)+'</p><p>Try refreshing the preview. No live company data is involved.</p></div>';
  }
@@ -109,6 +117,25 @@ function perform(el){
   const t=model.tasks(state).find(x=>x.id===id);if(!t)return;
   state.tasks[id]=t.status==="Complete"?"Upcoming":"Complete";
   event(state,"Work status changed: "+id+" → "+state.tasks[id]);save();render();toast("Sample work status updated.");
+ }else if(action==="historyReset"){
+  state.historyRequest=historicalDefaults(historyData);state.historyDraft=null;save();render();toast("Inquiry settings restored to the industry default.");
+ }else if(action==="historyDraft"){
+  const result=historicalEstimate(historyData,state.historyRequest);
+  if(!result.ok){toast("Cannot create a draft: "+result.reason);return;}
+  state.historyDraft={result,createdAt:new Date().toISOString(),fingerprint:JSON.stringify(state.historyRequest),reviewed:false,reviewedAt:null};
+  event(state,"Historical draft prepared from "+result.comparables.length+" fictional precedent records.");
+  save();render();toast("Draft created. Human review is required.");
+ }else if(action==="historyApprove"){
+  const draft=state.historyDraft;
+  if(!draft?.result?.ok){toast("Create a supported historical estimate first.");return;}
+  if(draft.fingerprint!==JSON.stringify(state.historyRequest)){toast("Inputs have changed; generate a fresh draft.");return;}
+  draft.reviewed=true;draft.reviewedAt=new Date().toISOString();event(state,"Simulated owner review of historical-cost estimate.");save();render();toast("Draft reviewed locally. No quotation was sent.");
+ }else if(action==="historyExport"){
+  const draft=state.historyDraft;
+  if(!draft?.reviewed||draft.fingerprint!==JSON.stringify(state.historyRequest)){toast("A current human-reviewed draft is required for export.");return;}
+  const markdown=estimateMarkdown(historyData,draft.result,draft),blob=new Blob([markdown],{type:"text/markdown;charset=utf-8"}),url=URL.createObjectURL(blob);
+  const link=document.createElement("a");link.href=url;link.download="StrideBrain-"+pack.id+"-historical-draft.md";document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+  toast("Reviewed sample estimate exported. This is not a commercial offer.");
  }else if(action==="draftLang"){
   state.customerDraft.lang=value;state.customerDraft.text="";state.customerDraft.reviewed=false;save();render();
  }else if(action==="draftGenerate"){
@@ -131,7 +158,7 @@ function perform(el){
   const result=markFeedbackReviewed(state,id);if(result.ok){save();render();toast("Review recorded; source text was not changed.");}
  }else if(action==="reset"){
   if(!confirm("Reset this industry's simulated approvals, tasks, feedback and drafts?"))return;
-  state=resetDemoState(pack);view.chat=[];view.docId=null;view.quoteId=null;view.projectDetail=false;setPage("overview");toast("Sample state restored.");
+  state=resetDemoState(pack);state.historyRequest=historicalDefaults(historyData);view.chat=[];view.docId=null;view.quoteId=null;view.projectDetail=false;setPage("overview");toast("Sample state restored.");
  }
 }
 document.addEventListener("click",ev=>{const el=ev.target.closest("[data-action]");if(el&&model)perform(el);});
@@ -143,6 +170,17 @@ document.addEventListener("change",ev=>{
  if(ev.target.id==="industry-switcher"){loadIndustry(ev.target.value);return;}
  if(!model)return;
  const input=ev.target.dataset.input;
+ if(ev.target.hasAttribute("data-history-scope")){
+   const code=ev.target.getAttribute("data-history-scope");
+   const current=new Set(state.historyRequest.scope);
+   if(ev.target.checked)current.add(code);else current.delete(code);
+   state.historyRequest=safeRequest(historyData,{...state.historyRequest,scope:[...current]});state.historyDraft=null;save();render();return;
+ }
+ const historyField=ev.target.dataset.history;
+ if(historyField&&historyField!=="inquiry"){
+   state.historyRequest=safeRequest(historyData,{...state.historyRequest,[historyField]:ev.target.value});
+   state.historyDraft=null;save();render();return;
+ }
  if(input==="filter"){view.filter=ev.target.value;view.pageIndex=0;render();}
  else if(input==="varCost"||input==="varMargin"){
   const result=setVariationInput(state,input==="varCost"?"cost":"margin",ev.target.value);
@@ -155,6 +193,8 @@ document.addEventListener("input",ev=>{
  if(input==="search"){
   const pos=ev.target.selectionStart||0;view.search=ev.target.value;view.pageIndex=0;
   render();const el=document.querySelector('[data-input="search"]');if(el){el.focus();try{el.setSelectionRange(pos,pos);}catch{}}
+ }else if(ev.target.dataset.history==="inquiry"){
+  state.historyRequest.inquiry=ev.target.value;state.historyDraft=null;save();
  }else if(input==="draftText"){
   state.customerDraft.text=ev.target.value;state.customerDraft.reviewed=false;save();
  }
