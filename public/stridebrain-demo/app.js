@@ -129,6 +129,7 @@ function detachImported(){
  if(view.docId===current.document.id)view.docId=null;
  documentSession.imported=null;
  state.historyDraft=null;
+ state.historyRequest=historicalDefaults(historyData); // do not persist imported project metadata on removal
  save();
 }
 async function handleDocument(file){
