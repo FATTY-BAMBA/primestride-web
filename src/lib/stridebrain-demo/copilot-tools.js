@@ -22,7 +22,24 @@ const tokens=input=>{
  const han=q.match(/[\u3400-\u9fff]{2,}/g)||[];
  // For Chinese natural-language questions retain adjacent 2-character substrings.
  const pairs=han.flatMap(word=>word.length<=2?[word]:Array.from({length:Math.min(word.length-1,30)},(_,i)=>word.slice(i,i+2)));
- return distinct([...english,...pairs]).slice(0,24);
+ const lexicon=[
+  ["廚房",["kitchen","countertop","cabinet"]],["檯面",["countertop","quartz"]],
+  ["石英",["quartz","stone"]],["材料",["material","materials","supplier"]],
+  ["供應商",["supplier","vendor"]],["報價",["quote","quotation","cost","estimate"]],
+  ["毛利",["margin","profit"]],["成本",["cost","pricing"]],
+  ["專案",["project","job"]],["案場",["project","site"]],["進度",["progress","status"]],
+  ["工程",["construction","work"]],["裝修",["renovation","construction"]],
+  ["合約",["contract","scope"]],["圖面",["drawing","revision"]],["驗收",["inspection","handover"]],
+  ["法規",["regulation","law","compliance"]],["許可",["permit","approval"]],
+  ["印刷",["printing","press"]],["海報",["poster","print"]],
+  ["紙張",["paper","stock"]],["紙材",["paper","material"]],
+  ["打樣",["proof","sample"]],["出血",["bleed","trim"]],
+  ["檔案",["artwork","file","pdf"]],["交期",["schedule","delivery"]],
+  ["工作單",["work order","task"]],["客戶",["customer","client"]],
+  ["庫存",["inventory","stock"]],["採購",["procurement","supplier"]]
+ ];
+ const translated=lexicon.filter(([han])=>q.includes(han)).flatMap(([,terms])=>terms);
+ return distinct([...english,...pairs,...translated]).slice(0,32);
 };
 function pack(industry){if(!validIndustry(industry))throw Error("Unknown demo industry");return COLLECTIONS[industry];}
 export function allDemoSources(industry){
