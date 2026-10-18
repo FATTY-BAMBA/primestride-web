@@ -24,7 +24,7 @@ export function bridgePreview(report,history,form){
   if(!report?.reviewed)issues.push("Review and approve the extracted document first.");
   if(report?.currencyConfirmed!==true)issues.push("Confirm the file's cost currency before history use.");
   if(!sum.ready||sum.approved===0)issues.push("At least one accepted, reconciled cost line is required.");
-  const blockers=(report?.findings||[]).filter(f=>f.severity==="blocker"||BRIDGE_BLOCKING_CODES.includes(f.code));
+  const blockers=(report?.findings||[]).filter(f=>(f.severity==="blocker"&&f.code!=="ROW_ISSUES")||BRIDGE_BLOCKING_CODES.includes(f.code));
   if(blockers.length)issues.push("The source has unresolved parsing/coverage issues ("+blockers.map(x=>x.code).join(", ")+").");
   const validCodes=new Set((history?.costCodes||[]).map(c=>c.id));
   const accepted=(report?.candidates||[]).filter(c=>c.reviewStatus==="approved");
