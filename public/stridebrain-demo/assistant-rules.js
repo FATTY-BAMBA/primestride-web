@@ -29,7 +29,7 @@ export function exampleAnswer(prompt,c){
   }
   const ids=selected.map(x=>x.id);
   const paragraphs=selected.slice(0,3).map(x=>'<div class="prio-row"><div class="prio-main"><div class="prio-title">'+e(x.titleZh)+' · '+e(x.titleEn)+'</div><div class="prio-sub">'+e(x.summary)+'</div><div class="disclosure" style="margin-top:5px">Scope limitation: '+e(x.limits)+'</div></div>'+source(x.id)+'</div>').join("");
-  const content='<p>I found '+selected.length+' relevant Taiwan public-reference notes. These are laws, official guidance or documented examples depending on the source type. They do not prove this fictional client is compliant or that vendor requirements are universal.</p>'+paragraphs+'<div class="answer-actions">'+button("Explore Taiwanese industry playbook ↗","nav","playbook","button-primary")+'</div>';
+  const content='<p>I found '+selected.length+' relevant Taiwan public-reference notes. These are laws, official guidance or documented examples depending on the source type. They do not prove this fictional client is compliant or that vendor requirements are universal.</p>'+paragraphs+'<div class="answer-actions">'+button("Explore Taiwan guidance ↗","nav","playbook","button-primary")+button("Run operational check ↗","nav","readiness","button-outline")+'</div>';
   return {sources:ids,html:wrap("Published Taiwan industry guidance",content)};
  }
  if(packTerm.test(question)||/change order|variation|material change|substitution|變更|替換/.test(question)){
