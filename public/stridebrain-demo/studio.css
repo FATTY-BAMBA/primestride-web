@@ -293,3 +293,58 @@ body{background:#f7f9f6;font-size:14px}
 @media(max-width:1190px){.readiness-layout{grid-template-columns:1fr}.readiness-context{align-items:start}}
 @media(max-width:790px){.readiness-fields{grid-template-columns:repeat(2,minmax(0,1fr))}.readiness-flow{grid-template-columns:repeat(2,minmax(0,1fr))}.readiness-context{flex-direction:column;align-items:start}}
 @media(max-width:520px){.readiness-fields,.readiness-fixtures{grid-template-columns:1fr}.readiness-task-actions{flex-direction:column}.readiness-mini,.readiness-shortcut{flex-direction:column;align-items:start}.readiness-mini button,.readiness-shortcut button{width:100%}.readiness-flow{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+
+/* Document Intelligence: file-to-evidence, not a cosmetic chatbot attachment. */
+.intake-warning{margin:17px 0 0;background:#fbf7ec;border:1px solid #e9dbc0;color:#7b653b;border-radius:12px;padding:14px 18px;font-size:12px;line-height:1.65}
+.intake-warning strong{display:block;font-size:12px}.intake-drop{border:1.5px dashed #aacdb8;border-radius:16px;background:linear-gradient(120deg,#f7fcf7,#eef7f0);padding:34px 24px;text-align:center}
+.intake-icon{font-size:31px;display:grid;place-items:center;margin:0 auto 10px;width:52px;height:52px;border-radius:15px;color:#17795a;background:#e1f3e7}
+.intake-drop h3{font-size:18px;margin:6px 0}
+.intake-drop p{font-size:12px;color:#5b7865;line-height:1.6;max-width:650px;margin:8px auto 18px}
+.intake-drop small{display:block;font-size:10px;color:#718578;margin-top:12px}
+.intake-file-picker{display:inline-flex;align-items:center;justify-content:center;background:#0b806a;color:white;font-size:12px;font-weight:800;border-radius:10px;padding:11px 18px;cursor:pointer;transition:background .2s}
+.intake-file-picker:hover{background:#085e4e}.intake-file-picker:focus-within{outline:3px solid #9cd7ba}
+#intake-file{display:block;position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.intake-fixtures{border:1px solid #e3eae4;background:white;padding:16px 19px;border-radius:12px;margin-top:13px}
+.intake-fixtures strong{display:block;font-size:12px}.intake-fixtures span{display:block;color:#7f8e83;font-size:11px;margin-top:4px}
+.intake-fixtures .action-stack{margin-top:10px}.intake-fixtures p{margin:10px 0 0;color:#718276;font-size:11px;line-height:1.6}
+.intake-file-header{display:flex;justify-content:space-between;align-items:start;gap:15px;padding:18px 20px;background:white;border-radius:14px;border:1px solid #e1ebe4;margin-bottom:16px}
+.intake-file-header h2{margin:5px 0 6px;font-size:18px;overflow-wrap:anywhere}.intake-file-header p{font-size:11px;color:#72857a;margin:0}
+.intake-facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.intake-fact{background:#fff;border:1px solid #e2eae3;padding:12px 14px;border-radius:10px;min-width:0}
+.intake-fact span{display:block;color:#74887a;font-size:10px;font-weight:800;text-transform:uppercase}
+.intake-fact strong{display:block;font-size:12px;margin:5px 0;overflow-wrap:anywhere}
+.intake-fact small{font-size:10px;color:#8b9a8e;overflow-wrap:anywhere}
+.intake-preview{display:flex;flex-direction:column;gap:15px}
+.intake-source-title{font-size:12px;color:#245d47;font-weight:800;padding-bottom:6px;border-bottom:1px solid #e9efe9}
+.intake-table-scroll{overflow:auto;border:1px solid #e3ebe3;border-radius:9px}
+.intake-table{width:100%;font-size:11px;white-space:nowrap}
+.intake-table th{background:#f2f7f2;font:800 10px ui-monospace,monospace;color:#698176;padding:9px 11px}
+.intake-table td{padding:9px 11px;border-bottom:1px solid #eff3ef;color:#4d6356}
+.intake-table tr:nth-child(even) td{background:#fbfcfb}
+.intake-text-preview{display:flex;flex-direction:column;gap:1px;padding:5px 0}
+.intake-text-line{display:grid;grid-template-columns:80px 1fr;gap:8px;padding:6px 0;border-bottom:1px solid #edf2ed;overflow-wrap:anywhere}
+.intake-text-line small{color:#819585;font:700 10px ui-monospace,monospace}
+.intake-text-line span{font-size:12px;color:#526b5d;line-height:1.5}
+.intake-issue{padding:10px 12px;border-radius:9px;background:#f2f7f1;border:1px solid #e0eadf;margin:8px 0;line-height:1.55}
+.intake-issue.blocker{background:#fdf5ec;border-color:#edddc5}
+.intake-issue strong{font:800 10px ui-monospace,monospace;display:block;color:#50745c}
+.intake-issue.blocker strong{color:#ac793b}
+.intake-issue span{display:block;font-size:11px;color:#617365;margin:4px 0}
+.intake-issue small{font-size:10px;color:#9a9e90}
+.intake-summary{padding:13px;background:#eff8f1;border:1px solid #dceada;border-radius:11px;margin-top:17px}
+.intake-summary span{font-size:11px;color:#5a7763;display:block}
+.intake-summary strong{font-family:Manrope,sans-serif;font-size:22px;letter-spacing:-.04em;color:#155738;display:block;margin:3px 0}
+.intake-summary small{font-size:10px;color:#6c8772}
+.intake-caveat{font-size:11px;line-height:1.6;color:#859185;border-top:1px solid #ecf0ec;padding-top:13px;margin-top:16px}
+.intake-line-table td{vertical-align:top}
+.intake-number{border:1px solid #d4e3d9;border-radius:8px;padding:8px;width:104px;max-width:100%;font-size:12px}
+.intake-inline-flag{margin-top:7px;font-size:10px;color:#aa753f;line-height:1.45;max-width:300px}
+.intake-action-stack{display:grid;grid-template-columns:repeat(2,1fr);gap:5px;margin-top:8px;max-width:150px}
+.intake-action-stack button{border:1px solid #d5e6d8;color:#347052;border-radius:7px;padding:5px;font-size:10px;background:#f9fcf9;font-weight:800}
+.intake-action-stack button:hover{border-color:#99c8a8;background:#edf9f0}
+.intake-action-stack button:last-child{grid-column:1/-1}
+.intake-review-note{resize:vertical;width:100%;min-height:140px;border:1px solid #d9e5da;border-radius:9px;padding:12px;font-size:12px;line-height:1.6;margin-top:8px}
+.intake-review-note:focus-visible{outline:3px solid rgba(14,128,98,.2)}
+@media(max-width:950px){.intake-facts{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.intake-file-header{flex-direction:column}.intake-facts{grid-template-columns:1fr}.intake-drop{padding:26px 13px}.intake-text-line{grid-template-columns:65px 1fr}}
