@@ -83,6 +83,7 @@ export function historicalEstimate(data,requested){
   return {...x,similarity:Math.round(score*100),ageMonths:monthsOld(x.completedAt),weight:Math.max(.15,score)};
  }).sort((a,b)=>b.similarity-a.similarity||a.ageMonths-b.ageMonths);
  const matches=ranked.slice(0,6);
+ const localSandboxCount=matches.filter(x=>x.provenance==="LOCAL_SANDBOX_SELF_ATTESTED").length;
  if(matches.length<3)return noResult("Only "+matches.length+" eligible completed "+data.unit+"-based jobs match this category, finish tier and scope. At least three reconciled precedents are required.",matches);
  const lines=[],missing=[];
  for(const code of r.scope){
@@ -115,7 +116,8 @@ export function historicalEstimate(data,requested){
    "Missing line items, site constraints, specifications and contractual exclusions require human review."
  ];
  if(recencyWarning)limitations.push("At least one comparable job is over 18 months old.");
- const result={ok:true,request:r,method:"Similarity ranking + weighted median unit costs + explicit escalation and contingency + company margin",comparables:matches.map(x=>({id:x.id,title:x.title,category:x.category,tier:x.tier,location:x.location,quantity:x.quantity,unit:x.unit,completedAt:x.completedAt,similarity:x.similarity,ageMonths:x.ageMonths,finalDirectCost:x.finalDirectCost,sourceDocId:x.sourceDocId})),lines,historicalDirectCost,escalationAmount,contingencyAmount,forecastCost,margin:r.margin,preTax,sampleTax,total:preTax+sampleTax,rangeLow:Math.min(lowPrice,highPrice),rangeHigh:Math.max(lowPrice,highPrice),rangeType:"Illustrative sensitivity band from comparable synthetic unit costs, not a statistical confidence interval or binding quote",excludedQuoteOnly:data.records.filter(x=>x.status!=="COMPLETE").length,limitations,sourceIds:matches.map(x=>x.sourceDocId),quality:"Illustrative only — no real pricing verified"};
+ if(localSandboxCount)limitations.push(localSandboxCount+" matching precedent(s) were reconstructed from a local, hypothetical cost ledger and self-attested only for this sandbox; not independently verified.");
+ const result={ok:true,request:r,method:"Similarity ranking + weighted median unit costs + explicit escalation and contingency + company margin",comparables:matches.map(x=>({id:x.id,title:x.title,category:x.category,tier:x.tier,location:x.location,quantity:x.quantity,unit:x.unit,completedAt:x.completedAt,similarity:x.similarity,ageMonths:x.ageMonths,finalDirectCost:x.finalDirectCost,sourceDocId:x.sourceDocId,provenance:x.provenance||"FICTIONAL_SEEDED_HISTORY"})),localSandboxCount,lines,historicalDirectCost,escalationAmount,contingencyAmount,forecastCost,margin:r.margin,preTax,sampleTax,total:preTax+sampleTax,rangeLow:Math.min(lowPrice,highPrice),rangeHigh:Math.max(lowPrice,highPrice),rangeType:"Illustrative sensitivity band from comparable synthetic unit costs, not a statistical confidence interval or binding quote",excludedQuoteOnly:data.records.filter(x=>x.status!=="COMPLETE").length,limitations,sourceIds:matches.map(x=>x.sourceDocId),quality:"Illustrative only — no real pricing verified"};
  return result;
 }
 export function estimateFingerprint(estimate){
