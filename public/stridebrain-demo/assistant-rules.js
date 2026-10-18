@@ -11,6 +11,11 @@ export function exampleAnswer(prompt,c){
  const relevant=ids=>'<div class="disclosure" style="margin-top:10px">Inspect source records: '+sources(ids)+'</div>';
  const wrap=(heading,body,actions)=>'<div class="answer-card"><div class="suite-eyebrow">SOURCE-AWARE DEMO</div><h3>'+heading+'</h3>'+body+(actions||"")+'</div>';
  const actions=(...btns)=>'<div class="answer-actions">'+btns.join("")+'</div>';
+ if(/past projects|previous jobs|historical|quote from history|similar jobs|past quotes|歷史|以往|過去|類似案例|歷史報價|智能報價/.test(question)){
+  const h=c.history,ref=h?.records.filter(x=>x.status==="COMPLETE").slice(0,3).map(x=>x.sourceDocId)||[];
+  const body='<p>Use comparable completed work, normalized cost lines, explicit price adjustments, and human approval to prepare a source-linked new estimate. The current precedents are fictional sample jobs.</p>'+relevant(ref);
+  return {sources:ref,html:wrap("Historical Quotation Intelligence",body,actions(button("Review similar projects ↗","nav","history","button-primary")))};
+ }
  if(packTerm.test(question)||/change order|variation|material change|substitution|變更|替換/.test(question)){
   const changed=s.variation.cost!==sc.cost||s.variation.margin!==sc.margin;
   let desc='<p>'+e(pr.name)+' has a proposed change: '+e(sc.name)+'. The current draft input is '+money(cost.cost)+' incremental direct cost. At '+cost.margin+'% target gross margin, the calculated pre-tax amount is '+money(cost.beforeTax)+'; illustrative tax-inclusive total '+money(cost.total)+'.</p>';
