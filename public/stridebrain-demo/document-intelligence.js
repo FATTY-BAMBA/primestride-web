@@ -234,6 +234,8 @@ export function editCandidate(report,id,field,value){
 export function approveDocument(report,reviewerNote){
  const s=reviewSummary(report);
  const textOnly=report.candidates.length===0&&report.parts.some(p=>p.kind==="text"&&p.lines.length>0);
+ const blockers=(report.findings||[]).filter(f=>f.severity==="blocker"&&!["ROW_ISSUES"].includes(f.code));
+ if(blockers.length)return {ok:false,reason:"Document-level blocking issues remain: "+blockers.map(f=>f.code).join(", ")+". Fix the source or request specialist review."};
  if(report.candidates.length&&report.currencyConfirmed!==true)return {ok:false,reason:"Confirm that the source pricing currency is TWD before approving a quotation-derived draft."};
  if(!s.ready&&!textOnly)return {ok:false,reason:"Every extracted cost item must be approved or excluded; blocking discrepancies must be resolved first."};
  if(!String(reviewerNote||"").trim())return {ok:false,reason:"Enter a human review note before approving this draft."};
