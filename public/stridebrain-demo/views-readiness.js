@@ -31,6 +31,16 @@ export function readinessView(c){
  out+='<div class="readiness-task-actions">'+button(workCreated?"Review task created ✓":"Create linked review work item","readinessCreateTask","","button-secondary")+button("Open work orders ↗","nav","work","button-outline")+'</div>';
  if(workCreated)out+='<p class="disclosure">Task ID '+e(config.reviewWorkId)+' is linked to '+e(config.project)+' and appears in Work Orders. It is stored only in this browser.</p>';
  out+='</div></section>';
+ const files=pack.id==="interior"?[
+  {label:"Site measurement record",meta:"CSV · opens in Excel",href:"./fixtures/interior/site-measurements.csv",download:true},
+  {label:"Quartz cost breakdown",meta:"CSV · opens in Excel",href:"./fixtures/interior/quartz-costs.csv",download:true},
+  {label:"Change review sheet",meta:"Printable HTML · Save as PDF",href:"./fixtures/interior/change-review.html",download:false}
+ ]:[
+  {label:"Manual artwork preflight log",meta:"CSV · opens in Excel",href:"./fixtures/printing/preflight-manual.csv",download:true},
+  {label:"Paper change cost sheet",meta:"CSV · opens in Excel",href:"./fixtures/printing/recycled-stock-cost.csv",download:true},
+  {label:"Preflight review sheet",meta:"Printable HTML · Save as PDF",href:"./fixtures/printing/preflight-review.html",download:false}
+ ];
+ out+='<section class="section">'+section("Sample business documents","Open realistic example sheets linked to the same case. These are fictional training files, not customer uploads.")+'<div class="readiness-fixtures">'+files.map(file=>'<a class="readiness-fixture" href="'+e(file.href)+'"'+(file.download?' download':' target="_blank" rel="noopener noreferrer"')+'><span class="readiness-fixture-icon">'+(file.download?'▧':'▤')+'</span><span><strong>'+e(file.label)+'</strong><small>'+e(file.meta)+'</small></span><span>↗</span></a>').join("")+'</div><p class="disclosure" style="margin-top:10px">The CSV sheets can be opened in spreadsheet software. Printable HTML opens a new tab for printing to PDF; no uploaded files have been parsed by StrideBrain.</p></section>';
  out+='<section class="section">'+section("Where this fits in daily operations","Readiness checks are one stage of a larger company workflow, not an artificial green light.")+'<div class="readiness-flow"><div><small>01 · Inquiry</small><strong>Capture job scope</strong></div><div><small>02 · Evidence</small><strong>Inspect current sources</strong></div><div><small>03 · Decisions</small><strong>Resolve exceptions</strong></div><div><small>04 · Execution</small><strong>Authorized work</strong></div></div><div class="readiness-links">'+button("Company knowledge ↗","nav","knowledge","button-outline")+button("Quotations & approvals ↗","nav","quotes","button-secondary")+'</div></section>';
  return out;
 }
