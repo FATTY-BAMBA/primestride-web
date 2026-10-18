@@ -81,7 +81,7 @@ function buildReport(name,extension,parts,metadata={}){
  if(parts.length===0)findings.push(problem("EMPTY_DOCUMENT","No readable content was extracted.",name,"blocker"));
  const facts=[];for(const part of segments)for(const item of part.lines){const match=/^\s*(Project|Job|Document|Revision|Quantity|Status|Supplier|Approval|Material|Date|File format|Stock request|Baseline|Requested|Dimensions|Trim size|Finish)\s*:\s*(.+)/i.exec(item.text);if(match)facts.push({field:match[1],value:match[2],sourceRef:part.name+" · "+item.ref});}
  const id="LOCAL-"+Date.now().toString(36);
- return {id,fileName:name,extension,createdAt:new Date().toISOString(),basisType:"BROWSER_LOCAL_UPLOADED",privacy:"File content remains in this tab's memory and is not uploaded or stored as company knowledge.",metadata,parts,facts:facts.slice(0,60),candidates,findings,reviewed:false,reviewedAt:null,reviewerNote:"",targetMargin:25,issueCount:candidates.reduce((n,c)=>n+c.flags.length,0)+findings.length};
+ return {id,fileName:name,extension,createdAt:new Date().toISOString(),basisType:"BROWSER_LOCAL_UPLOADED",privacy:"File content remains in this tab's memory and is not uploaded or stored as company knowledge.",metadata,parts,facts:facts.slice(0,60),candidates,findings,currencyConfirmed:false,reviewed:false,reviewedAt:null,reviewerNote:"",targetMargin:25,issueCount:candidates.reduce((n,c)=>n+c.flags.length,0)+findings.length};
 }
 const read16=(v,i)=>v.getUint16(i,true),read32=(v,i)=>v.getUint32(i,true);
 export async function unzipOffice(arrayBuffer){
@@ -90,7 +90,7 @@ export async function unzipOffice(arrayBuffer){
  if(eocd<0)throw Error("The .xlsx/.docx archive has no readable ZIP directory.");
  const total=read16(v,eocd+10),dirAt=read32(v,eocd+16);
  if(total>2000)throw Error("Office file has too many ZIP entries for the public demo.");
- const files=new Map(),decoder=new TextDecoder();
+ const files=new Map(),decoder=new TextDecoder();let accumulatedUncompressed=0;
  let p=dirAt;
  for(let n=0;n<total;n++){
   if(read32(v,p)!==0x02014b50)throw Error("ZIP directory is inconsistent.");
@@ -99,6 +99,8 @@ export async function unzipOffice(arrayBuffer){
   if(name.endsWith("/"))continue;
   if(!/^(xl\/|word\/|\[Content_Types\]|_rels\/|docProps\/)/.test(name))continue;
   if(compressed>LIMIT_BYTES||uncompressed>LIMIT_BYTES*2)throw Error("Office XML entry is too large to expand safely in the public demo.");
+  accumulatedUncompressed+=uncompressed;
+  if(accumulatedUncompressed>LIMIT_BYTES*3)throw Error("Total decompressed Office data exceeds the safe public-demo limit.");
   if(read32(v,offset)!==0x04034b50)throw Error("ZIP entry header mismatch.");
   const localLen=read16(v,offset+26),localExtra=read16(v,offset+28),start=offset+30+localLen+localExtra;
   const source=bytes.slice(start,start+compressed);let unpacked;
@@ -114,6 +116,7 @@ export async function unzipOffice(arrayBuffer){
 }
 const parseXml=(text)=>{
  if(!text)throw Error("Required XML file is missing.");
+ if(/<!DOCTYPE|<!ENTITY/i.test(text))throw Error("Office XML declares an unsupported document type or entity. The demo refuses unsafe XML.");
  const xml=new DOMParser().parseFromString(text,"application/xml");
  if(xml.getElementsByTagName("parsererror").length)throw Error("An Office XML document could not be parsed.");
  return xml;
@@ -195,7 +198,7 @@ export async function extractDocument(file){
  report.findings.push(...(result.warnings||[]));
  if(report.candidates.length){
   const unresolved=report.candidates.filter(c=>c.flags.some(f=>f.severity==="blocker"));
-  if(unresolved.length)report.findings.push(problem("ROW_ISSUES",unresolved.length+" itemized lines contain missing or conflicting cost values; manual review is required.",file.name,"blocker"));
+  if(unresolved.length)report.findings.push(problem("ROW_ISSUES","Initial extraction found "+unresolved.length+" lines with missing or conflicting values; inspect original source and record reviewer corrections.",file.name,"blocker"));
  }
  if(["pdf","docx"].includes(ext))report.findings.push(problem("NO_AUTOMATIC_PRICE","Text extraction does not prove that a document contains an approved quotation. No customer price will be generated without structured costs.",file.name));
  return report;
@@ -228,6 +231,7 @@ export function editCandidate(report,id,field,value){
 export function approveDocument(report,reviewerNote){
  const s=reviewSummary(report);
  const textOnly=report.candidates.length===0&&report.parts.some(p=>p.kind==="text"&&p.lines.length>0);
+ if(report.candidates.length&&report.currencyConfirmed!==true)return {ok:false,reason:"Confirm that the source pricing currency is TWD before approving a quotation-derived draft."};
  if(!s.ready&&!textOnly)return {ok:false,reason:"Every extracted cost item must be approved or excluded; blocking discrepancies must be resolved first."};
  if(!String(reviewerNote||"").trim())return {ok:false,reason:"Enter a human review note before approving this draft."};
  report.reviewed=true;report.reviewedAt=new Date().toISOString();report.reviewerNote=String(reviewerNote).slice(0,500);
@@ -244,6 +248,7 @@ export function reviewReportMarkdown(report,industry){
  "Data classification: LOCAL_BROWSER_DOCUMENT",
  "Status: "+(report.reviewed?"REVIEWED IN THIS BROWSER":"DRAFT — NOT APPROVED"),
  "Source reference: "+report.id,
+ "Cost currency: "+(report.currencyConfirmed?"TWD — manually confirmed":"UNCONFIRMED"),
  "Review timestamp: "+(report.reviewedAt||"Not reviewed"),
  "",
  "## Accepted extracted cost lines",
