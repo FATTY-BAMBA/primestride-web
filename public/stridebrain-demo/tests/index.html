@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>StrideBrain · Document Parser Self-Test</title>
+<style>body{font:14px/1.55 system-ui,sans-serif;background:#f5f8f5;color:#1c3730;padding:24px;max-width:980px;margin:auto}
+h1{font-size:26px}p{color:#5e7468}.box{background:white;border:1px solid #dce8dd;border-radius:14px;padding:19px;margin-bottom:16px}
+button{background:#0b8066;color:white;border:0;border-radius:9px;padding:11px 15px;font-weight:700;cursor:pointer}
+table{width:100%;border-collapse:collapse;font-size:12px}th,td{text-align:left;padding:9px;border-bottom:1px solid #e7efe9}
+.pass{color:#18734c;font-weight:800}.fail{color:#a63e37;font-weight:800}code{font-size:11px}
+.warn{padding:13px;background:#fbf4e6;border:1px solid #e8d9b9;border-radius:9px;color:#725b36}
+</style></head><body><div class="box"><h1>Document Intelligence · Browser Self-Test</h1><p>Checks our *fictional* CSV, XLSX and PDF samples through the same parser used by the public StrideBrain demonstration. No files are uploaded and no private business records are required.</p><div class="warn">PDF extraction depends on pinned PDF.js code served by a CDN; it will report a clear failure if the network blocks the library. XLSX parsing needs browser-native ZIP decompression.</div><p><button type="button" id="run">Run all six tests</button> <a href="../index.html?industry=interior">← Back to demo</a></p></div>
+<div class="box"><table><thead><tr><th>Industry</th><th>Format</th><th>Expected behavior</th><th>Result</th></tr></thead><tbody id="results"><tr><td colspan="4">Press Run all six tests to begin.</td></tr></tbody></table></div>
+<div class="box"><h2>Boundary</h2><p>A passing test shows that our generated sample can be parsed in your browser. It does <strong>not</strong> validate a scanned file, establish a supplier price, test real tenancy, or certify any customer-facing quotation.</p><pre id="details" style="white-space:pre-wrap;word-break:break-word"></pre></div>
+<script type="module" src="./selftest.js"></script></body></html>
