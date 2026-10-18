@@ -204,13 +204,15 @@ function perform(el){
  else if(action==="modelMenu"){
    if(copilotBusy)return;
    copilotModelMenuOpen=!copilotModelMenuOpen;render();
+   if(copilotModelMenuOpen)document.querySelector(".sb-model-option.selected")?.focus();
+   else document.querySelector(".sb-model-trigger")?.focus();
  }
  else if(action==="modelSelect"){
    if(copilotBusy)return;
    const chosen=findAllowedModel(value);
    if(!chosen){toast("That model is not on the approved list.");return;}
    selectedModelId=chosen.id;copilotModelMenuOpen=false;copilotConnected=false;
-   render();
+   render();document.querySelector(".sb-model-trigger")?.focus();
    toast(copilotMode==="gpt"?"Selected "+chosen.label+" for the next authorized model request.":"Selected "+chosen.label+". Connect staff AI to use this model; sample answers remain deterministic.");
  }
  else if(action==="newChat"){
@@ -457,11 +459,17 @@ document.addEventListener("input",ev=>{
  }
 });
 document.addEventListener("keydown",ev=>{
+ if(copilotModelMenuOpen&&["ArrowDown","ArrowUp"].includes(ev.key)&&ev.target.closest(".sb-model-menu")){
+  ev.preventDefault();
+  const choices=[...document.querySelectorAll(".sb-model-option:not(:disabled)")];
+  if(choices.length){const i=choices.indexOf(document.activeElement);choices[(i+(ev.key==="ArrowDown"?1:-1)+choices.length)%choices.length].focus();}
+  return;
+ }
  if(ev.key==="Enter"&&!ev.shiftKey&&!ev.isComposing&&ev.target.matches("[data-copilot-input]")){
   ev.preventDefault();if(!copilotBusy)ev.target.closest("form")?.requestSubmit();return;
  }
  if(ev.key==="Escape"&&copilotModelMenuOpen){
-  copilotModelMenuOpen=false;if(view.page==="copilot")render();return;
+  copilotModelMenuOpen=false;if(view.page==="copilot"){render();document.querySelector(".sb-model-trigger")?.focus();}return;
  }
  if(ev.key==="Escape"&&view.docId)closeSource();
 });
