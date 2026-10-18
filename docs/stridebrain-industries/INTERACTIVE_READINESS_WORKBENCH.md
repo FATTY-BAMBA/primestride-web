@@ -64,3 +64,6 @@ A browser QA harness lives at /stridebrain-demo/qa.html. It runs source, file-av
 
 Underlying source registry: /stridebrain-demo/seeds/taiwan-industry-evidence.json.
 Source-of-truth market positioning: https://www.primestrideai.com/en/stridebrain.
+
+## Additional release safeguards
+Unassessed fire/escape impacts and missing qualified scope/applicability review are blocking conditions. The shared business engine re-evaluates current industry rules on commit and rejects stale saved approvals or conditions. A linked readiness review work order cannot be marked complete while the current assessment contains blocking gaps. These checks are only client-side behavioral demonstrations; actual role authority and immutable enforcement belong on the future server.
