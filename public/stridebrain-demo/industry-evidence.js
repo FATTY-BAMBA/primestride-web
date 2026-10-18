@@ -38,7 +38,7 @@ export function validateIndustryEvidence(pack){
 export function sourceUrlForDocument(d){
  if(!d||d.basisType!=="PUBLIC_REFERENCE")return null;
  const raw=typeof d.sourceUrl==="string"?d.sourceUrl:"";
- try{const parsed=new URL(raw);return parsed.protocol==="https:"?parsed.href:null;}catch{return null;}
+ return /^https:\/\/[A-Za-z0-9.-]+(?:[\/?#][^\s]*)?$/.test(raw)?raw:null;
 }
 export function industryCards(pack,industry){return pack.cards.filter(c=>c.industry===industry);}
 export function referenceForPrompt(pack,industry,query){
