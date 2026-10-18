@@ -23,7 +23,7 @@ export function documentIntelligenceView(c){
  }
  const s=reviewSummary(report),priced=report.candidates.length>0,hasText=report.parts.some(p=>p.kind==="text"&&p.lines.length);
  const dataKind=report.extension.toUpperCase(),blocks=report.candidates.flatMap(x=>x.flags.filter(f=>f.severity==="blocker")).length;
- out+='<section class="section"><div class="intake-file-header"><div><div class="suite-eyebrow">LOCAL DOCUMENT · '+e(dataKind)+'</div><h2>'+e(report.fileName)+'</h2><p>'+e(report.parts.length)+' extracted '+(report.extension==="pdf"?"pages":"sections/sheets")+' · '+e(report.candidates.length)+' candidate cost lines · '+e(report.findings.length)+' parsing/consistency notes</p></div>'+eButton("Clear this document","intakeClear","","button-outline")+'</div><div class="operational-cards">'+[
+ out+='<section class="section"><div class="intake-file-header"><div><div class="suite-eyebrow">LOCAL DOCUMENT · '+e(dataKind)+'</div><h2>'+e(report.fileName)+'</h2><p>'+e(report.parts.length)+' extracted '+(report.extension==="pdf"?"pages":"sections/sheets")+' · '+e(report.candidates.length)+' candidate cost lines · '+e(report.findings.length)+' parsing/consistency notes</p><p class="disclosure">Tentative classification: '+e(report.classification.replace(/_/g," "))+' — based on visible patterns only, not AI verification.</p></div>'+eButton("Clear this document","intakeClear","","button-outline")+'</div><div class="operational-cards">'+[
  ["Extracted cost lines",report.candidates.length,"Observed table rows"],
  ["Human-approved rows",s.approved,"Only within this browser"],
  ["Outstanding decisions",s.open,"Pending or needs review"],
