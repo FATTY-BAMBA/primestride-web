@@ -4,25 +4,27 @@ import {overview,copilot,projects,knowledge,renderInspector,renderSourceModal} f
 import {service,quotes,work,suppliers,approvals,analytics,learning} from "./views-operations.js";
 import {exampleAnswer} from "./assistant-rules.js";
 import {historyView} from "./views-history.js";
+import {playbook} from "./views-playbook.js";
+import {validateIndustryEvidence} from "./industry-evidence.js";
 import {validateHistory,historicalDefaults,safeRequest,historicalEstimate,estimateMarkdown} from "./historical-estimator.js";
 const $=id=>document.getElementById(id);
 const requested=new URLSearchParams(location.search).get("industry")||"interior";
-let pack=getPack(requested),model=null,state=null,historyData=null,toastHandle=null;
-let view={page:"overview",projectId:null,projectDetail:false,docId:null,quoteId:null,chat:[],search:"",filter:"all",pageIndex:0};
+let pack=getPack(requested),model=null,state=null,historyData=null,industryEvidence=null,toastHandle=null;
+let view={page:"overview",projectId:null,projectDetail:false,docId:null,quoteId:null,chat:[],search:"",filter:"all",pageIndex:0,flowStep:null};
 function toast(message){
  const el=$("toast");el.textContent=message;el.classList.add("visible");
  if(toastHandle)clearTimeout(toastHandle);toastHandle=setTimeout(()=>el.classList.remove("visible"),3500);
 }
-function context(){return {model,pack,state,view,history:historyData};}
+function context(){return {model,pack,state,view,history:historyData,industryEvidence};}
 function save(){if(!saveDemoState(pack,state))toast("Browser storage unavailable. Changes may not survive a refresh.");}
 function setPage(page,reset=true){
  view.page=page;if(reset){view.search="";view.filter="all";view.pageIndex=0;}
  render();window.scrollTo({top:0,behavior:"smooth"});
 }
-function pageTitle(){return view.page==="projects"?pack.projectLabel:view.page==="quotes"?pack.quoteLabel:view.page==="work"?pack.orderLabel:{overview:"Overview",copilot:"StrideBrain Copilot",knowledge:"Knowledge hub",service:"Customer service",suppliers:"Suppliers",approvals:"Approvals",analytics:"Analytics",learning:"Learning & feedback",history:"Historical estimates"}[view.page]||"Overview";}
+function pageTitle(){return view.page==="projects"?pack.projectLabel:view.page==="quotes"?pack.quoteLabel:view.page==="work"?pack.orderLabel:{overview:"Overview",copilot:"StrideBrain Copilot",knowledge:"Knowledge hub",service:"Customer service",suppliers:"Suppliers",approvals:"Approvals",analytics:"Analytics",learning:"Learning & feedback",history:"Historical estimates",playbook:"Industry playbook"}[view.page]||"Overview";}
 function render(){
  if(!model)return;
- const mapping={overview,copilot,projects,knowledge,service,quotes,work,suppliers,approvals,analytics,learning,history:historyView};
+ const mapping={overview,copilot,projects,knowledge,service,quotes,work,suppliers,approvals,analytics,learning,history:historyView,playbook};
  $("main").innerHTML=(mapping[view.page]||overview)(context());
  $("inspector").innerHTML=renderInspector(context());
  $("page-name").textContent=pageTitle();
@@ -36,7 +38,7 @@ function updateShell(){
  document.title="StrideBrain · "+pack.companyEn+" | SME Demo";
 }
 async function loadIndustry(id){
- const next=getPack(id),previous={pack,model,state,view,historyData};
+ const next=getPack(id),previous={pack,model,state,view,historyData,industryEvidence};
  $("main").innerHTML='<div class="loading-screen"><div class="loader-ring"></div><h2>Opening '+e(next.short)+'</h2><p>Connecting an industry pack to the shared operating workspace…</p></div>';
  try{
   const result=await fetch(next.dataset,{cache:"no-store"});if(!result.ok)throw Error("Dataset unavailable: "+result.status);
@@ -50,14 +52,21 @@ async function loadIndustry(id){
   const historyPack=await historyResponse.json();validateHistory(historyPack);
   const existing=new Set(seed.documents.map(d=>d.id));
   for(const document of historyPack.documents){if(!existing.has(document.id))seed.documents.push(document);}
+  const evidenceResult=await fetch("./seeds/taiwan-industry-evidence.json",{cache:"no-store"});
+  if(!evidenceResult.ok)throw Error("Curated Taiwan industry evidence unavailable: "+evidenceResult.status);
+  const curated=await evidenceResult.json();validateIndustryEvidence(curated);
+  const industryDocuments=curated.documents.filter(d=>d.industry===next.id);
+  for(const document of industryDocuments){
+    if(!existing.has(document.id)){seed.documents.push(document);existing.add(document.id);}
+  }
   const verified=new WorkspaceModel(seed,next);
-  pack=next;model=verified;historyData=historyPack;state=loadDemoState(pack);
+  pack=next;model=verified;historyData=historyPack;industryEvidence=curated;state=loadDemoState(pack);
   state.historyRequest=safeRequest(historyData,state.historyRequest||historicalDefaults(historyData));
-  view={page:"overview",projectId:pack.scenario.projectId,projectDetail:false,docId:null,quoteId:null,chat:[],search:"",filter:"all",pageIndex:0};
+  view={page:"overview",projectId:pack.scenario.projectId,projectDetail:false,docId:null,quoteId:null,chat:[],search:"",filter:"all",pageIndex:0,flowStep:null};
   const url=new URL(location.href);url.searchParams.set("industry",pack.id);history.replaceState({industry:pack.id},"",url);
   updateShell();render();toast(pack.name+" template loaded · "+model.seed.documents.length+" example source records.");
  }catch(error){
-  pack=previous.pack;model=previous.model;state=previous.state;historyData=previous.historyData;view=previous.view;
+  pack=previous.pack;model=previous.model;state=previous.state;historyData=previous.historyData;industryEvidence=previous.industryEvidence;view=previous.view;
   if(model){updateShell();render();toast("Could not load the selected industry: "+error.message);}
   else $("main").innerHTML='<div class="panel"><h2>Demo could not start</h2><p>'+e(error.message)+'</p><p>Try refreshing the preview. No live company data is involved.</p></div>';
  }
@@ -95,7 +104,8 @@ function perform(el){
  if(action==="nav"){view.projectDetail=false;setPage(value);}
  else if(action==="project"){
   const key=id||value;if(!model.project(key))return;view.projectId=key;view.projectDetail=true;setPage("projects");
- }else if(action==="projectBack"){view.projectDetail=false;render();}
+ }else if(action==="flowStep"){view.flowStep=value;render();}
+ else if(action==="projectBack"){view.projectDetail=false;render();}
  else if(action==="source")openSource(id);
  else if(action==="closeSource")closeSource();
  else if(action==="download")downloadSource(value);
