@@ -379,3 +379,26 @@ body{background:#f7f9f6;font-size:14px}
 .history-shortcut.imported{background:#e8f5ec;border-color:#a9d9ba}
 @media(max-width:800px){.intake-bridge-mapping-head{flex-direction:column;align-items:flex-start}.intake-bridge-mapping-head button{width:100%}}
 @media(max-width:500px){.intake-bridge-summary{grid-template-columns:1fr}.intake-bridge-evaluation{padding:12px}.history-shortcut.imported .action-stack{width:100%}}
+
+
+/* Internal GPT Copilot — optional, gated, synthetic-data-only */
+.copilot-mode-banner{display:flex;justify-content:space-between;align-items:center;gap:15px;background:#f3f9f5;border:1px solid #d9ebdf;border-radius:11px;padding:12px 15px;margin:10px 0 18px}
+.copilot-mode-banner>div{display:grid;gap:3px}
+.copilot-mode-banner strong{font-size:12px;color:#205e43}
+.copilot-mode-banner span{font-size:11px;color:#587364;line-height:1.5}
+.copilot-mode-banner button{white-space:nowrap}
+.copilot-operator-box{margin-top:22px;border:1px solid #dbe7de;background:#fff;border-radius:12px;overflow:hidden}
+.copilot-operator-box summary{cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:14px 17px;gap:12px;color:#536a5f;font-size:12px;font-weight:750;list-style:none}
+.copilot-operator-box summary::-webkit-details-marker{display:none}
+.copilot-operator-box summary:hover{background:#f7fbf8}
+.copilot-operator-inner{border-top:1px solid #e3eee6;padding:16px 17px}
+.copilot-operator-inner p{font-size:12px;line-height:1.7;color:#61756b}
+.copilot-operator-inner .form-field{max-width:520px}
+.copilot-operator-inner input{width:100%;min-height:42px}
+.copilot-gpt-prose{line-height:1.7;color:#33493c;font-size:13px}
+.copilot-gpt-prose p{margin-bottom:13px;white-space:normal;overflow-wrap:anywhere}
+.copilot-tool-sources{margin-top:15px;padding:13px 14px;background:#f4faf5;border:1px solid #deede2;border-radius:10px}
+.copilot-tool-sources strong{display:block;font-size:11px;color:#2a6549;margin-bottom:9px}
+.copilot-tool-sources .source-ref{margin:0 5px 6px 0}
+.copilot-operator-box:focus-within{border-color:#97cfad}
+@media(max-width:600px){.copilot-mode-banner{flex-direction:column;align-items:flex-start}.copilot-mode-banner button{width:100%}}
