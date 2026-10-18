@@ -40,7 +40,7 @@ export function copilot(c){
  if(empty){
   out+='<section class="sb-copilot-welcome">'+
    '<div class="sb-copilot-eyebrow"><span class="sb-brand-spark">✳</span> STRIDEBRAIN · '+e(p.companyEn.toUpperCase())+'</div>'+
-   '<h1>'+e(greeting)+', '+e(p.owner.split(" ")[0])+'.</h1>'+
+   '<h1>'+e(greeting)+', '+e(p.owner)+'.</h1>'+
    '<p>What can I help with across your '+e(p.short.toLowerCase())+' business today?</p>'+
    '</section>';
  }else{
