@@ -1,3 +1,4 @@
+import {evaluateReadiness} from "./readiness-rules.js";
 /**
  * StrideBrain demo domain engine.
  * Shared across vertical packs: no interior-design or print-shop conditionals here.
@@ -126,6 +127,9 @@ export function commitVariation(state,model){
  if(!assessment)return {ok:false,reason:"Record the current industry readiness assessment in Operational checks before releasing this change."};
  if(assessment.counts?.hold>0||assessment.status!=="READY_FOR_HUMAN_REVIEW")return {ok:false,reason:"The operational assessment still contains blocking information gaps; resolve them and record an updated assessment."};
  if(JSON.stringify(assessment.inputs)!==JSON.stringify(readiness.inputs))return {ok:false,reason:"The readiness inputs changed since the last recorded assessment; assess them again."};
+ const fresh=evaluateReadiness(model.pack.id,readiness.inputs);
+ if(fresh.counts.hold>0||fresh.status!=="READY_FOR_HUMAN_REVIEW")return {ok:false,reason:"The latest industry rules still find blocking issues. Recheck and record a fresh assessment."};
+ if(JSON.stringify(fresh.inputs)!==JSON.stringify(assessment.inputs)||JSON.stringify(fresh.checks.map(x=>x.status))!==JSON.stringify(assessment.checks?.map(x=>x.status)))return {ok:false,reason:"Readiness rules or entered facts have changed; redo the assessment before release."};
  v.committed=true;event(state,"Variation committed to demo work orders as "+model.pack.scenario.newWorkId);
  return {ok:true,workOrderId:model.pack.scenario.newWorkId};
 }
