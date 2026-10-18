@@ -303,7 +303,7 @@ document.addEventListener("change",ev=>{
 document.addEventListener("input",ev=>{
  if(!model)return;
  const input=ev.target.dataset.input;
- if(ev.target.id==="intake-review-note"){if(documentSession)documentSession.reviewNote=ev.target.value;return;}
+ if(ev.target.id==="intake-review-note"){if(documentSession){documentSession.reviewNote=ev.target.value;if(documentSession.report?.reviewed&&ev.target.value!==documentSession.report.reviewerNote){documentSession.report.reviewed=false;documentSession.report.reviewedAt=null;}}return;}
  if(input==="search"){
   const pos=ev.target.selectionStart||0;view.search=ev.target.value;view.pageIndex=0;
   render();const el=document.querySelector('[data-input="search"]');if(el){el.focus();try{el.setSelectionRange(pos,pos);}catch{}}
