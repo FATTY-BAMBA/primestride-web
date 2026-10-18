@@ -1,0 +1,6 @@
+﻿project_id,source,cost_item,sample_direct_cost_twd,vendor_verified
+PRJ-101,DOC-1010,Quartz slab supply,36000,NO
+PRJ-101,DOC-1010,Templating and fabrication,12000,NO
+PRJ-101,DOC-1010,Edge treatment and polishing,6000,NO
+PRJ-101,DOC-1010,Delivery and installation,6000,NO
+PRJ-101,DOC-1013,TOTAL SAMPLE DIRECT COST,60000,NO
