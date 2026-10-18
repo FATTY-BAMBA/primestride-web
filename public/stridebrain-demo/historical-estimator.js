@@ -40,9 +40,10 @@ export function safeRequest(data,input){
  const tier=allowTiers.has(input?.tier)?input.tier:data.defaults.tier;
  const location=allowLocations.has(input?.location)?input.location:data.defaults.location;
  const quantity=Math.max(1,Math.min(100000,Math.round(Number(input?.quantity)||data.defaults.quantity)));
- const margin=Math.max(0,Math.min(65,Number(input?.margin)??data.defaults.margin));
- const escalation=Math.max(0,Math.min(30,Number(input?.escalation)??data.defaults.escalation));
- const contingency=Math.max(0,Math.min(25,Number(input?.contingency)??data.defaults.contingency));
+ const numberOr=(v,fallback)=>v===undefined||v===null||v===""||!Number.isFinite(Number(v))?fallback:Number(v);
+ const margin=Math.max(0,Math.min(65,numberOr(input?.margin,data.defaults.margin)));
+ const escalation=Math.max(0,Math.min(30,numberOr(input?.escalation,data.defaults.escalation)));
+ const contingency=Math.max(0,Math.min(25,numberOr(input?.contingency,data.defaults.contingency)));
  const rawScopes=Array.isArray(input?.scope)?input.scope:data.defaults.scope;
  const scope=[...new Set(rawScopes.filter(code=>allowCodes.has(code)))];
  return {category:cat,tier,location,quantity,margin,escalation,contingency,scope,inquiry:String(input?.inquiry||"").slice(0,1200)};
