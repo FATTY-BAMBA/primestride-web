@@ -170,3 +170,49 @@ body{background:#f7f9f6;font-size:14px}
 .history-quote-summary p{font-size:12px;color:#506e5c;margin:0;line-height:1.55}
 .history-quote-summary button{flex:none}
 @media(max-width:600px){.history-quote-summary{flex-direction:column;align-items:start}.history-quote-summary button{width:100%}}
+
+
+/* Evidence-based Taiwanese industry playbook — public references clearly separated */
+.playbook-notice{display:grid;gap:6px;border:1px solid #d6e6da;background:#eff7f0;color:#335f4c;padding:14px 17px;border-radius:12px;font-size:12px;line-height:1.65}
+.playbook-notice strong{font-size:13px}
+.playbook-layout{display:grid;grid-template-columns:minmax(245px,.76fr) minmax(0,1.24fr);align-items:stretch;gap:15px}
+.playbook-steps{display:flex;flex-direction:column;gap:6px}
+.playbook-step{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid #e0e8e1;border-radius:11px;padding:12px;text-align:left;color:#315145;min-height:55px}
+.playbook-step:hover,.playbook-step.selected{background:#f0f8f1;border-color:#96cbb1}
+.playbook-step.selected{box-shadow:inset 3px 0 0 #0d8067}
+.playbook-step-num{height:31px;width:31px;flex:none;border-radius:9px;background:#eef5f0;display:grid;place-items:center;color:#1e7c61;font:800 11px ui-monospace,monospace}
+.playbook-step span:nth-child(2){min-width:0;flex:1}
+.playbook-step strong{display:block;font-size:12px;line-height:1.35}
+.playbook-step small{display:block;color:#86958a;font-size:10px;margin-top:3px}
+.playbook-step-chevron{color:#8eb29c}
+.playbook-detail{background:#fff;border:1px solid #dde8df;border-radius:14px;padding:24px;box-shadow:0 4px 17px rgba(21,42,27,.025)}
+.playbook-detail h2{font-size:24px;margin:0 0 20px}
+.playbook-detail h3{font-size:13px;margin:17px 0 8px}
+.playbook-detail-section{padding:12px 0;border-bottom:1px solid #e8efe9}
+.playbook-detail-section span{font-weight:800;font-size:11px;color:#157c60}
+.playbook-detail-section p{margin:6px 0 0;color:#50645a;font-size:13px;line-height:1.6}
+.playbook-evidence{display:flex;align-items:center;gap:9px;width:100%;padding:11px 10px;background:#f8fbf8;border:1px solid #e0ece3;border-radius:9px;text-align:left;margin:7px 0;color:#244a39}
+.playbook-evidence:hover{border-color:#a4d0b6;background:#eff8f1}
+.playbook-evidence-symbol{background:#deefe5;color:#257e5b;width:29px;height:29px;border-radius:8px;display:grid;place-items:center;flex:none}
+.playbook-evidence>span:nth-child(2){min-width:0;flex:1}.playbook-evidence strong{font-size:12px;display:block}.playbook-evidence small{display:block;color:#7a9280;font-size:10px;margin-top:3px}.playbook-evidence b{color:#17785a}
+.playbook-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-bottom:14px}
+.playbook-metrics div{border-radius:10px;padding:13px 15px;border:1px solid #e5ece5;background:#fff}
+.playbook-metrics strong{display:block;font-family:Manrope,sans-serif;font-size:24px;letter-spacing:-.04em}.playbook-metrics span{display:block;font-size:11px;color:#74877c}
+.playbook-card-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.playbook-reference-card{border:1px solid #e1eae3;background:#fff;border-radius:12px;padding:17px;min-width:0;display:flex;flex-direction:column}
+.playbook-reference-head{display:flex;justify-content:space-between;gap:7px;align-items:center;color:#87978b;font-size:10px}
+.playbook-type{font-size:9px;font-weight:800;color:#2b7860;background:#eaf7ef;border-radius:6px;padding:5px 7px}
+.playbook-reference-card h3{font-size:15px;margin:15px 0 3px}
+.playbook-reference-card .playbook-english{font-size:11px;color:#68816d;margin:0 0 9px;font-weight:700}
+.playbook-reference-card p:not(.playbook-english){font-size:12px;line-height:1.6;color:#52695d}
+.playbook-reference-footer{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:auto;padding-top:11px;border-top:1px solid #eaf0eb}
+.playbook-reference-footer small{font-size:10px;color:#8a9a8c}
+.playbook-cta{border:1px solid #d4e8dc;border-radius:13px;padding:18px 19px;background:linear-gradient(105deg,#eff8f0,#f6faf6);display:flex;justify-content:space-between;align-items:center;gap:20px}
+.playbook-cta h3{font-size:17px;margin:5px 0}.playbook-cta p{font-size:12px;color:#587267;margin:0}
+.doc-origin{font-size:9px;font-weight:800;letter-spacing:.03em;display:inline-block;margin-top:4px}
+.doc-origin.public{color:#146e53}.doc-origin.synthetic{color:#8d8d79}
+.source-original{display:inline-flex;align-items:center;gap:5px;margin:12px 0 6px;color:#067d61;text-decoration:underline;font-size:12px;font-weight:700}
+.source-original:hover{color:#055940}
+@media(max-width:1100px){.playbook-layout{grid-template-columns:1fr}.playbook-steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.playbook-card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.playbook-steps,.playbook-card-grid{grid-template-columns:1fr}.playbook-cta{flex-direction:column;align-items:start}.playbook-cta button{width:100%}.playbook-detail{padding:16px}}
+@media(max-width:420px){.playbook-metrics{grid-template-columns:1fr}}
