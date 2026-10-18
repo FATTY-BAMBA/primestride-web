@@ -9,19 +9,26 @@ import {readinessView} from "./views-readiness.js";
 import {documentIntelligenceView} from "./views-document-intelligence.js";
 import {extractDocument,reviewCandidate,editCandidate,approveDocument,reviewReportMarkdown} from "./document-intelligence.js";
 import {sampleFile} from "./sample-documents.js";
+import {historyBridgeSection} from "./views-history-bridge.js";
+import {bridgeDefaults,createSandboxPrecedent,attachSandboxPrecedent,detachSandboxPrecedent,suggestCostCodes} from "./document-history-bridge.js";
 import {getReadinessPack,initialReadiness,normalizeReadinessInput,evaluateReadiness,validateReadinessSources} from "./readiness-rules.js";
 import {validateIndustryEvidence} from "./industry-evidence.js";
 import {validateHistory,historicalDefaults,safeRequest,historicalEstimate,estimateMarkdown} from "./historical-estimator.js";
 const $=id=>document.getElementById(id);
 const requested=new URLSearchParams(location.search).get("industry")||"interior";
-let pack=getPack(requested),model=null,state=null,historyData=null,industryEvidence=null,documentSession=null,toastHandle=null;
+let pack=getPack(requested),model=null,state=null,historyData=null,industryEvidence=null,documentSession=null,toastHandle=null,documentLoadVersion=0;
 let view={page:"overview",projectId:null,projectDetail:false,docId:null,quoteId:null,chat:[],search:"",filter:"all",pageIndex:0,flowStep:null};
 function toast(message){
  const el=$("toast");el.textContent=message;el.classList.add("visible");
  if(toastHandle)clearTimeout(toastHandle);toastHandle=setTimeout(()=>el.classList.remove("visible"),3500);
 }
 function context(){return {model,pack,state,view,history:historyData,industryEvidence,documentSession};}
-function save(){if(!saveDemoState(pack,state))toast("Browser storage unavailable. Changes may not survive a refresh.");}
+function save(){
+ // A user-opened document or derived source must never leak into persistent localStorage.
+ // Imported cost sources, imported quote drafts and inquiry metadata stay tab-only.
+ const sanitized=documentSession?.imported&&historyData?{...state,historyRequest:historicalDefaults(historyData),historyDraft:null}:state;
+ if(!saveDemoState(pack,sanitized))toast("Browser storage unavailable. Changes may not survive a refresh.");
+}
 function setPage(page,reset=true){
  view.page=page;if(reset){view.search="";view.filter="all";view.pageIndex=0;}
  render();window.scrollTo({top:0,behavior:"smooth"});
@@ -30,7 +37,7 @@ function pageTitle(){return view.page==="projects"?pack.projectLabel:view.page==
 function render(){
  if(!model)return;
  const mapping={overview,copilot,projects,knowledge,service,quotes,work,suppliers,approvals,analytics,learning,history:historyView,playbook,readiness:readinessView,intake:documentIntelligenceView};
- $("main").innerHTML=(mapping[view.page]||overview)(context());
+ $("main").innerHTML=(mapping[view.page]||overview)(context())+(view.page==="intake"?historyBridgeSection(context()):"");
  $("inspector").innerHTML=renderInspector(context());
  $("page-name").textContent=pageTitle();
  document.querySelectorAll(".sidebar [data-action='nav']").forEach(b=>b.classList.toggle("active",b.dataset.value===view.page));
@@ -43,6 +50,7 @@ function updateShell(){
  document.title="StrideBrain · "+pack.companyEn+" | SME Demo";
 }
 async function loadIndustry(id){
+ documentLoadVersion++; // cancel any in-flight local file parsing on industry switch
  const next=getPack(id),previous={pack,model,state,view,historyData,industryEvidence,documentSession};
  $("main").innerHTML='<div class="loading-screen"><div class="loader-ring"></div><h2>Opening '+e(next.short)+'</h2><p>Connecting an industry pack to the shared operating workspace…</p></div>';
  try{
@@ -114,16 +122,29 @@ function downloadLocal(file){
  link.href=url;link.download=file.filename;document.body.appendChild(link);link.click();link.remove();
  setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
+function detachImported(){
+ const current=documentSession?.imported;
+ if(!current||!historyData||!model)return;
+ detachSandboxPrecedent(historyData,model,current.record.id);
+ if(view.docId===current.document.id)view.docId=null;
+ documentSession.imported=null;
+ state.historyDraft=null;
+ save();
+}
 async function handleDocument(file){
  if(!file||!model)return;
- documentSession={loading:true,error:null,report:null,reviewNote:""};
+ detachImported();
+ const run=++documentLoadVersion,sourceIndustry=pack.id;
+ documentSession={loading:true,error:null,report:null,reviewNote:"",bridgeForm:null,imported:null};
  setPage("intake");
  try{
   const report=await extractDocument(file);
-  documentSession={loading:false,error:null,report,reviewNote:""};
+  if(run!==documentLoadVersion||pack.id!==sourceIndustry)return;
+  documentSession={loading:false,error:null,report,reviewNote:"",bridgeForm:bridgeDefaults(report,historyData,pack.id),imported:null};
   render();toast("Extracted local file. Review every source value before using it.");
  }catch(err){
-  documentSession={loading:false,error:String(err?.message||err),report:null,reviewNote:""};
+  if(run!==documentLoadVersion||pack.id!==sourceIndustry)return;
+  documentSession={loading:false,error:String(err?.message||err),report:null,reviewNote:"",bridgeForm:null,imported:null};
   render();toast("Unable to read file. Check the source or try a fictional sample.");
  }
 }
@@ -136,16 +157,17 @@ function perform(el){
   try{downloadLocal(sampleFile(pack.id,value));toast("Fictional "+value.toUpperCase()+" sample downloaded. Select it in Document Intelligence to test.");}
   catch(err){toast("Cannot create sample: "+err.message);}
  }else if(action==="intakeClear"){
-  if(documentSession?.report&&!confirm("Clear the extracted document and local review? The upload is not stored."))return;
-  documentSession=null;render();toast("Local document cleared from the session.");
+  if(documentSession?.report&&!confirm("Clear the extracted document and any linked temporary cost precedent?"))return;
+  documentLoadVersion++;detachImported();
+  documentSession=null;render();toast("Local document and any derived precedent cleared from this tab.");
  }else if(action==="intakeRow"){
   const report=documentSession?.report;if(!report)return;
-  const result=reviewCandidate(report,id,value);
-  if(result.ok){render();toast("Line item review decision recorded in this tab.");}else toast(result.reason);
+  detachImported();const result=reviewCandidate(report,id,value);
+  if(result.ok){documentSession.bridgeForm=bridgeDefaults(report,historyData,pack.id);render();toast("Line item review decision recorded in this tab.");}else toast(result.reason);
  }else if(action==="intakeApprove"){
   const report=documentSession?.report;if(!report)return;
-  const result=approveDocument(report,documentSession?.reviewNote||"");
-  if(result.ok){render();toast(result.mode==="TEXT_EXTRACTION_REVIEW"?"Text extraction reviewed; no quotation was generated.":"Extracted cost draft reviewed locally. No customer quote was sent.");}
+  detachImported();const result=approveDocument(report,documentSession?.reviewNote||"");
+  if(result.ok){documentSession.bridgeForm=bridgeDefaults(report,historyData,pack.id);render();toast(result.mode==="TEXT_EXTRACTION_REVIEW"?"Text extraction reviewed; no quotation was generated.":"Extracted cost draft reviewed locally. No customer quote was sent.");}
   else toast(result.reason);
  }else if(action==="intakeExport"){
   const report=documentSession?.report;
@@ -154,6 +176,27 @@ function perform(el){
   const filename="StrideBrain-"+pack.id+"-reviewed-extraction.md";
   downloadLocal({filename,type:"text/markdown;charset=utf-8",bytes:new TextEncoder().encode(content)});
   toast("Reviewed extraction exported with original source references.");
+ }else if(action==="bridgeSuggest"){
+   const report=documentSession?.report;if(!report?.reviewed)return;
+   const form=documentSession.bridgeForm||bridgeDefaults(report,historyData,pack.id);
+   form.codeMapping={...form.codeMapping,...suggestCostCodes(report,historyData,pack.id)};
+   documentSession.bridgeForm=form;render();
+   toast("Cost categories suggested from line descriptions. Verify every mapping.");
+ }else if(action==="bridgeCommit"){
+   const report=documentSession?.report,form=documentSession?.bridgeForm;
+   if(!report||!form){toast("Review a document first.");return;}
+   const result=createSandboxPrecedent(report,historyData,form);
+   if(!result.ok){toast(result.issues?.[0]||"Cannot create sandbox precedent.");render();return;}
+   const attached=attachSandboxPrecedent(historyData,model,result);
+   if(!attached.ok){toast(attached.reason);return;}
+   documentSession.imported=result;
+   state.historyRequest=safeRequest(historyData,{...state.historyRequest,category:form.category,tier:form.tier,location:form.location,quantity:form.jobQuantity,scope:result.record.scope,inquiry:""});
+   state.historyDraft=null;
+   event(state,"A fictional browser-only completed-cost example was added after manual review.");
+   save();setPage("history");
+   toast("Temporary sandbox precedent added. Not a verified real-world cost.");
+ }else if(action==="bridgeRemove"){
+   detachImported();render();toast("Session-only historical example removed. Original upload remains in the tab until cleared.");
  }else if(action==="flowStep"){view.flowStep=value;render();}
  else if(action==="readinessReset"){
    state.readiness.inputs=initialReadiness(pack.id);state.readiness.assessment=null;
@@ -259,7 +302,7 @@ document.addEventListener("submit",ev=>{
 });
 document.addEventListener("change",ev=>{
  if(ev.target.id==="intake-currency"){
-  if(documentSession?.report){documentSession.report.currencyConfirmed=ev.target.checked;documentSession.report.reviewed=false;documentSession.report.reviewedAt=null;render();}
+  if(documentSession?.report){detachImported();documentSession.report.currencyConfirmed=ev.target.checked;documentSession.report.reviewed=false;documentSession.report.reviewedAt=null;render();}
   return;
  }
  if(ev.target.id==="intake-file"){
@@ -267,10 +310,19 @@ document.addEventListener("change",ev=>{
  }
  if(ev.target.hasAttribute("data-intake-value")){
   const itemId=ev.target.getAttribute("data-intake-value"),field=ev.target.dataset.field;
-  const result=editCandidate(documentSession?.report,itemId,field,ev.target.value);
-  if(result.ok){render();toast("Value updated as an explicit human edit; source amount is unchanged.");}
+  detachImported();const result=editCandidate(documentSession?.report,itemId,field,ev.target.value);
+  if(result.ok){documentSession.bridgeForm=bridgeDefaults(documentSession.report,historyData,pack.id);render();toast("Value updated as an explicit human edit; source amount is unchanged.");}
   else toast(result.reason);
   return;
+ }
+ if(ev.target.hasAttribute("data-bridge")){
+   if(!documentSession?.report)return;
+   const key=ev.target.dataset.bridge,form=documentSession.bridgeForm||bridgeDefaults(documentSession.report,historyData,pack.id);
+   detachImported();
+   if(key==="codeMapping")form.codeMapping[ev.target.dataset.lineId]=ev.target.value;
+   else if(["acknowledged","scopeComplete","sourceExplained"].includes(key))form[key]=ev.target.checked;
+   else form[key]=ev.target.value;
+   documentSession.bridgeForm=form;render();return;
  }
  if(ev.target.id==="industry-switcher"){loadIndustry(ev.target.value);return;}
  if(!model)return;
@@ -303,7 +355,14 @@ document.addEventListener("change",ev=>{
 document.addEventListener("input",ev=>{
  if(!model)return;
  const input=ev.target.dataset.input;
- if(ev.target.id==="intake-review-note"){if(documentSession){documentSession.reviewNote=ev.target.value;if(documentSession.report?.reviewed&&ev.target.value!==documentSession.report.reviewerNote){documentSession.report.reviewed=false;documentSession.report.reviewedAt=null;}}return;}
+ if(ev.target.id==="intake-review-note"){if(documentSession){if(documentSession.imported)detachImported();documentSession.reviewNote=ev.target.value;if(documentSession.report?.reviewed&&ev.target.value!==documentSession.report.reviewerNote){documentSession.report.reviewed=false;documentSession.report.reviewedAt=null;}}return;}
+ if(ev.target.hasAttribute("data-bridge")){
+   if(!documentSession?.report)return;
+   const key=ev.target.dataset.bridge;
+   if(!["title","excludedReason"].includes(key))return;
+   const form=documentSession.bridgeForm||bridgeDefaults(documentSession.report,historyData,pack.id);
+   form[key]=ev.target.value;documentSession.bridgeForm=form;return;
+ }
  if(input==="search"){
   const pos=ev.target.selectionStart||0;view.search=ev.target.value;view.pageIndex=0;
   render();const el=document.querySelector('[data-input="search"]');if(el){el.focus();try{el.setSelectionRange(pos,pos);}catch{}}
