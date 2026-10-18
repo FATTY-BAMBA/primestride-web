@@ -85,3 +85,17 @@ The platform must use the same code for both packs. Industry-specific language a
 
 ## Historical quote milestone (2026-10-18)
 The same historical cost engine is now used by both industry packs. It matches cost-complete synthetic past jobs by category, tier, quantity, recency and location; calculates from normalized actual-cost example lines; excludes quote-only records; rejects inadequate history; applies explicit escalation/contingency/margin; creates a browser-local reviewed draft. It cannot produce valid real prices without current suppliers and actual completed-job costs. See HISTORICAL_QUOTATION_ENGINE.md and HISTORICAL_ESTIMATOR_QA.md.
+
+
+## Research evidence and organization accounts (2026-10-18)
+- Verified 15 public Taiwan reference sources, with 25 original paraphrased industry knowledge notes and 18 modelled stages.
+- Cited references are clearly distinguished from the two synthetic company datasets and historical cost examples.
+- Real estate/renovation regulations are scoped by their actual legal applicability; individual company compliance and registration require professional verification.
+- Printing PDF, bleed, fonts and resolution examples belong to individual providers; they are not national standards applying automatically to all print vendors.
+- Industry Playbook shows inputs, outputs, review gates and links to original public publishers and source locators.
+- Copilot can route selected Taiwan practice questions to source-linked answers with applicability warnings; it remains deterministic and not an LLM.
+- Original public sources appear in the Knowledge Hub, with buttons to open the issuing authority/publisher.
+- Private company accounts are explicitly a future authenticated organization/membership model, separate from the switchable public demo; see ADR_004_ORG_ACCOUNTS_AND_TENANCY.md.
+- Taiwan source-level smoke test: 26 screens + 8 additional checks passed, but authenticated browser UX, PDF/Excel ingestion, production permissions, true AI and security tests are not complete.
+
+See TAIWAN_FIELD_RESEARCH_AND_DEMO_SPEC.md and the live source registry public/stridebrain-demo/seeds/taiwan-industry-evidence.json.
