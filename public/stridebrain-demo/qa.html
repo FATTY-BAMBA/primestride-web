@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>StrideBrain · Demo QA Smoke Tests</title>
+<style>
+:root{color-scheme:light}*{box-sizing:border-box}body{background:#f5f8f4;color:#173a2e;font:14px system-ui,sans-serif;margin:0}
+main{max-width:990px;margin:42px auto;padding:0 22px 70px}.label{color:#128261;font-size:11px;letter-spacing:.14em;font-weight:800}
+h1{letter-spacing:-.06em;font-size:36px;margin:9px 0}p{color:#668075;line-height:1.65}.summary{border:1px solid #cfe4d5;background:#eaf5ec;padding:20px;border-radius:13px;margin:20px 0}.summary strong{font-size:26px}.summary small{display:block}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.panel{padding:20px;border:1px solid #dfe9e0;border-radius:13px;background:white}
+.test{display:flex;gap:9px;align-items:flex-start;border-bottom:1px solid #ebefea;padding:10px 0;font-size:12px}
+.test:last-child{border:0}.icon{height:20px;width:20px;border-radius:50%;display:grid;place-items:center;flex:none;background:#eee;color:#666;font-weight:900}
+.pass .icon{background:#e3f4e8;color:#0c7851}.fail .icon{background:#fae4e3;color:#ab403b}
+a{color:#0c7757}code{font-size:12px}button{border:1px solid #aad1b5;border-radius:9px;padding:9px 13px;background:#e4f2e8;cursor:pointer;color:#164c34;font-weight:800}button:hover{background:#d5e9db}
+@media(max-width:720px){.grid{grid-template-columns:1fr}h1{font-size:27px}main{margin:24px auto}}
+</style></head><body><main><div class="label">PRIMESTRIDE AI · DEVELOPMENT UTILITIES</div>
+<h1>StrideBrain demo smoke checks</h1>
+<p>Runs source and workflow checks against the actual static files served by this deployment. This is a <strong>synthetic demo QA harness</strong>, not an enterprise security audit, UI accessibility test, or validation of customer pricing.</p>
+<div class="summary"><strong id="summary">Running…</strong><small id="meta">Loading seed data, modules and sample files</small></div>
+<div style="display:flex;gap:10px;align-items:center;margin-bottom:19px"><button id="rerun" type="button">Run checks again</button><a href="./index.html?industry=interior">Return to StrideBrain ↗</a></div>
+<div class="grid"><section class="panel"><h2>Interior design</h2><div id="interior" aria-live="polite"></div></section><section class="panel"><h2>Printing</h2><div id="printing" aria-live="polite"></div></section></div>
+<p style="margin-top:20px">Every check must be repeated later against a real authenticated backend, tenant permissions, document import service, production quote engine, and actual industry pilot.</p>
+</main><script type="module" src="./qa.js"></script></body></html>
