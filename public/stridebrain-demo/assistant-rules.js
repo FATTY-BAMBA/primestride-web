@@ -1,6 +1,7 @@
 import {money,calculateVariation,escapeHtml as e} from "./core-model.js";
 import {button,source,sources,documentRow} from "./ui-shared.js";
 import {referenceForPrompt} from "./industry-evidence.js";
+import {evaluateReadiness,initialReadiness} from "./readiness-rules.js";
 /**
  * Deterministic explainability examples — not an actual AI agent.
  * A production LLM would route to typed tools, verify claims and cite permission-filtered evidence.
@@ -16,6 +17,18 @@ export function exampleAnswer(prompt,c){
   const h=c.history,ref=h?.records.filter(x=>x.status==="COMPLETE").slice(0,3).map(x=>x.sourceDocId)||[];
   const body='<p>Use comparable completed work, normalized cost lines, explicit price adjustments, and human approval to prepare a source-linked new estimate. The current precedents are fictional sample jobs.</p>'+relevant(ref);
   return {sources:ref,html:wrap("Historical Quotation Intelligence",body,actions(button("Review similar projects ↗","nav","history","button-primary")))};
+ }
+ if(/ready to|ready for|can we (start|proceed|release|print)|what.{0,40}(missing|blocking|ready)|release (the )?(job|project|press)|檢核結果|缺少什麼|可以開工|可否印刷|印前準備|施工前|進場前|準備好了/.test(question)){
+  const report=evaluateReadiness(p.id,s.readiness?.inputs||initialReadiness(p.id));
+  const latest=s.readiness?.assessment;
+  const counted=latest&&JSON.stringify(latest.inputs)===JSON.stringify(report.inputs);
+  const issues=report.checks.filter(x=>x.status==="hold");
+  const cited=[...new Set(issues.slice(0,3).flatMap(x=>x.sourceIds))];
+  let body='<p>Based on manually entered <strong>fictional job conditions</strong>, this '+e(p.itemLabel)+' has <strong>'+report.counts.hold+' blocking evidence gaps</strong> and '+report.counts.review+' additional review flags. '+e(report.message)+'</p>';
+  body+='<div class="pulse-grid"><div class="pulse-item"><strong>'+report.counts.pass+'</strong><small>Recorded as checked</small></div><div class="pulse-item"><strong>'+report.counts.hold+'</strong><small>Blocking gaps</small></div><div class="pulse-item"><strong>'+report.counts.review+'</strong><small>Expert/process review</small></div></div>';
+  body+=issues.slice(0,3).map(x=>'<div class="prio-row"><div class="prio-main"><div class="prio-title">'+e(x.title)+'</div><div class="prio-sub">'+e(x.nextAction)+'</div></div>'+source(x.sourceIds[0])+'</div>').join("");
+  body+='<p class="disclosure">'+(counted?'A browser-local screening has been recorded.':'This is a preview; the screening is not yet recorded.')+' No actual building review or print-file preflight was performed.</p>'+relevant(cited);
+  return {sources:cited,html:wrap("Operational release readiness",body,actions(button("Review all checks ↗","nav","readiness","button-primary"),button("View linked work","nav","work","button-outline")))};
  }
  if(c.industryEvidence&&(
    (p.id==="interior"&&/permit|regulation|regulatory|renovation rules|building rules|code compliance|fire.safety|registered|licensed|contract form|drawing revision|completion inspection|裝修法規|室內裝修|室內設計法規|圖說|申請|驗收|建築法|契約範本|防火|證照/.test(question))
