@@ -108,11 +108,11 @@ export function evaluateReadiness(industry,raw){
   add("supplier",matches(value.supplierStatus,"written")?"pass":"hold",
    matches(value.supplierStatus,"written")?"A written supplier offer is recorded as checked, not fetched from a live API.":"Historical or illustrative supplier costs are insufficient for a customer commitment.",
    "Confirm actual cost, material suitability and availability directly with the supplier.");
-  add("fire",matches(value.fireImpact,"no")?"pass":matches(value.fireImpact,"yes")?"hold":"review",
+  add("fire",matches(value.fireImpact,"no")?"pass":"hold",
    value.fireImpact==="yes"?"The work may affect fire-safety or escape systems. Refer it to appropriately qualified parties; this form cannot clear that impact.":value.fireImpact==="unknown"?"Fire/escape impacts have not been assessed.":"The declared scope indicates no known change to fire/escape systems; this is a manual record, not technical certification.",
    "Have the responsible professional review escape and fire-protection implications.");
   const complex=value.changeType!=="countertop";
-  add("regulatory",value.professionalReview==="documented"?"review":complex?"hold":"review",
+  add("regulatory",value.professionalReview==="documented"?"review":"hold",
    value.professionalReview==="documented"?"A professional review is recorded. Follow its documented outcome and any required authority process; no permit decision is made here.":complex?"The selected scope may fall under regulated renovation activities. A professional must assess the current Taiwan and local requirements.":"Even an apparently minor surface change requires scope confirmation; do not infer blanket legal exemption.",
    "Record the qualified professional's applicability assessment and any required authority decision.");
   add("schedule",value.scheduleReview==="reviewed"?"pass":"hold",
@@ -122,7 +122,7 @@ export function evaluateReadiness(industry,raw){
    value.clientConsent==="written"?"Written customer acceptance is recorded in the example.":"The customer has not approved the revised scope and cost in writing.",
    "Attach the signed change order before work release.");
  }else{
-  add("format",value.fileFormat==="pdf"?"pass":value.fileFormat==="unknown"?"hold":"review",
+  add("format",value.fileFormat==="pdf"?"pass":"hold",
    value.fileFormat==="pdf"?"Manually declared PDF format matches the cited vendor's suggested handoff.":"The cited vendor's guidance describes PDF delivery; other formats need that provider's explicit confirmation.",
    "Request an agreed, production-ready PDF version.");
   const expectedW=297+2*value.bleedMm,expectedH=420+2*value.bleedMm;
