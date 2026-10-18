@@ -4,7 +4,7 @@
 ## Automated source-level checks completed
 - [x] 13 shared modules compiled as pure source checks, no syntax exceptions.
 - [x] 14 screens per industry rendered in source-level V8 checks.
-- [x] Interior checks: 7 results, 5 initial blockers, 2 review flags; valid synthetic scenario with 0 holds.
+- [x] Interior checks: 7 results, 7 initial blockers, 0 review flags; valid synthetic scenario with 0 holds.
 - [x] Printing checks: 8 results, 6 initial blockers, 1 review flag; valid example with 0 holds.
 - [x] All readiness check citations resolve to industry or public evidence documents.
 - [x] Fixed partition/fire impact scenario remains blocked pending qualified assessment.
@@ -35,3 +35,8 @@
 
 ## Boundaries and still-missing platform capabilities
 No real user-account service, tenant database, PDF/Excel upload parser, AI inference, supplier API, authorized LINE/email send, actual industrial equipment integration, invoice tracking or server-side audit logs yet. All example approvals are simulated and should NOT be treated as professional certifications.
+
+## Safety tightening
+- [x] Missing fire/escape assessment and missing professional applicability determination are HARD blockers in the interior scenario.
+- [x] Engine re-evaluates industry rules at change-release time, rather than trusting an old locally saved green status.
+- [x] Demo linked review tasks remain blocked until a current assessment has zero holds.
