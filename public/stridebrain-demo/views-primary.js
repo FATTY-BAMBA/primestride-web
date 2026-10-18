@@ -2,6 +2,8 @@ import {money,escapeHtml as e} from "./core-model.js";
 import {badge,button,source,sources,metric,heading,section,tag,recordCard,documentRow,quoteTable} from "./ui-shared.js";
 import {sourceUrlForDocument} from "./industry-evidence.js";
 import {getReadinessPack} from "./readiness-rules.js";
+import {MODEL_CATALOG,DEFAULT_MODEL_ID,findAllowedModel} from "./model-catalog.js";
+import {quickActionsFor,ideasFor} from "./copilot-suggestions.js";
 export function overview(c){
  const {model:m,pack:p,state:s}=c,sm=m.summary(s),open=m.approvals(s).filter(a=>a.status==="Pending").slice(0,3);
  let out='<section class="brief-header"><div class="suite-eyebrow">BUSINESS PULSE · '+e(p.companyEn)+'</div><h1>Know what matters.<br>Move work forward.</h1><p>'+e(p.companyLine)+' '+e(p.outcomeLine)+'</p><div class="brief-actions">'+button("Ask StrideBrain ↗","nav","copilot","button-primary")+'<span class="brief-date">'+e(p.dateLabel)+'</span></div></section>';
@@ -17,19 +19,82 @@ export function overview(c){
 }
 export function copilot(c){
  const {pack:p,view:v,copilotSession:session={}}=c;
- const mode=session.mode==="gpt"?"gpt":"sample",connected=!!session.connected,busy=!!session.busy;
- const status=mode==="gpt"?(connected?"GPT connected · Read-only synthetic data":"Staff GPT requested · Connection not verified"):"Deterministic demo · No model connected";
- let out=heading("StrideBrain Copilot","Ask ordinary questions about company knowledge and operations. Follow-up conversations are supported when the staff GPT service is available.",tag(status),"OPERATIONS INTELLIGENCE");
- out+='<div class="copilot-mode-banner"><div><strong>'+(mode==="gpt"?"GPT staff preview":"Reliable sample mode")+'</strong><span>'+(mode==="gpt"?"Optional model reasoning + bounded read-only business tools, using fictional records only.":"Rule-based source-linked sample answers remain available without an API connection.")+'</span></div>'+(mode==="gpt"?button("Return to sample mode","disableGpt","","button-outline"):'')+'</div>';
- if(!v.chat.length)out+='<div class="copilot-centered"><div class="copilot-logo">✦</div><h1>How can I help your team?</h1><p>Ask about projects, quotations, priorities, suppliers, or company guidance. When using the authorized GPT preview, follow-up questions retain a bounded conversation history.</p></div>';
- out+='<div class="conversation">'+v.chat.map((msg,i)=>msg.role==="user"?'<div class="chat-message">'+e(msg.text)+'</div>':'<div class="chat-answer"><div class="chat-answer-head">✦ STRIDEBRAIN · '+(msg.mode==="gpt"?"GPT / SYNTHETIC TOOLS":"DETERMINISTIC SAMPLE")+'</div>'+msg.html+(msg.pending?'':'<div class="feedback-row"><span class="disclosure">Was this answer useful?</span><span><button type="button" class="feedback-btn" data-action="feedback" data-kind="Helpful" data-index="'+i+'">✓ Helpful</button> <button type="button" class="feedback-btn" data-action="feedback" data-kind="Needs review" data-index="'+i+'">⚑ Needs review</button></span></div>')+'</div>').join("")+'</div>';
- out+='<form id="ask-form" class="quick-command"><span style="font-size:20px;color:var(--mint)">✦</span><input aria-label="Ask the company knowledge base" placeholder="'+e(p.cue)+'" autocomplete="off" '+(busy?"disabled":"")+'><button type="submit" class="button-primary" '+(busy?"disabled":"")+'>'+(busy?"Thinking…":"Ask ↗")+'</button></form>';
- out+='<div class="suggest-line">'+p.promptSuggestions.map(t=>'<button type="button" data-action="ask" data-prompt="'+e(t)+'" '+(busy?"disabled":"")+'>'+e(t)+'</button>').join("")+'</div>';
- if(mode!=="gpt"){
-  out+='<details class="copilot-operator-box"><summary><span>Internal staff option: GPT-powered conversational preview</span><span>▾</span></summary><div class="copilot-operator-inner"><p>This internal-only feature is disabled by default. A server administrator must configure a protected preview endpoint and OpenAI API key. Never enter an OpenAI API key here: this field accepts only the <strong>internal demo operator access token</strong> from your deployment administrator.</p><label for="copilot-access-token" class="form-field">Internal demo access token<input type="password" id="copilot-access-token" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Not an OpenAI API key"></label><div class="action-stack">'+button("Try authorized GPT mode ↗","enableGpt","","button-secondary")+'</div><p class="disclosure">Only use fictional/sanitized questions. GPT mode sends your messages to a server-side AI provider. This is NOT tenant-authenticated and it has no permission to send messages or change business records.</p></div></details>';
+ const isConnectedMode=session.mode==="gpt",connected=!!session.connected,busy=!!session.busy;
+ const empty=v.chat.length===0,model=findAllowedModel(session.selectedModelId)||findAllowedModel(DEFAULT_MODEL_ID);
+ const menuOpen=!!session.modelMenuOpen&&!busy;
+ const greetingHour=new Date().getHours();
+ const greeting=greetingHour<12?"Good morning":greetingHour<17?"Good afternoon":"Good evening";
+ const displayStatus=isConnectedMode?(connected?"Connected · Read-only synthetic records":"Staff AI requested · Connection not yet verified"):"Sample mode · No AI provider call";
+ const brandLabel=isConnectedMode?"STAFF AI COPILOT":"DETERMINISTIC EXAMPLE COPILOT";
+ const quick=quickActionsFor(p.id),ideas=ideasFor(p.id);
+ const hideIfBusy=busy?" disabled":"";
+ const menu=MODEL_CATALOG.map(item=>{
+  const selected=item.id===model.id;
+  return '<button type="button" role="option" aria-selected="'+(selected?"true":"false")+'" class="sb-model-option'+(selected?" selected":"")+'" data-action="modelSelect" data-value="'+e(item.id)+'"'+hideIfBusy+'>'+
+    '<span class="sb-model-option-main"><strong>'+e(item.label)+'</strong><span class="sb-model-check">'+(selected?"✓":"")+'</span></span>'+
+    '<span class="sb-model-purpose">'+e(item.purpose)+'</span>'+
+    '<span class="sb-model-desc">'+e(item.description)+'</span>'+
+    '<span class="sb-model-maker">'+e(item.provider==="openrouter"?"Via OpenRouter · "+item.maker:"Direct API · "+item.maker)+'</span></button>';
+ }).join("");
+ let out='<div class="sb-copilot '+(empty?"is-empty":"is-active")+'">';
+ if(empty){
+  out+='<section class="sb-copilot-welcome">'+
+   '<div class="sb-copilot-eyebrow"><span class="sb-brand-spark">✳</span> STRIDEBRAIN · '+e(p.companyEn.toUpperCase())+'</div>'+
+   '<h1>'+e(greeting)+', '+e(p.owner.split(" ")[0])+'.</h1>'+
+   '<p>What can I help with across your '+e(p.short.toLowerCase())+' business today?</p>'+
+   '</section>';
  }else{
-  out+='<div class="secondary-note" style="margin-top:17px"><strong>Staff-only model test:</strong> The server uses read-only demo tools, not any private company database. Answers are a fictional snapshot, not live customer numbers. GPT access may be unavailable until an administrator explicitly configures the server and access token. No uploads from Document Intelligence are sent to GPT.</div>';
+  out+='<div class="sb-copilot-session-head"><div><div class="sb-copilot-eyebrow">STRIDEBRAIN · '+e(p.companyEn.toUpperCase())+'</div><h1>Business conversation</h1><p>Ask follow-ups, explore sources, and move into the right workflow.</p></div>'+
+    '<button type="button" class="button-outline sb-new-chat" data-action="newChat">＋ New conversation</button></div>';
  }
+ out+='<div class="sb-conversation">'+v.chat.map((msg,i)=>msg.role==="user"?
+  '<div class="chat-message">'+e(msg.text)+'</div>':
+  '<div class="chat-answer"><div class="chat-answer-head"><span class="sb-answer-symbol">✳</span> STRIDEBRAIN · '+(msg.mode==="gpt"?e(msg.modelLabel||"CONNECTED MODEL")+" / SYNTHETIC BUSINESS TOOLS":"SOURCE-LINKED SAMPLE")+'</div>'+
+  msg.html+(msg.pending?'':'<div class="feedback-row"><span class="disclosure">Was this useful?</span><span><button type="button" class="feedback-btn" data-action="feedback" data-kind="Helpful" data-index="'+i+'">✓ Helpful</button> <button type="button" class="feedback-btn" data-action="feedback" data-kind="Needs review" data-index="'+i+'">⚑ Needs review</button></span></div>')+'</div>'
+ ).join("")+'</div>';
+ out+='<div class="sb-copilot-compose">';
+ out+='<form id="ask-form" class="sb-composer">'+
+  '<label class="sr-only" for="sb-composer-input">Ask StrideBrain</label>'+
+  '<textarea id="sb-composer-input" data-copilot-input rows="2" maxlength="1200" placeholder="Ask about quotes, priorities, suppliers, or your projects..."'+hideIfBusy+'>'+e(session.draft||"")+'</textarea>'+
+  '<div class="sb-composer-bottom">'+
+   '<div class="sb-composer-left">'+
+    '<button type="button" data-action="nav" data-value="intake" class="sb-composer-add" aria-label="Open Document Intelligence" title="Open Document Intelligence (files are not attached to Copilot)">＋</button>'+
+    '<span class="sb-composer-hint">Enter to send · Shift+Enter for a new line</span>'+
+   '</div>'+
+   '<div class="sb-composer-right">'+
+    '<div class="sb-model-container">'+
+     '<button type="button" class="sb-model-trigger" data-action="modelMenu" aria-haspopup="listbox" aria-expanded="'+(menuOpen?"true":"false")+'" aria-controls="sb-model-menu" title="Choose an approved AI model"'+hideIfBusy+'>'+
+      '<span class="sb-model-label">'+e(model.label)+'</span><span class="sb-model-arrow">⌄</span></button>'+
+     (menuOpen?'<div class="sb-model-menu" id="sb-model-menu" role="listbox" aria-label="Approved model choices">'+
+      '<div class="sb-model-menu-heading">CHOOSE AI MODEL</div>'+menu+
+      '<div class="sb-model-menu-note">Model choice takes effect only in a connected staff preview. All business tools remain read-only.</div></div>':'')+
+    '</div>'+
+    '<button type="submit" class="sb-send" aria-label="Send question" title="Send question"'+hideIfBusy+'>'+(busy?"···":"↑")+'</button>'+
+   '</div>'+
+  '</div></form>';
+ out+='<div class="sb-shortcut-row">'+quick.map(item=>
+   '<button type="button" class="sb-shortcut" data-action="ask" data-prompt="'+e(item.prompt)+'" title="'+e(item.description)+'"'+hideIfBusy+'><span aria-hidden="true">'+e(item.glyph)+'</span>'+e(item.label)+'</button>'
+ ).join("")+'</div>';
+ if(empty){
+  out+='<div class="sb-context-ideas"><span class="sb-context-label">SUGGESTED FOR '+e(p.companyEn.toUpperCase())+'</span>'+
+   '<div class="sb-context-idea-row">'+ideas.map(item=>
+    '<button type="button" data-action="ask" data-prompt="'+e(item.prompt)+'" class="sb-context-idea"'+hideIfBusy+'><span>'+e(item.glyph)+'</span>'+e(item.label)+' ↗</button>'
+   ).join("")+'</div></div>';
+ }
+ out+='<div class="sb-copilot-status"><span class="sb-status-dot"></span><span>'+e(displayStatus)+'</span><span class="sb-status-divider">·</span><span>Fictional company records · No automatic customer actions</span></div>';
+ out+='</div>';
+ if(!isConnectedMode){
+  out+='<details class="copilot-operator-box"><summary><span><span aria-hidden="true">⚙</span> Connect an approved AI provider (internal staff only)</span><span>▾</span></summary>'+
+   '<div class="copilot-operator-inner"><p>Model selection is already visible in the composer, just like the reference. To actually use OpenRouter or the direct OpenAI model, an administrator must configure the provider API key <strong>on the server</strong> and enable the internal demo endpoint. Enter only your <strong>separate staff operator access token</strong> here—not an OpenRouter or OpenAI API key.</p>'+
+   '<label for="copilot-access-token" class="form-field">Internal staff operator token<input type="password" id="copilot-access-token" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Private demo operator token"></label>'+
+   '<div class="action-stack">'+button("Connect selected AI model ↗","enableGpt","","button-secondary")+'</div>'+
+   '<p class="disclosure">Selected model: '+e(model.label)+' ('+e(model.provider==="openrouter"?"OpenRouter":"Direct OpenAI")+
+   '). Staff prompts are sent to the configured provider after authorization. Demo materials stay fictional; uploaded files are never forwarded to the model.</p></div></details>';
+ }else{
+  out+='<div class="sb-copilot-connected-foot"><span><strong>Internal staff AI mode</strong> · Selected model: '+e(model.label)+' · Read-only synthetic tools.</span>'+
+   button("Disconnect model","disableGpt","","button-outline")+'</div>';
+ }
+ out+='</div>';
  return out;
 }
 
