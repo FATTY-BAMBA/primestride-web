@@ -33,3 +33,7 @@
 - [ ] Server-authenticated tenant accounts, org membership checks and role-scoped knowledge retrieval.
 
 **All deployed preview business data remains synthetic. No actual customer records or outbound messages are accessed.**
+
+
+## Browser UI QA page (not yet run in the user's browser)
+Path: /stridebrain-demo/copilot-ui-qa.html. Contains 12 checks across interior and printing: quick chips, 5-model dropdown, selected-model draft preservation, follow-ups answer, no provider calls in sample mode, and new conversation. Requires a user to run the test in an authenticated preview browser. It does not require OpenRouter credentials or make model requests.
