@@ -19,11 +19,11 @@ export const QUICK_ACTIONS=Object.freeze([
  }}),
  Object.freeze({id:"suppliers",label:"Materials & suppliers",glyph:"⬡",description:"Example stock and supplier dependencies",prompts:{
   interior:"What should we check with material suppliers before making a project delivery promise?",
-  printing:"What should we confirm about paper stock and suppliers before releasing print jobs?"
+  printing:"Which sample printing suppliers and delivery lead-time assumptions need verification?"
  }}),
  Object.freeze({id:"financials",label:"Financials",glyph:"↗",description:"Explain proposed margins, never invent revenue",prompts:{
-  interior:"What is our weighted proposed gross margin across the latest fictional renovation quotations?",
-  printing:"What is our weighted proposed gross margin across the latest fictional print quotations?"
+  interior:"What is our overall weighted proposed gross margin across the latest fictional renovation quotations?",
+  printing:"What is our overall weighted proposed gross margin across the latest fictional print quotations?"
  }})
 ]);
 const INDUSTRY_IDEAS={
