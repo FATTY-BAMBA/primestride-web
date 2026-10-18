@@ -53,6 +53,7 @@ export function knowledge(c){
  out+='<div class="panel">'+section(hits.length+" matching documents","Page "+(page+1)+" of "+pages)+(rows.length?rows.map(documentRow).join(""):'<div class="empty">No sources match this filter.</div>')+'<div class="btn-row" style="justify-content:space-between;margin-top:17px">'+button("← Previous","page","-1","button-outline")+button("Next →","page","1","button-outline")+'</div></div>';return out;
 }
 function sourceProvenance(d,registry){
+ if(d?.basisType==="BROWSER_LOCAL_SANDBOX")return '<div class="source-provenance synthetic"><strong>Local hypothetical cost precedent · temporary</strong><span>Derived from reviewer-mapped source rows in this browser tab. Completion and cost coverage were assumed for the fictional scenario. The file is not verified as real job history and the record is not persisted or shared.</span></div>';
  if(d?.basisType!=="PUBLIC_REFERENCE")return '<div class="source-provenance synthetic"><strong>Fictional demo record</strong><span>This content is illustrative company data, not independent evidence of prices, permits, employees or transactions.</span></div>';
  const sources=(d.evidenceIds||[]).map(id=>registry?.sources?.find(x=>x.id===id)).filter(Boolean);
  if(!sources.length)return '<div class="source-provenance"><strong>Public reference · original link</strong><span>No source registry available; verify the reference independently.</span></div>';
