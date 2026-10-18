@@ -1,5 +1,6 @@
 import {money,calculateVariation,escapeHtml as e} from "./core-model.js";
 import {badge,button,source,sources,metric,heading,section,tag,quoteTable} from "./ui-shared.js";
+import {importDraftCard} from "./views-document-intelligence.js";
 export function service(c){
  const {pack:p,state:s,model:m}=c,sc=p.scenario,r=s.customerDraft,calc=calculateVariation(s.variation.cost,s.variation.margin,sc.tax);
  let out=heading("Customer replies, with evidence.","Prepare a contextual response and obtain human approval before sharing.",badge(r.reviewed?"Reviewed sample draft":"Draft only · no outbound messaging"),"CUSTOMER SERVICE");
@@ -11,6 +12,7 @@ export function quotes(c){
  const {pack:p,state:s,model:m,view:v}=c,g=s.variation,sc=p.scenario,x=calculateVariation(g.cost,g.margin,sc.tax);
  const gate=(title,desc,key,done)=>'<div class="gate '+(done?"done":"")+'"><span class="gate-indicator">'+(done?"✓":"○")+'</span><span class="gate-info"><strong>'+e(title)+'</strong><small>'+e(desc)+'</small></span>'+(done?badge("Confirmed"):button("Simulate ↗","gate",key,"tiny-button"))+'</div>';
  let out=heading("Quotations you can explain.","Source-backed cost assumptions, human approvals and a controlled path into work.",badge(g.committed?"Change committed":"Draft variation"),"COMMERCIAL CONTROLS");
+ out+=importDraftCard(c.documentSession);
  const readiness=s.readiness?.assessment;
  const readinessReady=!!readiness&&readiness.status==="READY_FOR_HUMAN_REVIEW"&&readiness.counts?.hold===0;
  const readinessText=readinessReady?"The recorded screening has no outstanding blockers":"A current operational screening is missing or has unresolved blockers";
