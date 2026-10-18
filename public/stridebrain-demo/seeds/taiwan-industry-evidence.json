@@ -1,0 +1,1651 @@
+{
+  "meta": {
+    "kind": "TAIWAN_INDUSTRY_EVIDENCE_PACK",
+    "asOf": "2026-10-18",
+    "sourceCount": 15,
+    "referenceCount": 25,
+    "workflowCount": 18,
+    "notice": "Public facts are paraphrased and source-linked; workflow controls are product-design recommendations; company transactions and prices remain fictional."
+  },
+  "sources": [
+    {
+      "id": "TW-I-LAW",
+      "industry": "interior",
+      "kind": "LAW",
+      "title": "建築物室內裝修管理辦法 · 現行條文",
+      "publisher": "Ministry of Justice / Ministry of Interior",
+      "url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?PCode=D0070148",
+      "locator": "Articles 2–3, 9–10, 23–34",
+      "caveat": "Binding legal text; applicability must be assessed for the actual building and proposed work",
+      "accessedAt": "2026-10-18",
+      "checkedAgainst": "Publicly available online source",
+      "licenseNote": "Summarized in original wording. Refer to official or publisher page for full text; no source material copied wholesale."
+    },
+    {
+      "id": "TW-I-CONTRACT",
+      "industry": "interior",
+      "kind": "OFFICIAL_TEMPLATE",
+      "title": "建築物室內裝修契約範本（設計／工程／合併）",
+      "publisher": "Ministry of the Interior / National Land Management Agency",
+      "url": "https://www.nlma.gov.tw/ch/legislation/law%26regusw/1320",
+      "locator": "Official published model contract announcements and sample files",
+      "caveat": "Official example contracts; do not represent a template as a signed agreement",
+      "accessedAt": "2026-10-18",
+      "checkedAgainst": "Publicly available online source",
+      "licenseNote": "Summarized in original wording. Refer to official or publisher page for full text; no source material copied wholesale."
+    },
+    {
+      "id": "TW-I-REGISTRY",
+      "industry": "interior",
+      "kind": "OFFICIAL_GUIDANCE",
+      "title": "國土署提醒查詢合格室內裝修業者與專業技術人員",
+      "publisher": "National Land Management Agency",
+      "url": "https://www.nlma.gov.tw/ch/titlelist/clear/17307",
+      "locator": "Qualified business/personnel lookup guidance",
+      "caveat": "Public guidance; registration must be verified at time of engagement",
+      "accessedAt": "2026-10-18",
+      "checkedAgainst": "Publicly available online source",
+      "licenseNote": "Summarized in original wording. Refer to official or publisher page for full text; no source material copied wholesale."
+    },
+    {
+      "id": "TW-I-NEWS",
+      "industry": "interior",
+      "kind": "OFFICIAL_CLARIFICATION",
+      "title": "內政部澄清 2026 裝修申請新制謠言",
+      "publisher": "Ministry of the Interior",
+      "url": "https://www.moi.gov.tw/News_Content.aspx?Create=1&n=2&s=337863",
+      "locator": "Public clarification, updated September 2026",
+      "caveat": "Clarification of existing rules, not new permission to start work",
+      "accessedAt": "2026-10-18",
+      "checkedAgainst": "Publicly available online source",
+      "licenseNote": "Summarized in original wording. Refer to official or publisher page for full text; no source material copied wholesale."
+    },
+    {
+      "id": "TW-I-FORM",
+      "industry": "interior",
+      "kind": "OFFICIAL_FORM",
+      "title": "建築物室內裝修竣工查驗表 E1-6",
+      "publisher": "National Land Management Agency",
+      "url": "https://www.nlma.gov.tw/uploads/files/a1cdf33705d10f915c61494e54a49f99.pdf",
+      "locator": "Official completion-inspection checklist form",
+      "caveat": "Form documents the verification categories; do not self-certify",
+      "accessedAt": "2026-10-18",
+      "checkedAgainst": "Publicly available online source",
+      "licenseNote": "Summarized in original wording. Refer to official or publisher page for full text; no source material copied wholesale."
+    },
+    {
+      "id": "TW-I-CASE",
+      "industry": "interior",
+      "kind": "OFFICIAL_PROCEDURE_EXAMPLE",
+      "title": "建管服務：室內裝修審查與竣工查驗",
+      "publisher": "Pingtung Agricultural Biotechnology Park public management service",
+      "url": "https://www.atp.gov.tw/cht/cl0110.aspx",
+      "locator": "Site-specific public agency service procedure",
+      "caveat": "Example procedure for a specific management authority; do not generalize local fees/timeframes to Taiwan",
+      "accessedAt": "2026-10-18",
+      "checkedAgainst": "Publicly available online source",
+      "licenseNote": "Summarized in original wording. Refer to official or publisher page for full text; no source material copied wholesale."
+    },
+    {
+      "id": "TW-I-TAX",
+      "industry": "shared",
+      "kind": "LAW",
+      "title": "加值型及非加值型營業稅法",
+      "publisher": "Ministry of Justice / Ministry of Finance",
+      "url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=G0340080&sid=1QUgcF",
+      "locator": "Articles 10 and 14 (rate and calculations); actual applicability varies",
+      "caveat": "Legal framework, not proof every transaction uses the demo's 5% assumption",
+      "accessedAt": "2026-10-18",
+      "checkedAgainst": "Publicly available online source",
+      "licenseNote": "Summarized in original wording. Refer to official or publisher page for full text; no source material copied wholesale."
+    },
+    {
+      "id": "TW-I-PDPA",
+      "industry": "shared",
+      "kind": "LAW",
+      "title": "個人資料保護法",
+      "publisher": "Ministry of Justice",
+      "url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=I0050021",
+      "locator": "Articles 3, 5, 8, 19, 20 and related requirements",
+      "caveat": "Confidentiality and purpose limitations relevant to future tenant isolation; lawyer review for deployment",
+      "accessedAt": "2026-10-18",
+      "checkedAgainst": "Publicly available online source",
+      "licenseNote": "Summarized in original wording. Refer to official or publisher page for full text; no source material copied wholesale."
+    },
+    {
+      "id": "TW-P-UNIVERSITY",
+      "industry": "printing",
+      "kind": "EDUCATION",
+      "title": "印前作業實務課程與印刷生產流程",
+      "publisher": "National Taiwan University of Arts",
+      "url": "https://eec.ntua.edu.tw/Course/Detail/25246",
+      "locator": "Course outline: prepress, color management, file checking, imposition, job tickets, cost estimates",
+      "caveat": "Educational description; not an individual printing vendor's contract requirement",
+      "accessedAt": "2026-10-18",
+      "checkedAgainst": "Publicly available online source",
+      "licenseNote": "Summarized in original wording. Refer to official or publisher page for full text; no source material copied wholesale."
+    },
+    {
+      "id": "TW-P-POSTER",
+      "industry": "printing",
+      "kind": "PUBLISHED_VENDOR_REQUIREMENT",
+      "title": "樺舍印前：海報／明信片檔案製作規範",
+      "publisher": "Interprint Taiwan",
+      "url": "https://www.interprint.com.tw/docInfo.aspx?docid=63&key=c3",
+      "locator": "Specific vendor instructions revised June 8, 2026; PDF, image resolution, 3mm bleed, fonts",
+      "caveat": "Published vendor-specific requirements; other printers may accept different specs",
+      "accessedAt": "2026-10-18",
+      "checkedAgainst": "Publicly available online source",
+      "licenseNote": "Summarized in original wording. Refer to official or publisher page for full text; no source material copied wholesale."
+    },
+    {
+      "id": "TW-P-BOOK",
+      "industry": "printing",
+      "kind": "PUBLISHED_VENDOR_REQUIREMENT",
+      "title": "樺舍印前：書籍封面與內頁製作規範",
+      "publisher": "Interprint Taiwan",
+      "url": "https://www.interprint.com.tw/docInfo.aspx?docid=60&key=c3",
+      "locator": "Specific vendor instructions revised July 27, 2026; separate cover/interior files, binding options",
+      "caveat": "Vendor-specific examples, not a universal national standard",
+      "accessedAt": "2026-10-18",
+      "checkedAgainst": "Publicly available online source",
+      "licenseNote": "Summarized in original wording. Refer to official or publisher page for full text; no source material copied wholesale."
+    },
+    {
+      "id": "TW-P-GUILD",
+      "industry": "printing",
+      "kind": "INDUSTRY_ASSOCIATION",
+      "title": "台北市印刷商業同業公會：印前、印中、印後產業範圍",
+      "publisher": "Taipei Printing Commercial Association",
+      "url": "https://www.tcpa88.org.tw/gong-hui-jie-shao/gong-hui-jian-jie",
+      "locator": "Industry coverage of prepress, press, postpress, supplies and publishing",
+      "caveat": "Descriptive association overview; not proof of a specific firm's equipment or workflow",
+      "accessedAt": "2026-10-18",
+      "checkedAgainst": "Publicly available online source",
+      "licenseNote": "Summarized in original wording. Refer to official or publisher page for full text; no source material copied wholesale."
+    },
+    {
+      "id": "TW-P-TENDER",
+      "industry": "printing",
+      "kind": "HISTORIC_PUBLIC_CONTRACT_EXAMPLE",
+      "title": "政府印製採購文件：校稿、打樣、品質驗收範例",
+      "publisher": "Kaohsiung District Agricultural Research and Extension Station",
+      "url": "https://www.kdais.gov.tw/files/kdais/tender/398/1060309a3.pdf",
+      "locator": "Archived specific printing procurement example: proofs, revised layout, binding, quality acceptance",
+      "caveat": "Historical case-specific contract; not current universal contract law or vendor price",
+      "accessedAt": "2026-10-18",
+      "checkedAgainst": "Publicly available online source",
+      "licenseNote": "Summarized in original wording. Refer to official or publisher page for full text; no source material copied wholesale."
+    },
+    {
+      "id": "TW-P-VOC",
+      "industry": "printing",
+      "kind": "REGULATORY_SCREENING",
+      "title": "揮發性有機物空氣污染管制及排放標準",
+      "publisher": "Ministry of Environment / Ministry of Justice",
+      "url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?PCODE=O0020030",
+      "locator": "Current regulation governing specified VOC emissions and operations",
+      "caveat": "Applies based on regulated process and conditions; never declare universal permit requirements",
+      "accessedAt": "2026-10-18",
+      "checkedAgainst": "Publicly available online source",
+      "licenseNote": "Summarized in original wording. Refer to official or publisher page for full text; no source material copied wholesale."
+    },
+    {
+      "id": "TW-P-PERMIT-HISTORY",
+      "industry": "printing",
+      "kind": "HISTORIC_ADMIN_INTERPRETATION",
+      "title": "環境部印刷作業與油墨／溶劑適用規範之歷史函釋",
+      "publisher": "Environmental Protection Administration (historical guidance)",
+      "url": "https://oaout.moenv.gov.tw/law/ExecutiveData.aspx?id=818&type=2",
+      "locator": "2006 letter illustrating a particular printing process and permit assessment",
+      "caveat": "Old interpretation: training example only; use current law and local authority",
+      "accessedAt": "2026-10-18",
+      "checkedAgainst": "Publicly available online source",
+      "licenseNote": "Summarized in original wording. Refer to official or publisher page for full text; no source material copied wholesale."
+    }
+  ],
+  "cards": [
+    {
+      "id": "REF-I01",
+      "industry": "interior",
+      "titleZh": "室內裝修行為是否適用法規",
+      "titleEn": "Determine whether works fall under interior-renovation rules",
+      "stage": "Intake & compliance",
+      "kind": "LEGAL_SCOPE",
+      "evidenceIds": [
+        "TW-I-LAW",
+        "TW-I-NEWS"
+      ],
+      "summary": "The regulatory definition covers certain fixed ceiling, internal wall, partition and layout works; excluded examples include wallpaper, furniture placement and some movable elements. Building use and scope affect whether review requirements apply.",
+      "checks": [
+        "Describe building use and location",
+        "Identify fixed partitions, ceiling or wall works",
+        "Record original floor plans and intended changes",
+        "Request qualified professional determination for applicability"
+      ],
+      "questions": [
+        "Are internal walls or fixed partitions changing?",
+        "Does the work affect an escape route or shared facility?"
+      ],
+      "limits": "Do not claim every residential decorative change requires the same permit; do not claim any project is automatically exempt.",
+      "reviewStatus": "CURATED_REFERENCE",
+      "lastReviewedAt": "2026-10-18",
+      "isLiveCompanyFact": false
+    },
+    {
+      "id": "REF-I02",
+      "industry": "interior",
+      "titleZh": "室內裝修專業資格與查詢",
+      "titleEn": "Licensed practitioner and registration verification",
+      "stage": "Supplier / contractor onboarding",
+      "kind": "OFFICIAL_GUIDANCE",
+      "evidenceIds": [
+        "TW-I-LAW",
+        "TW-I-REGISTRY"
+      ],
+      "summary": "Interior renovation design and construction activities may require relevant registered qualified businesses and professionals; official registry information is available for checking.",
+      "checks": [
+        "Record design and施工 scope",
+        "Ask for registration evidence and expiry",
+        "Check official registry before contracting",
+        "Have authorized reviewer accept qualification evidence"
+      ],
+      "questions": [
+        "Is the design or construction party properly qualified for this scope?",
+        "Has the registration been verified recently?"
+      ],
+      "limits": "Never infer a company's registration or staff certification from its name.",
+      "reviewStatus": "CURATED_REFERENCE",
+      "lastReviewedAt": "2026-10-18",
+      "isLiveCompanyFact": false
+    },
+    {
+      "id": "REF-I03",
+      "industry": "interior",
+      "titleZh": "室內裝修圖說與審查資料",
+      "titleEn": "Drawing package and submission requirements",
+      "stage": "Design & review",
+      "kind": "REGULATION",
+      "evidenceIds": [
+        "TW-I-LAW",
+        "TW-I-CASE"
+      ],
+      "summary": "Articles 23–26 describe required applications, evidence of property rights, existing authorized plans, and location, plan, elevation, section and detail drawings for applicable review procedures.",
+      "checks": [
+        "Track drawing version, author and approving professional",
+        "Identify missing rights/plan documents",
+        "Preserve approved construction issue",
+        "Track fire and material check requirements"
+      ],
+      "questions": [
+        "Which drawing is legally current for work?",
+        "What evidence is missing from the application package?"
+      ],
+      "limits": "The demo is a document readiness assistant, not an approval authority.",
+      "reviewStatus": "CURATED_REFERENCE",
+      "lastReviewedAt": "2026-10-18",
+      "isLiveCompanyFact": false
+    },
+    {
+      "id": "REF-I04",
+      "industry": "interior",
+      "titleZh": "消防設備與避難安全檢查",
+      "titleEn": "Fire protection and escape-route safeguards",
+      "stage": "Design & review",
+      "kind": "REGULATION",
+      "evidenceIds": [
+        "TW-I-LAW",
+        "TW-I-FORM"
+      ],
+      "summary": "Relevant renovation review checks include maintaining fire/escape facilities, fire compartments, and building structural elements. Fire-equipment changes may involve separate fire authority review.",
+      "checks": [
+        "Ask whether exits/escape paths change",
+        "Flag partitions and fire doors",
+        "Check fire-equipment scope with qualified designer",
+        "Record authority sign-off if applicable"
+      ],
+      "questions": [
+        "Will a proposed layout alter escape or fire-safety systems?",
+        "Who must validate a safety-related change?"
+      ],
+      "limits": "Never let the Copilot approve fire design or technical compliance.",
+      "reviewStatus": "CURATED_REFERENCE",
+      "lastReviewedAt": "2026-10-18",
+      "isLiveCompanyFact": false
+    },
+    {
+      "id": "REF-I05",
+      "industry": "interior",
+      "titleZh": "裝修契約範本與工程範圍",
+      "titleEn": "Design and construction contract structure",
+      "stage": "Commercial proposal",
+      "kind": "OFFICIAL_TEMPLATE",
+      "evidenceIds": [
+        "TW-I-CONTRACT"
+      ],
+      "summary": "The Ministry of the Interior publishes separate sample contracts for design, renovation construction and combined services. Scope, pricing, payment terms and responsibilities need to be aligned to the selected agreement.",
+      "checks": [
+        "Choose design-only, build-only or combined engagement",
+        "Identify work scope and exclusions",
+        "Attach pricing revision and drawing issue",
+        "Document change-order procedure and acceptance parties"
+      ],
+      "questions": [
+        "Is this a design retainer or a construction commitment?",
+        "Which contract version governs the quotation?"
+      ],
+      "limits": "A public model form is not a signed customer contract; legal review required for a real engagement.",
+      "reviewStatus": "CURATED_REFERENCE",
+      "lastReviewedAt": "2026-10-18",
+      "isLiveCompanyFact": false
+    },
+    {
+      "id": "REF-I06",
+      "industry": "interior",
+      "titleZh": "2026 新制消息查核",
+      "titleEn": "Avoid incorrect statements about 2026 permit changes",
+      "stage": "Intake & compliance",
+      "kind": "OFFICIAL_CLARIFICATION",
+      "evidenceIds": [
+        "TW-I-NEWS"
+      ],
+      "summary": "The national authority publicly corrected circulating claims that a newly imposed 2026 rule universally changed the start-work permit procedure; it stated that the discussed contract provisions were then a draft and existing application rules had not changed.",
+      "checks": [
+        "Date-stamp reference guidance",
+        "Link the original clarification",
+        "Ask professional to verify current rule before work",
+        "Avoid blanket permit assertions"
+      ],
+      "questions": [
+        "Has the client's building/use been checked against current law?",
+        "Does a newer enacted rule supersede the cited clarification?"
+      ],
+      "limits": "Do not treat an old news article as an evergreen legal certification.",
+      "reviewStatus": "CURATED_REFERENCE",
+      "lastReviewedAt": "2026-10-18",
+      "isLiveCompanyFact": false
+    },
+    {
+      "id": "REF-I07",
+      "industry": "interior",
+      "titleZh": "設計變更與核定圖說",
+      "titleEn": "Design revisions and approved construction instructions",
+      "stage": "Change order",
+      "kind": "REGULATION_PLUS_WORKFLOW",
+      "evidenceIds": [
+        "TW-I-LAW",
+        "TW-I-FORM"
+      ],
+      "summary": "For regulated works, Article 30 addresses work according to approved drawings and how design changes are handled. The recommended product workflow is to hold draft drawings until reviewed, track downstream impact, and prevent unapproved work instructions.",
+      "checks": [
+        "Show original and revised drawing versions",
+        "Flag changed safety/material details",
+        "Estimate cost and schedule effects",
+        "Hold construction-release until required decisions are recorded"
+      ],
+      "questions": [
+        "Is this an approved drawing or a draft pricing option?",
+        "Must the revised drawing be resubmitted for review?"
+      ],
+      "limits": "Resubmission requirements are conditional; professional decision needed.",
+      "reviewStatus": "CURATED_REFERENCE",
+      "lastReviewedAt": "2026-10-18",
+      "isLiveCompanyFact": false
+    },
+    {
+      "id": "REF-I08",
+      "industry": "interior",
+      "titleZh": "追加減工程與付款里程碑",
+      "titleEn": "Change order, scope and payment transparency",
+      "stage": "Change order",
+      "kind": "WORKFLOW_RECOMMENDATION",
+      "evidenceIds": [
+        "TW-I-CONTRACT",
+        "TW-I-REGISTRY"
+      ],
+      "summary": "The official contract resources and consumer-protection guidance motivate traceable scope, price and revision review. StrideBrain can show original scope, added work, actual verified costs, proposed price and approval state as separate objects.",
+      "checks": [
+        "Never overwrite the originally approved contract price",
+        "Link change to scope/drawing revision",
+        "Keep contractor/subcontractor cost evidence",
+        "Distinguish payable milestones from paid cash"
+      ],
+      "questions": [
+        "What has the client approved in writing?",
+        "Does a supplier quote expire before the planned work?"
+      ],
+      "limits": "Workflow recommendation derived from public contract context, not a legally mandated universal change form.",
+      "reviewStatus": "CURATED_REFERENCE",
+      "lastReviewedAt": "2026-10-18",
+      "isLiveCompanyFact": false
+    },
+    {
+      "id": "REF-I09",
+      "industry": "interior",
+      "titleZh": "完工查驗與交屋",
+      "titleEn": "Completion inspection and handover traceability",
+      "stage": "Handover",
+      "kind": "REGULATION",
+      "evidenceIds": [
+        "TW-I-LAW",
+        "TW-I-FORM"
+      ],
+      "summary": "Articles 32–34 cover completion inspection and documents for regulated renovation; the official check form references approved drawings, materials, fire/escape facilities and other checks.",
+      "checks": [
+        "Collect completion photos and authorized drawing issue",
+        "Reconcile work against approved plans",
+        "Identify required inspection and certificate",
+        "Track defects, customer acceptance and warranties as company workflow"
+      ],
+      "questions": [
+        "What evidence is still missing for regulated completion?",
+        "Who is authorized to sign the inspection documents?"
+      ],
+      "limits": "Never issue an official completion certificate via StrideBrain.",
+      "reviewStatus": "CURATED_REFERENCE",
+      "lastReviewedAt": "2026-10-18",
+      "isLiveCompanyFact": false
+    },
+    {
+      "id": "REF-I10",
+      "industry": "interior",
+      "titleZh": "簡易程序與條件判定",
+      "titleEn": "Conditional simplified renovation procedure",
+      "stage": "Regulatory screening",
+      "kind": "REGULATION",
+      "evidenceIds": [
+        "TW-I-LAW"
+      ],
+      "summary": "Article 33 sets conditional pathways based on work characteristics, area, floor, fire compartments and unaffected safety systems. It is not a general DIY exemption.",
+      "checks": [
+        "Collect floor, gross floor area and current use",
+        "Record whether life-safety elements change",
+        "Identify professional signatories",
+        "Route regulatory pathway choice for local expert review"
+      ],
+      "questions": [
+        "Does the project satisfy every stated eligibility condition?",
+        "What does the local building authority require?"
+      ],
+      "limits": "Software should flag possible relevance only; not make a binding permit determination.",
+      "reviewStatus": "CURATED_REFERENCE",
+      "lastReviewedAt": "2026-10-18",
+      "isLiveCompanyFact": false
+    },
+    {
+      "id": "REF-I11",
+      "industry": "interior",
+      "titleZh": "專案資訊與個資保護",
+      "titleEn": "Client plans and personal data handling",
+      "stage": "Company knowledge",
+      "kind": "CROSS_INDUSTRY_LAW",
+      "evidenceIds": [
+        "TW-I-PDPA"
+      ],
+      "summary": "Customer personal information and home-related documents need purpose-limited handling and appropriate safeguards under Taiwan personal-data law.",
+      "checks": [
+        "Keep company/customer data inside the proper organization",
+        "Restrict drawings with residential addresses",
+        "Record consent/purpose where required",
+        "Support access, correction and deletion workflows"
+      ],
+      "questions": [
+        "Can subcontractors see only the documents necessary for their work?",
+        "How long should this client's records be retained?"
+      ],
+      "limits": "Specific lawful basis and retention duties depend on actual processing and counsel review.",
+      "reviewStatus": "CURATED_REFERENCE",
+      "lastReviewedAt": "2026-10-18",
+      "isLiveCompanyFact": false
+    },
+    {
+      "id": "REF-I12",
+      "industry": "interior",
+      "titleZh": "報價及營業稅呈現",
+      "titleEn": "Estimate and applicable business tax",
+      "stage": "Quoting",
+      "kind": "CROSS_INDUSTRY_LAW",
+      "evidenceIds": [
+        "TW-I-TAX"
+      ],
+      "summary": "The business-tax law provides the framework for different tax rates and calculation. The demo's flat 5% is an explicit illustrative assumption, not verification of the client company's actual tax obligations.",
+      "checks": [
+        "Keep net price, tax assumption and gross price separate",
+        "Label budget, estimate, accepted contract and actual collections distinctly",
+        "Owner/accountant verifies tax treatment",
+        "Only approved quotes go to customer"
+      ],
+      "questions": [
+        "Is the estimate tax-inclusive or tax-exclusive?",
+        "Is this a proposed price or accepted contract?"
+      ],
+      "limits": "No automated legal or tax conclusions.",
+      "reviewStatus": "CURATED_REFERENCE",
+      "lastReviewedAt": "2026-10-18",
+      "isLiveCompanyFact": false
+    },
+    {
+      "id": "REF-P01",
+      "industry": "printing",
+      "titleZh": "印刷委託與工單建立",
+      "titleEn": "Print inquiry and job-ticket intake",
+      "stage": "Inquiry",
+      "kind": "EDUCATIONAL_PLUS_WORKFLOW",
+      "evidenceIds": [
+        "TW-P-UNIVERSITY",
+        "TW-P-GUILD"
+      ],
+      "summary": "Prepress planning includes job-ticket preparation, artwork checks, imposition and cost estimates. As a model workflow, collect print size, quantities, stock, colors, finishing and due date before pricing.",
+      "checks": [
+        "Require finished size and run quantity",
+        "Capture single/double sided and color details",
+        "Select paper/finish/binding",
+        "Link promised delivery to job capacity confirmation"
+      ],
+      "questions": [
+        "Is this a new print run or a reprint?",
+        "What quantity, substrate and finishing are required?"
+      ],
+      "limits": "Real shop equipment and quoting formulas are company-specific.",
+      "reviewStatus": "CURATED_REFERENCE",
+      "lastReviewedAt": "2026-10-18",
+      "isLiveCompanyFact": false
+    },
+    {
+      "id": "REF-P02",
+      "industry": "printing",
+      "titleZh": "海報印前檔案規格",
+      "titleEn": "Poster prepress file specification example",
+      "stage": "Prepress",
+      "kind": "VENDOR_EXAMPLE",
+      "evidenceIds": [
+        "TW-P-POSTER"
+      ],
+      "summary": "A Taiwanese printer publicly lists PDF delivery, recommended image resolution of at least 300 dpi, 3 mm bleed, and embedded/outlined fonts for its poster/postcard products.",
+      "checks": [
+        "Inspect actual file type and dimensions",
+        "Check bleed as required by selected vendor",
+        "Check placed image resolution",
+        "Check embedded fonts or text outlines"
+      ],
+      "questions": [
+        "Which printer/specification governs this order?",
+        "Does the input artwork meet that agreed vendor rule?"
+      ],
+      "limits": "These are one printer's published product requirements, not universal legal print standards.",
+      "reviewStatus": "CURATED_REFERENCE",
+      "lastReviewedAt": "2026-10-18",
+      "isLiveCompanyFact": false
+    },
+    {
+      "id": "REF-P03",
+      "industry": "printing",
+      "titleZh": "A3 海報尺寸與出血",
+      "titleEn": "A3 trim and 3 mm bleed example",
+      "stage": "Prepress",
+      "kind": "VENDOR_EXAMPLE",
+      "evidenceIds": [
+        "TW-P-POSTER"
+      ],
+      "summary": "An A3 trimmed poster is shown by one Taiwan provider as 297 × 420 mm, with 303 × 426 mm file dimensions including 3 mm bleed around each edge.",
+      "checks": [
+        "Record trim versus artwork size separately",
+        "Compare width/height in millimeters",
+        "Flag insufficient bleed for preflight review",
+        "Check orientation and safe margins"
+      ],
+      "questions": [
+        "Is 297 × 420 mm the requested finished size?",
+        "Does the press-ready PDF measure 303 × 426 mm if using this 3 mm specification?"
+      ],
+      "limits": "Do not apply this rule to books, packaging dies or all commercial prints.",
+      "reviewStatus": "CURATED_REFERENCE",
+      "lastReviewedAt": "2026-10-18",
+      "isLiveCompanyFact": false
+    },
+    {
+      "id": "REF-P04",
+      "industry": "printing",
+      "titleZh": "色彩模式與色差說明",
+      "titleEn": "Color-management guidance versus mandatory checks",
+      "stage": "Prepress",
+      "kind": "VENDOR_EXAMPLE",
+      "evidenceIds": [
+        "TW-P-POSTER",
+        "TW-P-UNIVERSITY"
+      ],
+      "summary": "Taiwanese vendor guidance recommends CMYK for color work and grayscale for mono work while explaining that RGB files may still be printed after conversion, potentially with different visual results.",
+      "checks": [
+        "Record color space and desired match tolerance",
+        "Offer physical or calibrated proof where appropriate",
+        "Explain conversion risks to customer",
+        "Preserve customer-approved proof version"
+      ],
+      "questions": [
+        "Is color accuracy important enough to require a proof?",
+        "Is the CMYK recommendation a contractual requirement for this printer?"
+      ],
+      "limits": "Do not universally reject RGB files or promise exact color matching.",
+      "reviewStatus": "CURATED_REFERENCE",
+      "lastReviewedAt": "2026-10-18",
+      "isLiveCompanyFact": false
+    },
+    {
+      "id": "REF-P05",
+      "industry": "printing",
+      "titleZh": "書籍檔案與裝訂條件",
+      "titleEn": "Book cover/interior and binding file practices",
+      "stage": "Prepress",
+      "kind": "VENDOR_EXAMPLE",
+      "evidenceIds": [
+        "TW-P-BOOK"
+      ],
+      "summary": "A Taiwan printer's book instructions call for separate cover and interior files, PDF settings, binding-dependent cover construction and page arrangement, with distinct examples for saddle stitch and perfect binding.",
+      "checks": [
+        "Capture binding type, spine and page count",
+        "Keep cover and interior file versions separate",
+        "Check binding-specific imposition and bleed",
+        "Record sample proof review before printing"
+      ],
+      "questions": [
+        "How many pages and which binding type?",
+        "Are files split according to the selected print vendor's requirements?"
+      ],
+      "limits": "Do not carry a vendor's binding page limits across other presses without verification.",
+      "reviewStatus": "CURATED_REFERENCE",
+      "lastReviewedAt": "2026-10-18",
+      "isLiveCompanyFact": false
+    },
+    {
+      "id": "REF-P06",
+      "industry": "printing",
+      "titleZh": "印前與落版估工",
+      "titleEn": "Prepress, imposition and job costing concepts",
+      "stage": "Estimating",
+      "kind": "EDUCATIONAL",
+      "evidenceIds": [
+        "TW-P-UNIVERSITY"
+      ],
+      "summary": "Prepress education in Taiwan explicitly covers file preflight, imposition calculations, job tickets and cost estimation; the demo can expose these concepts as cost lines rather than infer them invisibly.",
+      "checks": [
+        "Identify setup/makeready costs",
+        "Separate material, press, finishing and delivery lines",
+        "Validate print quantity and layout/imposition",
+        "Record scrap and overrun assumptions"
+      ],
+      "questions": [
+        "What press setup is required?",
+        "How many sellable pieces per sheet and what waste allowance applies?"
+      ],
+      "limits": "Prices and production speeds must come from the individual company's records.",
+      "reviewStatus": "CURATED_REFERENCE",
+      "lastReviewedAt": "2026-10-18",
+      "isLiveCompanyFact": false
+    },
+    {
+      "id": "REF-P07",
+      "industry": "printing",
+      "titleZh": "客戶打樣與校稿核准",
+      "titleEn": "Proofing and approval before a print run",
+      "stage": "Proof approval",
+      "kind": "PUBLIC_CONTRACT_EXAMPLE",
+      "evidenceIds": [
+        "TW-P-TENDER"
+      ],
+      "summary": "A historic government printing contract illustrates repeated proof review and a full sample approved before final printing. It is a concrete contract example, not a universal law for all jobs.",
+      "checks": [
+        "Track proof version and correction round",
+        "Record acceptance of color/trim/sample",
+        "Block press-release without required client sign-off",
+        "Preserve issued-to-production file checksum or revision"
+      ],
+      "questions": [
+        "Has the customer approved the correct proof revision?",
+        "Does the signed contract require a physical proof?"
+      ],
+      "limits": "Do not impose this specific government procurement contract on private commercial customers.",
+      "reviewStatus": "CURATED_REFERENCE",
+      "lastReviewedAt": "2026-10-18",
+      "isLiveCompanyFact": false
+    },
+    {
+      "id": "REF-P08",
+      "industry": "printing",
+      "titleZh": "印後加工與裝訂",
+      "titleEn": "Finishing and binding as first-class production stages",
+      "stage": "Finishing",
+      "kind": "INDUSTRY_CONTEXT",
+      "evidenceIds": [
+        "TW-P-GUILD",
+        "TW-P-BOOK"
+      ],
+      "summary": "The Taipei printing association describes an ecosystem spanning prepress, press and postpress. Published book guidance demonstrates finishing and binding variation. In StrideBrain, finishing should be an explicit task and cost stage.",
+      "checks": [
+        "Define trim, fold, lamination and binding requirements",
+        "Connect finish choices to stock and schedule",
+        "Inspect defects and tolerance concerns",
+        "Allocate finishing vendor owner and due dates"
+      ],
+      "questions": [
+        "What post-press process is required?",
+        "Is an external finishing vendor involved?"
+      ],
+      "limits": "This is a workflow model, not a claim every printer owns every machine.",
+      "reviewStatus": "CURATED_REFERENCE",
+      "lastReviewedAt": "2026-10-18",
+      "isLiveCompanyFact": false
+    },
+    {
+      "id": "REF-P09",
+      "industry": "printing",
+      "titleZh": "印刷品驗收與重印風險",
+      "titleEn": "Quality acceptance and reprint exceptions",
+      "stage": "Quality / dispatch",
+      "kind": "PUBLIC_CONTRACT_EXAMPLE",
+      "evidenceIds": [
+        "TW-P-TENDER"
+      ],
+      "summary": "A public printed-material procurement example specifies output-quality inspection and remedies such as corrections or reprints. The demo should distinguish approved artwork from delivered-product acceptance.",
+      "checks": [
+        "Record sampling/inspection criteria",
+        "Link defects to job ticket and proof revision",
+        "Flag possible reprint with cost impact",
+        "Track delivery and acceptance evidence"
+      ],
+      "questions": [
+        "Does the delivered job match the approved proof and order?",
+        "What do actual contract terms require if print quality is rejected?"
+      ],
+      "limits": "Public tender conditions are historic and specific; private remedies depend on actual contract.",
+      "reviewStatus": "CURATED_REFERENCE",
+      "lastReviewedAt": "2026-10-18",
+      "isLiveCompanyFact": false
+    },
+    {
+      "id": "REF-P10",
+      "industry": "printing",
+      "titleZh": "油墨、溶劑與空污適用檢核",
+      "titleEn": "Printing environmental compliance screening",
+      "stage": "Operations compliance",
+      "kind": "REGULATORY_SCREENING",
+      "evidenceIds": [
+        "TW-P-VOC",
+        "TW-P-PERMIT-HISTORY"
+      ],
+      "summary": "Printing processes using solvent-based inks, cleansers or coatings may trigger environmental emission control, depending on the regulated process and amounts. Historical environmental correspondence illustrates why ink/solvent usage must be reviewed.",
+      "checks": [
+        "Identify printing process type and relevant materials",
+        "Record annual consumption and SDS",
+        "Request environmental specialist applicability determination",
+        "Track permits and emission-control obligations where required"
+      ],
+      "questions": [
+        "Does the specific site/process trigger a permit threshold?",
+        "What current ministry/local authority rules apply?"
+      ],
+      "limits": "Never declare all printers need VOC permits; do not reuse an old letter as current compliance advice.",
+      "reviewStatus": "CURATED_REFERENCE",
+      "lastReviewedAt": "2026-10-18",
+      "isLiveCompanyFact": false
+    },
+    {
+      "id": "REF-P11",
+      "industry": "printing",
+      "titleZh": "紙材替代、供應與價格波動",
+      "titleEn": "Paper substitution and supplier change controls",
+      "stage": "Procurement",
+      "kind": "WORKFLOW_RECOMMENDATION",
+      "evidenceIds": [
+        "TW-P-UNIVERSITY",
+        "TW-P-POSTER"
+      ],
+      "summary": "Print choices affect the prepress output, stock, press setup and finishing. The product should hold a paper substitution until the selected supplier and customer approve material performance, availability, price, and proof implications.",
+      "checks": [
+        "Keep original and proposed stock in change request",
+        "Compute direct cost delta separately",
+        "Ask for sample proof if color/absorption changes",
+        "Create new production ticket only after required approvals"
+      ],
+      "questions": [
+        "Does the new paper need revised color settings or delivery planning?",
+        "Are current supplier costs verified?"
+      ],
+      "limits": "Sample workflow design, not a claim of universal stock pricing.",
+      "reviewStatus": "CURATED_REFERENCE",
+      "lastReviewedAt": "2026-10-18",
+      "isLiveCompanyFact": false
+    },
+    {
+      "id": "REF-P12",
+      "industry": "printing",
+      "titleZh": "預估與實際印製成本差異",
+      "titleEn": "Historical estimates versus actual manufacturing cost",
+      "stage": "Management analytics",
+      "kind": "WORKFLOW_RECOMMENDATION",
+      "evidenceIds": [
+        "TW-P-UNIVERSITY",
+        "TW-P-TENDER"
+      ],
+      "summary": "Costing should separate estimated materials, setup, printing, finishing, packing and dispatch from actual consumption and accepted outputs so future comparison is defensible.",
+      "checks": [
+        "Record estimated and actual cost codes",
+        "Tie reprints/waste to job ID",
+        "Do not treat quoted selling price as cost",
+        "Review deviations before using history to quote new jobs"
+      ],
+      "questions": [
+        "Was the job accepted and cost-complete?",
+        "Did reprint losses affect actual margins?"
+      ],
+      "limits": "The demo's generated cost histories are fictional and cannot prove real market price.",
+      "reviewStatus": "CURATED_REFERENCE",
+      "lastReviewedAt": "2026-10-18",
+      "isLiveCompanyFact": false
+    },
+    {
+      "id": "REF-P13",
+      "industry": "printing",
+      "titleZh": "商業報價稅金與客戶資料",
+      "titleEn": "Sales tax and personal-data handling",
+      "stage": "Commercial & privacy",
+      "kind": "CROSS_INDUSTRY_LAW",
+      "evidenceIds": [
+        "TW-I-TAX",
+        "TW-I-PDPA"
+      ],
+      "summary": "Printing quotations and customer contact files need applicable tax treatment and purpose-limited handling of personal data; a sample 5% assumption requires validation for actual trade.",
+      "checks": [
+        "Separate before-tax and inclusive quotations",
+        "Protect buyer contacts, shipping information and artwork",
+        "Define who sees confidential client orders",
+        "Approve outbound communications"
+      ],
+      "questions": [
+        "Does this company have the correct invoice/tax setup?",
+        "Does a contractor need customer personal data for this task?"
+      ],
+      "limits": "Company tax situation and lawful purposes cannot be inferred from public examples.",
+      "reviewStatus": "CURATED_REFERENCE",
+      "lastReviewedAt": "2026-10-18",
+      "isLiveCompanyFact": false
+    }
+  ],
+  "documents": [
+    {
+      "id": "REF-I01",
+      "projectId": null,
+      "title": "室內裝修行為是否適用法規 · Determine whether works fall under interior-renovation rules",
+      "kind": "Public industry reference",
+      "version": "source-review-2026-10-18",
+      "status": "Evidence-linked guidance",
+      "owner": "PrimeStride research",
+      "date": "2026-10-18",
+      "sourceType": "LEGAL_SCOPE",
+      "basisType": "PUBLIC_REFERENCE",
+      "industry": "interior",
+      "workflowPhase": "Intake & compliance",
+      "evidenceIds": [
+        "TW-I-LAW",
+        "TW-I-NEWS"
+      ],
+      "sourceUrl": "https://law.moj.gov.tw/LawClass/LawAll.aspx?PCode=D0070148",
+      "originalUrl": "https://law.moj.gov.tw/LawClass/LawAll.aspx?PCode=D0070148",
+      "body": "# 室內裝修行為是否適用法規 / Determine whether works fall under interior-renovation rules\n\nReference ID: REF-I01\nCategory: LEGAL_SCOPE\nWorkflow phase: Intake & compliance\nSource status: CURATED PUBLIC INDUSTRY REFERENCE (not company-specific)\nLast verified: 2026-10-18\n\n## Evidence-based explanation\nThe regulatory definition covers certain fixed ceiling, internal wall, partition and layout works; excluded examples include wallpaper, furniture placement and some movable elements. Building use and scope affect whether review requirements apply.\n\n## Suggested controls for the StrideBrain demo\n- Describe building use and location\n- Identify fixed partitions, ceiling or wall works\n- Record original floor plans and intended changes\n- Request qualified professional determination for applicability\n\n## Questions StrideBrain should ask\n- Are internal walls or fixed partitions changing?\n- Does the work affect an escape route or shared facility?\n\n## Scope and uncertainty\nDo not claim every residential decorative change requires the same permit; do not claim any project is automatically exempt.\n\n## Original public sources\n- 建築物室內裝修管理辦法 · 現行條文 — Ministry of Justice / Ministry of Interior [Articles 2–3, 9–10, 23–34] (https://law.moj.gov.tw/LawClass/LawAll.aspx?PCode=D0070148)\n- 內政部澄清 2026 裝修申請新制謠言 — Ministry of the Interior [Public clarification, updated September 2026] (https://www.moi.gov.tw/News_Content.aspx?Create=1&n=2&s=337863)\n\n## Data provenance\nThis is an original paraphrase and product-design mapping based on the cited public sources. It is NOT a real company's contract, invoice, permit, price list, or internal SOP. Actual site, printer, contract, and legal applicability must be checked before acting.\n"
+    },
+    {
+      "id": "REF-I02",
+      "projectId": null,
+      "title": "室內裝修專業資格與查詢 · Licensed practitioner and registration verification",
+      "kind": "Public industry reference",
+      "version": "source-review-2026-10-18",
+      "status": "Evidence-linked guidance",
+      "owner": "PrimeStride research",
+      "date": "2026-10-18",
+      "sourceType": "OFFICIAL_GUIDANCE",
+      "basisType": "PUBLIC_REFERENCE",
+      "industry": "interior",
+      "workflowPhase": "Supplier / contractor onboarding",
+      "evidenceIds": [
+        "TW-I-LAW",
+        "TW-I-REGISTRY"
+      ],
+      "sourceUrl": "https://law.moj.gov.tw/LawClass/LawAll.aspx?PCode=D0070148",
+      "originalUrl": "https://law.moj.gov.tw/LawClass/LawAll.aspx?PCode=D0070148",
+      "body": "# 室內裝修專業資格與查詢 / Licensed practitioner and registration verification\n\nReference ID: REF-I02\nCategory: OFFICIAL_GUIDANCE\nWorkflow phase: Supplier / contractor onboarding\nSource status: CURATED PUBLIC INDUSTRY REFERENCE (not company-specific)\nLast verified: 2026-10-18\n\n## Evidence-based explanation\nInterior renovation design and construction activities may require relevant registered qualified businesses and professionals; official registry information is available for checking.\n\n## Suggested controls for the StrideBrain demo\n- Record design and施工 scope\n- Ask for registration evidence and expiry\n- Check official registry before contracting\n- Have authorized reviewer accept qualification evidence\n\n## Questions StrideBrain should ask\n- Is the design or construction party properly qualified for this scope?\n- Has the registration been verified recently?\n\n## Scope and uncertainty\nNever infer a company's registration or staff certification from its name.\n\n## Original public sources\n- 建築物室內裝修管理辦法 · 現行條文 — Ministry of Justice / Ministry of Interior [Articles 2–3, 9–10, 23–34] (https://law.moj.gov.tw/LawClass/LawAll.aspx?PCode=D0070148)\n- 國土署提醒查詢合格室內裝修業者與專業技術人員 — National Land Management Agency [Qualified business/personnel lookup guidance] (https://www.nlma.gov.tw/ch/titlelist/clear/17307)\n\n## Data provenance\nThis is an original paraphrase and product-design mapping based on the cited public sources. It is NOT a real company's contract, invoice, permit, price list, or internal SOP. Actual site, printer, contract, and legal applicability must be checked before acting.\n"
+    },
+    {
+      "id": "REF-I03",
+      "projectId": null,
+      "title": "室內裝修圖說與審查資料 · Drawing package and submission requirements",
+      "kind": "Public industry reference",
+      "version": "source-review-2026-10-18",
+      "status": "Evidence-linked guidance",
+      "owner": "PrimeStride research",
+      "date": "2026-10-18",
+      "sourceType": "REGULATION",
+      "basisType": "PUBLIC_REFERENCE",
+      "industry": "interior",
+      "workflowPhase": "Design & review",
+      "evidenceIds": [
+        "TW-I-LAW",
+        "TW-I-CASE"
+      ],
+      "sourceUrl": "https://law.moj.gov.tw/LawClass/LawAll.aspx?PCode=D0070148",
+      "originalUrl": "https://law.moj.gov.tw/LawClass/LawAll.aspx?PCode=D0070148",
+      "body": "# 室內裝修圖說與審查資料 / Drawing package and submission requirements\n\nReference ID: REF-I03\nCategory: REGULATION\nWorkflow phase: Design & review\nSource status: CURATED PUBLIC INDUSTRY REFERENCE (not company-specific)\nLast verified: 2026-10-18\n\n## Evidence-based explanation\nArticles 23–26 describe required applications, evidence of property rights, existing authorized plans, and location, plan, elevation, section and detail drawings for applicable review procedures.\n\n## Suggested controls for the StrideBrain demo\n- Track drawing version, author and approving professional\n- Identify missing rights/plan documents\n- Preserve approved construction issue\n- Track fire and material check requirements\n\n## Questions StrideBrain should ask\n- Which drawing is legally current for work?\n- What evidence is missing from the application package?\n\n## Scope and uncertainty\nThe demo is a document readiness assistant, not an approval authority.\n\n## Original public sources\n- 建築物室內裝修管理辦法 · 現行條文 — Ministry of Justice / Ministry of Interior [Articles 2–3, 9–10, 23–34] (https://law.moj.gov.tw/LawClass/LawAll.aspx?PCode=D0070148)\n- 建管服務：室內裝修審查與竣工查驗 — Pingtung Agricultural Biotechnology Park public management service [Site-specific public agency service procedure] (https://www.atp.gov.tw/cht/cl0110.aspx)\n\n## Data provenance\nThis is an original paraphrase and product-design mapping based on the cited public sources. It is NOT a real company's contract, invoice, permit, price list, or internal SOP. Actual site, printer, contract, and legal applicability must be checked before acting.\n"
+    },
+    {
+      "id": "REF-I04",
+      "projectId": null,
+      "title": "消防設備與避難安全檢查 · Fire protection and escape-route safeguards",
+      "kind": "Public industry reference",
+      "version": "source-review-2026-10-18",
+      "status": "Evidence-linked guidance",
+      "owner": "PrimeStride research",
+      "date": "2026-10-18",
+      "sourceType": "REGULATION",
+      "basisType": "PUBLIC_REFERENCE",
+      "industry": "interior",
+      "workflowPhase": "Design & review",
+      "evidenceIds": [
+        "TW-I-LAW",
+        "TW-I-FORM"
+      ],
+      "sourceUrl": "https://law.moj.gov.tw/LawClass/LawAll.aspx?PCode=D0070148",
+      "originalUrl": "https://law.moj.gov.tw/LawClass/LawAll.aspx?PCode=D0070148",
+      "body": "# 消防設備與避難安全檢查 / Fire protection and escape-route safeguards\n\nReference ID: REF-I04\nCategory: REGULATION\nWorkflow phase: Design & review\nSource status: CURATED PUBLIC INDUSTRY REFERENCE (not company-specific)\nLast verified: 2026-10-18\n\n## Evidence-based explanation\nRelevant renovation review checks include maintaining fire/escape facilities, fire compartments, and building structural elements. Fire-equipment changes may involve separate fire authority review.\n\n## Suggested controls for the StrideBrain demo\n- Ask whether exits/escape paths change\n- Flag partitions and fire doors\n- Check fire-equipment scope with qualified designer\n- Record authority sign-off if applicable\n\n## Questions StrideBrain should ask\n- Will a proposed layout alter escape or fire-safety systems?\n- Who must validate a safety-related change?\n\n## Scope and uncertainty\nNever let the Copilot approve fire design or technical compliance.\n\n## Original public sources\n- 建築物室內裝修管理辦法 · 現行條文 — Ministry of Justice / Ministry of Interior [Articles 2–3, 9–10, 23–34] (https://law.moj.gov.tw/LawClass/LawAll.aspx?PCode=D0070148)\n- 建築物室內裝修竣工查驗表 E1-6 — National Land Management Agency [Official completion-inspection checklist form] (https://www.nlma.gov.tw/uploads/files/a1cdf33705d10f915c61494e54a49f99.pdf)\n\n## Data provenance\nThis is an original paraphrase and product-design mapping based on the cited public sources. It is NOT a real company's contract, invoice, permit, price list, or internal SOP. Actual site, printer, contract, and legal applicability must be checked before acting.\n"
+    },
+    {
+      "id": "REF-I05",
+      "projectId": null,
+      "title": "裝修契約範本與工程範圍 · Design and construction contract structure",
+      "kind": "Public industry reference",
+      "version": "source-review-2026-10-18",
+      "status": "Evidence-linked guidance",
+      "owner": "PrimeStride research",
+      "date": "2026-10-18",
+      "sourceType": "OFFICIAL_TEMPLATE",
+      "basisType": "PUBLIC_REFERENCE",
+      "industry": "interior",
+      "workflowPhase": "Commercial proposal",
+      "evidenceIds": [
+        "TW-I-CONTRACT"
+      ],
+      "sourceUrl": "https://www.nlma.gov.tw/ch/legislation/law%26regusw/1320",
+      "originalUrl": "https://www.nlma.gov.tw/ch/legislation/law%26regusw/1320",
+      "body": "# 裝修契約範本與工程範圍 / Design and construction contract structure\n\nReference ID: REF-I05\nCategory: OFFICIAL_TEMPLATE\nWorkflow phase: Commercial proposal\nSource status: CURATED PUBLIC INDUSTRY REFERENCE (not company-specific)\nLast verified: 2026-10-18\n\n## Evidence-based explanation\nThe Ministry of the Interior publishes separate sample contracts for design, renovation construction and combined services. Scope, pricing, payment terms and responsibilities need to be aligned to the selected agreement.\n\n## Suggested controls for the StrideBrain demo\n- Choose design-only, build-only or combined engagement\n- Identify work scope and exclusions\n- Attach pricing revision and drawing issue\n- Document change-order procedure and acceptance parties\n\n## Questions StrideBrain should ask\n- Is this a design retainer or a construction commitment?\n- Which contract version governs the quotation?\n\n## Scope and uncertainty\nA public model form is not a signed customer contract; legal review required for a real engagement.\n\n## Original public sources\n- 建築物室內裝修契約範本（設計／工程／合併） — Ministry of the Interior / National Land Management Agency [Official published model contract announcements and sample files] (https://www.nlma.gov.tw/ch/legislation/law%26regusw/1320)\n\n## Data provenance\nThis is an original paraphrase and product-design mapping based on the cited public sources. It is NOT a real company's contract, invoice, permit, price list, or internal SOP. Actual site, printer, contract, and legal applicability must be checked before acting.\n"
+    },
+    {
+      "id": "REF-I06",
+      "projectId": null,
+      "title": "2026 新制消息查核 · Avoid incorrect statements about 2026 permit changes",
+      "kind": "Public industry reference",
+      "version": "source-review-2026-10-18",
+      "status": "Evidence-linked guidance",
+      "owner": "PrimeStride research",
+      "date": "2026-10-18",
+      "sourceType": "OFFICIAL_CLARIFICATION",
+      "basisType": "PUBLIC_REFERENCE",
+      "industry": "interior",
+      "workflowPhase": "Intake & compliance",
+      "evidenceIds": [
+        "TW-I-NEWS"
+      ],
+      "sourceUrl": "https://www.moi.gov.tw/News_Content.aspx?Create=1&n=2&s=337863",
+      "originalUrl": "https://www.moi.gov.tw/News_Content.aspx?Create=1&n=2&s=337863",
+      "body": "# 2026 新制消息查核 / Avoid incorrect statements about 2026 permit changes\n\nReference ID: REF-I06\nCategory: OFFICIAL_CLARIFICATION\nWorkflow phase: Intake & compliance\nSource status: CURATED PUBLIC INDUSTRY REFERENCE (not company-specific)\nLast verified: 2026-10-18\n\n## Evidence-based explanation\nThe national authority publicly corrected circulating claims that a newly imposed 2026 rule universally changed the start-work permit procedure; it stated that the discussed contract provisions were then a draft and existing application rules had not changed.\n\n## Suggested controls for the StrideBrain demo\n- Date-stamp reference guidance\n- Link the original clarification\n- Ask professional to verify current rule before work\n- Avoid blanket permit assertions\n\n## Questions StrideBrain should ask\n- Has the client's building/use been checked against current law?\n- Does a newer enacted rule supersede the cited clarification?\n\n## Scope and uncertainty\nDo not treat an old news article as an evergreen legal certification.\n\n## Original public sources\n- 內政部澄清 2026 裝修申請新制謠言 — Ministry of the Interior [Public clarification, updated September 2026] (https://www.moi.gov.tw/News_Content.aspx?Create=1&n=2&s=337863)\n\n## Data provenance\nThis is an original paraphrase and product-design mapping based on the cited public sources. It is NOT a real company's contract, invoice, permit, price list, or internal SOP. Actual site, printer, contract, and legal applicability must be checked before acting.\n"
+    },
+    {
+      "id": "REF-I07",
+      "projectId": null,
+      "title": "設計變更與核定圖說 · Design revisions and approved construction instructions",
+      "kind": "Public industry reference",
+      "version": "source-review-2026-10-18",
+      "status": "Evidence-linked guidance",
+      "owner": "PrimeStride research",
+      "date": "2026-10-18",
+      "sourceType": "REGULATION_PLUS_WORKFLOW",
+      "basisType": "PUBLIC_REFERENCE",
+      "industry": "interior",
+      "workflowPhase": "Change order",
+      "evidenceIds": [
+        "TW-I-LAW",
+        "TW-I-FORM"
+      ],
+      "sourceUrl": "https://law.moj.gov.tw/LawClass/LawAll.aspx?PCode=D0070148",
+      "originalUrl": "https://law.moj.gov.tw/LawClass/LawAll.aspx?PCode=D0070148",
+      "body": "# 設計變更與核定圖說 / Design revisions and approved construction instructions\n\nReference ID: REF-I07\nCategory: REGULATION_PLUS_WORKFLOW\nWorkflow phase: Change order\nSource status: CURATED PUBLIC INDUSTRY REFERENCE (not company-specific)\nLast verified: 2026-10-18\n\n## Evidence-based explanation\nFor regulated works, Article 30 addresses work according to approved drawings and how design changes are handled. The recommended product workflow is to hold draft drawings until reviewed, track downstream impact, and prevent unapproved work instructions.\n\n## Suggested controls for the StrideBrain demo\n- Show original and revised drawing versions\n- Flag changed safety/material details\n- Estimate cost and schedule effects\n- Hold construction-release until required decisions are recorded\n\n## Questions StrideBrain should ask\n- Is this an approved drawing or a draft pricing option?\n- Must the revised drawing be resubmitted for review?\n\n## Scope and uncertainty\nResubmission requirements are conditional; professional decision needed.\n\n## Original public sources\n- 建築物室內裝修管理辦法 · 現行條文 — Ministry of Justice / Ministry of Interior [Articles 2–3, 9–10, 23–34] (https://law.moj.gov.tw/LawClass/LawAll.aspx?PCode=D0070148)\n- 建築物室內裝修竣工查驗表 E1-6 — National Land Management Agency [Official completion-inspection checklist form] (https://www.nlma.gov.tw/uploads/files/a1cdf33705d10f915c61494e54a49f99.pdf)\n\n## Data provenance\nThis is an original paraphrase and product-design mapping based on the cited public sources. It is NOT a real company's contract, invoice, permit, price list, or internal SOP. Actual site, printer, contract, and legal applicability must be checked before acting.\n"
+    },
+    {
+      "id": "REF-I08",
+      "projectId": null,
+      "title": "追加減工程與付款里程碑 · Change order, scope and payment transparency",
+      "kind": "Public industry reference",
+      "version": "source-review-2026-10-18",
+      "status": "Evidence-linked guidance",
+      "owner": "PrimeStride research",
+      "date": "2026-10-18",
+      "sourceType": "WORKFLOW_RECOMMENDATION",
+      "basisType": "PUBLIC_REFERENCE",
+      "industry": "interior",
+      "workflowPhase": "Change order",
+      "evidenceIds": [
+        "TW-I-CONTRACT",
+        "TW-I-REGISTRY"
+      ],
+      "sourceUrl": "https://www.nlma.gov.tw/ch/legislation/law%26regusw/1320",
+      "originalUrl": "https://www.nlma.gov.tw/ch/legislation/law%26regusw/1320",
+      "body": "# 追加減工程與付款里程碑 / Change order, scope and payment transparency\n\nReference ID: REF-I08\nCategory: WORKFLOW_RECOMMENDATION\nWorkflow phase: Change order\nSource status: CURATED PUBLIC INDUSTRY REFERENCE (not company-specific)\nLast verified: 2026-10-18\n\n## Evidence-based explanation\nThe official contract resources and consumer-protection guidance motivate traceable scope, price and revision review. StrideBrain can show original scope, added work, actual verified costs, proposed price and approval state as separate objects.\n\n## Suggested controls for the StrideBrain demo\n- Never overwrite the originally approved contract price\n- Link change to scope/drawing revision\n- Keep contractor/subcontractor cost evidence\n- Distinguish payable milestones from paid cash\n\n## Questions StrideBrain should ask\n- What has the client approved in writing?\n- Does a supplier quote expire before the planned work?\n\n## Scope and uncertainty\nWorkflow recommendation derived from public contract context, not a legally mandated universal change form.\n\n## Original public sources\n- 建築物室內裝修契約範本（設計／工程／合併） — Ministry of the Interior / National Land Management Agency [Official published model contract announcements and sample files] (https://www.nlma.gov.tw/ch/legislation/law%26regusw/1320)\n- 國土署提醒查詢合格室內裝修業者與專業技術人員 — National Land Management Agency [Qualified business/personnel lookup guidance] (https://www.nlma.gov.tw/ch/titlelist/clear/17307)\n\n## Data provenance\nThis is an original paraphrase and product-design mapping based on the cited public sources. It is NOT a real company's contract, invoice, permit, price list, or internal SOP. Actual site, printer, contract, and legal applicability must be checked before acting.\n"
+    },
+    {
+      "id": "REF-I09",
+      "projectId": null,
+      "title": "完工查驗與交屋 · Completion inspection and handover traceability",
+      "kind": "Public industry reference",
+      "version": "source-review-2026-10-18",
+      "status": "Evidence-linked guidance",
+      "owner": "PrimeStride research",
+      "date": "2026-10-18",
+      "sourceType": "REGULATION",
+      "basisType": "PUBLIC_REFERENCE",
+      "industry": "interior",
+      "workflowPhase": "Handover",
+      "evidenceIds": [
+        "TW-I-LAW",
+        "TW-I-FORM"
+      ],
+      "sourceUrl": "https://law.moj.gov.tw/LawClass/LawAll.aspx?PCode=D0070148",
+      "originalUrl": "https://law.moj.gov.tw/LawClass/LawAll.aspx?PCode=D0070148",
+      "body": "# 完工查驗與交屋 / Completion inspection and handover traceability\n\nReference ID: REF-I09\nCategory: REGULATION\nWorkflow phase: Handover\nSource status: CURATED PUBLIC INDUSTRY REFERENCE (not company-specific)\nLast verified: 2026-10-18\n\n## Evidence-based explanation\nArticles 32–34 cover completion inspection and documents for regulated renovation; the official check form references approved drawings, materials, fire/escape facilities and other checks.\n\n## Suggested controls for the StrideBrain demo\n- Collect completion photos and authorized drawing issue\n- Reconcile work against approved plans\n- Identify required inspection and certificate\n- Track defects, customer acceptance and warranties as company workflow\n\n## Questions StrideBrain should ask\n- What evidence is still missing for regulated completion?\n- Who is authorized to sign the inspection documents?\n\n## Scope and uncertainty\nNever issue an official completion certificate via StrideBrain.\n\n## Original public sources\n- 建築物室內裝修管理辦法 · 現行條文 — Ministry of Justice / Ministry of Interior [Articles 2–3, 9–10, 23–34] (https://law.moj.gov.tw/LawClass/LawAll.aspx?PCode=D0070148)\n- 建築物室內裝修竣工查驗表 E1-6 — National Land Management Agency [Official completion-inspection checklist form] (https://www.nlma.gov.tw/uploads/files/a1cdf33705d10f915c61494e54a49f99.pdf)\n\n## Data provenance\nThis is an original paraphrase and product-design mapping based on the cited public sources. It is NOT a real company's contract, invoice, permit, price list, or internal SOP. Actual site, printer, contract, and legal applicability must be checked before acting.\n"
+    },
+    {
+      "id": "REF-I10",
+      "projectId": null,
+      "title": "簡易程序與條件判定 · Conditional simplified renovation procedure",
+      "kind": "Public industry reference",
+      "version": "source-review-2026-10-18",
+      "status": "Evidence-linked guidance",
+      "owner": "PrimeStride research",
+      "date": "2026-10-18",
+      "sourceType": "REGULATION",
+      "basisType": "PUBLIC_REFERENCE",
+      "industry": "interior",
+      "workflowPhase": "Regulatory screening",
+      "evidenceIds": [
+        "TW-I-LAW"
+      ],
+      "sourceUrl": "https://law.moj.gov.tw/LawClass/LawAll.aspx?PCode=D0070148",
+      "originalUrl": "https://law.moj.gov.tw/LawClass/LawAll.aspx?PCode=D0070148",
+      "body": "# 簡易程序與條件判定 / Conditional simplified renovation procedure\n\nReference ID: REF-I10\nCategory: REGULATION\nWorkflow phase: Regulatory screening\nSource status: CURATED PUBLIC INDUSTRY REFERENCE (not company-specific)\nLast verified: 2026-10-18\n\n## Evidence-based explanation\nArticle 33 sets conditional pathways based on work characteristics, area, floor, fire compartments and unaffected safety systems. It is not a general DIY exemption.\n\n## Suggested controls for the StrideBrain demo\n- Collect floor, gross floor area and current use\n- Record whether life-safety elements change\n- Identify professional signatories\n- Route regulatory pathway choice for local expert review\n\n## Questions StrideBrain should ask\n- Does the project satisfy every stated eligibility condition?\n- What does the local building authority require?\n\n## Scope and uncertainty\nSoftware should flag possible relevance only; not make a binding permit determination.\n\n## Original public sources\n- 建築物室內裝修管理辦法 · 現行條文 — Ministry of Justice / Ministry of Interior [Articles 2–3, 9–10, 23–34] (https://law.moj.gov.tw/LawClass/LawAll.aspx?PCode=D0070148)\n\n## Data provenance\nThis is an original paraphrase and product-design mapping based on the cited public sources. It is NOT a real company's contract, invoice, permit, price list, or internal SOP. Actual site, printer, contract, and legal applicability must be checked before acting.\n"
+    },
+    {
+      "id": "REF-I11",
+      "projectId": null,
+      "title": "專案資訊與個資保護 · Client plans and personal data handling",
+      "kind": "Public industry reference",
+      "version": "source-review-2026-10-18",
+      "status": "Evidence-linked guidance",
+      "owner": "PrimeStride research",
+      "date": "2026-10-18",
+      "sourceType": "CROSS_INDUSTRY_LAW",
+      "basisType": "PUBLIC_REFERENCE",
+      "industry": "interior",
+      "workflowPhase": "Company knowledge",
+      "evidenceIds": [
+        "TW-I-PDPA"
+      ],
+      "sourceUrl": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=I0050021",
+      "originalUrl": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=I0050021",
+      "body": "# 專案資訊與個資保護 / Client plans and personal data handling\n\nReference ID: REF-I11\nCategory: CROSS_INDUSTRY_LAW\nWorkflow phase: Company knowledge\nSource status: CURATED PUBLIC INDUSTRY REFERENCE (not company-specific)\nLast verified: 2026-10-18\n\n## Evidence-based explanation\nCustomer personal information and home-related documents need purpose-limited handling and appropriate safeguards under Taiwan personal-data law.\n\n## Suggested controls for the StrideBrain demo\n- Keep company/customer data inside the proper organization\n- Restrict drawings with residential addresses\n- Record consent/purpose where required\n- Support access, correction and deletion workflows\n\n## Questions StrideBrain should ask\n- Can subcontractors see only the documents necessary for their work?\n- How long should this client's records be retained?\n\n## Scope and uncertainty\nSpecific lawful basis and retention duties depend on actual processing and counsel review.\n\n## Original public sources\n- 個人資料保護法 — Ministry of Justice [Articles 3, 5, 8, 19, 20 and related requirements] (https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=I0050021)\n\n## Data provenance\nThis is an original paraphrase and product-design mapping based on the cited public sources. It is NOT a real company's contract, invoice, permit, price list, or internal SOP. Actual site, printer, contract, and legal applicability must be checked before acting.\n"
+    },
+    {
+      "id": "REF-I12",
+      "projectId": null,
+      "title": "報價及營業稅呈現 · Estimate and applicable business tax",
+      "kind": "Public industry reference",
+      "version": "source-review-2026-10-18",
+      "status": "Evidence-linked guidance",
+      "owner": "PrimeStride research",
+      "date": "2026-10-18",
+      "sourceType": "CROSS_INDUSTRY_LAW",
+      "basisType": "PUBLIC_REFERENCE",
+      "industry": "interior",
+      "workflowPhase": "Quoting",
+      "evidenceIds": [
+        "TW-I-TAX"
+      ],
+      "sourceUrl": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=G0340080&sid=1QUgcF",
+      "originalUrl": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=G0340080&sid=1QUgcF",
+      "body": "# 報價及營業稅呈現 / Estimate and applicable business tax\n\nReference ID: REF-I12\nCategory: CROSS_INDUSTRY_LAW\nWorkflow phase: Quoting\nSource status: CURATED PUBLIC INDUSTRY REFERENCE (not company-specific)\nLast verified: 2026-10-18\n\n## Evidence-based explanation\nThe business-tax law provides the framework for different tax rates and calculation. The demo's flat 5% is an explicit illustrative assumption, not verification of the client company's actual tax obligations.\n\n## Suggested controls for the StrideBrain demo\n- Keep net price, tax assumption and gross price separate\n- Label budget, estimate, accepted contract and actual collections distinctly\n- Owner/accountant verifies tax treatment\n- Only approved quotes go to customer\n\n## Questions StrideBrain should ask\n- Is the estimate tax-inclusive or tax-exclusive?\n- Is this a proposed price or accepted contract?\n\n## Scope and uncertainty\nNo automated legal or tax conclusions.\n\n## Original public sources\n- 加值型及非加值型營業稅法 — Ministry of Justice / Ministry of Finance [Articles 10 and 14 (rate and calculations); actual applicability varies] (https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=G0340080&sid=1QUgcF)\n\n## Data provenance\nThis is an original paraphrase and product-design mapping based on the cited public sources. It is NOT a real company's contract, invoice, permit, price list, or internal SOP. Actual site, printer, contract, and legal applicability must be checked before acting.\n"
+    },
+    {
+      "id": "REF-P01",
+      "projectId": null,
+      "title": "印刷委託與工單建立 · Print inquiry and job-ticket intake",
+      "kind": "Public industry reference",
+      "version": "source-review-2026-10-18",
+      "status": "Evidence-linked guidance",
+      "owner": "PrimeStride research",
+      "date": "2026-10-18",
+      "sourceType": "EDUCATIONAL_PLUS_WORKFLOW",
+      "basisType": "PUBLIC_REFERENCE",
+      "industry": "printing",
+      "workflowPhase": "Inquiry",
+      "evidenceIds": [
+        "TW-P-UNIVERSITY",
+        "TW-P-GUILD"
+      ],
+      "sourceUrl": "https://eec.ntua.edu.tw/Course/Detail/25246",
+      "originalUrl": "https://eec.ntua.edu.tw/Course/Detail/25246",
+      "body": "# 印刷委託與工單建立 / Print inquiry and job-ticket intake\n\nReference ID: REF-P01\nCategory: EDUCATIONAL_PLUS_WORKFLOW\nWorkflow phase: Inquiry\nSource status: CURATED PUBLIC INDUSTRY REFERENCE (not company-specific)\nLast verified: 2026-10-18\n\n## Evidence-based explanation\nPrepress planning includes job-ticket preparation, artwork checks, imposition and cost estimates. As a model workflow, collect print size, quantities, stock, colors, finishing and due date before pricing.\n\n## Suggested controls for the StrideBrain demo\n- Require finished size and run quantity\n- Capture single/double sided and color details\n- Select paper/finish/binding\n- Link promised delivery to job capacity confirmation\n\n## Questions StrideBrain should ask\n- Is this a new print run or a reprint?\n- What quantity, substrate and finishing are required?\n\n## Scope and uncertainty\nReal shop equipment and quoting formulas are company-specific.\n\n## Original public sources\n- 印前作業實務課程與印刷生產流程 — National Taiwan University of Arts [Course outline: prepress, color management, file checking, imposition, job tickets, cost estimates] (https://eec.ntua.edu.tw/Course/Detail/25246)\n- 台北市印刷商業同業公會：印前、印中、印後產業範圍 — Taipei Printing Commercial Association [Industry coverage of prepress, press, postpress, supplies and publishing] (https://www.tcpa88.org.tw/gong-hui-jie-shao/gong-hui-jian-jie)\n\n## Data provenance\nThis is an original paraphrase and product-design mapping based on the cited public sources. It is NOT a real company's contract, invoice, permit, price list, or internal SOP. Actual site, printer, contract, and legal applicability must be checked before acting.\n"
+    },
+    {
+      "id": "REF-P02",
+      "projectId": null,
+      "title": "海報印前檔案規格 · Poster prepress file specification example",
+      "kind": "Public industry reference",
+      "version": "source-review-2026-10-18",
+      "status": "Evidence-linked guidance",
+      "owner": "PrimeStride research",
+      "date": "2026-10-18",
+      "sourceType": "VENDOR_EXAMPLE",
+      "basisType": "PUBLIC_REFERENCE",
+      "industry": "printing",
+      "workflowPhase": "Prepress",
+      "evidenceIds": [
+        "TW-P-POSTER"
+      ],
+      "sourceUrl": "https://www.interprint.com.tw/docInfo.aspx?docid=63&key=c3",
+      "originalUrl": "https://www.interprint.com.tw/docInfo.aspx?docid=63&key=c3",
+      "body": "# 海報印前檔案規格 / Poster prepress file specification example\n\nReference ID: REF-P02\nCategory: VENDOR_EXAMPLE\nWorkflow phase: Prepress\nSource status: CURATED PUBLIC INDUSTRY REFERENCE (not company-specific)\nLast verified: 2026-10-18\n\n## Evidence-based explanation\nA Taiwanese printer publicly lists PDF delivery, recommended image resolution of at least 300 dpi, 3 mm bleed, and embedded/outlined fonts for its poster/postcard products.\n\n## Suggested controls for the StrideBrain demo\n- Inspect actual file type and dimensions\n- Check bleed as required by selected vendor\n- Check placed image resolution\n- Check embedded fonts or text outlines\n\n## Questions StrideBrain should ask\n- Which printer/specification governs this order?\n- Does the input artwork meet that agreed vendor rule?\n\n## Scope and uncertainty\nThese are one printer's published product requirements, not universal legal print standards.\n\n## Original public sources\n- 樺舍印前：海報／明信片檔案製作規範 — Interprint Taiwan [Specific vendor instructions revised June 8, 2026; PDF, image resolution, 3mm bleed, fonts] (https://www.interprint.com.tw/docInfo.aspx?docid=63&key=c3)\n\n## Data provenance\nThis is an original paraphrase and product-design mapping based on the cited public sources. It is NOT a real company's contract, invoice, permit, price list, or internal SOP. Actual site, printer, contract, and legal applicability must be checked before acting.\n"
+    },
+    {
+      "id": "REF-P03",
+      "projectId": null,
+      "title": "A3 海報尺寸與出血 · A3 trim and 3 mm bleed example",
+      "kind": "Public industry reference",
+      "version": "source-review-2026-10-18",
+      "status": "Evidence-linked guidance",
+      "owner": "PrimeStride research",
+      "date": "2026-10-18",
+      "sourceType": "VENDOR_EXAMPLE",
+      "basisType": "PUBLIC_REFERENCE",
+      "industry": "printing",
+      "workflowPhase": "Prepress",
+      "evidenceIds": [
+        "TW-P-POSTER"
+      ],
+      "sourceUrl": "https://www.interprint.com.tw/docInfo.aspx?docid=63&key=c3",
+      "originalUrl": "https://www.interprint.com.tw/docInfo.aspx?docid=63&key=c3",
+      "body": "# A3 海報尺寸與出血 / A3 trim and 3 mm bleed example\n\nReference ID: REF-P03\nCategory: VENDOR_EXAMPLE\nWorkflow phase: Prepress\nSource status: CURATED PUBLIC INDUSTRY REFERENCE (not company-specific)\nLast verified: 2026-10-18\n\n## Evidence-based explanation\nAn A3 trimmed poster is shown by one Taiwan provider as 297 × 420 mm, with 303 × 426 mm file dimensions including 3 mm bleed around each edge.\n\n## Suggested controls for the StrideBrain demo\n- Record trim versus artwork size separately\n- Compare width/height in millimeters\n- Flag insufficient bleed for preflight review\n- Check orientation and safe margins\n\n## Questions StrideBrain should ask\n- Is 297 × 420 mm the requested finished size?\n- Does the press-ready PDF measure 303 × 426 mm if using this 3 mm specification?\n\n## Scope and uncertainty\nDo not apply this rule to books, packaging dies or all commercial prints.\n\n## Original public sources\n- 樺舍印前：海報／明信片檔案製作規範 — Interprint Taiwan [Specific vendor instructions revised June 8, 2026; PDF, image resolution, 3mm bleed, fonts] (https://www.interprint.com.tw/docInfo.aspx?docid=63&key=c3)\n\n## Data provenance\nThis is an original paraphrase and product-design mapping based on the cited public sources. It is NOT a real company's contract, invoice, permit, price list, or internal SOP. Actual site, printer, contract, and legal applicability must be checked before acting.\n"
+    },
+    {
+      "id": "REF-P04",
+      "projectId": null,
+      "title": "色彩模式與色差說明 · Color-management guidance versus mandatory checks",
+      "kind": "Public industry reference",
+      "version": "source-review-2026-10-18",
+      "status": "Evidence-linked guidance",
+      "owner": "PrimeStride research",
+      "date": "2026-10-18",
+      "sourceType": "VENDOR_EXAMPLE",
+      "basisType": "PUBLIC_REFERENCE",
+      "industry": "printing",
+      "workflowPhase": "Prepress",
+      "evidenceIds": [
+        "TW-P-POSTER",
+        "TW-P-UNIVERSITY"
+      ],
+      "sourceUrl": "https://www.interprint.com.tw/docInfo.aspx?docid=63&key=c3",
+      "originalUrl": "https://www.interprint.com.tw/docInfo.aspx?docid=63&key=c3",
+      "body": "# 色彩模式與色差說明 / Color-management guidance versus mandatory checks\n\nReference ID: REF-P04\nCategory: VENDOR_EXAMPLE\nWorkflow phase: Prepress\nSource status: CURATED PUBLIC INDUSTRY REFERENCE (not company-specific)\nLast verified: 2026-10-18\n\n## Evidence-based explanation\nTaiwanese vendor guidance recommends CMYK for color work and grayscale for mono work while explaining that RGB files may still be printed after conversion, potentially with different visual results.\n\n## Suggested controls for the StrideBrain demo\n- Record color space and desired match tolerance\n- Offer physical or calibrated proof where appropriate\n- Explain conversion risks to customer\n- Preserve customer-approved proof version\n\n## Questions StrideBrain should ask\n- Is color accuracy important enough to require a proof?\n- Is the CMYK recommendation a contractual requirement for this printer?\n\n## Scope and uncertainty\nDo not universally reject RGB files or promise exact color matching.\n\n## Original public sources\n- 樺舍印前：海報／明信片檔案製作規範 — Interprint Taiwan [Specific vendor instructions revised June 8, 2026; PDF, image resolution, 3mm bleed, fonts] (https://www.interprint.com.tw/docInfo.aspx?docid=63&key=c3)\n- 印前作業實務課程與印刷生產流程 — National Taiwan University of Arts [Course outline: prepress, color management, file checking, imposition, job tickets, cost estimates] (https://eec.ntua.edu.tw/Course/Detail/25246)\n\n## Data provenance\nThis is an original paraphrase and product-design mapping based on the cited public sources. It is NOT a real company's contract, invoice, permit, price list, or internal SOP. Actual site, printer, contract, and legal applicability must be checked before acting.\n"
+    },
+    {
+      "id": "REF-P05",
+      "projectId": null,
+      "title": "書籍檔案與裝訂條件 · Book cover/interior and binding file practices",
+      "kind": "Public industry reference",
+      "version": "source-review-2026-10-18",
+      "status": "Evidence-linked guidance",
+      "owner": "PrimeStride research",
+      "date": "2026-10-18",
+      "sourceType": "VENDOR_EXAMPLE",
+      "basisType": "PUBLIC_REFERENCE",
+      "industry": "printing",
+      "workflowPhase": "Prepress",
+      "evidenceIds": [
+        "TW-P-BOOK"
+      ],
+      "sourceUrl": "https://www.interprint.com.tw/docInfo.aspx?docid=60&key=c3",
+      "originalUrl": "https://www.interprint.com.tw/docInfo.aspx?docid=60&key=c3",
+      "body": "# 書籍檔案與裝訂條件 / Book cover/interior and binding file practices\n\nReference ID: REF-P05\nCategory: VENDOR_EXAMPLE\nWorkflow phase: Prepress\nSource status: CURATED PUBLIC INDUSTRY REFERENCE (not company-specific)\nLast verified: 2026-10-18\n\n## Evidence-based explanation\nA Taiwan printer's book instructions call for separate cover and interior files, PDF settings, binding-dependent cover construction and page arrangement, with distinct examples for saddle stitch and perfect binding.\n\n## Suggested controls for the StrideBrain demo\n- Capture binding type, spine and page count\n- Keep cover and interior file versions separate\n- Check binding-specific imposition and bleed\n- Record sample proof review before printing\n\n## Questions StrideBrain should ask\n- How many pages and which binding type?\n- Are files split according to the selected print vendor's requirements?\n\n## Scope and uncertainty\nDo not carry a vendor's binding page limits across other presses without verification.\n\n## Original public sources\n- 樺舍印前：書籍封面與內頁製作規範 — Interprint Taiwan [Specific vendor instructions revised July 27, 2026; separate cover/interior files, binding options] (https://www.interprint.com.tw/docInfo.aspx?docid=60&key=c3)\n\n## Data provenance\nThis is an original paraphrase and product-design mapping based on the cited public sources. It is NOT a real company's contract, invoice, permit, price list, or internal SOP. Actual site, printer, contract, and legal applicability must be checked before acting.\n"
+    },
+    {
+      "id": "REF-P06",
+      "projectId": null,
+      "title": "印前與落版估工 · Prepress, imposition and job costing concepts",
+      "kind": "Public industry reference",
+      "version": "source-review-2026-10-18",
+      "status": "Evidence-linked guidance",
+      "owner": "PrimeStride research",
+      "date": "2026-10-18",
+      "sourceType": "EDUCATIONAL",
+      "basisType": "PUBLIC_REFERENCE",
+      "industry": "printing",
+      "workflowPhase": "Estimating",
+      "evidenceIds": [
+        "TW-P-UNIVERSITY"
+      ],
+      "sourceUrl": "https://eec.ntua.edu.tw/Course/Detail/25246",
+      "originalUrl": "https://eec.ntua.edu.tw/Course/Detail/25246",
+      "body": "# 印前與落版估工 / Prepress, imposition and job costing concepts\n\nReference ID: REF-P06\nCategory: EDUCATIONAL\nWorkflow phase: Estimating\nSource status: CURATED PUBLIC INDUSTRY REFERENCE (not company-specific)\nLast verified: 2026-10-18\n\n## Evidence-based explanation\nPrepress education in Taiwan explicitly covers file preflight, imposition calculations, job tickets and cost estimation; the demo can expose these concepts as cost lines rather than infer them invisibly.\n\n## Suggested controls for the StrideBrain demo\n- Identify setup/makeready costs\n- Separate material, press, finishing and delivery lines\n- Validate print quantity and layout/imposition\n- Record scrap and overrun assumptions\n\n## Questions StrideBrain should ask\n- What press setup is required?\n- How many sellable pieces per sheet and what waste allowance applies?\n\n## Scope and uncertainty\nPrices and production speeds must come from the individual company's records.\n\n## Original public sources\n- 印前作業實務課程與印刷生產流程 — National Taiwan University of Arts [Course outline: prepress, color management, file checking, imposition, job tickets, cost estimates] (https://eec.ntua.edu.tw/Course/Detail/25246)\n\n## Data provenance\nThis is an original paraphrase and product-design mapping based on the cited public sources. It is NOT a real company's contract, invoice, permit, price list, or internal SOP. Actual site, printer, contract, and legal applicability must be checked before acting.\n"
+    },
+    {
+      "id": "REF-P07",
+      "projectId": null,
+      "title": "客戶打樣與校稿核准 · Proofing and approval before a print run",
+      "kind": "Public industry reference",
+      "version": "source-review-2026-10-18",
+      "status": "Evidence-linked guidance",
+      "owner": "PrimeStride research",
+      "date": "2026-10-18",
+      "sourceType": "PUBLIC_CONTRACT_EXAMPLE",
+      "basisType": "PUBLIC_REFERENCE",
+      "industry": "printing",
+      "workflowPhase": "Proof approval",
+      "evidenceIds": [
+        "TW-P-TENDER"
+      ],
+      "sourceUrl": "https://www.kdais.gov.tw/files/kdais/tender/398/1060309a3.pdf",
+      "originalUrl": "https://www.kdais.gov.tw/files/kdais/tender/398/1060309a3.pdf",
+      "body": "# 客戶打樣與校稿核准 / Proofing and approval before a print run\n\nReference ID: REF-P07\nCategory: PUBLIC_CONTRACT_EXAMPLE\nWorkflow phase: Proof approval\nSource status: CURATED PUBLIC INDUSTRY REFERENCE (not company-specific)\nLast verified: 2026-10-18\n\n## Evidence-based explanation\nA historic government printing contract illustrates repeated proof review and a full sample approved before final printing. It is a concrete contract example, not a universal law for all jobs.\n\n## Suggested controls for the StrideBrain demo\n- Track proof version and correction round\n- Record acceptance of color/trim/sample\n- Block press-release without required client sign-off\n- Preserve issued-to-production file checksum or revision\n\n## Questions StrideBrain should ask\n- Has the customer approved the correct proof revision?\n- Does the signed contract require a physical proof?\n\n## Scope and uncertainty\nDo not impose this specific government procurement contract on private commercial customers.\n\n## Original public sources\n- 政府印製採購文件：校稿、打樣、品質驗收範例 — Kaohsiung District Agricultural Research and Extension Station [Archived specific printing procurement example: proofs, revised layout, binding, quality acceptance] (https://www.kdais.gov.tw/files/kdais/tender/398/1060309a3.pdf)\n\n## Data provenance\nThis is an original paraphrase and product-design mapping based on the cited public sources. It is NOT a real company's contract, invoice, permit, price list, or internal SOP. Actual site, printer, contract, and legal applicability must be checked before acting.\n"
+    },
+    {
+      "id": "REF-P08",
+      "projectId": null,
+      "title": "印後加工與裝訂 · Finishing and binding as first-class production stages",
+      "kind": "Public industry reference",
+      "version": "source-review-2026-10-18",
+      "status": "Evidence-linked guidance",
+      "owner": "PrimeStride research",
+      "date": "2026-10-18",
+      "sourceType": "INDUSTRY_CONTEXT",
+      "basisType": "PUBLIC_REFERENCE",
+      "industry": "printing",
+      "workflowPhase": "Finishing",
+      "evidenceIds": [
+        "TW-P-GUILD",
+        "TW-P-BOOK"
+      ],
+      "sourceUrl": "https://www.tcpa88.org.tw/gong-hui-jie-shao/gong-hui-jian-jie",
+      "originalUrl": "https://www.tcpa88.org.tw/gong-hui-jie-shao/gong-hui-jian-jie",
+      "body": "# 印後加工與裝訂 / Finishing and binding as first-class production stages\n\nReference ID: REF-P08\nCategory: INDUSTRY_CONTEXT\nWorkflow phase: Finishing\nSource status: CURATED PUBLIC INDUSTRY REFERENCE (not company-specific)\nLast verified: 2026-10-18\n\n## Evidence-based explanation\nThe Taipei printing association describes an ecosystem spanning prepress, press and postpress. Published book guidance demonstrates finishing and binding variation. In StrideBrain, finishing should be an explicit task and cost stage.\n\n## Suggested controls for the StrideBrain demo\n- Define trim, fold, lamination and binding requirements\n- Connect finish choices to stock and schedule\n- Inspect defects and tolerance concerns\n- Allocate finishing vendor owner and due dates\n\n## Questions StrideBrain should ask\n- What post-press process is required?\n- Is an external finishing vendor involved?\n\n## Scope and uncertainty\nThis is a workflow model, not a claim every printer owns every machine.\n\n## Original public sources\n- 台北市印刷商業同業公會：印前、印中、印後產業範圍 — Taipei Printing Commercial Association [Industry coverage of prepress, press, postpress, supplies and publishing] (https://www.tcpa88.org.tw/gong-hui-jie-shao/gong-hui-jian-jie)\n- 樺舍印前：書籍封面與內頁製作規範 — Interprint Taiwan [Specific vendor instructions revised July 27, 2026; separate cover/interior files, binding options] (https://www.interprint.com.tw/docInfo.aspx?docid=60&key=c3)\n\n## Data provenance\nThis is an original paraphrase and product-design mapping based on the cited public sources. It is NOT a real company's contract, invoice, permit, price list, or internal SOP. Actual site, printer, contract, and legal applicability must be checked before acting.\n"
+    },
+    {
+      "id": "REF-P09",
+      "projectId": null,
+      "title": "印刷品驗收與重印風險 · Quality acceptance and reprint exceptions",
+      "kind": "Public industry reference",
+      "version": "source-review-2026-10-18",
+      "status": "Evidence-linked guidance",
+      "owner": "PrimeStride research",
+      "date": "2026-10-18",
+      "sourceType": "PUBLIC_CONTRACT_EXAMPLE",
+      "basisType": "PUBLIC_REFERENCE",
+      "industry": "printing",
+      "workflowPhase": "Quality / dispatch",
+      "evidenceIds": [
+        "TW-P-TENDER"
+      ],
+      "sourceUrl": "https://www.kdais.gov.tw/files/kdais/tender/398/1060309a3.pdf",
+      "originalUrl": "https://www.kdais.gov.tw/files/kdais/tender/398/1060309a3.pdf",
+      "body": "# 印刷品驗收與重印風險 / Quality acceptance and reprint exceptions\n\nReference ID: REF-P09\nCategory: PUBLIC_CONTRACT_EXAMPLE\nWorkflow phase: Quality / dispatch\nSource status: CURATED PUBLIC INDUSTRY REFERENCE (not company-specific)\nLast verified: 2026-10-18\n\n## Evidence-based explanation\nA public printed-material procurement example specifies output-quality inspection and remedies such as corrections or reprints. The demo should distinguish approved artwork from delivered-product acceptance.\n\n## Suggested controls for the StrideBrain demo\n- Record sampling/inspection criteria\n- Link defects to job ticket and proof revision\n- Flag possible reprint with cost impact\n- Track delivery and acceptance evidence\n\n## Questions StrideBrain should ask\n- Does the delivered job match the approved proof and order?\n- What do actual contract terms require if print quality is rejected?\n\n## Scope and uncertainty\nPublic tender conditions are historic and specific; private remedies depend on actual contract.\n\n## Original public sources\n- 政府印製採購文件：校稿、打樣、品質驗收範例 — Kaohsiung District Agricultural Research and Extension Station [Archived specific printing procurement example: proofs, revised layout, binding, quality acceptance] (https://www.kdais.gov.tw/files/kdais/tender/398/1060309a3.pdf)\n\n## Data provenance\nThis is an original paraphrase and product-design mapping based on the cited public sources. It is NOT a real company's contract, invoice, permit, price list, or internal SOP. Actual site, printer, contract, and legal applicability must be checked before acting.\n"
+    },
+    {
+      "id": "REF-P10",
+      "projectId": null,
+      "title": "油墨、溶劑與空污適用檢核 · Printing environmental compliance screening",
+      "kind": "Public industry reference",
+      "version": "source-review-2026-10-18",
+      "status": "Evidence-linked guidance",
+      "owner": "PrimeStride research",
+      "date": "2026-10-18",
+      "sourceType": "REGULATORY_SCREENING",
+      "basisType": "PUBLIC_REFERENCE",
+      "industry": "printing",
+      "workflowPhase": "Operations compliance",
+      "evidenceIds": [
+        "TW-P-VOC",
+        "TW-P-PERMIT-HISTORY"
+      ],
+      "sourceUrl": "https://law.moj.gov.tw/LawClass/LawAll.aspx?PCODE=O0020030",
+      "originalUrl": "https://law.moj.gov.tw/LawClass/LawAll.aspx?PCODE=O0020030",
+      "body": "# 油墨、溶劑與空污適用檢核 / Printing environmental compliance screening\n\nReference ID: REF-P10\nCategory: REGULATORY_SCREENING\nWorkflow phase: Operations compliance\nSource status: CURATED PUBLIC INDUSTRY REFERENCE (not company-specific)\nLast verified: 2026-10-18\n\n## Evidence-based explanation\nPrinting processes using solvent-based inks, cleansers or coatings may trigger environmental emission control, depending on the regulated process and amounts. Historical environmental correspondence illustrates why ink/solvent usage must be reviewed.\n\n## Suggested controls for the StrideBrain demo\n- Identify printing process type and relevant materials\n- Record annual consumption and SDS\n- Request environmental specialist applicability determination\n- Track permits and emission-control obligations where required\n\n## Questions StrideBrain should ask\n- Does the specific site/process trigger a permit threshold?\n- What current ministry/local authority rules apply?\n\n## Scope and uncertainty\nNever declare all printers need VOC permits; do not reuse an old letter as current compliance advice.\n\n## Original public sources\n- 揮發性有機物空氣污染管制及排放標準 — Ministry of Environment / Ministry of Justice [Current regulation governing specified VOC emissions and operations] (https://law.moj.gov.tw/LawClass/LawAll.aspx?PCODE=O0020030)\n- 環境部印刷作業與油墨／溶劑適用規範之歷史函釋 — Environmental Protection Administration (historical guidance) [2006 letter illustrating a particular printing process and permit assessment] (https://oaout.moenv.gov.tw/law/ExecutiveData.aspx?id=818&type=2)\n\n## Data provenance\nThis is an original paraphrase and product-design mapping based on the cited public sources. It is NOT a real company's contract, invoice, permit, price list, or internal SOP. Actual site, printer, contract, and legal applicability must be checked before acting.\n"
+    },
+    {
+      "id": "REF-P11",
+      "projectId": null,
+      "title": "紙材替代、供應與價格波動 · Paper substitution and supplier change controls",
+      "kind": "Public industry reference",
+      "version": "source-review-2026-10-18",
+      "status": "Evidence-linked guidance",
+      "owner": "PrimeStride research",
+      "date": "2026-10-18",
+      "sourceType": "WORKFLOW_RECOMMENDATION",
+      "basisType": "PUBLIC_REFERENCE",
+      "industry": "printing",
+      "workflowPhase": "Procurement",
+      "evidenceIds": [
+        "TW-P-UNIVERSITY",
+        "TW-P-POSTER"
+      ],
+      "sourceUrl": "https://eec.ntua.edu.tw/Course/Detail/25246",
+      "originalUrl": "https://eec.ntua.edu.tw/Course/Detail/25246",
+      "body": "# 紙材替代、供應與價格波動 / Paper substitution and supplier change controls\n\nReference ID: REF-P11\nCategory: WORKFLOW_RECOMMENDATION\nWorkflow phase: Procurement\nSource status: CURATED PUBLIC INDUSTRY REFERENCE (not company-specific)\nLast verified: 2026-10-18\n\n## Evidence-based explanation\nPrint choices affect the prepress output, stock, press setup and finishing. The product should hold a paper substitution until the selected supplier and customer approve material performance, availability, price, and proof implications.\n\n## Suggested controls for the StrideBrain demo\n- Keep original and proposed stock in change request\n- Compute direct cost delta separately\n- Ask for sample proof if color/absorption changes\n- Create new production ticket only after required approvals\n\n## Questions StrideBrain should ask\n- Does the new paper need revised color settings or delivery planning?\n- Are current supplier costs verified?\n\n## Scope and uncertainty\nSample workflow design, not a claim of universal stock pricing.\n\n## Original public sources\n- 印前作業實務課程與印刷生產流程 — National Taiwan University of Arts [Course outline: prepress, color management, file checking, imposition, job tickets, cost estimates] (https://eec.ntua.edu.tw/Course/Detail/25246)\n- 樺舍印前：海報／明信片檔案製作規範 — Interprint Taiwan [Specific vendor instructions revised June 8, 2026; PDF, image resolution, 3mm bleed, fonts] (https://www.interprint.com.tw/docInfo.aspx?docid=63&key=c3)\n\n## Data provenance\nThis is an original paraphrase and product-design mapping based on the cited public sources. It is NOT a real company's contract, invoice, permit, price list, or internal SOP. Actual site, printer, contract, and legal applicability must be checked before acting.\n"
+    },
+    {
+      "id": "REF-P12",
+      "projectId": null,
+      "title": "預估與實際印製成本差異 · Historical estimates versus actual manufacturing cost",
+      "kind": "Public industry reference",
+      "version": "source-review-2026-10-18",
+      "status": "Evidence-linked guidance",
+      "owner": "PrimeStride research",
+      "date": "2026-10-18",
+      "sourceType": "WORKFLOW_RECOMMENDATION",
+      "basisType": "PUBLIC_REFERENCE",
+      "industry": "printing",
+      "workflowPhase": "Management analytics",
+      "evidenceIds": [
+        "TW-P-UNIVERSITY",
+        "TW-P-TENDER"
+      ],
+      "sourceUrl": "https://eec.ntua.edu.tw/Course/Detail/25246",
+      "originalUrl": "https://eec.ntua.edu.tw/Course/Detail/25246",
+      "body": "# 預估與實際印製成本差異 / Historical estimates versus actual manufacturing cost\n\nReference ID: REF-P12\nCategory: WORKFLOW_RECOMMENDATION\nWorkflow phase: Management analytics\nSource status: CURATED PUBLIC INDUSTRY REFERENCE (not company-specific)\nLast verified: 2026-10-18\n\n## Evidence-based explanation\nCosting should separate estimated materials, setup, printing, finishing, packing and dispatch from actual consumption and accepted outputs so future comparison is defensible.\n\n## Suggested controls for the StrideBrain demo\n- Record estimated and actual cost codes\n- Tie reprints/waste to job ID\n- Do not treat quoted selling price as cost\n- Review deviations before using history to quote new jobs\n\n## Questions StrideBrain should ask\n- Was the job accepted and cost-complete?\n- Did reprint losses affect actual margins?\n\n## Scope and uncertainty\nThe demo's generated cost histories are fictional and cannot prove real market price.\n\n## Original public sources\n- 印前作業實務課程與印刷生產流程 — National Taiwan University of Arts [Course outline: prepress, color management, file checking, imposition, job tickets, cost estimates] (https://eec.ntua.edu.tw/Course/Detail/25246)\n- 政府印製採購文件：校稿、打樣、品質驗收範例 — Kaohsiung District Agricultural Research and Extension Station [Archived specific printing procurement example: proofs, revised layout, binding, quality acceptance] (https://www.kdais.gov.tw/files/kdais/tender/398/1060309a3.pdf)\n\n## Data provenance\nThis is an original paraphrase and product-design mapping based on the cited public sources. It is NOT a real company's contract, invoice, permit, price list, or internal SOP. Actual site, printer, contract, and legal applicability must be checked before acting.\n"
+    },
+    {
+      "id": "REF-P13",
+      "projectId": null,
+      "title": "商業報價稅金與客戶資料 · Sales tax and personal-data handling",
+      "kind": "Public industry reference",
+      "version": "source-review-2026-10-18",
+      "status": "Evidence-linked guidance",
+      "owner": "PrimeStride research",
+      "date": "2026-10-18",
+      "sourceType": "CROSS_INDUSTRY_LAW",
+      "basisType": "PUBLIC_REFERENCE",
+      "industry": "printing",
+      "workflowPhase": "Commercial & privacy",
+      "evidenceIds": [
+        "TW-I-TAX",
+        "TW-I-PDPA"
+      ],
+      "sourceUrl": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=G0340080&sid=1QUgcF",
+      "originalUrl": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=G0340080&sid=1QUgcF",
+      "body": "# 商業報價稅金與客戶資料 / Sales tax and personal-data handling\n\nReference ID: REF-P13\nCategory: CROSS_INDUSTRY_LAW\nWorkflow phase: Commercial & privacy\nSource status: CURATED PUBLIC INDUSTRY REFERENCE (not company-specific)\nLast verified: 2026-10-18\n\n## Evidence-based explanation\nPrinting quotations and customer contact files need applicable tax treatment and purpose-limited handling of personal data; a sample 5% assumption requires validation for actual trade.\n\n## Suggested controls for the StrideBrain demo\n- Separate before-tax and inclusive quotations\n- Protect buyer contacts, shipping information and artwork\n- Define who sees confidential client orders\n- Approve outbound communications\n\n## Questions StrideBrain should ask\n- Does this company have the correct invoice/tax setup?\n- Does a contractor need customer personal data for this task?\n\n## Scope and uncertainty\nCompany tax situation and lawful purposes cannot be inferred from public examples.\n\n## Original public sources\n- 加值型及非加值型營業稅法 — Ministry of Justice / Ministry of Finance [Articles 10 and 14 (rate and calculations); actual applicability varies] (https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=G0340080&sid=1QUgcF)\n- 個人資料保護法 — Ministry of Justice [Articles 3, 5, 8, 19, 20 and related requirements] (https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=I0050021)\n\n## Data provenance\nThis is an original paraphrase and product-design mapping based on the cited public sources. It is NOT a real company's contract, invoice, permit, price list, or internal SOP. Actual site, printer, contract, and legal applicability must be checked before acting.\n"
+    }
+  ],
+  "workflows": {
+    "interior": [
+      {
+        "id": "WF-INT-01",
+        "index": 1,
+        "title": "Lead intake",
+        "input": "Client request: residence type, floor, location, timeline, priorities",
+        "output": "Register inquiry, contact permission and missing requirements",
+        "referenceIds": [
+          "REF-I01",
+          "REF-I11"
+        ],
+        "stage": "MODELLED_WORKFLOW",
+        "blockingRule": "Never advance to an irreversible/customer-facing action if required source or approval is missing.",
+        "isAutomated": false
+      },
+      {
+        "id": "WF-INT-02",
+        "index": 2,
+        "title": "Site and regulatory screening",
+        "input": "Building use, fixed partitions, safety, existing approved plans",
+        "output": "Open design/regulatory questions for qualified professional",
+        "referenceIds": [
+          "REF-I01",
+          "REF-I02",
+          "REF-I10"
+        ],
+        "stage": "MODELLED_WORKFLOW",
+        "blockingRule": "Never advance to an irreversible/customer-facing action if required source or approval is missing.",
+        "isAutomated": false
+      },
+      {
+        "id": "WF-INT-03",
+        "index": 3,
+        "title": "Design and plan issue",
+        "input": "Measured plans, current drawings, finishes, material specs",
+        "output": "Version-controlled design drawing register and client review",
+        "referenceIds": [
+          "REF-I03",
+          "REF-I04",
+          "REF-I07"
+        ],
+        "stage": "MODELLED_WORKFLOW",
+        "blockingRule": "Never advance to an irreversible/customer-facing action if required source or approval is missing.",
+        "isAutomated": false
+      },
+      {
+        "id": "WF-INT-04",
+        "index": 4,
+        "title": "Budget and proposal",
+        "input": "Approved scope, quantities, cost code assumptions",
+        "output": "Price preview, risk/exclusions and correct contract template",
+        "referenceIds": [
+          "REF-I05",
+          "REF-I12"
+        ],
+        "stage": "MODELLED_WORKFLOW",
+        "blockingRule": "Never advance to an irreversible/customer-facing action if required source or approval is missing.",
+        "isAutomated": false
+      },
+      {
+        "id": "WF-INT-05",
+        "index": 5,
+        "title": "Contract and approval",
+        "input": "Design-only / build-only / combined scope, staged payments",
+        "output": "Signed scope and owner-approved handoff",
+        "referenceIds": [
+          "REF-I05",
+          "REF-I08"
+        ],
+        "stage": "MODELLED_WORKFLOW",
+        "blockingRule": "Never advance to an irreversible/customer-facing action if required source or approval is missing.",
+        "isAutomated": false
+      },
+      {
+        "id": "WF-INT-06",
+        "index": 6,
+        "title": "Procurement and trade coordination",
+        "input": "Approved specs, measured quantity, suppliers, subcontractors",
+        "output": "Purchase/material request and scheduled work tasks",
+        "referenceIds": [
+          "REF-I02",
+          "REF-I07",
+          "REF-I08"
+        ],
+        "stage": "MODELLED_WORKFLOW",
+        "blockingRule": "Never advance to an irreversible/customer-facing action if required source or approval is missing.",
+        "isAutomated": false
+      },
+      {
+        "id": "WF-INT-07",
+        "index": 7,
+        "title": "Site execution and inspection",
+        "input": "Issued drawings, daily progress, safety and exception records",
+        "output": "Tracked work, variation requests and corrective actions",
+        "referenceIds": [
+          "REF-I04",
+          "REF-I07"
+        ],
+        "stage": "MODELLED_WORKFLOW",
+        "blockingRule": "Never advance to an irreversible/customer-facing action if required source or approval is missing.",
+        "isAutomated": false
+      },
+      {
+        "id": "WF-INT-08",
+        "index": 8,
+        "title": "Variation and client communication",
+        "input": "Material change, revised supplier quote, current drawing",
+        "output": "Separate change-order, customer response draft and approvals",
+        "referenceIds": [
+          "REF-I08",
+          "REF-I07",
+          "REF-I11"
+        ],
+        "stage": "MODELLED_WORKFLOW",
+        "blockingRule": "Never advance to an irreversible/customer-facing action if required source or approval is missing.",
+        "isAutomated": false
+      },
+      {
+        "id": "WF-INT-09",
+        "index": 9,
+        "title": "Handover and post-project knowledge",
+        "input": "Inspection, defect list, acceptance, reconciled costs",
+        "output": "Reviewed closeout, client handover and reusable cost evidence",
+        "referenceIds": [
+          "REF-I09",
+          "REF-I08"
+        ],
+        "stage": "MODELLED_WORKFLOW",
+        "blockingRule": "Never advance to an irreversible/customer-facing action if required source or approval is missing.",
+        "isAutomated": false
+      }
+    ],
+    "printing": [
+      {
+        "id": "WF-PRI-01",
+        "index": 1,
+        "title": "Inquiry and job ticket",
+        "input": "Finished dimensions, quantity, paper, colors, finishing, deadline",
+        "output": "Complete production inquiry; missing-field questions",
+        "referenceIds": [
+          "REF-P01",
+          "REF-P06"
+        ],
+        "stage": "MODELLED_WORKFLOW",
+        "blockingRule": "Never advance to an irreversible/customer-facing action if required source or approval is missing.",
+        "isAutomated": false
+      },
+      {
+        "id": "WF-PRI-02",
+        "index": 2,
+        "title": "File and preflight",
+        "input": "PDF/AI, resolution, bleed, font handling, color mode",
+        "output": "Preflight exceptions with vendor-specific source reference",
+        "referenceIds": [
+          "REF-P02",
+          "REF-P03",
+          "REF-P04"
+        ],
+        "stage": "MODELLED_WORKFLOW",
+        "blockingRule": "Never advance to an irreversible/customer-facing action if required source or approval is missing.",
+        "isAutomated": false
+      },
+      {
+        "id": "WF-PRI-03",
+        "index": 3,
+        "title": "Artwork proof review",
+        "input": "File revision, press proof, client corrections",
+        "output": "Versioned proof status and customer acceptance",
+        "referenceIds": [
+          "REF-P05",
+          "REF-P07"
+        ],
+        "stage": "MODELLED_WORKFLOW",
+        "blockingRule": "Never advance to an irreversible/customer-facing action if required source or approval is missing.",
+        "isAutomated": false
+      },
+      {
+        "id": "WF-PRI-04",
+        "index": 4,
+        "title": "Cost and material quote",
+        "input": "Stock, yield, press setup, quantity, finishing and delivery",
+        "output": "Itemized quote and current-price verification list",
+        "referenceIds": [
+          "REF-P06",
+          "REF-P11",
+          "REF-P13"
+        ],
+        "stage": "MODELLED_WORKFLOW",
+        "blockingRule": "Never advance to an irreversible/customer-facing action if required source or approval is missing.",
+        "isAutomated": false
+      },
+      {
+        "id": "WF-PRI-05",
+        "index": 5,
+        "title": "Release and schedule",
+        "input": "Approved proof, supplier stock, equipment availability",
+        "output": "Authorized production job ticket and timeline",
+        "referenceIds": [
+          "REF-P07",
+          "REF-P11"
+        ],
+        "stage": "MODELLED_WORKFLOW",
+        "blockingRule": "Never advance to an irreversible/customer-facing action if required source or approval is missing.",
+        "isAutomated": false
+      },
+      {
+        "id": "WF-PRI-06",
+        "index": 6,
+        "title": "Printing and outsourced tasks",
+        "input": "Press instructions, operators, ink and related work",
+        "output": "Real-time job status and capacity dependencies",
+        "referenceIds": [
+          "REF-P08",
+          "REF-P10"
+        ],
+        "stage": "MODELLED_WORKFLOW",
+        "blockingRule": "Never advance to an irreversible/customer-facing action if required source or approval is missing.",
+        "isAutomated": false
+      },
+      {
+        "id": "WF-PRI-07",
+        "index": 7,
+        "title": "Postpress and inspection",
+        "input": "Finishing, trim, binding, QC, defects",
+        "output": "Inspected job and disposition of rejects/reprints",
+        "referenceIds": [
+          "REF-P08",
+          "REF-P09"
+        ],
+        "stage": "MODELLED_WORKFLOW",
+        "blockingRule": "Never advance to an irreversible/customer-facing action if required source or approval is missing.",
+        "isAutomated": false
+      },
+      {
+        "id": "WF-PRI-08",
+        "index": 8,
+        "title": "Dispatch and customer acceptance",
+        "input": "Packed quantity, shipping method, receipt, corrections",
+        "output": "Delivery/acceptance status and follow-up action",
+        "referenceIds": [
+          "REF-P09"
+        ],
+        "stage": "MODELLED_WORKFLOW",
+        "blockingRule": "Never advance to an irreversible/customer-facing action if required source or approval is missing.",
+        "isAutomated": false
+      },
+      {
+        "id": "WF-PRI-09",
+        "index": 9,
+        "title": "Closed job analytics",
+        "input": "Actual material, labor, machine, reprints and logistics",
+        "output": "Reconciled direct cost and future quotation references",
+        "referenceIds": [
+          "REF-P12"
+        ],
+        "stage": "MODELLED_WORKFLOW",
+        "blockingRule": "Never advance to an irreversible/customer-facing action if required source or approval is missing.",
+        "isAutomated": false
+      }
+    ]
+  }
+}
