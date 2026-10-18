@@ -5,6 +5,8 @@ import {service,quotes,work,suppliers,approvals,analytics,learning} from "./view
 import {exampleAnswer} from "./assistant-rules.js";
 import {historyView} from "./views-history.js";
 import {playbook} from "./views-playbook.js";
+import {readinessView} from "./views-readiness.js";
+import {getReadinessPack,initialReadiness,normalizeReadinessInput,evaluateReadiness,validateReadinessSources} from "./readiness-rules.js";
 import {validateIndustryEvidence} from "./industry-evidence.js";
 import {validateHistory,historicalDefaults,safeRequest,historicalEstimate,estimateMarkdown} from "./historical-estimator.js";
 const $=id=>document.getElementById(id);
@@ -21,10 +23,10 @@ function setPage(page,reset=true){
  view.page=page;if(reset){view.search="";view.filter="all";view.pageIndex=0;}
  render();window.scrollTo({top:0,behavior:"smooth"});
 }
-function pageTitle(){return view.page==="projects"?pack.projectLabel:view.page==="quotes"?pack.quoteLabel:view.page==="work"?pack.orderLabel:{overview:"Overview",copilot:"StrideBrain Copilot",knowledge:"Knowledge hub",service:"Customer service",suppliers:"Suppliers",approvals:"Approvals",analytics:"Analytics",learning:"Learning & feedback",history:"Historical estimates",playbook:"Industry playbook"}[view.page]||"Overview";}
+function pageTitle(){return view.page==="projects"?pack.projectLabel:view.page==="quotes"?pack.quoteLabel:view.page==="work"?pack.orderLabel:{overview:"Overview",copilot:"StrideBrain Copilot",knowledge:"Knowledge hub",service:"Customer service",suppliers:"Suppliers",approvals:"Approvals",analytics:"Analytics",learning:"Learning & feedback",history:"Historical estimates",playbook:"Industry playbook",readiness:"Operational checks"}[view.page]||"Overview";}
 function render(){
  if(!model)return;
- const mapping={overview,copilot,projects,knowledge,service,quotes,work,suppliers,approvals,analytics,learning,history:historyView,playbook};
+ const mapping={overview,copilot,projects,knowledge,service,quotes,work,suppliers,approvals,analytics,learning,history:historyView,playbook,readiness:readinessView};
  $("main").innerHTML=(mapping[view.page]||overview)(context());
  $("inspector").innerHTML=renderInspector(context());
  $("page-name").textContent=pageTitle();
@@ -60,8 +62,11 @@ async function loadIndustry(id){
     if(!existing.has(document.id)){seed.documents.push(document);existing.add(document.id);}
   }
   const verified=new WorkspaceModel(seed,next);
+  validateReadinessSources(getReadinessPack(next.id),verified);
   pack=next;model=verified;historyData=historyPack;industryEvidence=curated;state=loadDemoState(pack);
   state.historyRequest=safeRequest(historyData,state.historyRequest||historicalDefaults(historyData));
+  state.readiness=state.readiness||{};
+  state.readiness.inputs=normalizeReadinessInput(pack.id,state.readiness.inputs||initialReadiness(pack.id));
   view={page:"overview",projectId:pack.scenario.projectId,projectDetail:false,docId:null,quoteId:null,chat:[],search:"",filter:"all",pageIndex:0,flowStep:null};
   const url=new URL(location.href);url.searchParams.set("industry",pack.id);history.replaceState({industry:pack.id},"",url);
   updateShell();render();toast(pack.name+" template loaded · "+model.seed.documents.length+" example source records.");
@@ -105,6 +110,29 @@ function perform(el){
  else if(action==="project"){
   const key=id||value;if(!model.project(key))return;view.projectId=key;view.projectDetail=true;setPage("projects");
  }else if(action==="flowStep"){view.flowStep=value;render();}
+ else if(action==="readinessReset"){
+   state.readiness.inputs=initialReadiness(pack.id);state.readiness.assessment=null;
+   if(state.readiness.reviewTaskCreated)state.tasks[state.readiness.reviewTaskId]="Blocked";
+   event(state,"Manual screening reset; any prior assessment became stale.");save();render();toast("Screening reset. Existing follow-up work remains for review.");
+ }
+ else if(action==="readinessRecord"){
+   const result=evaluateReadiness(pack.id,state.readiness.inputs);
+   state.readiness.assessment={...result,recordedAt:new Date().toLocaleString("en-TW",{hour12:false})};
+   if(state.readiness.reviewTaskCreated)state.tasks[state.readiness.reviewTaskId]=result.counts.hold>0?"Blocked":"Upcoming";
+   event(state,"Manually entered "+pack.id+" readiness screen: "+result.counts.hold+" holds, "+result.counts.review+" reviews.");
+   save();render();toast("Assessment recorded. Not a technical certification.");
+ }
+ else if(action==="readinessCreateTask"){
+   const config=getReadinessPack(pack.id),assessment=state.readiness.assessment;
+   if(!assessment||JSON.stringify(assessment.inputs)!==JSON.stringify(evaluateReadiness(pack.id,state.readiness.inputs).inputs)){toast("Record the current assessment before creating a follow-up.");return;}
+   if(state.readiness.reviewTaskCreated){toast("Review task already exists in Work Orders.");return;}
+   state.readiness.reviewTaskCreated=true;
+   state.readiness.reviewTaskId=config.reviewWorkId;state.readiness.reviewTaskTitle=config.reviewWorkTitle;
+   state.readiness.reviewTaskSourceId=config.workSourceId;
+   state.tasks[config.reviewWorkId]=assessment.counts.hold>0?"Blocked":"Upcoming";
+   event(state,"Created linked review item "+config.reviewWorkId+" for "+config.project+" from manual readiness findings.");
+   save();render();toast("Linked "+config.reviewWorkId+" to the example work-order register.");
+ }
  else if(action==="projectBack"){view.projectDetail=false;render();}
  else if(action==="source")openSource(id);
  else if(action==="closeSource")closeSource();
@@ -169,7 +197,7 @@ function perform(el){
   const result=markFeedbackReviewed(state,id);if(result.ok){save();render();toast("Review recorded; source text was not changed.");}
  }else if(action==="reset"){
   if(!confirm("Reset this industry's simulated approvals, tasks, feedback and drafts?"))return;
-  state=resetDemoState(pack);state.historyRequest=historicalDefaults(historyData);view.chat=[];view.docId=null;view.quoteId=null;view.projectDetail=false;setPage("overview");toast("Sample state restored.");
+  state=resetDemoState(pack);state.historyRequest=historicalDefaults(historyData);state.readiness.inputs=initialReadiness(pack.id);view.chat=[];view.docId=null;view.quoteId=null;view.projectDetail=false;setPage("overview");toast("Sample state restored.");
  }
 }
 document.addEventListener("click",ev=>{const el=ev.target.closest("[data-action]");if(el&&model)perform(el);});
@@ -181,6 +209,14 @@ document.addEventListener("change",ev=>{
  if(ev.target.id==="industry-switcher"){loadIndustry(ev.target.value);return;}
  if(!model)return;
  const input=ev.target.dataset.input;
+ const screeningField=ev.target.dataset.readiness;
+ if(screeningField){
+   const nextInput={...state.readiness.inputs,[screeningField]:ev.target.value};
+   state.readiness.inputs=normalizeReadinessInput(pack.id,nextInput);state.readiness.assessment=null;
+   if(state.readiness.reviewTaskCreated)state.tasks[state.readiness.reviewTaskId]="Blocked";
+   event(state,"Manual screening input updated: "+screeningField+"; previous assessment invalidated.");
+   save();render();return;
+ }
  if(ev.target.hasAttribute("data-history-scope")){
    const code=ev.target.getAttribute("data-history-scope");
    const current=new Set(state.historyRequest.scope);
