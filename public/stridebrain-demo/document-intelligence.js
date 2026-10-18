@@ -79,8 +79,9 @@ function buildReport(name,extension,parts,metadata={}){
  for(const t of tabs){const d=detectCostTable(t.rows,t.name);candidates.push(...d.candidates);findings.push(...d.findings);if(t.truncated)findings.push(problem("ROW_LIMIT","Only the first rows of "+t.name+" were examined.",t.name));}
  for(const p of segments){if(p.lines.length===0)findings.push(problem("NO_EMBEDDED_TEXT","No readable embedded text found. Scanned pages and drawings require OCR or specialist review.",p.name,"blocker"));}
  if(parts.length===0)findings.push(problem("EMPTY_DOCUMENT","No readable content was extracted.",name,"blocker"));
+ const facts=[];for(const part of segments)for(const item of part.lines){const match=/^\s*(Project|Job|Document|Revision|Quantity|Status|Supplier|Approval|Material|Date|File format|Stock request|Baseline|Requested|Dimensions|Trim size|Finish)\s*:\s*(.+)/i.exec(item.text);if(match)facts.push({field:match[1],value:match[2],sourceRef:part.name+" · "+item.ref});}
  const id="LOCAL-"+Date.now().toString(36);
- return {id,fileName:name,extension,createdAt:new Date().toISOString(),basisType:"BROWSER_LOCAL_UPLOADED",privacy:"File content remains in this tab's memory and is not uploaded or stored as company knowledge.",metadata,parts,candidates,findings,reviewed:false,reviewedAt:null,reviewerNote:"",targetMargin:25,issueCount:candidates.reduce((n,c)=>n+c.flags.length,0)+findings.length};
+ return {id,fileName:name,extension,createdAt:new Date().toISOString(),basisType:"BROWSER_LOCAL_UPLOADED",privacy:"File content remains in this tab's memory and is not uploaded or stored as company knowledge.",metadata,parts,facts:facts.slice(0,60),candidates,findings,reviewed:false,reviewedAt:null,reviewerNote:"",targetMargin:25,issueCount:candidates.reduce((n,c)=>n+c.flags.length,0)+findings.length};
 }
 const read16=(v,i)=>v.getUint16(i,true),read32=(v,i)=>v.getUint32(i,true);
 export async function unzipOffice(arrayBuffer){
@@ -93,11 +94,11 @@ export async function unzipOffice(arrayBuffer){
  let p=dirAt;
  for(let n=0;n<total;n++){
   if(read32(v,p)!==0x02014b50)throw Error("ZIP directory is inconsistent.");
-  const method=read16(v,p+10),compressed=read32(v,p+20),len=read16(v,p+28),extra=read16(v,p+30),comment=read16(v,p+32),offset=read32(v,p+42);
+  const method=read16(v,p+10),compressed=read32(v,p+20),uncompressed=read32(v,p+24),len=read16(v,p+28),extra=read16(v,p+30),comment=read16(v,p+32),offset=read32(v,p+42);
   const name=decoder.decode(bytes.slice(p+46,p+46+len));p+=46+len+extra+comment;
   if(name.endsWith("/"))continue;
   if(!/^(xl\/|word\/|\[Content_Types\]|_rels\/|docProps\/)/.test(name))continue;
-  if(compressed>LIMIT_BYTES)throw Error("Individual Office XML entry exceeds the demo limit.");
+  if(compressed>LIMIT_BYTES||uncompressed>LIMIT_BYTES*2)throw Error("Office XML entry is too large to expand safely in the public demo.");
   if(read32(v,offset)!==0x04034b50)throw Error("ZIP entry header mismatch.");
   const localLen=read16(v,offset+26),localExtra=read16(v,offset+28),start=offset+30+localLen+localExtra;
   const source=bytes.slice(start,start+compressed);let unpacked;
@@ -144,7 +145,7 @@ export async function decodeXlsx(arrayBuffer){
    for(const node of elements(row,"c").slice(0,70)){
     const ref=node.getAttribute("r"),index=columnIndex(ref||"");if(index===null||index>=70)continue;
     const type=node.getAttribute("t")||"",v=ownText(node,"v"),formula=first(node,"f"),str=type==="s"?ss[Number(v)]||"":type==="inlineStr"?elements(node,"t").map(x=>x.textContent||"").join(""):type==="b"?(v==="1"?"TRUE":"FALSE"):type==="str"?v:v;
-    if(formula&&!v)warnings.push(problem("UNCACHED_FORMULA","A formula at "+name+"!"+ref+" has no stored result. The demo does not execute Excel formulas.",name+"!"+ref));
+    if(formula)warnings.push(problem(v?"CACHED_FORMULA":"UNCACHED_FORMULA",v?"A formula at "+name+"!"+ref+" has a cached value. The demo never recalculates Excel formulas; verify the workbook.":"A formula at "+name+"!"+ref+" has no stored result. The demo cannot execute Excel formulas.",name+"!"+ref));
     cells[index]=str;
    }
    while(rows.length<rowNo-1&&rows.length<1500)rows.push([]);
@@ -202,7 +203,7 @@ export async function extractDocument(file){
 export function reviewSummary(report){
  if(!report)return {approved:0,open:0,blocked:0,directCost:0,ready:false};
  const accepted=report.candidates.filter(c=>c.reviewStatus==="approved"),blocked=report.candidates.filter(c=>c.reviewStatus==="pending"&&c.flags.some(f=>f.severity==="blocker"));
- const open=report.candidates.filter(c=>c.reviewStatus==="pending");
+ const open=report.candidates.filter(c=>c.reviewStatus==="pending"||c.reviewStatus==="needs_review");
  return {approved:accepted.length,open:open.length,blocked:blocked.length,directCost:accepted.reduce((n,c)=>n+(c.calculatedAmount||0),0),ready:report.candidates.length>0&&open.length===0&&blocked.length===0&&accepted.length>0};
 }
 export function reviewCandidate(report,id,status,note=""){
@@ -226,10 +227,11 @@ export function editCandidate(report,id,field,value){
 }
 export function approveDocument(report,reviewerNote){
  const s=reviewSummary(report);
- if(!s.ready)return {ok:false,reason:"Every extracted cost item must be approved or excluded; blocking discrepancies must be resolved first."};
+ const textOnly=report.candidates.length===0&&report.parts.some(p=>p.kind==="text"&&p.lines.length>0);
+ if(!s.ready&&!textOnly)return {ok:false,reason:"Every extracted cost item must be approved or excluded; blocking discrepancies must be resolved first."};
  if(!String(reviewerNote||"").trim())return {ok:false,reason:"Enter a human review note before approving this draft."};
  report.reviewed=true;report.reviewedAt=new Date().toISOString();report.reviewerNote=String(reviewerNote).slice(0,500);
- return {ok:true,summary:s};
+ return {ok:true,summary:s,mode:textOnly?"TEXT_EXTRACTION_REVIEW":"COST_LINE_REVIEW"};
 }
 export function reviewReportMarkdown(report,industry){
  const s=reviewSummary(report),rows=report.candidates.filter(c=>c.reviewStatus==="approved");
@@ -251,6 +253,12 @@ export function reviewReportMarkdown(report,industry){
  "",
  "Sample extracted direct cost total: NT$"+Math.round(s.directCost).toLocaleString("en-US"),
  "Reviewer note: "+clean(report.reviewerNote||"Not recorded"),
+ "",
+ "## Observed document fields (not independently verified)",
+ ...(report.facts||[]).map(f=>"- "+clean(f.field)+": "+clean(f.value)+" ["+clean(f.sourceRef)+"]"),
+ "",
+ "## Text excerpts with original locations",
+ ...report.parts.filter(p=>p.kind==="text").slice(0,20).flatMap(p=>p.lines.slice(0,50).map(x=>"- "+clean(p.name)+" "+clean(x.ref)+": "+clean(x.text))),
  "",
  "## Unresolved source warnings",
  ...report.findings.map(f=>"- "+clean(f.code)+" at "+clean(f.ref)+": "+clean(f.message)),
