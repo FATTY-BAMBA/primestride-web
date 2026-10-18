@@ -48,7 +48,8 @@ export function bridgePreview(report,history,form){
   if(!tier.has(form?.tier))issues.push("Select a supported finish tier.");
   if(!location.has(form?.location))issues.push("Select a supported location.");
   const completedAt=String(form?.completedAt||"");
-  if(!/^\d{4}-\d{2}-\d{2}$/.test(completedAt)||!Number.isFinite(Date.parse(completedAt))||completedAt>"2026-10-18"||completedAt<"2021-01-01")issues.push("Enter a valid completed-date example (2021-01-01 through 2026-10-18).");
+  const exactDate=/^\d{4}-\d{2}-\d{2}$/.test(completedAt)&&Number.isFinite(Date.parse(completedAt))&&new Date(completedAt+"T00:00:00Z").toISOString().slice(0,10)===completedAt;
+  if(!exactDate||completedAt>"2026-10-18"||completedAt<"2021-01-01")issues.push("Enter a valid completed-date example (2021-01-01 through 2026-10-18).");
   if(form?.workMode!=="fictional_sandbox")issues.push("Only fictional/sanitized sandbox cases can be promoted in this public demo.");
   if(!form?.acknowledged)issues.push("Acknowledge that this is fictional demo data, not independently confirmed actual cost.");
   if(!form?.scopeComplete)issues.push("Confirm that the selected lines represent a *hypothetical* complete direct-cost scope for this demo.");
