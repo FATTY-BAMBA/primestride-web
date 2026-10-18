@@ -100,7 +100,7 @@ function gptAnswerCard(result){
  const actions=[...new Set((Array.isArray(result.actions)?result.actions:[]).filter(a=>allowed.has(a)))].slice(0,4);
  const labelMap={overview:"Business overview",projects:"Explore projects",knowledge:"Inspect knowledge",quotes:"Review quotes",work:"Work orders",suppliers:"Suppliers",approvals:"Pending approvals",analytics:"Analytics",history:"Past project estimates",playbook:"Industry playbook",service:"Customer replies"};
  const ids=[...new Set((Array.isArray(result.sourceIds)?result.sourceIds:[]).filter(id=>!!model.document(id)))].slice(0,12);
- return '<div class="answer-card"><div class="suite-eyebrow">GPT · READ-ONLY DEMO ANSWER</div><div class="copilot-gpt-prose">'+paragraphs+'</div>'+
+ return '<div class="answer-card"><div class="suite-eyebrow">'+e(result.modelLabel||"AI model")+' · READ-ONLY DEMO ANSWER</div><div class="copilot-gpt-prose">'+paragraphs+'</div>'+
   (ids.length?'<div class="copilot-tool-sources"><strong>Inspect supporting sample records</strong><div>'+ids.map(sourceButton).join(" ")+'</div></div>':'<p class="disclosure">No cited record was returned for this conversational answer.</p>')+
   (actions.length?'<div class="answer-actions">'+actions.map(a=>'<button type="button" class="button-secondary" data-action="nav" data-value="'+a+'">'+e(labelMap[a])+' ↗</button>').join("")+'</div>':'')+
   '<p class="disclosure">Fictional sample data · '+e(result.asOf||"2026-10-18")+' snapshot · no live customer records or actions.</p></div>';
@@ -139,7 +139,7 @@ async function ask(question){
   copilotMode="sample";copilotOperatorToken="";copilotConnected=false;
   const fallback=exampleAnswer(text,context());
   view.chat[index]={role:"assistant",html:'<div class="divergence"><strong>GPT is not connected.</strong> '+e(String(err?.message||"The service could not answer."))+' The result below is from the deterministic synthetic sample—not a GPT response.</div>'+fallback.html,sources:fallback.sources,query:text,mode:"sample",text:""};
-  toast("GPT unavailable. Showing the clearly labeled deterministic fallback.");
+  toast("Selected AI model unavailable. Showing the clearly labeled deterministic fallback.");
  }finally{
   if(active===copilotRunId){copilotBusy=false;render();window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});}
  }
