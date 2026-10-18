@@ -13,6 +13,13 @@ export function exampleAnswer(prompt,c){
  const relevant=ids=>'<div class="disclosure" style="margin-top:10px">Inspect source records: '+sources(ids)+'</div>';
  const wrap=(heading,body,actions)=>'<div class="answer-card"><div class="suite-eyebrow">SOURCE-AWARE DEMO</div><h3>'+heading+'</h3>'+body+(actions||"")+'</div>';
  const actions=(...btns)=>'<div class="answer-actions">'+btns.join("")+'</div>';
+ if(/uploaded|upload|imported|my pdf|my excel|spreadsheet file|document intake|file extraction|上傳|文件解析|檔案解析|試算表|匯入的文件/.test(question)){
+  const report=c.documentSession?.report;
+  const body=report?
+   '<p>I read the file locally in this browser. The extraction found <strong>'+report.candidates.length+' candidate cost items</strong>, '+report.parts.length+' page or sheet sections, and '+report.findings.length+' review warnings. The detected type is <strong>'+e(report.classification.replace(/_/g," "))+'</strong>. This is not a verified company fact or a customer-ready quote.</p><p>Sample source positions: '+e(report.candidates.slice(0,3).map(x=>x.sourceRef).join(", ")||report.facts?.slice(0,3).map(x=>x.sourceRef).join(", ")||"not yet identified")+'</p>':
+   '<p>No uploaded source is available in this browser session. Open Document Intelligence, download a fictional sample PDF/Excel file, and select it to inspect.</p>';
+  return {sources:[],html:wrap("Document extraction status",body,actions(button("Open document intelligence ↗","nav","intake","button-primary")))};
+ }
  if(/past projects|previous jobs|historical|quote from history|similar jobs|past quotes|歷史|以往|過去|類似案例|歷史報價|智能報價/.test(question)){
   const h=c.history,ref=h?.records.filter(x=>x.status==="COMPLETE").slice(0,3).map(x=>x.sourceDocId)||[];
   const body='<p>Use comparable completed work, normalized cost lines, explicit price adjustments, and human approval to prepare a source-linked new estimate. The current precedents are fictional sample jobs.</p>'+relevant(ref);
