@@ -18,7 +18,7 @@ export function exampleAnswer(prompt,c){
   return {sources:ref,html:wrap("Historical Quotation Intelligence",body,actions(button("Review similar projects ↗","nav","history","button-primary")))};
  }
  if(c.industryEvidence&&(
-   (p.id==="interior"&&/permit|regulation|fire.safety|registered|licensed|contract form|drawing revision|completion inspection|裝修法規|室內裝修|圖說|申請|驗收|建築法|契約範本|防火|證照/.test(question))
+   (p.id==="interior"&&/permit|regulation|regulatory|renovation rules|building rules|code compliance|fire.safety|registered|licensed|contract form|drawing revision|completion inspection|裝修法規|室內裝修|室內設計法規|圖說|申請|驗收|建築法|契約範本|防火|證照/.test(question))
    ||(p.id==="printing"&&/preflight|bleed|dpi|\bpdf\b|\ba3\b|artwork|font embed|proof approval|color management|CMYK|binding|印前|出血|校稿|打樣|色彩|裝訂|印刷檔案|油墨|空污/.test(question))
   )){
   let selected=referenceForPrompt(c.industryEvidence,p.id,question);
