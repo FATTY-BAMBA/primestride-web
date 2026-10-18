@@ -23,7 +23,7 @@ export function validateHistory(data){
   if(r.status==="COMPLETE"){
     if(r.finalDirectCost===null||r.finalDirectCost===undefined)errors.push("Missing actual cost "+r.id);
     const total=r.lines.reduce((sum,x)=>sum+x.actualCost,0);
-    if(total!==r.finalDirectCost)errors.push("Unreconciled total "+r.id);
+    if(Math.abs(total-r.finalDirectCost)>.005)errors.push("Unreconciled total "+r.id);
     if(r.lines.some(x=>!codes.has(x.code)||!Number.isFinite(x.actualCost)||x.actualCost<0))errors.push("Bad costs "+r.id);
   }
  }
