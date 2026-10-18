@@ -1,0 +1,36 @@
+import {money,escapeHtml as e} from "./core-model.js";
+import {historicalEstimate} from "./historical-estimator.js";
+import {button,source,heading,section,tag} from "./ui-shared.js";
+export function historyView(c){
+ const h=c.history,s=c.state;
+ if(!h)return '<div class="panel"><h2>Historical cost pack unavailable</h2></div>';
+ const r=s.historyRequest||h.defaults;
+ const x=historicalEstimate(h,r),draft=s.historyDraft;
+ const select=(label,key,opts)=>'<label class="form-field">'+e(label)+'<select data-history="'+key+'" class="history-select">'+opts.map(z=>'<option value="'+e(z.id)+'"'+(r[key]===z.id?' selected':'')+'>'+e(z.label)+'</option>').join('')+'</select></label>';
+ const number=(label,key,max)=>'<label class="form-field">'+e(label)+'<input class="history-input" type="number" min="0" max="'+max+'" data-history="'+key+'" value="'+e(r[key])+'"></label>';
+ let out=heading('Estimate from past work','Comparable completed projects, traceable costs, and a reviewable draft.',tag('歷史案件智慧報價 · DEMO'),'HISTORICAL QUOTATION INTELLIGENCE');
+ out+='<div class="quote-journey">'+['New inquiry','Past job evidence','Pricing assumptions','Human review'].map((t,i)=>'<div class="journey-step"><span>0'+(i+1)+'</span><strong>'+t+'</strong></div>').join('')+'</div>';
+ out+='<div class="history-banner"><strong>Important: illustrative history</strong><p>All prior jobs, costs, quotations and dates below are fictional demonstration records. No supplier prices or actual customer transactions are connected.</p></div>';
+ out+='<section class="section split-page"><div class="panel">'+section('New customer inquiry','Specify the job before requesting a comparable-cost estimate.');
+ out+='<label class="form-field">Customer inquiry · 客戶詢價<textarea id="history-inquiry" data-history="inquiry" rows="3" placeholder="Describe the scope, constraints, and requested timing.">'+e(r.inquiry||'')+'</textarea></label>';
+ out+='<div class="history-form-grid">'+select('Project / job type','category',h.categories)+select('Finish tier','tier',h.tiers.map(z=>({id:z,label:z})))+number('Quantity ('+h.unit+')','quantity',100000)+select('Location','location',h.locations.map(z=>({id:z,label:z})))+'</div>';
+ out+='<div class="history-group-title">Included scope · 工作範圍</div><div class="history-scope-grid">'+h.costCodes.map(z=>'<label class="history-check"><input type="checkbox" data-history-scope="'+e(z.id)+'" '+(r.scope.includes(z.id)?'checked':'')+'><span>'+e(z.label)+'</span></label>').join('')+'</div>';
+ out+='<div class="history-group-title">Commercial assumptions · 報價條件</div><div class="history-assumptions">'+number('Target gross margin %','margin',65)+number('Past-cost adjustment %','escalation',30)+number('Contingency %','contingency',25)+'</div>';
+ out+='<p class="disclosure">Adjustment and contingency are explicit assumptions. They are not live supplier quotations or an official cost index.</p><div class="action-stack">'+button('Reset inputs','historyReset','','button-outline')+button('Create draft for review ↗','historyDraft','','button-primary')+'</div></div>';
+ out+='<div class="panel">'+section('Suggested historical estimate','Comparable completed jobs normalized to the requested quantity.');
+ out+='<div class="history-evidence-meta"><div><strong>'+h.records.filter(z=>z.status==='COMPLETE').length+'</strong><small>Usable fictional records</small></div><div><strong>'+(x.comparables?.length||0)+'</strong><small>Selected matches</small></div><div><strong>'+h.records.filter(z=>z.status!=='COMPLETE').length+'</strong><small>Incomplete / quote-only excluded</small></div></div>';
+ if(x.ok){
+ out+='<div class="history-main-price"><small>Indicative price · before tax</small><strong>'+money(x.preTax)+'</strong><span>Inclusive example: '+money(x.total)+' · gross margin '+x.margin+'%</span></div>';
+ out+='<div class="history-sensitivity"><strong>Illustrative sensitivity: '+money(x.rangeLow)+'–'+money(x.rangeHigh)+'</strong><small>Not a statistical confidence interval or a binding quote.</small></div>';
+ out+='<div class="history-breakdown">'+[['Historical direct cost',x.historicalDirectCost],['Past-cost adjustment',x.escalationAmount],['Contingency',x.contingencyAmount],['Forecast direct cost',x.forecastCost],['Proposed before tax',x.preTax]].map((a,i)=>'<div class="'+(i===4?'total':'')+'"><span>'+a[0]+'</span><strong>'+money(a[1])+'</strong></div>').join('')+'</div>';
+ }else out+='<div class="divergence" style="margin-top:15px"><strong>Not enough comparable completed work.</strong><p>'+e(x.reason)+'</p>The engine will not invent a price. Revise the requirements or ask an estimator to review manually.</div>';
+ out+='<div class="history-draft-status"><strong>'+(draft?(draft.reviewed?'Human-reviewed demo draft':'Saved sample draft · not reviewed'):'No quotation draft yet')+'</strong><small>'+e(draft?'This is local browser state, not a sent customer quote.':'Create a draft from the currently selected precedent records.')+'</small></div>';
+ if(draft)out+='<div class="action-stack">'+button('Simulate owner review','historyApprove','','button-secondary')+button('Export reviewed draft','historyExport','','button-outline')+'</div>';
+ out+='</div></section>';
+ if(x.ok){
+ out+='<section class="section">'+section('Auditable cost calculation','Unit costs come from comparable synthetic ledgers.')+'<div class="data-table-wrap"><table class="data-table"><thead><tr><th>Cost line</th><th>Historical rate / '+e(h.unit)+'</th><th>Quantity</th><th>Base direct cost</th><th>Evidence count</th></tr></thead><tbody>'+x.lines.map(l=>'<tr><td>'+e(l.label)+'</td><td>'+money(l.unitRate)+'</td><td>'+l.quantity+'</td><td><strong>'+money(l.baseCost)+'</strong></td><td>'+l.observations+'</td></tr>').join('')+'</tbody></table></div></section>';
+ }
+ out+='<section class="section">'+section('Comparable past jobs','Review the source before relying on a cost.')+'<div class="history-comps">'+(x.comparables?.length?x.comparables.map(z=>'<div class="history-comp"><div class="history-comp-top"><span class="history-match">Match '+z.similarity+'%</span><small>'+e(z.completedAt)+'</small></div><h3>'+e(z.title)+'</h3><p>'+e(z.location)+' · '+z.quantity+' '+e(z.unit)+' · '+e(z.tier)+'</p><div class="history-comp-bottom"><strong>Fictional cost '+money(z.finalDirectCost)+'</strong>'+source(z.sourceDocId)+'</div></div>').join(''):'<div class="empty">No eligible complete cases meet these requirements.</div>')+'</div></section>';
+ if(x.ok)out+='<section class="section">'+section('Why human review is still essential','The estimate is a starting point, not a customer-ready promise.')+'<div class="history-warnings">'+x.limitations.map(z=>'<div class="history-warning"><span>!</span>'+e(z)+'</div>').join('')+'</div></section>';
+ return out;
+}
