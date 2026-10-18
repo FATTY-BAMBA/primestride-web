@@ -12,8 +12,8 @@ An adaptable knowledge-grounded operations platform for Taiwanese SMEs: one shar
 A template pack defines industry-specific language, customer-facing vocabulary, company identity, demo questions, material/quote semantics, approval checklist, workflow stage labels, supporting source IDs and a complete synthetic dataset.
 
 Currently implemented packs:
-- **interior:** Horizon Atelier / 禾序空間設計. 12 projects; 204 docs; 20 supplier records; 60 quote versions; 120 work items; 48 approval requests. Flagship change: Songshan Residence quartz countertop.
-- **printing:** Clearprint Studio / 晴川印務. 8 jobs; 114 docs; 8 supplier records; 24 quote versions; 64 work items; 24 approval requests. Flagship change: 500 A3 posters switching paper stock.
+- **interior:** Horizon Atelier / 禾序空間設計. 12 projects; 204 base docs + 16 fictional historical cost sources; 20 supplier records; 60 quote versions; 120 work items; 48 approval requests. Flagship change: Songshan Residence quartz countertop.
+- **printing:** Clearprint Studio / 晴川印務. 8 jobs; 114 base docs + 16 fictional historical cost sources; 8 supplier records; 24 quote versions; 64 work items; 24 approval requests. Flagship change: 500 A3 posters switching paper stock.
 
 The platform must use the same code for both packs. Industry-specific language and workflow rules live in industry-packs.js and each source file/seed, rather than being embedded in the UI.
 
@@ -63,7 +63,7 @@ The platform must use the same code for both packs. Industry-specific language a
 
 ## Improvement roadmap
 
-**R0 — Completed in isolated branch:** generic industry packs; 2 synthetic sectors; shared schema and calculations; full-text source search; quote/approval/work-order demonstration; feedback review queue; primary visual refinement; automated in-memory functional checks.
+**R0 — Completed in isolated branch:** generic industry packs; 2 synthetic sectors; shared schema and calculations; full-text source search; source-linked historical quotation estimates; quote/approval/work-order demonstration; feedback review queue; primary visual refinement; automated in-memory functional checks.
 
 **R1 — Next:** human visual QA, accessibility, richer sample source files and representative PDF/Excel samples; complete Traditional Chinese interface; edit/revision tests; address empty/error states; performance checks.
 
@@ -82,3 +82,6 @@ The platform must use the same code for both packs. Industry-specific language a
 - Browser runtime / visual QA and real external integration tests are **not** complete.
 
 **This specification governs the customer-facing platform, not the internal PrimeStride opportunity-intelligence OS.**
+
+## Historical quote milestone (2026-10-18)
+The same historical cost engine is now used by both industry packs. It matches cost-complete synthetic past jobs by category, tier, quantity, recency and location; calculates from normalized actual-cost example lines; excludes quote-only records; rejects inadequate history; applies explicit escalation/contingency/margin; creates a browser-local reviewed draft. It cannot produce valid real prices without current suppliers and actual completed-job costs. See HISTORICAL_QUOTATION_ENGINE.md and HISTORICAL_ESTIMATOR_QA.md.
