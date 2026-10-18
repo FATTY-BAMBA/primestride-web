@@ -4,6 +4,7 @@ import {overview,copilot,projects,knowledge,renderInspector,renderSourceModal} f
 import {service,quotes,work,suppliers,approvals,analytics,learning} from "./views-operations.js";
 import {exampleAnswer} from "./assistant-rules.js";
 import {source as sourceButton} from "./ui-shared.js";
+import {DEFAULT_MODEL_ID,findAllowedModel} from "./model-catalog.js";
 import {historyView} from "./views-history.js";
 import {playbook} from "./views-playbook.js";
 import {readinessView} from "./views-readiness.js";
@@ -19,12 +20,13 @@ const $=id=>document.getElementById(id);
 const requested=new URLSearchParams(location.search).get("industry")||"interior";
 let pack=getPack(requested),model=null,state=null,historyData=null,industryEvidence=null,documentSession=null,toastHandle=null,documentLoadVersion=0;
 let copilotMode="sample",copilotOperatorToken="",copilotConnected=false,copilotBusy=false,copilotRunId=0;
+let selectedModelId=DEFAULT_MODEL_ID,copilotModelMenuOpen=false,copilotDraft="";
 let view={page:"overview",projectId:null,projectDetail:false,docId:null,quoteId:null,chat:[],search:"",filter:"all",pageIndex:0,flowStep:null};
 function toast(message){
  const el=$("toast");el.textContent=message;el.classList.add("visible");
  if(toastHandle)clearTimeout(toastHandle);toastHandle=setTimeout(()=>el.classList.remove("visible"),3500);
 }
-function context(){return {model,pack,state,view,history:historyData,industryEvidence,documentSession,copilotSession:{mode:copilotMode,connected:copilotConnected,busy:copilotBusy}};}
+function context(){return {model,pack,state,view,history:historyData,industryEvidence,documentSession,copilotSession:{mode:copilotMode,connected:copilotConnected,busy:copilotBusy,selectedModelId,modelMenuOpen:copilotModelMenuOpen,draft:copilotDraft}};}
 function save(){
  // A user-opened document or derived source must never leak into persistent localStorage.
  // Imported cost sources, imported quote drafts and inquiry metadata stay tab-only.
@@ -52,7 +54,7 @@ function updateShell(){
  document.title="StrideBrain · "+pack.companyEn+" | SME Demo";
 }
 async function loadIndustry(id){
- copilotRunId++;copilotMode="sample";copilotConnected=false;copilotOperatorToken="";copilotBusy=false;
+ copilotRunId++;copilotMode="sample";copilotConnected=false;copilotOperatorToken="";copilotBusy=false;copilotModelMenuOpen=false;copilotDraft="";
  documentLoadVersion++; // cancel any in-flight local file parsing on industry switch
  const next=getPack(id),previous={pack,model,state,view,historyData,industryEvidence,documentSession};
  $("main").innerHTML='<div class="loading-screen"><div class="loader-ring"></div><h2>Opening '+e(next.short)+'</h2><p>Connecting an industry pack to the shared operating workspace…</p></div>';
@@ -105,6 +107,7 @@ function gptAnswerCard(result){
 }
 async function ask(question){
  const text=String(question||"").trim();if(!text||copilotBusy)return;
+ copilotDraft="";copilotModelMenuOpen=false;
  view.chat.push({role:"user",text});
  view.page="copilot";
  if(copilotMode!=="gpt"||!copilotOperatorToken){
@@ -112,7 +115,7 @@ async function ask(question){
   view.chat.push({role:"assistant",html:ans.html,sources:ans.sources,query:text,mode:"sample",text:""});
   render();window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});return;
  }
- const active=++copilotRunId,activeIndustry=pack.id;
+ const active=++copilotRunId,activeIndustry=pack.id,activeModel=selectedModelId;
  const recent=view.chat.filter(m=>m.role==="user"||(m.role==="assistant"&&m.mode==="gpt"&&m.text))
   .slice(-12).map(m=>({role:m.role,content:String(m.text||"").slice(0,m.role==="user"?1200:1800)}));
  copilotBusy=true;
@@ -123,14 +126,14 @@ async function ask(question){
   const response=await fetch("/api/stridebrain-demo/copilot",{
    method:"POST",cache:"no-store",credentials:"same-origin",
    headers:{"Content-Type":"application/json","x-stridebrain-operator-token":copilotOperatorToken},
-   body:JSON.stringify({industry:activeIndustry,messages:recent})
+   body:JSON.stringify({industry:activeIndustry,messages:recent,modelId:activeModel})
   });
   const result=await response.json();
   if(!response.ok)throw Error(String(result.error||"The GPT service is unavailable.").slice(0,180));
   if(active!==copilotRunId||pack.id!==activeIndustry)return;
-  if(result.mode!=="gpt-readonly-demo"||typeof result.answer!=="string")throw Error("Unexpected server response.");
+  if(!["gpt-readonly-demo","openrouter-readonly-demo"].includes(result.mode)||typeof result.answer!=="string"||result.modelId!==activeModel)throw Error("Unexpected model server response.");
   copilotConnected=true;
-  view.chat[index]={role:"assistant",html:gptAnswerCard(result),sources:result.sourceIds,query:text,mode:"gpt",text:result.answer};
+  view.chat[index]={role:"assistant",html:gptAnswerCard(result),sources:result.sourceIds,query:text,mode:"gpt",modelId:result.modelId,modelLabel:result.modelLabel,text:result.answer};
  }catch(err){
   if(active!==copilotRunId||pack.id!==activeIndustry)return;
   copilotMode="sample";copilotOperatorToken="";copilotConnected=false;
@@ -197,7 +200,24 @@ async function handleDocument(file){
 }
 function perform(el){
  const action=el.dataset.action,id=el.dataset.id||"",value=el.dataset.value||"";
- if(action==="nav"){view.projectDetail=false;setPage(value);}
+ if(action==="nav"){copilotModelMenuOpen=false;view.projectDetail=false;setPage(value);}
+ else if(action==="modelMenu"){
+   if(copilotBusy)return;
+   copilotModelMenuOpen=!copilotModelMenuOpen;render();
+ }
+ else if(action==="modelSelect"){
+   if(copilotBusy)return;
+   const chosen=findAllowedModel(value);
+   if(!chosen){toast("That model is not on the approved list.");return;}
+   selectedModelId=chosen.id;copilotModelMenuOpen=false;copilotConnected=false;
+   render();
+   toast(copilotMode==="gpt"?"Selected "+chosen.label+" for the next authorized model request.":"Selected "+chosen.label+". Connect staff AI to use this model; sample answers remain deterministic.");
+ }
+ else if(action==="newChat"){
+   if(copilotBusy){toast("Wait for the current answer or disconnect first.");return;}
+   copilotRunId++;view.chat=[];copilotDraft="";copilotModelMenuOpen=false;render();
+   toast("Started a new local conversation.");
+ }
  else if(action==="project"){
   const key=id||value;if(!model.project(key))return;view.projectId=key;view.projectDetail=true;setPage("projects");
  }else if(action==="intakeFixture"){
@@ -272,10 +292,10 @@ function perform(el){
    const token=$("copilot-access-token")?.value?.trim()||"";
    if(token.length<20){toast("Enter the internal operator token (not an OpenAI API key).");return;}
    if(view.chat.length&&!confirm("Switching to GPT preview clears the current sample conversation. Continue?"))return;
-   copilotMode="gpt";copilotOperatorToken=token;copilotConnected=false;copilotRunId++;view.chat=[];render();
+   copilotMode="gpt";copilotOperatorToken=token;copilotConnected=false;copilotRunId++;view.chat=[];copilotModelMenuOpen=false;render();
    toast("Staff GPT mode requested. The next message will check server configuration and access.");
  }else if(action==="disableGpt"){
-   copilotRunId++;copilotMode="sample";copilotOperatorToken="";copilotConnected=false;copilotBusy=false;
+   copilotRunId++;copilotMode="sample";copilotOperatorToken="";copilotConnected=false;copilotBusy=false;copilotModelMenuOpen=false;copilotDraft="";
    view.chat=[];render();toast("Returned to the offline deterministic demo; no operator access token is retained.");
  }else if(action==="projectBack"){view.projectDetail=false;render();}
  else if(action==="source")openSource(id);
@@ -352,10 +372,16 @@ function perform(el){
   state=resetDemoState(pack);state.historyRequest=historicalDefaults(historyData);state.readiness.inputs=initialReadiness(pack.id);view.chat=[];view.docId=null;view.quoteId=null;view.projectDetail=false;setPage("overview");toast("Sample state restored.");
  }
 }
-document.addEventListener("click",ev=>{const el=ev.target.closest("[data-action]");if(el&&model)perform(el);});
+document.addEventListener("click",ev=>{
+ const el=ev.target.closest("[data-action]");
+ if(el&&model){perform(el);return;}
+ if(copilotModelMenuOpen&&!ev.target.closest(".sb-model-container")){
+  copilotModelMenuOpen=false;if(view.page==="copilot")render();
+ }
+});
 document.addEventListener("submit",ev=>{
  if(ev.target.id!=="ask-form"||!model)return;
- ev.preventDefault();const input=ev.target.querySelector("input");if(input){const text=input.value;input.value="";ask(text);}
+ ev.preventDefault();const input=ev.target.querySelector("[data-copilot-input],input");if(input){const text=input.value;input.value="";copilotDraft="";ask(text);}
 });
 document.addEventListener("change",ev=>{
  if(ev.target.id==="intake-currency"){
@@ -411,6 +437,7 @@ document.addEventListener("change",ev=>{
 });
 document.addEventListener("input",ev=>{
  if(!model)return;
+ if(ev.target.matches("[data-copilot-input]")){copilotDraft=ev.target.value.slice(0,1200);return;}
  const input=ev.target.dataset.input;
  if(ev.target.id==="intake-review-note"){if(documentSession){if(documentSession.imported)detachImported();documentSession.reviewNote=ev.target.value;if(documentSession.report?.reviewed&&ev.target.value!==documentSession.report.reviewerNote){documentSession.report.reviewed=false;documentSession.report.reviewedAt=null;}}return;}
  if(ev.target.hasAttribute("data-bridge")){
@@ -429,7 +456,15 @@ document.addEventListener("input",ev=>{
   state.customerDraft.text=ev.target.value;state.customerDraft.reviewed=false;save();
  }
 });
-document.addEventListener("keydown",ev=>{if(ev.key==="Escape"&&view.docId)closeSource();});
+document.addEventListener("keydown",ev=>{
+ if(ev.key==="Enter"&&!ev.shiftKey&&!ev.isComposing&&ev.target.matches("[data-copilot-input]")){
+  ev.preventDefault();if(!copilotBusy)ev.target.closest("form")?.requestSubmit();return;
+ }
+ if(ev.key==="Escape"&&copilotModelMenuOpen){
+  copilotModelMenuOpen=false;if(view.page==="copilot")render();return;
+ }
+ if(ev.key==="Escape"&&view.docId)closeSource();
+});
 document.addEventListener("dragover",ev=>{if(ev.target.closest("#intake-drop"))ev.preventDefault();});
 document.addEventListener("drop",ev=>{const area=ev.target.closest("#intake-drop");if(!area)return;ev.preventDefault();const file=ev.dataTransfer?.files?.[0];if(file)handleDocument(file);});
 loadIndustry(pack.id);
