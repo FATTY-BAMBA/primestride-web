@@ -6,27 +6,30 @@ import {exampleAnswer} from "./assistant-rules.js";
 import {historyView} from "./views-history.js";
 import {playbook} from "./views-playbook.js";
 import {readinessView} from "./views-readiness.js";
+import {documentIntelligenceView} from "./views-document-intelligence.js";
+import {extractDocument,reviewCandidate,editCandidate,approveDocument,reviewReportMarkdown} from "./document-intelligence.js";
+import {sampleFile} from "./sample-documents.js";
 import {getReadinessPack,initialReadiness,normalizeReadinessInput,evaluateReadiness,validateReadinessSources} from "./readiness-rules.js";
 import {validateIndustryEvidence} from "./industry-evidence.js";
 import {validateHistory,historicalDefaults,safeRequest,historicalEstimate,estimateMarkdown} from "./historical-estimator.js";
 const $=id=>document.getElementById(id);
 const requested=new URLSearchParams(location.search).get("industry")||"interior";
-let pack=getPack(requested),model=null,state=null,historyData=null,industryEvidence=null,toastHandle=null;
+let pack=getPack(requested),model=null,state=null,historyData=null,industryEvidence=null,documentSession=null,toastHandle=null;
 let view={page:"overview",projectId:null,projectDetail:false,docId:null,quoteId:null,chat:[],search:"",filter:"all",pageIndex:0,flowStep:null};
 function toast(message){
  const el=$("toast");el.textContent=message;el.classList.add("visible");
  if(toastHandle)clearTimeout(toastHandle);toastHandle=setTimeout(()=>el.classList.remove("visible"),3500);
 }
-function context(){return {model,pack,state,view,history:historyData,industryEvidence};}
+function context(){return {model,pack,state,view,history:historyData,industryEvidence,documentSession};}
 function save(){if(!saveDemoState(pack,state))toast("Browser storage unavailable. Changes may not survive a refresh.");}
 function setPage(page,reset=true){
  view.page=page;if(reset){view.search="";view.filter="all";view.pageIndex=0;}
  render();window.scrollTo({top:0,behavior:"smooth"});
 }
-function pageTitle(){return view.page==="projects"?pack.projectLabel:view.page==="quotes"?pack.quoteLabel:view.page==="work"?pack.orderLabel:{overview:"Overview",copilot:"StrideBrain Copilot",knowledge:"Knowledge hub",service:"Customer service",suppliers:"Suppliers",approvals:"Approvals",analytics:"Analytics",learning:"Learning & feedback",history:"Historical estimates",playbook:"Industry playbook",readiness:"Operational checks"}[view.page]||"Overview";}
+function pageTitle(){return view.page==="projects"?pack.projectLabel:view.page==="quotes"?pack.quoteLabel:view.page==="work"?pack.orderLabel:{overview:"Overview",copilot:"StrideBrain Copilot",knowledge:"Knowledge hub",service:"Customer service",suppliers:"Suppliers",approvals:"Approvals",analytics:"Analytics",learning:"Learning & feedback",history:"Historical estimates",playbook:"Industry playbook",readiness:"Operational checks",intake:"Document intelligence"}[view.page]||"Overview";}
 function render(){
  if(!model)return;
- const mapping={overview,copilot,projects,knowledge,service,quotes,work,suppliers,approvals,analytics,learning,history:historyView,playbook,readiness:readinessView};
+ const mapping={overview,copilot,projects,knowledge,service,quotes,work,suppliers,approvals,analytics,learning,history:historyView,playbook,readiness:readinessView,intake:documentIntelligenceView};
  $("main").innerHTML=(mapping[view.page]||overview)(context());
  $("inspector").innerHTML=renderInspector(context());
  $("page-name").textContent=pageTitle();
@@ -40,7 +43,7 @@ function updateShell(){
  document.title="StrideBrain · "+pack.companyEn+" | SME Demo";
 }
 async function loadIndustry(id){
- const next=getPack(id),previous={pack,model,state,view,historyData,industryEvidence};
+ const next=getPack(id),previous={pack,model,state,view,historyData,industryEvidence,documentSession};
  $("main").innerHTML='<div class="loading-screen"><div class="loader-ring"></div><h2>Opening '+e(next.short)+'</h2><p>Connecting an industry pack to the shared operating workspace…</p></div>';
  try{
   const result=await fetch(next.dataset,{cache:"no-store"});if(!result.ok)throw Error("Dataset unavailable: "+result.status);
@@ -67,11 +70,12 @@ async function loadIndustry(id){
   state.historyRequest=safeRequest(historyData,state.historyRequest||historicalDefaults(historyData));
   state.readiness=state.readiness||{};
   state.readiness.inputs=normalizeReadinessInput(pack.id,state.readiness.inputs||initialReadiness(pack.id));
+  documentSession=null;
   view={page:"overview",projectId:pack.scenario.projectId,projectDetail:false,docId:null,quoteId:null,chat:[],search:"",filter:"all",pageIndex:0,flowStep:null};
   const url=new URL(location.href);url.searchParams.set("industry",pack.id);history.replaceState({industry:pack.id},"",url);
   updateShell();render();toast(pack.name+" template loaded · "+model.seed.documents.length+" example source records.");
  }catch(error){
-  pack=previous.pack;model=previous.model;state=previous.state;historyData=previous.historyData;industryEvidence=previous.industryEvidence;view=previous.view;
+  pack=previous.pack;model=previous.model;state=previous.state;historyData=previous.historyData;industryEvidence=previous.industryEvidence;documentSession=previous.documentSession;view=previous.view;
   if(model){updateShell();render();toast("Could not load the selected industry: "+error.message);}
   else $("main").innerHTML='<div class="panel"><h2>Demo could not start</h2><p>'+e(error.message)+'</p><p>Try refreshing the preview. No live company data is involved.</p></div>';
  }
@@ -104,11 +108,52 @@ async function copyReviewedDraft(){
  try{await navigator.clipboard.writeText(state.customerDraft.text);toast("Reviewed sample draft copied. No message was sent.");}
  catch{toast("Clipboard unavailable. You may select the text manually.");}
 }
+
+function downloadLocal(file){
+ const blob=new Blob([file.bytes],{type:file.type}),url=URL.createObjectURL(blob),link=document.createElement("a");
+ link.href=url;link.download=file.filename;document.body.appendChild(link);link.click();link.remove();
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+async function handleDocument(file){
+ if(!file||!model)return;
+ documentSession={loading:true,error:null,report:null,reviewNote:""};
+ setPage("intake");
+ try{
+  const report=await extractDocument(file);
+  documentSession={loading:false,error:null,report,reviewNote:""};
+  render();toast("Extracted local file. Review every source value before using it.");
+ }catch(err){
+  documentSession={loading:false,error:String(err?.message||err),report:null,reviewNote:""};
+  render();toast("Unable to read file. Check the source or try a fictional sample.");
+ }
+}
 function perform(el){
  const action=el.dataset.action,id=el.dataset.id||"",value=el.dataset.value||"";
  if(action==="nav"){view.projectDetail=false;setPage(value);}
  else if(action==="project"){
   const key=id||value;if(!model.project(key))return;view.projectId=key;view.projectDetail=true;setPage("projects");
+ }else if(action==="intakeFixture"){
+  try{downloadLocal(sampleFile(pack.id,value));toast("Fictional "+value.toUpperCase()+" sample downloaded. Select it in Document Intelligence to test.");}
+  catch(err){toast("Cannot create sample: "+err.message);}
+ }else if(action==="intakeClear"){
+  if(documentSession?.report&&!confirm("Clear the extracted document and local review? The upload is not stored."))return;
+  documentSession=null;render();toast("Local document cleared from the session.");
+ }else if(action==="intakeRow"){
+  const report=documentSession?.report;if(!report)return;
+  const result=reviewCandidate(report,id,value);
+  if(result.ok){render();toast("Line item review decision recorded in this tab.");}else toast(result.reason);
+ }else if(action==="intakeApprove"){
+  const report=documentSession?.report;if(!report)return;
+  const result=approveDocument(report,documentSession?.reviewNote||"");
+  if(result.ok){render();toast(result.mode==="TEXT_EXTRACTION_REVIEW"?"Text extraction reviewed; no quotation was generated.":"Extracted cost draft reviewed locally. No customer quote was sent.");}
+  else toast(result.reason);
+ }else if(action==="intakeExport"){
+  const report=documentSession?.report;
+  if(!report?.reviewed){toast("Human review is required before export.");return;}
+  const content=reviewReportMarkdown(report,pack.id);
+  const filename="StrideBrain-"+pack.id+"-reviewed-extraction.md";
+  downloadLocal({filename,type:"text/markdown;charset=utf-8",bytes:new TextEncoder().encode(content)});
+  toast("Reviewed extraction exported with original source references.");
  }else if(action==="flowStep"){view.flowStep=value;render();}
  else if(action==="readinessReset"){
    state.readiness.inputs=initialReadiness(pack.id);state.readiness.assessment=null;
@@ -213,6 +258,16 @@ document.addEventListener("submit",ev=>{
  ev.preventDefault();const input=ev.target.querySelector("input");if(input){const text=input.value;input.value="";ask(text);}
 });
 document.addEventListener("change",ev=>{
+ if(ev.target.id==="intake-file"){
+  const file=ev.target.files?.[0];if(file)handleDocument(file);return;
+ }
+ if(ev.target.hasAttribute("data-intake-value")){
+  const itemId=ev.target.getAttribute("data-intake-value"),field=ev.target.dataset.field;
+  const result=editCandidate(documentSession?.report,itemId,field,ev.target.value);
+  if(result.ok){render();toast("Value updated as an explicit human edit; source amount is unchanged.");}
+  else toast(result.reason);
+  return;
+ }
  if(ev.target.id==="industry-switcher"){loadIndustry(ev.target.value);return;}
  if(!model)return;
  const input=ev.target.dataset.input;
@@ -244,6 +299,7 @@ document.addEventListener("change",ev=>{
 document.addEventListener("input",ev=>{
  if(!model)return;
  const input=ev.target.dataset.input;
+ if(ev.target.id==="intake-review-note"){if(documentSession)documentSession.reviewNote=ev.target.value;return;}
  if(input==="search"){
   const pos=ev.target.selectionStart||0;view.search=ev.target.value;view.pageIndex=0;
   render();const el=document.querySelector('[data-input="search"]');if(el){el.focus();try{el.setSelectionRange(pos,pos);}catch{}}
@@ -254,4 +310,6 @@ document.addEventListener("input",ev=>{
  }
 });
 document.addEventListener("keydown",ev=>{if(ev.key==="Escape"&&view.docId)closeSource();});
+document.addEventListener("dragover",ev=>{if(ev.target.closest("#intake-drop"))ev.preventDefault();});
+document.addEventListener("drop",ev=>{const area=ev.target.closest("#intake-drop");if(!area)return;ev.preventDefault();const file=ev.dataTransfer?.files?.[0];if(file)handleDocument(file);});
 loadIndustry(pack.id);
