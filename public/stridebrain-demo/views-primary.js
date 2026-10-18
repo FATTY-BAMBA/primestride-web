@@ -38,6 +38,10 @@ export function knowledge(c){
  const {model:m,view:v}=c,kinds=["all",...new Set(m.seed.documents.map(d=>d.kind))],hits=m.searchDocuments(v.search,v.filter),pages=Math.max(1,Math.ceil(hits.length/18)),page=Math.min(v.pageIndex,pages-1),rows=hits.slice(page*18,(page+1)*18);
  v.pageIndex=page;
  let out=heading("Company knowledge hub","Inspect sources, revision labels, and clearly separated public guidance versus fictional company records.",tag(m.seed.documents.length+" indexed knowledge records"),"ONE SHARED KNOWLEDGE FOUNDATION");
+ const imported=c.documentSession?.report||null;
+ if(imported){
+  out+='<div class="history-mini"><span><strong>Temporary source in this browser:</strong> '+e(imported.fileName)+' · '+e(imported.classification.replace(/_/g," "))+' · '+(imported.reviewed?'Reviewed extraction':'Requires review')+'. This file is not part of the company knowledge index and disappears after refresh.</span>'+button("Inspect local file ↗","nav","intake","button-secondary")+'</div>';
+ }
  const publicCount=m.seed.documents.filter(d=>d.basisType==="PUBLIC_REFERENCE").length;
  const historicalCount=m.seed.documents.filter(d=>d.kind==="Historical cost record").length;
  const sampleCount=m.seed.documents.length-publicCount-historicalCount;
