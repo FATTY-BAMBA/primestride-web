@@ -39,3 +39,17 @@ The preview is a synthetic prototype, NOT an LLM, live RAG system, multi-tenant 
 - [x] Contextual past-project quote access in Copilot and Quotations.
 - [ ] Manual confirmation of draft creation, review, invalidation and export in a browser.
 - [ ] Production cost source verification, secure tenant data, real document intake, PDF quotes.
+
+
+## Taiwan evidence and multi-tenancy design checks
+- [x] 15 source IDs unique and original URLs use HTTPS.
+- [x] 25 reference documents and every workflow/reference link resolve in the curated pack.
+- [x] Nine workflow stages for each of two industries.
+- [x] Original publisher, source type, locator and applicability warnings are visible in source inspector and narrow-screen modal templates.
+- [x] Copilot routes Taiwan renovation requirements and A3 artwork-preflight questions to original citations rather than company cost data.
+- [x] Public reference documents and fictitious company/history records are labeled separately.
+- [x] 26 module screens and 8 supplemental checks passed in source-level V8 rendering smoke test.
+- [ ] Full visual desktop/mobile walkthrough, focus/accessibility review and browser networking.
+- [ ] Public-source freshness recheck and legal/professional applicability review before launch.
+- [ ] Real private company accounts and cross-organization RLS/access-control security tests; schema design only.
+- [ ] Real customer PDF, Excel, historical actual-cost imports and production AI evaluations.
