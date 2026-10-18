@@ -163,3 +163,10 @@ body{background:#f7f9f6;font-size:14px}
 @media(max-width:1450px){.history-comps{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:800px){.quote-journey{grid-template-columns:repeat(2,minmax(0,1fr))}.history-assumptions{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:550px){.history-comps,.history-form-grid{grid-template-columns:1fr}.history-assumptions{grid-template-columns:1fr}.history-evidence-meta{grid-template-columns:repeat(3,1fr)}.history-shortcut,.history-mini{flex-direction:column;align-items:start}.history-main-price strong{font-size:26px}}
+
+
+.history-quote-summary{display:flex;align-items:center;justify-content:space-between;gap:20px;border:1px solid #cae4d2;border-radius:14px;background:#eff8f0;padding:20px 22px;margin-bottom:18px}
+.history-quote-summary h3{font-size:16px;margin:4px 0 6px}
+.history-quote-summary p{font-size:12px;color:#506e5c;margin:0;line-height:1.55}
+.history-quote-summary button{flex:none}
+@media(max-width:600px){.history-quote-summary{flex-direction:column;align-items:start}.history-quote-summary button{width:100%}}
