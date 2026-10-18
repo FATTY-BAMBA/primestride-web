@@ -231,3 +231,65 @@ body{background:#f7f9f6;font-size:14px}
 .source-provenance.synthetic strong{color:#876d42}
 .source-provenance.synthetic span{color:#858679;display:block}
 @media(max-width:540px){.source-provenance a{flex-wrap:wrap}.source-provenance a>span,.source-provenance a>small{flex:1 1 100%}}
+
+
+/* v0.4 — manual evidence readiness checks, portable across Taiwan SME packs */
+.readiness-context{display:flex;align-items:center;justify-content:space-between;gap:16px;background:linear-gradient(110deg,#e6f3eb,#f9fbf7);border:1px solid #d4e8db;border-radius:15px;padding:19px 21px}
+.readiness-context h3{font-size:18px;margin:4px 0 5px}
+.readiness-context p{font-size:12px;color:#577363;line-height:1.65;max-width:710px;margin:0}
+.readiness-context .button-outline{flex:none}
+.readiness-layout{display:grid;grid-template-columns:minmax(0,.90fr) minmax(0,1.1fr);gap:15px;align-items:start}
+.readiness-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 12px;margin-top:15px}
+.readiness-fields .form-field{min-width:0}
+.readiness-fields .form-field span{font-size:11px;color:#4f7161;font-weight:800;line-height:1.4}
+.readiness-input,.readiness-select{width:100%;min-height:42px;font-size:12px;background:#fff;border:1px solid #d4e5da;border-radius:10px;padding:10px 12px;color:#234036;outline:none;max-width:100%}
+.readiness-input:focus,.readiness-select:focus{border-color:#87cbb0;box-shadow:0 0 0 3px rgba(9,128,91,.1)}
+.readiness-disclosure{font-size:11px;color:#7b897f;line-height:1.65;margin-top:17px;padding:11px 13px;background:#f7faf7;border:1px solid #e2ece5;border-radius:10px}
+.readiness-status{border:1px solid #e6d7b8;background:#fff9ee;border-radius:13px;padding:16px;margin-top:14px;margin-bottom:13px}
+.readiness-status.success{background:#f0f9f3;border-color:#bbe3cb}
+.readiness-status small{color:#8e744b;font-size:10px;text-transform:uppercase;letter-spacing:.09em;font-weight:800}
+.readiness-status.success small{color:#257957}
+.readiness-status strong{display:block;font-size:19px;letter-spacing:-.025em;margin:5px 0;color:#674a29}
+.readiness-status.success strong{color:#1c6a48}
+.readiness-status span{display:block;color:#7f6b4f;font-size:12px;line-height:1.6}
+.readiness-status.success span{color:#557b61}
+.readiness-status-numbers{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:12px;padding-top:10px;border-top:1px solid rgba(134,117,74,.18)}
+.readiness-status-numbers span{padding:5px 8px;background:rgba(255,255,255,.65);font-size:10px;color:#526c5b;font-weight:800;border-radius:7px}
+.readiness-list{display:flex;flex-direction:column;gap:9px;margin-top:16px}
+.readiness-finding{border:1px solid #e3eae4;border-radius:11px;padding:13px 14px;background:#fff}
+.readiness-finding.pass{border-color:#cde4d3;background:#f8fcf8}
+.readiness-finding.hold{border-color:#e9dcc3;background:#fffcf5}
+.readiness-finding.review{border-color:#dce7ef;background:#f8fbfe}
+.readiness-finding-head{display:flex;align-items:center;gap:9px}
+.readiness-indicator{height:29px;width:29px;flex:none;border-radius:9px;background:#edf5ee;color:#267f5b;font-weight:800;display:grid;place-items:center;font-size:13px}
+.readiness-finding.hold .readiness-indicator{background:#fff0d4;color:#8d6527}
+.readiness-finding.review .readiness-indicator{background:#eaf1f9;color:#4575a4}
+.readiness-finding-head div{min-width:0}
+.readiness-finding-head strong{display:block;font-size:12px;color:#244838}
+.readiness-finding-head small{display:block;font-size:10px;color:#7b8d80;margin-top:2px}
+.readiness-finding p{font-size:11px;color:#657b6c;margin:10px 0;line-height:1.6}
+.readiness-next{padding:8px 10px;border-radius:7px;background:#f4f6ed;color:#697c58;font-size:11px;line-height:1.6}
+.readiness-sources{display:flex;gap:5px;flex-wrap:wrap;margin-top:9px}
+.readiness-task-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:16px}
+.readiness-task-actions button{flex:1}
+.readiness-flow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+.readiness-flow div{border:1px solid #dde8e0;background:#fff;padding:13px;border-radius:10px}
+.readiness-flow small{font-size:10px;color:#748779;display:block;margin-bottom:7px}
+.readiness-flow strong{font-size:12px;color:#294e3e}
+.readiness-links{display:flex;gap:10px;flex-wrap:wrap;margin-top:15px}
+.readiness-mini{display:flex;align-items:center;justify-content:space-between;gap:14px;border-radius:11px;padding:14px 17px;background:#f5f8f3;border:1px solid #dce8db;font-size:12px;color:#587368;margin:11px 0}
+.readiness-mini strong{color:#245943}
+.readiness-mini button{flex:none}
+.readiness-shortcut{display:flex;justify-content:space-between;align-items:center;gap:12px;border:1px solid #d8e8dc;background:#eef8f0;padding:16px 18px;border-radius:13px}
+.readiness-shortcut h3{font-size:15px;margin:4px 0}
+.readiness-shortcut p{font-size:12px;color:#56745d;line-height:1.65;margin:0}
+.readiness-shortcut button{flex:none}
+.readiness-fixtures{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.readiness-fixture{display:flex;align-items:center;gap:9px;border:1px solid #dce6df;border-radius:10px;background:white;padding:12px;color:#305a45;text-decoration:none}
+.readiness-fixture:hover{border-color:#8ebfa0;background:#f4faf5}
+.readiness-fixture strong{font-size:12px;display:block}
+.readiness-fixture small{font-size:10px;color:#738779;display:block;margin-top:3px}
+.readiness-fixture-icon{font-size:17px}
+@media(max-width:1190px){.readiness-layout{grid-template-columns:1fr}.readiness-context{align-items:start}}
+@media(max-width:790px){.readiness-fields{grid-template-columns:repeat(2,minmax(0,1fr))}.readiness-flow{grid-template-columns:repeat(2,minmax(0,1fr))}.readiness-context{flex-direction:column;align-items:start}}
+@media(max-width:520px){.readiness-fields,.readiness-fixtures{grid-template-columns:1fr}.readiness-task-actions{flex-direction:column}.readiness-mini,.readiness-shortcut{flex-direction:column;align-items:start}.readiness-mini button,.readiness-shortcut button{width:100%}.readiness-flow{grid-template-columns:repeat(2,minmax(0,1fr))}}
