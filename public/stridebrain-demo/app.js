@@ -82,7 +82,7 @@ function openSource(id){
  if(!model.document(id)){toast("Source document not found.");return;}
  view.docId=id;render();
  if(window.matchMedia("(max-width:1250px)").matches){
-  $("evidence-overlay").innerHTML=renderSourceModal(model.document(id));$("evidence-overlay").classList.add("show");
+  $("evidence-overlay").innerHTML=renderSourceModal(model.document(id),industryEvidence);$("evidence-overlay").classList.add("show");
  }else toast("Source opened in the evidence panel.");
 }
 function closeSource(){
