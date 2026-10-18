@@ -76,7 +76,7 @@ export function detectCostTable(rows,sourceName="Sheet1",maxCandidates=120){
 }
 function buildReport(name,extension,parts,metadata={}){
  const tabs=parts.filter(x=>x.kind==="table"),segments=parts.filter(x=>x.kind==="text"),candidates=[],findings=[];
- for(const t of tabs){const d=detectCostTable(t.rows,t.name);candidates.push(...d.candidates);findings.push(...d.findings);if(t.truncated)findings.push(problem("ROW_LIMIT","Only the first rows of "+t.name+" were examined.",t.name));}
+ for(const [sheetIndex,t] of tabs.entries()){const d=detectCostTable(t.rows,t.name);for(const [index,item] of d.candidates.entries()){item.id="C-S"+String(sheetIndex+1).padStart(2,"0")+"-R"+String(item.rowIndex)+"-"+String(index+1);candidates.push(item);}findings.push(...d.findings);if(t.truncated)findings.push(problem("ROW_LIMIT","Only the first rows of "+t.name+" were examined.",t.name));}
  for(const p of segments){if(p.lines.length===0)findings.push(problem("NO_EMBEDDED_TEXT","No readable embedded text found. Scanned pages and drawings require OCR or specialist review.",p.name,"blocker"));}
  if(parts.length===0)findings.push(problem("EMPTY_DOCUMENT","No readable content was extracted.",name,"blocker"));
  const textRows=segments.flatMap(p=>p.lines.map(l=>({name:p.name,...l})));
