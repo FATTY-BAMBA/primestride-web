@@ -1,5 +1,6 @@
 import {money,calculateVariation,escapeHtml as e} from "./core-model.js";
 import {button,source,sources,documentRow} from "./ui-shared.js";
+import {referenceForPrompt} from "./industry-evidence.js";
 /**
  * Deterministic explainability examples — not an actual AI agent.
  * A production LLM would route to typed tools, verify claims and cite permission-filtered evidence.
@@ -15,6 +16,21 @@ export function exampleAnswer(prompt,c){
   const h=c.history,ref=h?.records.filter(x=>x.status==="COMPLETE").slice(0,3).map(x=>x.sourceDocId)||[];
   const body='<p>Use comparable completed work, normalized cost lines, explicit price adjustments, and human approval to prepare a source-linked new estimate. The current precedents are fictional sample jobs.</p>'+relevant(ref);
   return {sources:ref,html:wrap("Historical Quotation Intelligence",body,actions(button("Review similar projects ↗","nav","history","button-primary")))};
+ }
+ if(c.industryEvidence&&(
+   (p.id==="interior"&&/permit|regulation|fire.safety|registered|licensed|contract form|drawing revision|completion inspection|裝修法規|室內裝修|圖說|申請|驗收|建築法|契約範本|防火|證照/.test(question))
+   ||(p.id==="printing"&&/preflight|bleed|dpi|pdf file|font embed|proof approval|color management|CMYK|binding|印前|出血|校稿|打樣|色彩|裝訂|印刷檔案|油墨|空污/.test(question))
+  )){
+  let selected=referenceForPrompt(c.industryEvidence,p.id,question);
+  if(!selected.length){
+   const ids=p.id==="interior"?( /contract|契約/.test(question)?["REF-I05","REF-I08"]: /fire|防火/.test(question)?["REF-I04","REF-I07"]: /inspection|驗收/.test(question)?["REF-I09"]:["REF-I01","REF-I03","REF-I10"]):
+    (/bleed|dpi|pdf|出血|印前|檔案/.test(question)?["REF-P02","REF-P03","REF-P04"]:/proof|打樣|校稿/.test(question)?["REF-P07","REF-P09"]:["REF-P01","REF-P05","REF-P06"]);
+   selected=c.industryEvidence.cards.filter(x=>ids.includes(x.id));
+  }
+  const ids=selected.map(x=>x.id);
+  const paragraphs=selected.slice(0,3).map(x=>'<div class="prio-row"><div class="prio-main"><div class="prio-title">'+e(x.titleZh)+' · '+e(x.titleEn)+'</div><div class="prio-sub">'+e(x.summary)+'</div><div class="disclosure" style="margin-top:5px">Scope limitation: '+e(x.limits)+'</div></div>'+source(x.id)+'</div>').join("");
+  const content='<p>I found '+selected.length+' relevant Taiwan public-reference notes. These are laws, official guidance or documented examples depending on the source type. They do not prove this fictional client is compliant or that vendor requirements are universal.</p>'+paragraphs+'<div class="answer-actions">'+button("Explore Taiwanese industry playbook ↗","nav","playbook","button-primary")+'</div>';
+  return {sources:ids,html:wrap("Published Taiwan industry guidance",content)};
  }
  if(packTerm.test(question)||/change order|variation|material change|substitution|變更|替換/.test(question)){
   const changed=s.variation.cost!==sc.cost||s.variation.margin!==sc.margin;
