@@ -154,6 +154,13 @@ function perform(el){
   state.approvals[id]="Approved";event(state,"Simulated approval "+id+" · "+a.projectId);save();render();toast("Internal demo approval recorded.");
  }else if(action==="task"){
   const t=model.tasks(state).find(x=>x.id===id);if(!t)return;
+  if(id===state.readiness?.reviewTaskId&&t.status!=="Complete"){
+   const current=evaluateReadiness(pack.id,state.readiness.inputs);
+   const saved=state.readiness.assessment;
+   if(!saved||current.counts.hold>0||JSON.stringify(current.inputs)!==JSON.stringify(saved.inputs)||JSON.stringify(current.checks.map(x=>x.status))!==JSON.stringify(saved.checks?.map(x=>x.status))){
+    toast("Keep this review task blocked until the latest operational assessment has no outstanding holds.");return;
+   }
+  }
   state.tasks[id]=t.status==="Complete"?"Upcoming":"Complete";
   event(state,"Work status changed: "+id+" → "+state.tasks[id]);save();render();toast("Sample work status updated.");
  }else if(action==="historyReset"){
