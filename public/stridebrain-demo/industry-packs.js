@@ -18,7 +18,8 @@ export const INDUSTRY_PACKS = Object.freeze({
       "What needs my attention today?",
       "Review the Songshan quartz countertop change",
       "Which site tasks are blocked?",
-      "Show the materials schedule for Songshan"
+      "Show the materials schedule for Songshan",
+      "Which Taiwan renovation rules should we check?"
     ],
     scenario:{
       id:"CHG-101-QZ",name:"Kitchen countertop · Quartz upgrade",
@@ -64,7 +65,8 @@ export const INDUSTRY_PACKS = Object.freeze({
       "What needs attention today?",
       "Review the Minquan paper stock substitution",
       "Which press jobs are blocked?",
-      "Find the latest artwork checklist"
+      "Find the latest artwork checklist",
+      "What checks does an A3 poster PDF need?"
     ],
     scenario:{
       id:"CHG-201-RP",name:"Recycled-paper stock substitution",
