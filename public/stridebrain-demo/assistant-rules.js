@@ -79,7 +79,7 @@ export function exampleAnswer(prompt,c){
    '<p class="disclosure">Drafts, accepted contracts, invoices, and cash receipts are different operational states.</p>';
   return {sources:refs,html:wrap("Recorded quotation activity",body,actions(button("Inspect quotations","nav","quotes","button-primary")))};
  }
- if(/(blended|average|overall).{0,22}(margin|profit)|margin.{0,22}(today|overall)|平均毛利|整體毛利/.test(question)){
+ if(/(weighted|blended|average|overall).{0,42}(margin|profit)|margin.{0,22}(today|overall)|平均毛利|整體毛利/.test(question)){
   const latest=m.latestQuotes(),costs=latest.reduce((x,q)=>x+q.directCost,0),sell=latest.reduce((x,q)=>x+q.amountExTax,0);
   const margin=sell>0?(sell-costs)/sell*100:0;
   const refs=[...new Set(latest.slice(0,6).map(q=>q.sourceDocId))];
