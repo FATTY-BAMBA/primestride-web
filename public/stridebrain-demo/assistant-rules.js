@@ -60,6 +60,32 @@ export function exampleAnswer(prompt,c){
   desc+='<p>'+e(sc.unresolved)+'</p>'+relevant(sc.sourceIds);
   return {sources:sc.sourceIds,html:wrap("Review the proposed change",desc,actions(button("Open quotation review ↗","nav","quotes","button-primary")))};
  }
+ if(/who.{0,50}(call|follow|contact|first)|call first|follow.up first|誰.{0,20}(先|聯絡|追蹤)|先(聯絡|跟進)|優先(聯絡|追蹤)/.test(question)){
+  const approvals=m.approvals(s).filter(a=>a.status==="Pending");
+  const blocked=m.tasks(s).filter(t=>t.status==="Blocked");
+  const recommended=[...approvals.slice(0,3).map(a=>({projectId:a.projectId,title:a.title,reason:"Pending owner review before dependent work or customer promises",sourceDocId:a.sourceDocId,person:m.project(a.projectId)?.manager})),
+  ...blocked.slice(0,2).map(t=>({projectId:t.projectId,title:t.title,reason:t.blockedBy||"Recorded work blockage",sourceDocId:t.sourceDocId,person:t.owner}))].slice(0,5);
+  const refs=[...new Set(recommended.map(x=>x.sourceDocId))];
+  const body='<p>For the <strong>fictional example workspace</strong>, the recommended follow-up order is pending decisions first, then blocked work—not a learned customer lifetime-value ranking. No actual phone numbers or contact availability are connected.</p>'+
+   recommended.map((r,i)=>'<div class="prio-row"><span class="prio-index">'+(i+1)+'</span><div class="prio-main"><div class="prio-title">'+e(r.person||"Assigned owner")+' · '+e(m.project(r.projectId)?.name)+'</div><div class="prio-sub">'+e(r.title)+' — '+e(r.reason)+'</div></div>'+source(r.sourceDocId)+'</div>').join("")+
+   '<p class="disclosure">Before any external customer call, check the latest approved quote and account relationship. No call was made.</p>';
+  return {sources:refs,html:wrap("Who to follow up with first",body,actions(button("Review approval queue","nav","approvals","button-primary"),button("Work blockers","nav","work","button-outline")))};
+ }
+ if(/(how many|number of|count).{0,45}(quotes|quotations).{0,35}(today|sent)|(today|今天).{0,45}(quotes|quotations|報價)|今天.{0,35}(送出|報價)/.test(question)){
+  const day=m.seed.meta.date||"2026-10-18";
+  const sent=m.seed.quotes.filter(q=>q.status==="Sent"&&q.lastUpdated===day);
+  const priced=sent.reduce((sum,q)=>sum+q.amountExTax,0),refs=[...new Set(sent.map(q=>q.sourceDocId))];
+  const body='<p>On the fictional dataset’s recorded date <strong>'+e(day)+'</strong>, <strong>'+sent.length+'</strong> quote version(s) were marked “Sent”, with a proposed pre-tax total of <strong>'+money(priced)+'</strong>. This is not a live count for the real current date; delivery to a customer has not been independently verified.</p>'+relevant(refs)+
+   '<p class="disclosure">Drafts, accepted contracts, invoices, and cash receipts are different operational states.</p>';
+  return {sources:refs,html:wrap("Recorded quotation activity",body,actions(button("Inspect quotations","nav","quotes","button-primary")))};
+ }
+ if(/(blended|average|overall).{0,22}(margin|profit)|margin.{0,22}(today|overall)|平均毛利|整體毛利/.test(question)){
+  const latest=m.latestQuotes(),costs=latest.reduce((x,q)=>x+q.directCost,0),sell=latest.reduce((x,q)=>x+q.amountExTax,0);
+  const margin=sell>0?(sell-costs)/sell*100:0;
+  const refs=[...new Set(latest.slice(0,6).map(q=>q.sourceDocId))];
+  const body='<p>The sample current proposal portfolio has a <strong>'+margin.toFixed(1)+'% weighted proposed gross margin</strong> calculated from '+latest.length+' latest quote versions, using proposed pre-tax price and recorded direct cost. It does <strong>not</strong> represent realized company profit or any live sales activity.</p>'+relevant(refs);
+  return {sources:refs,html:wrap("Weighted draft-quote margin",body,actions(button("Inspect source calculations","nav","analytics","button-primary")))};
+ }
  if(/today|priority|attention|numbers|status|brief|overview|今天|狀態|優先|待辦/.test(question)){
   const pending=m.approvals(s).filter(a=>a.status==="Pending"),blocked=m.tasks(s).filter(t=>t.status==="Blocked"),ref=[pending[0]?.sourceDocId,blocked[0]?.sourceDocId].filter(Boolean);
   const body='<p>In this fictional operational dataset there are <strong>'+sm.pending+' pending approvals</strong> and <strong>'+sm.blocked+' blocked work items</strong> across '+sm.projects+' '+e(p.itemLabelPlural)+'. These counts update when you change work and approval state.</p><div class="pulse-grid"><div class="pulse-item"><strong>'+sm.projects+'</strong><small>'+e(p.projectLabel)+'</small></div><div class="pulse-item"><strong>'+sm.pending+'</strong><small>Pending decisions</small></div><div class="pulse-item"><strong>'+sm.blocked+'</strong><small>Blocked tasks</small></div></div>'+relevant(ref);
