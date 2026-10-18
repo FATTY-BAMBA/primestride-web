@@ -110,6 +110,7 @@ function perform(el){
  else if(action==="closeSource")closeSource();
  else if(action==="download")downloadSource(value);
  else if(action==="ask")ask(el.dataset.prompt||"");
+ else if(action==="publicFilter"){view.page="knowledge";view.search="";view.filter="Public industry reference";view.pageIndex=0;render();}
  else if(action==="page"){view.pageIndex=Math.max(0,view.pageIndex+Number(value));render();}
  else if(action==="quote"){view.quoteId=id;setPage("quotes");}
  else if(action==="gate"){
