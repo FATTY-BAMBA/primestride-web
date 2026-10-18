@@ -84,7 +84,10 @@ async function loadIndustry(id){
   state.readiness=state.readiness||{};
   state.readiness.inputs=normalizeReadinessInput(pack.id,state.readiness.inputs||initialReadiness(pack.id));
   documentSession=null;
-  view={page:"overview",projectId:pack.scenario.projectId,projectDetail:false,docId:null,quoteId:null,chat:[],search:"",filter:"all",pageIndex:0,flowStep:null};
+  // A shareable ?view=copilot preview opens directly to the conversational
+  // landing without changing the Overview default for existing customers.
+  const preferCopilot=new URLSearchParams(location.search).get("view")==="copilot"||view.page==="copilot";
+  view={page:preferCopilot?"copilot":"overview",projectId:pack.scenario.projectId,projectDetail:false,docId:null,quoteId:null,chat:[],search:"",filter:"all",pageIndex:0,flowStep:null};
   const url=new URL(location.href);url.searchParams.set("industry",pack.id);history.replaceState({industry:pack.id},"",url);
   updateShell();render();toast(pack.name+" template loaded · "+model.seed.documents.length+" example source records.");
  }catch(error){
