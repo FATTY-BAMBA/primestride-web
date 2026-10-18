@@ -258,6 +258,10 @@ document.addEventListener("submit",ev=>{
  ev.preventDefault();const input=ev.target.querySelector("input");if(input){const text=input.value;input.value="";ask(text);}
 });
 document.addEventListener("change",ev=>{
+ if(ev.target.id==="intake-currency"){
+  if(documentSession?.report){documentSession.report.currencyConfirmed=ev.target.checked;documentSession.report.reviewed=false;documentSession.report.reviewedAt=null;render();}
+  return;
+ }
  if(ev.target.id==="intake-file"){
   const file=ev.target.files?.[0];if(file)handleDocument(file);return;
  }
