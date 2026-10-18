@@ -27,3 +27,16 @@ Implemented as an isolated, client-side synthetic demonstration. This is NOT ser
 
 ## Production milestones
 Tenant-isolated encrypted object storage and database; server-side parse jobs, PDF table extraction/OCR, authenticated reviewer permissions, source version lineage, enterprise retention/deletion, validation against current supplier records, and signed quotation exports. These are not currently implemented.
+
+## Browser execution evidence — 2026-10-18
+
+Observed from the user's executed StrideBrain QA page (also visible in the connected browser tab): **4 passed, 0 failed**.
+
+| Industry | Format | Browser result | Evidence reported by the harness |
+|---|---|---|---|
+| Interior | CSV | PASS | 6 lines, 5 accepted, 1 blocked, 6 matches |
+| Interior | XLSX | PASS | 6 lines, 5 accepted, 1 blocked, 6 matches |
+| Printing | CSV | PASS | 6 lines, 5 accepted, 1 blocked, 6 matches |
+| Printing | XLSX | PASS | 6 lines, 5 accepted, 1 blocked, 6 matches |
+
+**Scope:** These are four automated sample-fixture checks executed in a browser. They do not verify the manual drag-and-drop UX, PDF/DOCX/OCR, keyboard/mobile accessibility, production security, tenant isolation, or quote accuracy with real transactions. Mark the sample CSV/XLSX smoke gate complete only. Preserve earlier separate source-level test counts; the browser fixture row counts are reported as displayed by the QA harness.
