@@ -99,3 +99,15 @@ The same historical cost engine is now used by both industry packs. It matches c
 - Taiwan source-level smoke test: 26 screens + 8 additional checks passed, but authenticated browser UX, PDF/Excel ingestion, production permissions, true AI and security tests are not complete.
 
 See TAIWAN_FIELD_RESEARCH_AND_DEMO_SPEC.md and the live source registry public/stridebrain-demo/seeds/taiwan-industry-evidence.json.
+
+
+## Operational readiness integration — v0.4 (2026-10-18)
+Two interactive industry readiness screens are now available, built from a shared deterministic rules engine:
+- Interior: approved drawing issue, field measurement, supplier offer, fire/escape impact, professional regulatory applicability, schedule impact and customer acceptance.
+- Printing: manual prepress properties of a representative A3 poster (not file parsing), bleed/file geometry, fonts, DPI, color advisory, customer proof, paper stock and press capacity.
+- Findings link to relevant Taiwan references and fictional company documents with explicit provenance and caution.
+- A saved assessment can create a linked review item in the common Work Orders module.
+- Commercial change release now requires BOTH supplier→owner→customer approval gates AND a current recorded readiness assessment with zero blocking gaps. Passing the demo input does not prove real regulatory compliance or actual preflight.
+- Four Excel-friendly CSV example records and two printable HTML review sheets support more realistic demonstration.
+- Browser smoke-test harness added at /stridebrain-demo/qa.html.
+- Technical specification: INTERACTIVE_READINESS_WORKBENCH.md; manual QA: READINESS_QA_CHECKLIST.md.
