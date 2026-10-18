@@ -3,6 +3,7 @@ import {WorkspaceModel,money,calculateVariation,escapeHtml as e,loadDemoState,sa
 import {overview,copilot,projects,knowledge,renderInspector,renderSourceModal} from "./views-primary.js";
 import {service,quotes,work,suppliers,approvals,analytics,learning} from "./views-operations.js";
 import {exampleAnswer} from "./assistant-rules.js";
+import {source as sourceButton} from "./ui-shared.js";
 import {historyView} from "./views-history.js";
 import {playbook} from "./views-playbook.js";
 import {readinessView} from "./views-readiness.js";
@@ -17,12 +18,13 @@ import {validateHistory,historicalDefaults,safeRequest,historicalEstimate,estima
 const $=id=>document.getElementById(id);
 const requested=new URLSearchParams(location.search).get("industry")||"interior";
 let pack=getPack(requested),model=null,state=null,historyData=null,industryEvidence=null,documentSession=null,toastHandle=null,documentLoadVersion=0;
+let copilotMode="sample",copilotOperatorToken="",copilotConnected=false,copilotBusy=false,copilotRunId=0;
 let view={page:"overview",projectId:null,projectDetail:false,docId:null,quoteId:null,chat:[],search:"",filter:"all",pageIndex:0,flowStep:null};
 function toast(message){
  const el=$("toast");el.textContent=message;el.classList.add("visible");
  if(toastHandle)clearTimeout(toastHandle);toastHandle=setTimeout(()=>el.classList.remove("visible"),3500);
 }
-function context(){return {model,pack,state,view,history:historyData,industryEvidence,documentSession};}
+function context(){return {model,pack,state,view,history:historyData,industryEvidence,documentSession,copilotSession:{mode:copilotMode,connected:copilotConnected,busy:copilotBusy}};}
 function save(){
  // A user-opened document or derived source must never leak into persistent localStorage.
  // Imported cost sources, imported quote drafts and inquiry metadata stay tab-only.
@@ -50,6 +52,7 @@ function updateShell(){
  document.title="StrideBrain · "+pack.companyEn+" | SME Demo";
 }
 async function loadIndustry(id){
+ copilotRunId++;copilotMode="sample";copilotConnected=false;copilotOperatorToken="";copilotBusy=false;
  documentLoadVersion++; // cancel any in-flight local file parsing on industry switch
  const next=getPack(id),previous={pack,model,state,view,historyData,industryEvidence,documentSession};
  $("main").innerHTML='<div class="loading-screen"><div class="loader-ring"></div><h2>Opening '+e(next.short)+'</h2><p>Connecting an industry pack to the shared operating workspace…</p></div>';
@@ -88,12 +91,55 @@ async function loadIndustry(id){
   else $("main").innerHTML='<div class="panel"><h2>Demo could not start</h2><p>'+e(error.message)+'</p><p>Try refreshing the preview. No live company data is involved.</p></div>';
  }
 }
-function ask(question){
- const text=String(question||"").trim();if(!text)return;
+function gptAnswerCard(result){
+ const content=String(result?.answer||"").slice(0,3800);
+ const paragraphs=content.split(/\n{2,}/).map(p=>'<p>'+e(p).replace(/\n/g,"<br>")+'</p>').join("");
+ const allowed=new Set(["overview","projects","knowledge","quotes","work","suppliers","approvals","analytics","history","playbook","service"]);
+ const actions=[...new Set((Array.isArray(result.actions)?result.actions:[]).filter(a=>allowed.has(a)))].slice(0,4);
+ const labelMap={overview:"Business overview",projects:"Explore projects",knowledge:"Inspect knowledge",quotes:"Review quotes",work:"Work orders",suppliers:"Suppliers",approvals:"Pending approvals",analytics:"Analytics",history:"Past project estimates",playbook:"Industry playbook",service:"Customer replies"};
+ const ids=[...new Set((Array.isArray(result.sourceIds)?result.sourceIds:[]).filter(id=>!!model.document(id)))].slice(0,12);
+ return '<div class="answer-card"><div class="suite-eyebrow">GPT · READ-ONLY DEMO ANSWER</div><div class="copilot-gpt-prose">'+paragraphs+'</div>'+
+  (ids.length?'<div class="copilot-tool-sources"><strong>Inspect supporting sample records</strong><div>'+ids.map(sourceButton).join(" ")+'</div></div>':'<p class="disclosure">No cited record was returned for this conversational answer.</p>')+
+  (actions.length?'<div class="answer-actions">'+actions.map(a=>'<button type="button" class="button-secondary" data-action="nav" data-value="'+a+'">'+e(labelMap[a])+' ↗</button>').join("")+'</div>':'')+
+  '<p class="disclosure">Fictional sample data · '+e(result.asOf||"2026-10-18")+' snapshot · no live customer records or actions.</p></div>';
+}
+async function ask(question){
+ const text=String(question||"").trim();if(!text||copilotBusy)return;
  view.chat.push({role:"user",text});
- const ans=exampleAnswer(text,context());
- view.chat.push({role:"assistant",html:ans.html,sources:ans.sources,query:text});
- view.page="copilot";render();window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});
+ view.page="copilot";
+ if(copilotMode!=="gpt"||!copilotOperatorToken){
+  const ans=exampleAnswer(text,context());
+  view.chat.push({role:"assistant",html:ans.html,sources:ans.sources,query:text,mode:"sample",text:""});
+  render();window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});return;
+ }
+ const active=++copilotRunId,activeIndustry=pack.id;
+ const recent=view.chat.filter(m=>m.role==="user"||(m.role==="assistant"&&m.mode==="gpt"&&m.text))
+  .slice(-12).map(m=>({role:m.role,content:String(m.text||"").slice(0,m.role==="user"?1200:1800)}));
+ copilotBusy=true;
+ const index=view.chat.length;
+ view.chat.push({role:"assistant",html:'<div class="answer-card"><div class="suite-eyebrow">READ-ONLY BUSINESS TOOLS</div><p class="muted">Checking the synthetic company records and composing an answer…</p></div>',sources:[],query:text,mode:"gpt",pending:true});
+ render();window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});
+ try{
+  const response=await fetch("/api/stridebrain-demo/copilot",{
+   method:"POST",cache:"no-store",credentials:"same-origin",
+   headers:{"Content-Type":"application/json","x-stridebrain-operator-token":copilotOperatorToken},
+   body:JSON.stringify({industry:activeIndustry,messages:recent})
+  });
+  const result=await response.json();
+  if(!response.ok)throw Error(String(result.error||"The GPT service is unavailable.").slice(0,180));
+  if(active!==copilotRunId||pack.id!==activeIndustry)return;
+  if(result.mode!=="gpt-readonly-demo"||typeof result.answer!=="string")throw Error("Unexpected server response.");
+  copilotConnected=true;
+  view.chat[index]={role:"assistant",html:gptAnswerCard(result),sources:result.sourceIds,query:text,mode:"gpt",text:result.answer};
+ }catch(err){
+  if(active!==copilotRunId||pack.id!==activeIndustry)return;
+  copilotMode="sample";copilotOperatorToken="";copilotConnected=false;
+  const fallback=exampleAnswer(text,context());
+  view.chat[index]={role:"assistant",html:'<div class="divergence"><strong>GPT is not connected.</strong> '+e(String(err?.message||"The service could not answer."))+' The result below is from the deterministic synthetic sample—not a GPT response.</div>'+fallback.html,sources:fallback.sources,query:text,mode:"sample",text:""};
+  toast("GPT unavailable. Showing the clearly labeled deterministic fallback.");
+ }finally{
+  if(active===copilotRunId){copilotBusy=false;render();window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});}
+ }
 }
 function openSource(id){
  if(!model.document(id)){toast("Source document not found.");return;}
@@ -222,7 +268,16 @@ function perform(el){
    event(state,"Created linked review item "+config.reviewWorkId+" for "+config.project+" from manual readiness findings.");
    save();render();toast("Linked "+config.reviewWorkId+" to the example work-order register.");
  }
- else if(action==="projectBack"){view.projectDetail=false;render();}
+ else if(action==="enableGpt"){
+   const token=$("copilot-access-token")?.value?.trim()||"";
+   if(token.length<20){toast("Enter the internal operator token (not an OpenAI API key).");return;}
+   if(view.chat.length&&!confirm("Switching to GPT preview clears the current sample conversation. Continue?"))return;
+   copilotMode="gpt";copilotOperatorToken=token;copilotConnected=false;copilotRunId++;view.chat=[];render();
+   toast("Staff GPT mode requested. The next message will check server configuration and access.");
+ }else if(action==="disableGpt"){
+   copilotRunId++;copilotMode="sample";copilotOperatorToken="";copilotConnected=false;copilotBusy=false;
+   view.chat=[];render();toast("Returned to the offline deterministic demo; no operator access token is retained.");
+ }else if(action==="projectBack"){view.projectDetail=false;render();}
  else if(action==="source")openSource(id);
  else if(action==="closeSource")closeSource();
  else if(action==="download")downloadSource(value);
@@ -284,7 +339,8 @@ function perform(el){
  else if(action==="feedback"){
   const i=Number(el.dataset.index||0),msg=view.chat[i];if(!msg||msg.role!=="assistant")return;
   const kind=el.dataset.kind;
-  const result=recordFeedback(state,kind,msg.sources?.[0]||null,(kind==="Helpful"?"Helpful answer: ":"Needs verification: ")+msg.query);
+  const note=msg.mode==="gpt"?"Staff GPT response feedback (question text not saved)":(kind==="Helpful"?"Helpful answer: ":"Needs verification: ")+msg.query;
+  const result=recordFeedback(state,kind,msg.sources?.[0]||null,note);
   if(result.ok){save();toast("Feedback captured for human review.");}
  }else if(action==="sourceFeedback"){
   const result=recordFeedback(state,"Needs review",value||id,"Source requires accuracy or revision review.");
