@@ -19,7 +19,8 @@ export const INDUSTRY_PACKS = Object.freeze({
       "Review the Songshan quartz countertop change",
       "Which site tasks are blocked?",
       "Show the materials schedule for Songshan",
-      "Which Taiwan renovation rules should we check?"
+      "Which Taiwan renovation rules should we check?",
+      "What is missing before this renovation can proceed?"
     ],
     scenario:{
       id:"CHG-101-QZ",name:"Kitchen countertop · Quartz upgrade",
@@ -66,7 +67,8 @@ export const INDUSTRY_PACKS = Object.freeze({
       "Review the Minquan paper stock substitution",
       "Which press jobs are blocked?",
       "Find the latest artwork checklist",
-      "What checks does an A3 poster PDF need?"
+      "What checks does an A3 poster PDF need?",
+      "Is this print job ready to go to press?"
     ],
     scenario:{
       id:"CHG-201-RP",name:"Recycled-paper stock substitution",
