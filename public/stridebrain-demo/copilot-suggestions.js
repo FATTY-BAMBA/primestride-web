@@ -48,7 +48,13 @@ export function ideasFor(industry){return INDUSTRY_IDEAS[industry==="printing"?"
  * Contextual next questions, derived from the user's current topic and safe
  * read-only workflow signals. Never imply a message was sent or quote approved.
  */
-export function followUpsFor(lastQuestion="",industry="interior",actions=[]){
+export function followUpsFor(lastQuestion="",industry="interior",actions=[],lastAnswer=""){
+ const answer=String(lastAnswer||"").slice(0,3800);
+ const projectId=(answer.match(/\\bPRJ-\\d{3,6}\\b/i)||[])[0]||"";
+ const context=projectId?"For the fictional project "+projectId+", ":"";
+ const chinese=/[\\u3400-\\u9fff]/.test(String(lastQuestion||""))&&
+  (String(lastQuestion||"").match(/[\\u3400-\\u9fff]/g)||[]).length>=4;
+
  const q=String(lastQuestion||"").toLowerCase();
  const a=new Set(Array.isArray(actions)?actions:[]);
  let prompts;
@@ -76,6 +82,18 @@ export function followUpsFor(lastQuestion="",industry="interior",actions=[]){
    ["Explore costs","What do the latest fictional quotations and historical costs tell us?"],
    ["Plan next actions",industry==="printing"?"What should the print production team check next?":"What should the renovation project team check next?"]
   ];
+ }
+ if(context){
+  prompts=prompts.map(([label,prompt])=>[label,context+prompt.charAt(0).toLowerCase()+prompt.slice(1)]);
+ }
+ if(chinese){
+  const zhLabels={
+   "Review cost evidence":"查看成本來源","Compare alternatives":"比較歷史案例","Identify approval gaps":"確認核准缺口",
+   "Supplier risks":"供應商風險","Affected work":"影響哪些工作","Draft a request":"草擬詢價訊息",
+   "Root causes":"找出卡關原因","Deadline exposure":"查看交期風險","Draft follow-up":"草擬追蹤訊息",
+   "Investigate blockers":"查看待處理事項","Explore costs":"分析報價成本","Plan next actions":"規劃下一步"
+  };
+  prompts=prompts.map(([label,prompt])=>[zhLabels[label]||label,"請用繁體中文回答："+prompt]);
  }
  return prompts.map(([label,prompt])=>({label,prompt}));
 }
