@@ -116,7 +116,7 @@ export async function runOpenRouterCopilot({industry,messages,modelId,apiKey,req
    model:selected.id,
    messages:chat,
    tools:toolSchema,
-   tool_choice:round===0?"required":"auto",
+   tool_choice:"auto",
    max_tokens:1800,
    stream:false
   });
