@@ -67,7 +67,7 @@ export async function POST(request){
     try{
      emit("status",{message:"Checking the fictional company records…"});
      const answer=await runOpenRouterCopilot({industry:parsed.industry,messages:parsed.messages,modelId:selected.id,apiKey:providerKey,
-      onDelta:delta=>emit("delta",{text:delta})});
+      onDelta:delta=>emit("delta",{text:delta}),onStatus:message=>emit("status",{message})});
      emit("result",answer);
     }catch(error){
      const safeCode=typeof error?.copilotCode==="string"?error.copilotCode:"COPILOT_UNAVAILABLE";
