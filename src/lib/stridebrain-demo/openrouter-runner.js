@@ -41,7 +41,7 @@ function citationValidation(industry,ids,answer){
  const sanitized=String(answer||"").replace(/\[([A-Z][A-Z0-9-]{2,85})\]/g,(full,id)=>known.has(id)?full:"");
  return {sourceIds,answer:sanitized.slice(0,MAX_OUTPUT_CHARS)};
 }
-export async function callOpenRouter(payload,{apiKey,requestFn=fetch,timeout=14000}={}){
+export async function callOpenRouter(payload,{apiKey,requestFn=fetch,timeout=30000}={}){
  if(typeof apiKey!=="string"||apiKey.length<8)throw Error("OpenRouter is not configured.");
  const ctrl=new AbortController(),timeoutId=setTimeout(()=>ctrl.abort(),timeout);
  try{
@@ -96,11 +96,58 @@ export async function callOpenRouter(payload,{apiKey,requestFn=fetch,timeout=140
   throw error;
  }finally{clearTimeout(timeoutId);}
 }
+/** Stream only the final answer, after the server has completed its read-only tool calls.
+ * Never stream unvalidated citations as trusted links; the final result is validated separately.
+ */
+export async function streamOpenRouterFinal(payload,{apiKey,onDelta,requestFn=fetch,timeout=45000}={}){
+ const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),timeout);
+ let answer="",buffer="";
+ try{
+  const response=await requestFn(OPENROUTER_CHAT_URL,{
+   method:"POST",signal:ctrl.signal,
+   headers:{"Authorization":"Bearer "+apiKey,"Content-Type":"application/json","Accept":"text/event-stream",
+    "HTTP-Referer":"https://www.primestrideai.com","X-Title":"StrideBrain · Internal SME demo"},
+   body:JSON.stringify({...payload,stream:true,tool_choice:"none",tools:undefined})
+  });
+  if(!response.ok)throw Object.assign(Error("Streaming provider request failed."),{copilotCode:response.status===429?"PROVIDER_RATE_LIMIT":"PROVIDER_FAILURE",providerStatus:response.status});
+  if(!response.body)throw Error("Provider returned no streaming body.");
+  const reader=response.body.getReader(),decoder=new TextDecoder();
+  let done=false;
+  while(!done){
+   const part=await reader.read();if(part.done)break;
+   buffer+=decoder.decode(part.value,{stream:true});
+   if(buffer.length>100000)throw Error("Provider stream buffer exceeded limit.");
+   let end;
+   while((end=buffer.indexOf("\n\n"))>=0){
+    const event=buffer.slice(0,end);buffer=buffer.slice(end+2);
+    for(const line of event.split("\n")){
+     if(!line.startsWith("data:"))continue;
+     const data=line.slice(5).trim();
+     if(data==="[DONE]"){done=true;break;}
+     let chunk;try{chunk=JSON.parse(data);}catch{continue;}
+     if(chunk.error)throw Error("Provider stream reported an error.");
+     const delta=chunk.choices?.[0]?.delta?.content;
+     const text=typeof delta==="string"?delta:Array.isArray(delta)?delta.filter(x=>x.type==="text").map(x=>x.text||"").join(""):"";
+     if(text){
+      const remaining=MAX_OUTPUT_CHARS-answer.length;
+      if(remaining>0){const safe=text.slice(0,remaining);answer+=safe;onDelta?.(safe);}
+     }
+    }
+   }
+  }
+  if(!answer.trim())throw Error("Provider returned no streaming answer.");
+  return answer.trim();
+ }catch(error){
+  if(error?.name==="AbortError")throw Object.assign(Error("Provider stream timed out."),{copilotCode:"PROVIDER_TIMEOUT"});
+  throw error;
+ }finally{clearTimeout(timer);}
+}
+
 /**
  * Mockable for unit tests: requestModel(payload) returns OpenRouter-shaped
  * {choices:[{message:{role:"assistant",content,tool_calls}}]}.
  */
-export async function runOpenRouterCopilot({industry,messages,modelId,apiKey,requestModel}){
+export async function runOpenRouterCopilot({industry,messages,modelId,apiKey,requestModel,onDelta}){
  const selected=findAllowedModel(modelId);
  if(!selected||selected.provider!=="openrouter")throw Error("This model is not in the OpenRouter allowlist.");
  if(!validIndustry(industry))throw Error("Invalid demo industry.");
@@ -113,6 +160,10 @@ export async function runOpenRouterCopilot({industry,messages,modelId,apiKey,req
  ];
  let usedTools=[],recordIds=[],answer="",totalCalls=0,round=0;
  for(;round<MAX_TOOL_ROUNDS;round++){
+  if(round>0&&usedTools.length&&onDelta&&!requestModel){
+   answer=await streamOpenRouterFinal({model:selected.id,messages:[...chat,{role:"system",content:"Now provide the final answer using the tool evidence already supplied. Cite only provided source IDs and do not call more tools."}],max_tokens:1800},{apiKey,onDelta});
+   break;
+  }
   const result=await ask({
    model:selected.id,
    messages:chat,
