@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createHash, timingSafeEqual } from "node:crypto";
+import {tokenMatches,isStaffSessionValid,SESSION_COOKIE} from "@/lib/stridebrain-demo/staff-session";
 import { runGptCopilot } from "@/lib/stridebrain-demo/copilot-runner";
 import { runOpenRouterCopilot } from "@/lib/stridebrain-demo/openrouter-runner";
 import { validIndustry } from "@/lib/stridebrain-demo/copilot-tools";
@@ -23,11 +23,6 @@ export const maxDuration = 60;
  */
 const NO_STORE={"Cache-Control":"private, no-store, max-age=0","X-Content-Type-Options":"nosniff"};
 function json(status,payload){return NextResponse.json(payload,{status,headers:NO_STORE});}
-function secretsMatch(given,expected){
- if(!given||!expected||expected.length<20)return false;
- const a=createHash("sha256").update(given).digest(),b=createHash("sha256").update(expected).digest();
- return timingSafeEqual(a,b);
-}
 function parseChat(body){
  if(!body||typeof body!=="object"||Array.isArray(body)||!validIndustry(body.industry))return null;
  if(!Array.isArray(body.messages)||!body.messages.length||body.messages.length>12)return null;
@@ -47,7 +42,7 @@ export async function POST(request){
  const origin=request.headers.get("origin");
  if(origin&&origin!==new URL(request.url).origin)
   return json(403,{error:"Cross-origin requests are not allowed.",code:"ORIGIN_DENIED"});
- if(!secretsMatch(request.headers.get("x-stridebrain-operator-token")||"",process.env.STRIDEBRAIN_DEMO_OPERATOR_SECRET||""))
+ if(!(isStaffSessionValid(request.cookies.get(SESSION_COOKIE)?.value||"")||tokenMatches(request.headers.get("x-stridebrain-operator-token")||"")))
   return json(401,{error:"Internal demo access was not authorized.",code:"DEMO_ACCESS_DENIED"});
  if((Number(request.headers.get("content-length"))||0)>24000)
   return json(413,{error:"This chat request is too large.",code:"REQUEST_TOO_LARGE"});
