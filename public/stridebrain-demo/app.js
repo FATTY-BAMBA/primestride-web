@@ -114,7 +114,7 @@ async function ask(question){
  copilotDraft="";copilotModelMenuOpen=false;
  view.chat.push({role:"user",text});
  view.page="copilot";
- if(copilotMode!=="gpt"||!copilotOperatorToken){
+ if(copilotMode!=="gpt"){
   const ans=exampleAnswer(text,context());
   view.chat.push({role:"assistant",html:ans.html,sources:ans.sources,query:text,mode:"sample",text:""});
   render();window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});return;
@@ -129,7 +129,7 @@ async function ask(question){
  try{
   const response=await fetch("/api/stridebrain-demo/copilot",{
    method:"POST",cache:"no-store",credentials:"same-origin",
-   headers:{"Content-Type":"application/json","Accept":activeModel.startsWith("openai-direct/")?"application/json":"text/event-stream","x-stridebrain-operator-token":copilotOperatorToken},
+   headers:{"Content-Type":"application/json","Accept":activeModel.startsWith("openai-direct/")?"application/json":"text/event-stream"},
    body:JSON.stringify({industry:activeIndustry,messages:recent,modelId:activeModel})
   });
   let result;
@@ -330,13 +330,17 @@ function perform(el){
  }
  else if(action==="enableGpt"){
    const token=$("copilot-access-token")?.value?.trim()||"";
-   if(token.length<20){toast("Enter the internal operator token (not an OpenAI API key).");return;}
-   if(view.chat.length&&!confirm("Switching to GPT preview clears the current sample conversation. Continue?"))return;
-   copilotMode="gpt";copilotOperatorToken=token;copilotConnected=false;copilotRunId++;view.chat=[];copilotModelMenuOpen=false;render();
-   toast("Staff GPT mode requested. The next message will check server configuration and access.");
+   if(token.length<20){toast("Enter the one-time staff access code.");return;}
+   try{
+    const response=await fetch("/api/stridebrain-demo/copilot/session",{method:"POST",credentials:"same-origin",cache:"no-store",headers:{"Content-Type":"application/json"},body:JSON.stringify({token})});
+    if(!response.ok){toast("Staff preview access could not be verified.");return;}
+    copilotMode="gpt";copilotOperatorToken="";copilotConnected=false;copilotRunId++;view.chat=[];copilotModelMenuOpen=false;render();
+    toast("Staff AI enabled for this browser. You won't need the code again while the session is valid.");
+   }catch{toast("Could not establish a protected staff session.");}
  }else if(action==="disableGpt"){
+   await fetch("/api/stridebrain-demo/copilot/session",{method:"DELETE",credentials:"same-origin"}).catch(()=>{});
    copilotRunId++;copilotMode="sample";copilotOperatorToken="";copilotConnected=false;copilotBusy=false;copilotModelMenuOpen=false;copilotDraft="";
-   view.chat=[];render();toast("Returned to the offline deterministic demo; no operator access token is retained.");
+   view.chat=[];render();toast("Staff AI session signed out.");
  }else if(action==="projectBack"){view.projectDetail=false;render();}
  else if(action==="source")openSource(id);
  else if(action==="closeSource")closeSource();
@@ -513,4 +517,12 @@ document.addEventListener("keydown",ev=>{
 });
 document.addEventListener("dragover",ev=>{if(ev.target.closest("#intake-drop"))ev.preventDefault();});
 document.addEventListener("drop",ev=>{const area=ev.target.closest("#intake-drop");if(!area)return;ev.preventDefault();const file=ev.dataTransfer?.files?.[0];if(file)handleDocument(file);});
-loadIndustry(pack.id);
+async function restoreStaffPreview(){
+ try{
+  const response=await fetch("/api/stridebrain-demo/copilot/session",{credentials:"same-origin",cache:"no-store"});
+  if(!response.ok)return;
+  const info=await response.json();
+  if(info.active){copilotMode="gpt";copilotConnected=false;if(model)render();}
+ }catch{}
+}
+loadIndustry(pack.id).then(restoreStaffPreview);
