@@ -43,3 +43,39 @@ export function quickActionsFor(industry){
  return QUICK_ACTIONS.map(({id,label,glyph,description,prompts})=>({id,label,glyph,description,prompt:prompts[key]}));
 }
 export function ideasFor(industry){return INDUSTRY_IDEAS[industry==="printing"?"printing":"interior"].map(item=>({...item}));}
+
+/**
+ * Contextual next questions, derived from the user's current topic and safe
+ * read-only workflow signals. Never imply a message was sent or quote approved.
+ */
+export function followUpsFor(lastQuestion="",industry="interior",actions=[]){
+ const q=String(lastQuestion||"").toLowerCase();
+ const a=new Set(Array.isArray(actions)?actions:[]);
+ let prompts;
+ if(/quote|quotation|estimate|margin|成本|報價|毛利|financial/.test(q)||a.has("quotes")||a.has("history")){
+  prompts=[
+   ["Review cost evidence","Which approved or historical source records support this quotation, and what remains unverified?"],
+   ["Compare alternatives","Which comparable completed fictional jobs could inform the estimate? Explain the limitations."],
+   ["Identify approval gaps","What approvals are missing before this quotation could be released?"]
+  ];
+ }else if(/supplier|material|vendor|stock|paper|供應商|材料|紙材|交期/.test(q)||a.has("suppliers")){
+  prompts=[
+   ["Supplier risks","Which supplier assumptions or lead times require confirmation?"],
+   ["Affected work","Which projects or production orders might be affected by those risks?"],
+   ["Draft a request","Draft an unsent message asking the relevant supplier to confirm availability and timing."]
+  ];
+ }else if(/approval|blocked|delay|priority|follow|待辦|卡住|進度|核准/.test(q)||a.has("approvals")){
+  prompts=[
+   ["Root causes","What source-linked issues are blocking the highest-priority project?"],
+   ["Deadline exposure","Which unresolved items might threaten the earliest target date?"],
+   ["Draft follow-up","Draft an unsent follow-up to the responsible team member in a professional tone."]
+  ];
+ }else{
+  prompts=[
+   ["Investigate blockers","Which approvals or blocked work items deserve attention first?"],
+   ["Explore costs","What do the latest fictional quotations and historical costs tell us?"],
+   ["Plan next actions",industry==="printing"?"What should the print production team check next?":"What should the renovation project team check next?"]
+  ];
+ }
+ return prompts.map(([label,prompt])=>({label,prompt}));
+}
