@@ -173,10 +173,11 @@ async function ask(question){
   view.chat[index]={role:"assistant",html:gptAnswerCard(result),sources:result.sourceIds,query:text,mode:"gpt",modelId:result.modelId,modelLabel:result.modelLabel,text:result.answer,actions:result.actions};
  }catch(err){
   if(active!==copilotRunId||pack.id!==activeIndustry)return;
-  copilotMode="sample";copilotOperatorToken="";copilotConnected=false;
-  const fallback=exampleAnswer(text,context());
-  view.chat[index]={role:"assistant",html:'<div class="divergence"><strong>GPT is not connected.</strong> '+e(String(err?.message||"The service could not answer."))+' The result below is from the deterministic synthetic sample—not a GPT response.</div>'+fallback.html,sources:fallback.sources,query:text,mode:"sample",text:""};
-  toast("Selected AI model unavailable. Showing the clearly labeled deterministic fallback.");
+  // Temporary provider failures must not erase a valid staff session or mix
+  // synthetic sample answers into an incomplete real AI conversation.
+  copilotConnected=false;
+  view.chat[index]={role:"assistant",html:'<div class="answer-card"><div class="suite-eyebrow">AI RESPONSE INTERRUPTED</div><p>'+e(String(err?.message||"The model could not complete its answer."))+'</p><p class="disclosure">No completed AI answer was returned. Your staff session is retained; you can retry the question or choose another approved model.</p><button type="button" class="button-secondary" data-action="ask" data-prompt="'+e(text)+'">↻ Retry question</button></div>',sources:[],query:text,mode:"error",text:""};
+  toast("The model response was interrupted. You can retry without entering your staff code again.");
  }finally{
   if(active===copilotRunId){copilotBusy=false;render();window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});}
  }
