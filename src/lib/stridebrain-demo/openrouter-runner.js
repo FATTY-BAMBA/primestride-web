@@ -55,11 +55,18 @@ export async function callOpenRouter(payload,{apiKey,requestFn=fetch,timeout=140
    signal:ctrl.signal,
    body:JSON.stringify(payload)
   });
-  if(!response.ok)throw Error("OpenRouter returned a service error ("+response.status+").");
+  if(!response.ok){
+   const status=response.status;
+   const code=status===401?"PROVIDER_AUTH":status===402?"PROVIDER_CREDITS":status===403?"PROVIDER_ACCESS":status===404?"MODEL_UNAVAILABLE":status===408||status===504?"PROVIDER_TIMEOUT":status===429?"PROVIDER_RATE_LIMIT":status===400||status===422?"MODEL_REQUEST_REJECTED":"PROVIDER_FAILURE";
+   throw Object.assign(Error("Provider request failed."),{copilotCode:code,providerStatus:status});
+  }
   const data=await response.json();
   if(!Array.isArray(data?.choices)||!data.choices[0]?.message)
-   throw Error("OpenRouter returned an unexpected completion.");
+   throw Object.assign(Error("Unexpected provider response."),{copilotCode:"PROVIDER_BAD_RESPONSE"});
   return data;
+ }catch(error){
+  if(error?.name==="AbortError")throw Object.assign(Error("Provider timed out."),{copilotCode:"PROVIDER_TIMEOUT"});
+  throw error;
  }finally{clearTimeout(timeoutId);}
 }
 /**
