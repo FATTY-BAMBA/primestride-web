@@ -148,7 +148,7 @@ export async function streamOpenRouterFinal(payload,{apiKey,onDelta,requestFn=fe
  * Mockable for unit tests: requestModel(payload) returns OpenRouter-shaped
  * {choices:[{message:{role:"assistant",content,tool_calls}}]}.
  */
-export async function runOpenRouterCopilot({industry,messages,modelId,apiKey,requestModel,onDelta}){
+export async function runOpenRouterCopilot({industry,messages,modelId,apiKey,requestModel,onDelta,onStatus}){
  const selected=findAllowedModel(modelId);
  if(!selected||selected.provider!=="openrouter")throw Error("This model is not in the OpenRouter allowlist.");
  if(!validIndustry(industry))throw Error("Invalid demo industry.");
@@ -162,9 +162,11 @@ export async function runOpenRouterCopilot({industry,messages,modelId,apiKey,req
  let usedTools=[],recordIds=[],answer="",totalCalls=0,round=0;
  for(;round<MAX_TOOL_ROUNDS;round++){
   if(round>0&&usedTools.length&&onDelta&&!requestModel){
+   onStatus?.("Writing an evidence-grounded answer…");
    answer=await streamOpenRouterFinal({model:selected.id,messages:[...chat,{role:"system",content:"Now provide the final answer using the tool evidence already supplied. Cite only provided source IDs and do not call more tools."}],max_tokens:1800},{apiKey,onDelta});
    break;
   }
+  onStatus?.("Finding relevant business records…");
   const result=await ask({
    model:selected.id,
    messages:chat,
@@ -202,6 +204,7 @@ export async function runOpenRouterCopilot({industry,messages,modelId,apiKey,req
   for(const call of safeCalls){
    const args=parseToolArguments(call.function.arguments);
    const fact=runCopilotTool(industry,call.function.name,args);
+   onStatus?.("Verified "+usedTools.length+" business lookups. Preparing answer…");
    usedTools.push(call.function.name);
    recordIds.push(...(Array.isArray(fact.sourceIds)?fact.sourceIds:[]));
    if(Array.isArray(fact.matches))
