@@ -3,7 +3,7 @@ import {badge,button,source,sources,metric,heading,section,tag,recordCard,docume
 import {sourceUrlForDocument} from "./industry-evidence.js";
 import {getReadinessPack} from "./readiness-rules.js";
 import {MODEL_CATALOG,DEFAULT_MODEL_ID,findAllowedModel} from "./model-catalog.js";
-import {quickActionsFor,ideasFor} from "./copilot-suggestions.js";
+import {quickActionsFor,ideasFor,followUpsFor} from "./copilot-suggestions.js";
 export function overview(c){
  const {model:m,pack:p,state:s}=c,sm=m.summary(s),open=m.approvals(s).filter(a=>a.status==="Pending").slice(0,3);
  let out='<section class="brief-header"><div class="suite-eyebrow">BUSINESS PULSE · '+e(p.companyEn)+'</div><h1>Know what matters.<br>Move work forward.</h1><p>'+e(p.companyLine)+' '+e(p.outcomeLine)+'</p><div class="brief-actions">'+button("Ask StrideBrain ↗","nav","copilot","button-primary")+'<span class="brief-date">'+e(p.dateLabel)+'</span></div></section>';
@@ -52,6 +52,13 @@ export function copilot(c){
   '<div class="chat-answer"><div class="chat-answer-head"><span class="sb-answer-symbol">✳</span> STRIDEBRAIN · '+(msg.mode==="gpt"?e(msg.modelLabel||"CONNECTED MODEL")+" / SYNTHETIC BUSINESS TOOLS":"SOURCE-LINKED SAMPLE")+'</div>'+
   msg.html+(msg.pending?'':'<div class="feedback-row"><span class="disclosure">Was this useful?</span><span><button type="button" class="feedback-btn" data-action="feedback" data-kind="Helpful" data-index="'+i+'">✓ Helpful</button> <button type="button" class="feedback-btn" data-action="feedback" data-kind="Needs review" data-index="'+i+'">⚑ Needs review</button></span></div>')+'</div>'
  ).join("")+'</div>';
+ const last=v.chat[v.chat.length-1];
+ if(last?.role==="assistant"&&!last.pending&&last.mode==="gpt"){
+  const next=followUpsFor(last.query,p.id,last.actions||[]);
+  out+='<div class="sb-context-ideas sb-followup-ideas"><span class="sb-context-label">CONTINUE INVESTIGATING</span><div class="sb-context-idea-row">'+next.map(item=>
+   '<button type="button" data-action="ask" data-prompt="'+e(item.prompt)+'" class="sb-context-idea"'+hideIfBusy+'>'+e(item.label)+' ↗</button>'
+  ).join("")+'</div></div>';
+ }
  out+='<div class="sb-copilot-compose">';
  out+='<form id="ask-form" class="sb-composer">'+
   '<label class="sr-only" for="sb-composer-input">Ask StrideBrain</label>'+
