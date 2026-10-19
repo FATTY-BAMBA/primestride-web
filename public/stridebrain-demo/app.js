@@ -142,7 +142,7 @@ async function ask(question){
     const node=document.querySelector('[data-streaming-answer="'+index+'"]');
     if(node)node.textContent=draft;
    };
-   view.chat[index].html='<div class="answer-card"><div class="suite-eyebrow">AI RESPONSE · STREAMING</div><p class="disclosure">Generating an answer from read-only fictional business records. Sources are verified after completion.</p><div class="copilot-stream-text" data-streaming-answer="'+index+'" aria-live="polite"></div></div>';
+   view.chat[index].html='<div class="answer-card"><div class="suite-eyebrow">AI RESPONSE · STREAMING</div><p class="disclosure">Checking business records… Sources are verified after completion.</p><div class="copilot-stream-text" data-streaming-answer="'+index+'" aria-live="polite"></div></div>';
    render();
    while(true){
     const chunk=await reader.read();if(chunk.done)break;
@@ -155,7 +155,10 @@ async function ask(question){
      const dataLine=event.split("\n").find(line=>line.startsWith("data:"));
      if(!dataLine)continue;
      let data;try{data=JSON.parse(dataLine.slice(5).trim());}catch{continue;}
-     if(type==="delta"&&typeof data.text==="string"){
+     if(type==="status"&&typeof data.message==="string"){
+      const note=document.querySelector('[data-streaming-answer="'+index+'"]')?.previousElementSibling;
+      if(note)note.textContent=data.message.slice(0,130);
+     }else if(type==="delta"&&typeof data.text==="string"){
       draft=(draft+data.text).slice(0,3800);
       updateDraft();
      }else if(type==="result"){result=data;completed=true;}
