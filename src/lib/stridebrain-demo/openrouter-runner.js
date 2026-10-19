@@ -115,7 +115,7 @@ export async function streamOpenRouterFinal(payload,{apiKey,onDelta,requestFn=fe
   let done=false;
   while(!done){
    const part=await reader.read();if(part.done)break;
-   buffer+=decoder.decode(part.value,{stream:true});
+   buffer+=decoder.decode(part.value,{stream:true}).replace(/\r\n/g,"\n");
    if(buffer.length>100000)throw Error("Provider stream buffer exceeded limit.");
    let end;
    while((end=buffer.indexOf("\n\n"))>=0){
@@ -135,6 +135,7 @@ export async function streamOpenRouterFinal(payload,{apiKey,onDelta,requestFn=fe
     }
    }
   }
+  if(!done)throw Error("Provider stream ended without completion.");
   if(!answer.trim())throw Error("Provider returned no streaming answer.");
   return answer.trim();
  }catch(error){
