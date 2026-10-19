@@ -13,7 +13,7 @@ function inline(text){
 export function safeCopilotMarkdown(value){
  // Some providers escape Markdown emphasis and line breaks inside plain-text completions.
  // Normalize only these predictable artifacts before safe HTML escaping.
- value=String(value??"").replace(/\\\\([*#`])/g,"$1").replace(/\\\\\n/g,"\n").replace(/\\\\n/g,"\n");
+ value=String(value??"").replace(/\\([*#\`])/g,"$1").replace(/\\\n/g,"\n").replace(/\\n/g,"\n");
  const lines=String(value??"").slice(0,3800).replace(/\\\n/g,"\n").replace(/\r\n?/g,"\n").split("\n");
  const out=[];let list=null;
  function close(){if(list){out.push("</"+list+">");list=null;}}
