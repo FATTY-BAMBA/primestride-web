@@ -54,7 +54,7 @@ export function copilot(c){
  ).join("")+'</div>';
  const last=v.chat[v.chat.length-1];
  if(last?.role==="assistant"&&!last.pending&&last.mode==="gpt"){
-  const next=followUpsFor(last.query,p.id,last.actions||[]);
+  const next=followUpsFor(last.query,p.id,last.actions||[],last.text||"");
   out+='<div class="sb-context-ideas sb-followup-ideas"><span class="sb-context-label">CONTINUE INVESTIGATING</span><div class="sb-context-idea-row">'+next.map(item=>
    '<button type="button" data-action="ask" data-prompt="'+e(item.prompt)+'" class="sb-context-idea"'+hideIfBusy+'>'+e(item.label)+' ↗</button>'
   ).join("")+'</div></div>';
