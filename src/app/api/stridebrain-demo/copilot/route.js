@@ -68,7 +68,7 @@ export async function POST(request){
   const encoder=new TextEncoder();
   const stream=new ReadableStream({
    async start(controller){
-    const emit=(type,payload)=>controller.enqueue(encoder.encode("event: "+type+"\\ndata: "+JSON.stringify(payload)+"\\n\\n".replaceAll("\\\\n","\\n")));
+    const emit=(type,payload)=>controller.enqueue(encoder.encode(`event: ${type}\ndata: ${JSON.stringify(payload)}\n\n`));
     try{
      emit("status",{message:"Checking the fictional company records…"});
      const answer=await runOpenRouterCopilot({industry:parsed.industry,messages:parsed.messages,modelId:selected.id,apiKey:providerKey,
