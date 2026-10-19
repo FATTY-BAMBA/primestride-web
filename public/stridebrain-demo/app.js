@@ -137,7 +137,7 @@ async function ask(question){
   if(active!==copilotRunId||pack.id!==activeIndustry)return;
   if(!["gpt-readonly-demo","openrouter-readonly-demo"].includes(result.mode)||typeof result.answer!=="string"||result.modelId!==activeModel)throw Error("Unexpected model server response.");
   copilotConnected=true;
-  view.chat[index]={role:"assistant",html:gptAnswerCard(result),sources:result.sourceIds,query:text,mode:"gpt",modelId:result.modelId,modelLabel:result.modelLabel,text:result.answer};
+  view.chat[index]={role:"assistant",html:gptAnswerCard(result),sources:result.sourceIds,query:text,mode:"gpt",modelId:result.modelId,modelLabel:result.modelLabel,text:result.answer,actions:result.actions};
  }catch(err){
   if(active!==copilotRunId||pack.id!==activeIndustry)return;
   copilotMode="sample";copilotOperatorToken="";copilotConnected=false;
