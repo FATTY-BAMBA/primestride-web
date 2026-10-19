@@ -5,6 +5,7 @@ import {service,quotes,work,suppliers,approvals,analytics,learning} from "./view
 import {exampleAnswer} from "./assistant-rules.js";
 import {source as sourceButton} from "./ui-shared.js";
 import {DEFAULT_MODEL_ID,findAllowedModel} from "./model-catalog.js";
+import {safeCopilotMarkdown} from "./copilot-format.js";
 import {historyView} from "./views-history.js";
 import {playbook} from "./views-playbook.js";
 import {readinessView} from "./views-readiness.js";
@@ -98,7 +99,7 @@ async function loadIndustry(id){
 }
 function gptAnswerCard(result){
  const content=String(result?.answer||"").slice(0,3800);
- const paragraphs=content.split(/\n{2,}/).map(p=>'<p>'+e(p).replace(/\n/g,"<br>")+'</p>').join("");
+ const paragraphs=safeCopilotMarkdown(content);
  const allowed=new Set(["overview","projects","knowledge","quotes","work","suppliers","approvals","analytics","history","playbook","service"]);
  const actions=[...new Set((Array.isArray(result.actions)?result.actions:[]).filter(a=>allowed.has(a)))].slice(0,4);
  const labelMap={overview:"Business overview",projects:"Explore projects",knowledge:"Inspect knowledge",quotes:"Review quotes",work:"Work orders",suppliers:"Suppliers",approvals:"Pending approvals",analytics:"Analytics",history:"Past project estimates",playbook:"Industry playbook",service:"Customer replies"};
