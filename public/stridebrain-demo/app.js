@@ -55,7 +55,7 @@ function updateShell(){
  document.title="StrideBrain · "+pack.companyEn+" | SME Demo";
 }
 async function loadIndustry(id){
- copilotRunId++;copilotMode="sample";copilotConnected=false;copilotOperatorToken="";copilotBusy=false;copilotModelMenuOpen=false;copilotDraft="";
+ copilotRunId++;copilotConnected=false;copilotOperatorToken="";copilotBusy=false;copilotModelMenuOpen=false;copilotDraft="";
  documentLoadVersion++; // cancel any in-flight local file parsing on industry switch
  const next=getPack(id),previous={pack,model,state,view,historyData,industryEvidence,documentSession};
  $("main").innerHTML='<div class="loading-screen"><div class="loader-ring"></div><h2>Opening '+e(next.short)+'</h2><p>Connecting an industry pack to the shared operating workspace…</p></div>';
