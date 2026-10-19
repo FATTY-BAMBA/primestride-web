@@ -57,6 +57,18 @@ export async function callOpenRouter(payload,{apiKey,requestFn=fetch,timeout=140
   });
   if(!response.ok){
    const status=response.status;
+   // Record only safe provider error classifications, never the raw message.
+   let providerReason="unknown";
+   if(status===400||status===422){
+    try{
+     const detail=await response.json();
+     const message=String(detail?.error?.message||"").toLowerCase();
+     if(/tool_choice|required tool|tool call/.test(message))providerReason="tool_choice";
+     else if(/schema|parameters|function|strict/.test(message))providerReason="tool_schema";
+     else if(/temperature|parallel_tool_calls|max_tokens|unsupported parameter/.test(message))providerReason="optional_parameter";
+     else if(/model/.test(message))providerReason="model_compatibility";
+    }catch{}
+   }
    const code=status===401?"PROVIDER_AUTH":status===402?"PROVIDER_CREDITS":status===403?"PROVIDER_ACCESS":status===404?"MODEL_UNAVAILABLE":status===408||status===504?"PROVIDER_TIMEOUT":status===429?"PROVIDER_RATE_LIMIT":status===400||status===422?"MODEL_REQUEST_REJECTED":"PROVIDER_FAILURE";
    // OpenRouter distinguishes platform-side 429s from upstream provider capacity.
    // Record only a safe classification; never surface raw provider error text.
@@ -72,7 +84,7 @@ export async function callOpenRouter(payload,{apiKey,requestFn=fetch,timeout=140
     }
    }
    const rateCode=status===429?(origin==="openrouter"?"OPENROUTER_RATE_LIMIT":origin==="upstream_provider"?"UPSTREAM_CAPACITY":"PROVIDER_RATE_LIMIT"):code;
-   throw Object.assign(Error("Provider request failed."),{copilotCode:rateCode,providerStatus:status,rateLimitOrigin:origin});
+   throw Object.assign(Error("Provider request failed."),{copilotCode:rateCode,providerStatus:status,rateLimitOrigin:origin,providerReason});
   }
   const data=await response.json();
   if(!Array.isArray(data?.choices)||!data.choices[0]?.message)
@@ -105,8 +117,6 @@ export async function runOpenRouterCopilot({industry,messages,modelId,apiKey,req
    messages:chat,
    tools:toolSchema,
    tool_choice:round===0?"required":"auto",
-   parallel_tool_calls:false,
-   temperature:0.2,
    max_tokens:1800,
    stream:false
   });
