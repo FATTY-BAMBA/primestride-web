@@ -11,6 +11,7 @@
 import {copilotTools,runCopilotTool,toolsForSourceIds,validIndustry,allowedActionsFromTools,toolNames} from "./copilot-tools.js";
 import {COPILOT_INSTRUCTIONS,normaliseMessages} from "./copilot-runner.js";
 import {findAllowedModel} from "../../../public/stridebrain-demo/model-catalog.js";
+import {copilotLanguageDirective} from "./copilot-locale.js";
 
 const MAX_TOOL_ROUNDS=3;
 const MAX_TOOL_CALLS_PER_ROUND=3;
@@ -107,7 +108,7 @@ export async function runOpenRouterCopilot({industry,messages,modelId,apiKey,req
  if(!recent.length||recent.at(-1)?.role!=="user")throw Error("A new question is required.");
  const ask=requestModel||((payload)=>callOpenRouter(payload,{apiKey}));
  const chat=[
-  {role:"system",content:COPILOT_INSTRUCTIONS+"\nProvider: OpenRouter. The model is a reasoning interface to server-executed read-only tools, not an authoritative business record."},
+  {role:"system",content:COPILOT_INSTRUCTIONS+"\nProvider: OpenRouter. The model is a reasoning interface to server-executed read-only tools, not an authoritative business record.\n"+copilotLanguageDirective(recent)},
   ...recent
  ];
  let usedTools=[],recordIds=[],answer="",totalCalls=0,round=0;
