@@ -64,6 +64,25 @@ export async function POST(request){
   return json(403,{error:"This model has not been enabled for the staff demo.",code:"MODEL_NOT_ALLOWED"});
  const providerKey=selected.provider==="openrouter"?process.env.OPENROUTER_API_KEY:process.env.OPENAI_API_KEY;
  if(!providerKey)return json(503,{error:"The selected provider is not configured by the administrator.",code:"MODEL_NOT_CONFIGURED"});
+ if(selected.provider==="openrouter"&&request.headers.get("accept")?.includes("text/event-stream")){
+  const encoder=new TextEncoder();
+  const stream=new ReadableStream({
+   async start(controller){
+    const emit=(type,payload)=>controller.enqueue(encoder.encode("event: "+type+"\\ndata: "+JSON.stringify(payload)+"\\n\\n".replaceAll("\\\\n","\\n")));
+    try{
+     emit("status",{message:"Checking the fictional company records…"});
+     const answer=await runOpenRouterCopilot({industry:parsed.industry,messages:parsed.messages,modelId:selected.id,apiKey:providerKey,
+      onDelta:delta=>emit("delta",{text:delta})});
+     emit("result",answer);
+    }catch(error){
+     const safeCode=typeof error?.copilotCode==="string"?error.copilotCode:"COPILOT_UNAVAILABLE";
+     console.error("stridebrain_preview_copilot_stream_failure",{code:safeCode,provider:selected.provider,modelId:selected.id});
+     emit("error",{code:safeCode,error:safeCode==="PROVIDER_TIMEOUT"?"The model timed out. The answer was not completed.":"The AI response could not be completed. Please retry."});
+    }finally{controller.close();}
+   }
+  });
+  return new Response(stream,{headers:{...NO_STORE,"Content-Type":"text/event-stream; charset=utf-8","X-Accel-Buffering":"no"}});
+ }
  try{
   if(selected.provider==="openrouter"){
    const answer=await runOpenRouterCopilot({
