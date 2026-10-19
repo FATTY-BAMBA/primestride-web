@@ -50,10 +50,10 @@ export function ideasFor(industry){return INDUSTRY_IDEAS[industry==="printing"?"
  */
 export function followUpsFor(lastQuestion="",industry="interior",actions=[],lastAnswer=""){
  const answer=String(lastAnswer||"").slice(0,3800);
- const projectId=(answer.match(/\\bPRJ-\\d{3,6}\\b/i)||[])[0]||"";
+ const projectId=(answer.match(/\bPRJ-\d{3,6}\b/i)||[])[0]||"";
  const context=projectId?"For the fictional project "+projectId+", ":"";
- const chinese=/[\\u3400-\\u9fff]/.test(String(lastQuestion||""))&&
-  (String(lastQuestion||"").match(/[\\u3400-\\u9fff]/g)||[]).length>=4;
+ const chinese=/[\u3400-\u9fff]/.test(String(lastQuestion||""))&&
+  (String(lastQuestion||"").match(/[\u3400-\u9fff]/g)||[]).length>=4;
 
  const q=String(lastQuestion||"").toLowerCase();
  const a=new Set(Array.isArray(actions)?actions:[]);
