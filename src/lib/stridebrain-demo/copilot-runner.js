@@ -4,6 +4,7 @@
  * Real company access MUST replace the operator token with authenticated org roles.
  */
 import {copilotTools,runCopilotTool,toolsForSourceIds,validIndustry,allowedActionsFromTools} from "./copilot-tools.js";
+import {copilotLanguageDirective} from "./copilot-locale.js";
 
 const MAX_TOOL_ROUNDS=3,MAX_OUTPUT_CHARS=3800;
 export const COPILOT_INSTRUCTIONS=[
@@ -57,10 +58,11 @@ export async function runGptCopilot({industry,messages,apiKey,model="gpt-5.6",re
  if(recent.at(-1).content.length>1200)throw Error("Question exceeds demo limit.");
  const ask=requestModel||((payload)=>callOpenAi(payload,{apiKey}));
  let input=[...recent],used=[],allIds=[],round=0,lastText="";
+ const localizedInstructions=COPILOT_INSTRUCTIONS+"\n"+copilotLanguageDirective(recent);
  for(;round<MAX_TOOL_ROUNDS;round++){
   const response=await ask({
    model,
-   instructions:COPILOT_INSTRUCTIONS,
+   instructions:localizedInstructions,
    input,
    tools:copilotTools,
    tool_choice:round===0?"required":"auto",
@@ -86,7 +88,7 @@ export async function runGptCopilot({industry,messages,apiKey,model="gpt-5.6",re
  }
  if(!lastText&&round>=MAX_TOOL_ROUNDS){
   // Provide a final summarization step with tools disabled; never execute unlimited calls.
-  const final=await ask({model,instructions:COPILOT_INSTRUCTIONS+"\nConclude the response from evidence already supplied. Do not call tools.",input,tools:[],tool_choice:"none",store:false,max_output_tokens:1400});
+  const final=await ask({model,instructions:localizedInstructions+"\nConclude the response from evidence already supplied. Do not call tools.",input,tools:[],tool_choice:"none",store:false,max_output_tokens:1400});
   lastText=outputText(final);
  }
  if(!lastText)throw Error("No usable model answer was produced.");
