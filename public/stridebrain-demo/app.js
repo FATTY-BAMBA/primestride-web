@@ -236,7 +236,7 @@ async function handleDocument(file){
   render();toast("Unable to read file. Check the source or try a fictional sample.");
  }
 }
-function perform(el){
+async function perform(el){
  const action=el.dataset.action,id=el.dataset.id||"",value=el.dataset.value||"";
  if(action==="nav"){copilotModelMenuOpen=false;view.projectDetail=false;setPage(value);}
  else if(action==="modelMenu"){
