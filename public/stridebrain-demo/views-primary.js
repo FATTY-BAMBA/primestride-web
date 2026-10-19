@@ -91,15 +91,15 @@ export function copilot(c){
  out+='<div class="sb-copilot-status"><span class="sb-status-dot"></span><span>'+e(displayStatus)+'</span><span class="sb-status-divider">·</span><span>Fictional company records · No automatic customer actions</span></div>';
  out+='</div>';
  if(!isConnectedMode){
-  out+='<details class="copilot-operator-box"><summary><span><span aria-hidden="true">⚙</span> Connect an approved AI provider (internal staff only)</span><span>▾</span></summary>'+
-   '<div class="copilot-operator-inner"><p>Model selection is already visible in the composer, just like the reference. To actually use OpenRouter or the direct OpenAI model, an administrator must configure the provider API key <strong>on the server</strong> and enable the internal demo endpoint. Enter only your <strong>separate staff operator access token</strong> here—not an OpenRouter or OpenAI API key.</p>'+
-   '<label for="copilot-access-token" class="form-field">Internal staff operator token<input type="password" id="copilot-access-token" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Private demo operator token"></label>'+
-   '<div class="action-stack">'+button("Connect selected AI model ↗","enableGpt","","button-secondary")+'</div>'+
+  out+='<details class="copilot-operator-box"><summary><span><span aria-hidden="true">⚙</span> Enable staff AI (one-time access)</span><span>▾</span></summary>'+
+   '<div class="copilot-operator-inner"><p>Model selection is already visible in the composer, just like the reference. To actually use OpenRouter or the direct OpenAI model, an administrator must configure the provider API key <strong>on the server</strong> and enable the internal demo endpoint. Enter your separate staff code once on a trusted browser. A protected session will then keep AI available without repeated code entry. Never enter an OpenRouter or OpenAI API key here.</p>'+
+   '<label for="copilot-access-token" class="form-field">One-time staff access code<input type="password" id="copilot-access-token" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Enter once on this trusted browser"></label>'+
+   '<div class="action-stack">'+button("Enable AI for this browser ↗","enableGpt","","button-secondary")+'</div>'+
    '<p class="disclosure">Selected model: '+e(model.label)+' ('+e(model.provider==="openrouter"?"OpenRouter":"Direct OpenAI")+
    '). Staff prompts are sent to the configured provider after authorization. Demo materials stay fictional; uploaded files are never forwarded to the model.</p></div></details>';
  }else{
   out+='<div class="sb-copilot-connected-foot"><span><strong>Internal staff AI mode</strong> · Selected model: '+e(model.label)+' · Read-only synthetic tools.</span>'+
-   button("Disconnect model","disableGpt","","button-outline")+'</div>';
+   button("Sign out of staff AI","disableGpt","","button-outline")+'</div>';
  }
  out+='</div>';
  return out;
