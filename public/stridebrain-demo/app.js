@@ -129,11 +129,44 @@ async function ask(question){
  try{
   const response=await fetch("/api/stridebrain-demo/copilot",{
    method:"POST",cache:"no-store",credentials:"same-origin",
-   headers:{"Content-Type":"application/json","x-stridebrain-operator-token":copilotOperatorToken},
+   headers:{"Content-Type":"application/json","Accept":activeModel.startsWith("openai-direct/")?"application/json":"text/event-stream","x-stridebrain-operator-token":copilotOperatorToken},
    body:JSON.stringify({industry:activeIndustry,messages:recent,modelId:activeModel})
   });
-  const result=await response.json();
-  if(!response.ok)throw Error(String(result.error||"The GPT service is unavailable.").slice(0,180));
+  let result;
+  if(response.ok&&response.headers.get("content-type")?.includes("text/event-stream")){
+   if(!response.body)throw Error("No streaming response was received.");
+   const reader=response.body.getReader(),decoder=new TextDecoder();
+   let buffer="",draft="",completed=false;
+   const updateDraft=()=>{
+    if(active!==copilotRunId||pack.id!==activeIndustry)return;
+    const node=document.querySelector('[data-streaming-answer="'+index+'"]');
+    if(node)node.textContent=draft;
+   };
+   view.chat[index].html='<div class="answer-card"><div class="suite-eyebrow">AI RESPONSE · STREAMING</div><p class="disclosure">Generating an answer from read-only fictional business records. Sources are verified after completion.</p><div class="copilot-stream-text" data-streaming-answer="'+index+'" aria-live="polite"></div></div>';
+   render();
+   while(true){
+    const chunk=await reader.read();if(chunk.done)break;
+    buffer+=decoder.decode(chunk.value,{stream:true});
+    if(buffer.length>100000)throw Error("Invalid streaming response.");
+    let end;
+    while((end=buffer.indexOf("\n\n"))>=0){
+     const event=buffer.slice(0,end);buffer=buffer.slice(end+2);
+     const type=(event.match(/^event:\s*(.+)$/m)||[])[1];
+     const dataLine=event.split("\n").find(line=>line.startsWith("data:"));
+     if(!dataLine)continue;
+     let data;try{data=JSON.parse(dataLine.slice(5).trim());}catch{continue;}
+     if(type==="delta"&&typeof data.text==="string"){
+      draft=(draft+data.text).slice(0,3800);
+      updateDraft();
+     }else if(type==="result"){result=data;completed=true;}
+     else if(type==="error")throw Error(String(data.error||"The model response was interrupted.").slice(0,180));
+    }
+   }
+   if(!completed)throw Error("The streaming response ended before completion.");
+  }else{
+   result=await response.json();
+   if(!response.ok)throw Error(String(result.error||"The GPT service is unavailable.").slice(0,180));
+  }
   if(active!==copilotRunId||pack.id!==activeIndustry)return;
   if(!["gpt-readonly-demo","openrouter-readonly-demo"].includes(result.mode)||typeof result.answer!=="string"||result.modelId!==activeModel)throw Error("Unexpected model server response.");
   copilotConnected=true;
