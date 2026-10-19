@@ -483,3 +483,7 @@ body{background:#f7f9f6;font-size:14px}
 @media(max-width:630px){.sb-copilot.is-empty{min-height:calc(100vh - 200px);justify-content:flex-start;padding-top:38px}.sb-composer{padding:12px 11px 9px;border-radius:14px}.sb-composer textarea{min-height:78px;font-size:14px}.sb-composer-hint{display:none}.sb-model-menu{width:min(340px,calc(100vw - 30px));right:-45px}.sb-model-trigger{padding:8px}.sb-model-label{font-size:11px}.sb-shortcut{font-size:11px;padding:8px 10px}.sb-copilot-welcome{margin-bottom:23px}.sb-copilot-welcome h1{font-size:36px!important}.sb-copilot-session-head{flex-direction:column;align-items:flex-start}.sb-copilot-connected-foot{flex-direction:column;align-items:flex-start}.sb-copilot-connected-foot .button-outline{width:100%}}
 @media(max-width:390px){.sb-model-menu{right:-39px}.sb-shortcut-row{gap:6px}.sb-shortcut{padding:7px 9px}.sb-copilot-welcome h1{font-size:31px!important}}
 @media(prefers-reduced-motion:reduce){.sb-copilot *{transition:none!important;animation:none!important}}
+
+/* Stream draft text stays escaped/untrusted until the validated final answer arrives. */
+.sb-copilot .copilot-stream-text{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.75;font-size:14px;color:#263d33;min-height:48px}
+.sb-copilot .copilot-stream-text:empty::after{content:"Preparing response…";color:#738778}
