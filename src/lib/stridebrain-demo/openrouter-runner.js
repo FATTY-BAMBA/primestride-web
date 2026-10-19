@@ -41,7 +41,7 @@ function citationValidation(industry,ids,answer){
  const sanitized=String(answer||"").replace(/\[([A-Z][A-Z0-9-]{2,85})\]/g,(full,id)=>known.has(id)?full:"");
  return {sourceIds,answer:sanitized.slice(0,MAX_OUTPUT_CHARS)};
 }
-export async function callOpenRouter(payload,{apiKey,requestFn=fetch,timeout=30000}={}){
+export async function callOpenRouter(payload,{apiKey,requestFn=fetch,timeout=24000}={}){
  if(typeof apiKey!=="string"||apiKey.length<8)throw Error("OpenRouter is not configured.");
  const ctrl=new AbortController(),timeoutId=setTimeout(()=>ctrl.abort(),timeout);
  try{
@@ -99,7 +99,7 @@ export async function callOpenRouter(payload,{apiKey,requestFn=fetch,timeout=300
 /** Stream only the final answer, after the server has completed its read-only tool calls.
  * Never stream unvalidated citations as trusted links; the final result is validated separately.
  */
-export async function streamOpenRouterFinal(payload,{apiKey,onDelta,requestFn=fetch,timeout=45000}={}){
+export async function streamOpenRouterFinal(payload,{apiKey,onDelta,requestFn=fetch,timeout=30000}={}){
  const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),timeout);
  let answer="",buffer="";
  try{
