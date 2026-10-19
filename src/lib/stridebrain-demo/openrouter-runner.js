@@ -58,7 +58,21 @@ export async function callOpenRouter(payload,{apiKey,requestFn=fetch,timeout=140
   if(!response.ok){
    const status=response.status;
    const code=status===401?"PROVIDER_AUTH":status===402?"PROVIDER_CREDITS":status===403?"PROVIDER_ACCESS":status===404?"MODEL_UNAVAILABLE":status===408||status===504?"PROVIDER_TIMEOUT":status===429?"PROVIDER_RATE_LIMIT":status===400||status===422?"MODEL_REQUEST_REJECTED":"PROVIDER_FAILURE";
-   throw Object.assign(Error("Provider request failed."),{copilotCode:code,providerStatus:status});
+   // OpenRouter distinguishes platform-side 429s from upstream provider capacity.
+   // Record only a safe classification; never surface raw provider error text.
+   let origin="unknown";
+   if(status===429){
+    const hasPlatformRateHeaders=response.headers?.has?.("x-ratelimit-limit")||response.headers?.has?.("x-ratelimit-remaining");
+    if(hasPlatformRateHeaders)origin="openrouter";
+    else {
+     try{
+      const payload=await response.json();
+      if(payload?.error?.metadata?.provider_code)origin="upstream_provider";
+     }catch{}
+    }
+   }
+   const rateCode=status===429?(origin==="openrouter"?"OPENROUTER_RATE_LIMIT":origin==="upstream_provider"?"UPSTREAM_CAPACITY":"PROVIDER_RATE_LIMIT"):code;
+   throw Object.assign(Error("Provider request failed."),{copilotCode:rateCode,providerStatus:status,rateLimitOrigin:origin});
   }
   const data=await response.json();
   if(!Array.isArray(data?.choices)||!data.choices[0]?.message)
