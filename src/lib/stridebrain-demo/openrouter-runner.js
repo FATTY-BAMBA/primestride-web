@@ -107,7 +107,7 @@ export async function streamOpenRouterFinal(payload,{apiKey,onDelta,requestFn=fe
    method:"POST",signal:ctrl.signal,
    headers:{"Authorization":"Bearer "+apiKey,"Content-Type":"application/json","Accept":"text/event-stream",
     "HTTP-Referer":"https://www.primestrideai.com","X-Title":"StrideBrain · Internal SME demo"},
-   body:JSON.stringify({...payload,stream:true,tool_choice:"none",tools:undefined})
+   body:JSON.stringify({...payload,stream:true,tool_choice:undefined,tools:undefined})
   });
   if(!response.ok)throw Object.assign(Error("Streaming provider request failed."),{copilotCode:response.status===429?"PROVIDER_RATE_LIMIT":"PROVIDER_FAILURE",providerStatus:response.status});
   if(!response.body)throw Error("Provider returned no streaming body.");
