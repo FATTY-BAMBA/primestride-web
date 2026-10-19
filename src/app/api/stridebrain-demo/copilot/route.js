@@ -76,7 +76,12 @@ export async function POST(request){
    model:process.env.STRIDEBRAIN_DEMO_OPENAI_MODEL||"gpt-5.6"
   });
   return json(200,{...answer,modelId:selected.id,modelLabel:selected.label,provider:"OpenAI"});
- }catch{
-  return json(502,{error:"The selected model could not complete this request. Try another model or sample mode.",code:"COPILOT_UNAVAILABLE"});
+ }catch(error){
+  // Return safe diagnostics only: never echo provider response bodies, requests, or credentials.
+  const recognized=new Set(["PROVIDER_AUTH","PROVIDER_CREDITS","PROVIDER_ACCESS","MODEL_UNAVAILABLE","PROVIDER_TIMEOUT","PROVIDER_RATE_LIMIT","MODEL_REQUEST_REJECTED","PROVIDER_BAD_RESPONSE","PROVIDER_FAILURE"]);
+  const code=recognized.has(error?.copilotCode)?error.copilotCode:"COPILOT_UNAVAILABLE";
+  const messages={PROVIDER_AUTH:"The AI provider credentials were rejected. Ask the administrator to review the configured key.",PROVIDER_CREDITS:"The AI provider requires available credits or billing configuration.",PROVIDER_ACCESS:"The selected model is not accessible to this provider account.",MODEL_UNAVAILABLE:"The selected model was not found or is unavailable. Ask the administrator to review the model catalog.",PROVIDER_TIMEOUT:"The AI provider timed out before answering.",PROVIDER_RATE_LIMIT:"The AI provider rate limit was reached. Try later.",MODEL_REQUEST_REJECTED:"The AI provider rejected the model request or tool format. The integration needs review.",PROVIDER_BAD_RESPONSE:"The AI provider returned an unsupported response format.",PROVIDER_FAILURE:"The AI provider reported an error.",COPILOT_UNAVAILABLE:"The Copilot could not complete this request. The integration needs review."};
+  console.error("stridebrain_preview_copilot_failure",{code,providerStatus:Number.isInteger(error?.providerStatus)?error.providerStatus:null,provider:selected.provider,modelId:selected.id});
+  return json(502,{error:messages[code],code});
  }
 }
