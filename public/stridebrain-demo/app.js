@@ -20,6 +20,7 @@ import {validateHistory,historicalDefaults,safeRequest,historicalEstimate,estima
 const $=id=>document.getElementById(id);
 const requested=new URLSearchParams(location.search).get("industry")||"interior";
 let pack=getPack(requested),model=null,state=null,historyData=null,industryEvidence=null,documentSession=null,toastHandle=null,documentLoadVersion=0;
+let copilotGuest=false;
 let copilotMode="sample",copilotOperatorToken="",copilotConnected=false,copilotBusy=false,copilotRunId=0;
 let selectedModelId=DEFAULT_MODEL_ID,copilotModelMenuOpen=false,copilotDraft="";
 let view={page:"overview",projectId:null,projectDetail:false,docId:null,quoteId:null,chat:[],search:"",filter:"all",pageIndex:0,flowStep:null};
@@ -27,7 +28,7 @@ function toast(message){
  const el=$("toast");el.textContent=message;el.classList.add("visible");
  if(toastHandle)clearTimeout(toastHandle);toastHandle=setTimeout(()=>el.classList.remove("visible"),3500);
 }
-function context(){return {model,pack,state,view,history:historyData,industryEvidence,documentSession,copilotSession:{mode:copilotMode,connected:copilotConnected,busy:copilotBusy,selectedModelId,modelMenuOpen:copilotModelMenuOpen,draft:copilotDraft}};}
+function context(){return {model,pack,state,view,history:historyData,industryEvidence,documentSession,copilotSession:{mode:copilotMode,guest:copilotGuest,connected:copilotConnected,busy:copilotBusy,selectedModelId,modelMenuOpen:copilotModelMenuOpen,draft:copilotDraft}};}
 function save(){
  // A user-opened document or derived source must never leak into persistent localStorage.
  // Imported cost sources, imported quote drafts and inquiry metadata stay tab-only.
@@ -353,11 +354,12 @@ async function perform(el){
    try{
     const response=await fetch("/api/stridebrain-demo/copilot/session",{method:"POST",credentials:"same-origin",cache:"no-store",headers:{"Content-Type":"application/json"},body:JSON.stringify({token})});
     if(!response.ok){toast("Staff preview access could not be verified.");return;}
-    copilotMode="gpt";copilotOperatorToken="";copilotConnected=false;copilotRunId++;view.chat=[];copilotModelMenuOpen=false;render();
+    copilotGuest=false;copilotMode="gpt";copilotOperatorToken="";copilotConnected=false;copilotRunId++;view.chat=[];copilotModelMenuOpen=false;render();
     toast("Staff AI enabled for this browser. You won't need the code again while the session is valid.");
    }catch{toast("Could not establish a protected staff session.");}
  }else if(action==="disableGpt"){
-   await fetch("/api/stridebrain-demo/copilot/session",{method:"DELETE",credentials:"same-origin"}).catch(()=>{});
+   await fetch(copilotGuest?"/api/stridebrain-demo/copilot/guest-session":"/api/stridebrain-demo/copilot/session",{method:"DELETE",credentials:"same-origin"}).catch(()=>{});
+   copilotGuest=false;
    copilotRunId++;copilotMode="sample";copilotOperatorToken="";copilotConnected=false;copilotBusy=false;copilotModelMenuOpen=false;copilotDraft="";
    view.chat=[];render();toast("Staff AI session signed out.");
  }else if(action==="projectBack"){view.projectDetail=false;render();}
@@ -539,14 +541,14 @@ document.addEventListener("drop",ev=>{const area=ev.target.closest("#intake-drop
 async function restoreStaffPreview(){
  try{
   const guest=await fetch("/api/stridebrain-demo/copilot/guest-session",{credentials:"same-origin",cache:"no-store"});
-  if(guest.ok&&(await guest.json()).active){copilotMode="gpt";copilotConnected=false;if(model)render();return;}
+  if(guest.ok&&(await guest.json()).active){copilotGuest=true;copilotMode="gpt";copilotConnected=false;if(model)render();return;}
  }catch{}
 
  try{
   const response=await fetch("/api/stridebrain-demo/copilot/session",{credentials:"same-origin",cache:"no-store"});
   if(!response.ok)return;
   const info=await response.json();
-  if(info.active){copilotMode="gpt";copilotConnected=false;if(model)render();}
+  if(info.active){copilotGuest=false;copilotMode="gpt";copilotConnected=false;if(model)render();}
  }catch{}
 }
 loadIndustry(pack.id).then(restoreStaffPreview);
