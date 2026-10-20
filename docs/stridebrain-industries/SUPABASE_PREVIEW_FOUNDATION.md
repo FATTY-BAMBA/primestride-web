@@ -36,3 +36,6 @@ Before activation: choose a server-side Supabase connection strategy, grant a le
 - Configure these **Preview-only server** variables in Vercel: `STRIDEBRAIN_DEMO_QUOTA_BACKEND=supabase`, `STRIDEBRAIN_DEMO_SUPABASE_URL=https://mdldasphquwufxazelmk.supabase.co`, `STRIDEBRAIN_DEMO_ORGANIZATION_ID=35c78a0b-b0fa-4e31-bf96-7e56047e5c1c`, and `STRIDEBRAIN_DEMO_SUPABASE_SECRET_KEY` from the new preview project. Never use NEXT_PUBLIC_, paste the key in chat, or reuse production keys.
 - **Do not enable** `STRIDEBRAIN_DEMO_QUOTA_ENABLED=true` until a real authenticated RPC test succeeds. This connection is currently code-complete but not live-verified.
 - The current service-role key has broad rights and must remain server-only. Before real company accounts, replace with dedicated least-privilege access, authenticated organization membership, key rotation and comprehensive auditing.
+
+## Preview environment correction — 2026-10-20
+The four Supabase integration variables were initially applied to Vercel Production by mistake and subsequently retargeted to Preview only. Any deployment built before this correction must be rebuilt from the StrideBrain feature branch to receive the new Preview environment. Changing environment variable targets alone does not validate RPC access. Confirm live connectivity before enabling the quota enforcement switch.
