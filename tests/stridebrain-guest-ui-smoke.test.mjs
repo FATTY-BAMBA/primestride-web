@@ -8,6 +8,8 @@ test("guest sessions are restored independently of staff session",()=>{
  assert.match(app,/copilotGuest=true;copilotMode="gpt"/);
  assert.ok(app.includes('copilotGuest?"/api/stridebrain-demo/copilot/guest-session"'));
  assert.match(app,/copilotGuest=false;copilotMode="gpt"/);
+ const restore=app.slice(app.indexOf("async function restoreStaffPreview()"));
+ assert.ok(restore.indexOf('"/api/stridebrain-demo/copilot/session"')<restore.indexOf('"/api/stridebrain-demo/copilot/guest-session"'),"Staff session must take precedence over guest on shared devices");
 });
 test("guest sign out and model labels never claim staff access",()=>{
  assert.match(view,/isGuest\?'Guest AI workspace':'Internal staff AI mode'/);
