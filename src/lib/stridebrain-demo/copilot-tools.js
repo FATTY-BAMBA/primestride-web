@@ -69,7 +69,7 @@ function retrieveDocs(industry,query,limit=5){
  return {doc,score};
  }).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,Math.min(6,Math.max(1,limit))).map(({doc,score})=>({
  id:doc.id,title:doc.title,version:doc.version,status:doc.status,
- basisType:doc.basisType||"SYNTHETIC_DEMO",sourceType:doc.sourceType||"Synthetic record",
+ basisType:doc.basisType||"SYNTHETIC_DEMO",sourceType:doc.sourceType||"Demo record",
  sourceExcerpt:text(doc.body).slice(0,MAX_SOURCE_LEN),relevanceScore:score,
  sourceUrl:doc.basisType==="PUBLIC_REFERENCE"&&text(doc.sourceUrl).startsWith("https://")?doc.sourceUrl:null
  }));
@@ -94,7 +94,7 @@ function snapshot(industry){
  weightedDraftQuoteGrossMarginPct:total>0?Math.round((total-costs)/total*1000)/10:null,
  quoteVersionsMarkedSentOnSnapshotDate:recordedSent.length,
  proposedPreTaxValueMarkedSentOnSnapshotDate:recordedSentSum,
- warning:"These are seeded illustrative records as of 2026-10-18, NOT today's live transactions, recognized revenue, actual profit or customer cash flow.",
+ warning:"Sample workspace snapshot dated 2026-10-18. Figures are examples, not live transactions, recognized revenue, profit, or customer cash flow.",
  sourceIds:distinct([...pending.slice(0,3).map(a=>a.sourceDocId),...blocked.slice(0,3).map(w=>w.sourceDocId)])
  };
 }
@@ -104,7 +104,7 @@ function projects(industry,query){
 }
 function project(industry,projectId){
  const {seed}=pack(industry),p=resolveProject(seed,projectId);
- if(!p)return {found:false,note:"No such fictional project/job; ask for an ID or search by name.",sourceIds:[]};
+ if(!p)return {found:false,note:"No matching demo project or job. Try a project ID or name.",sourceIds:[]};
  const latest=latestQuote(seed,p.id);
  const tasks=seed.workOrders.filter(w=>w.projectId===p.id).slice(0,15).map(w=>({id:w.id,title:w.title,status:w.status,owner:w.owner,dueDate:w.dueDate,sourceDocId:w.sourceDocId}));
  const approvals=seed.approvals.filter(a=>a.projectId===p.id).map(a=>({id:a.id,title:a.title,status:a.status,sourceDocId:a.sourceDocId}));
@@ -120,7 +120,7 @@ function quote(industry,projectId){
  latestProposal:current?{id:current.id,revision:current.revision,priceExTax:current.amountExTax,directCost:current.directCost,computedGrossProfit:current.amountExTax-current.directCost,targetMargin:current.grossMarginTarget,status:current.status,illustrativeTax:current.tax,totalWithTax:current.totalWithTax}:null,
  revisions:list.map(q=>({id:q.id,revision:q.revision,status:q.status,priceExTax:q.amountExTax,sourceDocId:q.sourceDocId})),
  sourceIds:distinct(list.map(q=>q.sourceDocId)),
- disclaimer:"Fictional quotation prices, not actual revenue, real supplier costs or collected cash."};
+ disclaimer:"Sample quotation amounts—not recognized revenue, verified supplier costs, or collected cash."};
 }
 function priorities(industry,limit=6){
  const {seed}=pack(industry),max=Math.max(1,Math.min(8,Number(limit)||6));
@@ -144,7 +144,7 @@ function priorities(industry,limit=6){
 }
 function suppliers(industry,query){
  const {seed}=pack(industry),q=bounded(query),results=seed.suppliers.filter(x=>!q||[x.id,x.name,x.category].join(" ").toLowerCase().includes(q)).slice(0,8);
- return {isSynthetic:true,suppliers:results.map(x=>({id:x.id,name:x.name,category:x.category,exampleUnitPrice:x.sampleUnitPrice,exampleLeadTimeDays:x.leadTimeDays,priceChecked:x.priceChecked})),sourceIds:[],note:"All supplier names, rates and lead times are fictional, not live vendor confirmations."};
+ return {isSynthetic:true,suppliers:results.map(x=>({id:x.id,name:x.name,category:x.category,exampleUnitPrice:x.sampleUnitPrice,exampleLeadTimeDays:x.leadTimeDays,priceChecked:x.priceChecked})),sourceIds:[],note:"Supplier details, example prices and lead times are demo data, not live vendor confirmations."};
 }
 function historical(industry,category,quantity){
  const {history}=pack(industry);
@@ -155,7 +155,7 @@ function historical(industry,category,quantity){
    .map(r=>({...r,quantityGap:Math.abs(Math.log(count/r.quantity))})).sort((a,b)=>a.quantityGap-b.quantityGap).slice(0,6);
  return {industry,category:cat,targetQuantity:count,unit:history.unit,
  comparables:matches.map(r=>({id:r.id,name:r.title,date:r.completedAt,quantity:r.quantity,location:r.location,fictionalFinalDirectCost:r.finalDirectCost,sourceDocId:r.sourceDocId})),
- sourceIds:matches.map(x=>x.sourceDocId),notice:"Only completed, fictional cost records are compared. No current supplier validation or client quote has been generated."};
+ sourceIds:matches.map(x=>x.sourceDocId),notice:"Comparisons use completed sample cost records. Supplier prices haven't been verified and no client quote has been issued."};
 }
 function workflow(industry,query){
  const q=bounded(query,180),ts=tokens(q);
@@ -169,14 +169,14 @@ function workflow(industry,query){
 }
 /** tool schemas are STRICT. The model cannot authorize mutations through these functions. */
 const tools=[
- {name:"operations_snapshot",description:"Fetch fictional metrics as of the seed date: projects, pending approvals, blockers, quote versions marked Sent, sum of latest draft quotes, and weighted proposed gross margin. Never use for live today data.",properties:{}},
- {name:"search_projects",description:"Search projects/jobs by name, city, manager, stage or ID in the selected fictional company.",properties:{query:{type:"string"}}},
+ {name:"operations_snapshot",description:"Fetch demo-workspace metrics as of the snapshot date: projects, pending approvals, blockers, quote versions marked Sent, sum of latest draft quotes, and weighted proposed gross margin. Never use for live today data.",properties:{}},
+ {name:"search_projects",description:"Search projects/jobs by name, city, manager, stage or ID in the selected sample workspace.",properties:{query:{type:"string"}}},
  {name:"get_project",description:"Get one matching project/job, sample tasks, approvals, documents and latest draft quote.",properties:{project_id:{type:"string"}}},
  {name:"get_quote",description:"Get current draft quotation and version history for a project/job. Exact deterministic recorded values, not revenue.",properties:{project_id:{type:"string"}}},
  {name:"list_priorities",description:"Get priority approvals and blocked tasks for owner follow-up. Read-only, deterministic ranking.",properties:{limit:{type:"integer"}}},
  {name:"search_company_knowledge",description:"Retrieve source-linked passages from the industry demo corpus and public Taiwan reference notes.",properties:{query:{type:"string"}}},
- {name:"get_suppliers",description:"Retrieve fictional supplier directory; rates and times are not verified.",properties:{query:{type:"string"}}},
- {name:"find_historical_jobs",description:"Find fictional cost-complete past jobs similar by category and quantity; never invent current prices.",properties:{category:{type:"string"},quantity:{type:"integer"}}},
+ {name:"get_suppliers",description:"Retrieve the sample supplier directory; pricing and lead times are unverified.",properties:{query:{type:"string"}}},
+ {name:"find_historical_jobs",description:"Find completed sample jobs by category and quantity; do not infer current prices.",properties:{category:{type:"string"},quantity:{type:"integer"}}},
  {name:"industry_guidance",description:"Find cited Taiwan industry workflow guidance and important applicability cautions.",properties:{query:{type:"string"}}}
 ];
 export const copilotTools=tools.map(x=>({type:"function",name:x.name,description:x.description,strict:true,parameters:{type:"object",properties:x.properties,required:Object.keys(x.properties),additionalProperties:false}}));
