@@ -39,3 +39,6 @@ Before activation: choose a server-side Supabase connection strategy, grant a le
 
 ## Preview environment correction — 2026-10-20
 The four Supabase integration variables were initially applied to Vercel Production by mistake and subsequently retargeted to Preview only. Any deployment built before this correction must be rebuilt from the StrideBrain feature branch to receive the new Preview environment. Changing environment variable targets alone does not validate RPC access. Confirm live connectivity before enabling the quota enforcement switch.
+
+## Preview quota activation (2026-10-20)
+The StrideBrain feature-branch Preview environment now configures `STRIDEBRAIN_DEMO_QUOTA_ENABLED=true`, `STRIDEBRAIN_DEMO_MAX_DAILY_REQUESTS=100`, and `STRIDEBRAIN_DEMO_GLOBAL_DAILY_REQUESTS=500`. Confirm the next feature-branch build reaches READY before treating these settings as active. Connection probe and isolated reservation tests passed; six concurrent database requests at global limit three produced exactly three accepts and three rejections. Adapter failure paths are verified in mocked automated tests. Runtime provider spend ceilings, monetary budgeting, and public guest access remain separate release gates.
