@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import {createHash} from "node:crypto";
 import {enforceDemoQuota} from "@/lib/stridebrain-demo/demo-quota";
 import {enforceSupabaseDemoQuota} from "@/lib/stridebrain-demo/supabase-quota";
+import {reserveDemoBudget} from "@/lib/stridebrain-demo/demo-budget";
 import {tokenMatches,isStaffSessionValid,SESSION_COOKIE} from "@/lib/stridebrain-demo/staff-session";
 import {guestSessionIdentity,GUEST_COOKIE} from "@/lib/stridebrain-demo/guest-session";
 import { runGptCopilot } from "@/lib/stridebrain-demo/copilot-runner";
@@ -79,6 +80,8 @@ export async function POST(request){
   code:quota.code,
   error:["DEMO_QUOTA_EXCEEDED","DEMO_GLOBAL_QUOTA_EXCEEDED"].includes(quota.code)?"The internal demo request allowance has been reached for today.":"AI preview quota protection is temporarily unavailable."
  });
+ const budget=await reserveDemoBudget();
+ if(!budget.ok)return json(budget.code==="DEMO_BUDGET_EXCEEDED"?429:503,{code:budget.code,error:"The preview AI spending allowance is unavailable or has been reached."});
  if(selected.provider==="openrouter"&&request.headers.get("accept")?.includes("text/event-stream")){
   const encoder=new TextEncoder();
   const stream=new ReadableStream({
