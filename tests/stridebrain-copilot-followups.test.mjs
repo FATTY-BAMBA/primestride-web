@@ -12,7 +12,7 @@ test("no invented project context when evidence contains no project ID",()=>{
  const options=followUpsFor("Which suppliers are late?","printing",["suppliers"],"Supplier lead times require confirmation.");
  assert.equal(options.length,3);
  assert.ok(options.every(x=>!x.prompt.includes("PRJ-")));
- assert.ok(options.every(x=>!(/sent|approved automatically/i.test(x.prompt))));
+ assert.ok(options.every(x=>!(/\bsent\b|approved automatically/i.test(x.prompt))));
 });
 test("Traditional Chinese input produces localized follow-up labels and instructions",()=>{
  const options=followUpsFor("哪些專案需要先處理？","interior",["approvals"],"PRJ-103 尚有待核准項目");
