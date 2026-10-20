@@ -6,8 +6,8 @@
  */
 export const QUICK_ACTIONS=Object.freeze([
  Object.freeze({id:"numbers",label:"Today's numbers",glyph:"◷",description:"Snapshot of quotations and operational priorities",prompts:{
-  interior:"What needs my attention in our fictional operations snapshot? Include pending approvals, blocked work and quote activity.",
-  printing:"Give me today's numbers from the fictional print-shop snapshot: jobs, blocked production work, approvals and quote activity."
+  interior:"What needs my attention in our sample operations snapshot? Include pending approvals, blocked work and quote activity.",
+  printing:"Give me today's numbers from the sample print-shop snapshot: jobs, blocked production work, approvals and quote activity."
  }}),
  Object.freeze({id:"quotes",label:"Quotes",glyph:"▧",description:"Dated quotation activity and review status",prompts:{
   interior:"How many quotations were marked sent on the sample snapshot date? Which current quotations need review?",
@@ -22,8 +22,8 @@ export const QUICK_ACTIONS=Object.freeze([
   printing:"Which sample printing suppliers and delivery lead-time assumptions need verification?"
  }}),
  Object.freeze({id:"financials",label:"Financials",glyph:"↗",description:"Explain proposed margins, never invent revenue",prompts:{
-  interior:"What is our overall weighted proposed gross margin across the latest fictional renovation quotations?",
-  printing:"What is our overall weighted proposed gross margin across the latest fictional print quotations?"
+  interior:"What is our overall weighted proposed gross margin across the latest sample renovation quotations?",
+  printing:"What is our overall weighted proposed gross margin across the latest sample print quotations?"
  }})
 ]);
 const INDUSTRY_IDEAS={
@@ -51,7 +51,7 @@ export function ideasFor(industry){return INDUSTRY_IDEAS[industry==="printing"?"
 export function followUpsFor(lastQuestion="",industry="interior",actions=[],lastAnswer=""){
  const answer=String(lastAnswer||"").slice(0,3800);
  const projectId=(answer.match(/\bPRJ-\d{3,6}\b/i)||[])[0]||"";
- const context=projectId?"For the fictional project "+projectId+", ":"";
+ const context=projectId?"For the sample project "+projectId+", ":"";
  const chinese=/[\u3400-\u9fff]/.test(String(lastQuestion||""))&&
   (String(lastQuestion||"").match(/[\u3400-\u9fff]/g)||[]).length>=4;
 
@@ -61,7 +61,7 @@ export function followUpsFor(lastQuestion="",industry="interior",actions=[],last
  if(/quote|quotation|estimate|margin|成本|報價|毛利|financial/.test(q)||a.has("quotes")||a.has("history")){
   prompts=[
    ["Review cost evidence","Which approved or historical source records support this quotation, and what remains unverified?"],
-   ["Compare alternatives","Which comparable completed fictional jobs could inform the estimate? Explain the limitations."],
+   ["Compare alternatives","Which comparable completed sample jobs could inform the estimate? Explain the limitations."],
    ["Identify approval gaps","What approvals are missing before this quotation could be released?"]
   ];
  }else if(/supplier|material|vendor|stock|paper|供應商|材料|紙材|交期/.test(q)||a.has("suppliers")){
@@ -79,7 +79,7 @@ export function followUpsFor(lastQuestion="",industry="interior",actions=[],last
  }else{
   prompts=[
    ["Investigate blockers","Which approvals or blocked work items deserve attention first?"],
-   ["Explore costs","What do the latest fictional quotations and historical costs tell us?"],
+   ["Explore costs","What do the latest sample quotations and historical costs tell us?"],
    ["Plan next actions",industry==="printing"?"What should the print production team check next?":"What should the renovation project team check next?"]
   ];
  }
