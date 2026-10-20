@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import {createHash} from "node:crypto";
+import {enforceDemoQuota} from "@/lib/stridebrain-demo/demo-quota";
 import {tokenMatches,isStaffSessionValid,SESSION_COOKIE} from "@/lib/stridebrain-demo/staff-session";
 import { runGptCopilot } from "@/lib/stridebrain-demo/copilot-runner";
 import { runOpenRouterCopilot } from "@/lib/stridebrain-demo/openrouter-runner";
@@ -59,6 +61,14 @@ export async function POST(request){
   return json(403,{error:"This model has not been enabled for the staff demo.",code:"MODEL_NOT_ALLOWED"});
  const providerKey=selected.provider==="openrouter"?process.env.OPENROUTER_API_KEY:process.env.OPENAI_API_KEY;
  if(!providerKey)return json(503,{error:"The selected provider is not configured by the administrator.",code:"MODEL_NOT_CONFIGURED"});
+ // Staff-only by default. If distributed quotas are activated, quota exhaustion
+ // or infrastructure failure blocks provider spend before starting any stream.
+ const authorizedIdentity=request.cookies.get(SESSION_COOKIE)?.value||request.headers.get("x-stridebrain-operator-token")||"";
+ const quota=await enforceDemoQuota({sessionId:createHash("sha256").update(authorizedIdentity).digest("hex")});
+ if(!quota.ok)return json(quota.code==="DEMO_QUOTA_EXCEEDED"?429:503,{
+  code:quota.code,
+  error:quota.code==="DEMO_QUOTA_EXCEEDED"?"The internal demo request allowance has been reached for today.":"AI preview quota protection is temporarily unavailable."
+ });
  if(selected.provider==="openrouter"&&request.headers.get("accept")?.includes("text/event-stream")){
   const encoder=new TextEncoder();
   const stream=new ReadableStream({
