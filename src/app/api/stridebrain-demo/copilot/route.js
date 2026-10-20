@@ -65,9 +65,9 @@ export async function POST(request){
  // or infrastructure failure blocks provider spend before starting any stream.
  const authorizedIdentity=request.cookies.get(SESSION_COOKIE)?.value||request.headers.get("x-stridebrain-operator-token")||"";
  const quota=await enforceDemoQuota({sessionId:createHash("sha256").update(authorizedIdentity).digest("hex")});
- if(!quota.ok)return json(quota.code==="DEMO_QUOTA_EXCEEDED"?429:503,{
+ if(!quota.ok)return json(["DEMO_QUOTA_EXCEEDED","DEMO_GLOBAL_QUOTA_EXCEEDED"].includes(quota.code)?429:503,{
   code:quota.code,
-  error:quota.code==="DEMO_QUOTA_EXCEEDED"?"The internal demo request allowance has been reached for today.":"AI preview quota protection is temporarily unavailable."
+  error:["DEMO_QUOTA_EXCEEDED","DEMO_GLOBAL_QUOTA_EXCEEDED"].includes(quota.code)?"The internal demo request allowance has been reached for today.":"AI preview quota protection is temporarily unavailable."
  });
  if(selected.provider==="openrouter"&&request.headers.get("accept")?.includes("text/event-stream")){
   const encoder=new TextEncoder();
