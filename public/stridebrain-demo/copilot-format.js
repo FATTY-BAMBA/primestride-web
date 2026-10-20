@@ -22,16 +22,21 @@ function separator(line,count){
 }
 function tableAt(lines,i){
  const heads=cells(lines[i]||"");
- if(!heads||heads.length<2||heads.length>8||!separator(lines[i+1]||"",heads.length))return null;
- const rows=[];let j=i+2;
- while(j<lines.length){
+ if(!heads||heads.length<2||heads.length>8)return null;
+ let divider=i+1;
+ while(divider<lines.length&&!lines[divider].trim())divider++;
+ if(!separator(lines[divider]||"",heads.length))return null;
+ const rows=[];let j=divider+1;
+ while(j<lines.length&&rows.length<30){
+  if(!lines[j].trim()){j++;continue;}
+  if(!lines[j].trim().startsWith("|"))break;
   const row=cells(lines[j]);
-  if(!row||row.length!==heads.length||rows.length>=30)break;
+  if(!row||row.length!==heads.length)break;
   rows.push(row);j++;
  }
- const head="<thead><tr>"+heads.map(v=>"<th scope=\\"col\\">"+inline(v)+"</th>").join("")+"</tr></thead>";
- const body="<tbody>"+rows.map(row=>"<tr>"+row.map(v=>"<td>"+inline(v)+"</td>").join("")+"</tr>").join("")+"</tbody>";
- return {end:j,html:'<div class="copilot-table-scroll" role="region" aria-label="Business results table" tabindex="0"><table class="copilot-result-table">'+head+body+"</table></div>"};
+ const head='<thead><tr>'+heads.map(v=>'<th scope="col">'+inline(v)+'</th>').join("")+'</tr></thead>';
+ const body='<tbody>'+rows.map(row=>'<tr>'+row.map(v=>'<td>'+inline(v)+'</td>').join("")+'</tr>').join("")+'</tbody>';
+ return {end:j,html:'<div class="copilot-table-scroll" role="region" aria-label="Business results table" tabindex="0"><table class="copilot-result-table">'+head+body+'</table></div>'};
 }
 export function safeCopilotMarkdown(value){
  // Some providers escape Markdown emphasis and line breaks inside plain-text completions.
