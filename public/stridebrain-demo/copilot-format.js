@@ -13,7 +13,7 @@ function inline(text){
 function cells(line){
  const value=line.trim();
  if(!value.includes("|"))return null;
- const inner=value.replace(/^\\|/,"").replace(/\\|$/,"");
+ const inner=value.replace(/^\|/,"").replace(/\|$/,"");
  return inner.split("|").map(cell=>cell.trim());
 }
 function separator(line,count){
