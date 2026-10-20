@@ -19,13 +19,13 @@ export function overview(c){
 }
 export function copilot(c){
  const {pack:p,view:v,copilotSession:session={}}=c;
- const isConnectedMode=session.mode==="gpt",connected=!!session.connected,busy=!!session.busy;
+ const isConnectedMode=session.mode==="gpt",isGuest=!!session.guest,connected=!!session.connected,busy=!!session.busy;
  const empty=v.chat.length===0,model=findAllowedModel(session.selectedModelId)||findAllowedModel(DEFAULT_MODEL_ID);
  const menuOpen=!!session.modelMenuOpen&&!busy;
  const greetingHour=new Date().getHours();
  const greeting=greetingHour<12?"Good morning":greetingHour<17?"Good afternoon":"Good evening";
  const displayStatus=isConnectedMode?(connected?"Connected · Read-only workspace tools":"AI session selected · Connection not yet verified"):"Sample answers · AI provider not connected";
- const brandLabel=isConnectedMode?"STAFF AI COPILOT":"DETERMINISTIC EXAMPLE COPILOT";
+ const brandLabel=isConnectedMode?(isGuest?"STRIDEBRAIN AI COPILOT":"STAFF AI COPILOT"):"DETERMINISTIC EXAMPLE COPILOT";
  const quick=quickActionsFor(p.id),ideas=ideasFor(p.id);
  const hideIfBusy=busy?" disabled":"";
  const menu=MODEL_CATALOG.map(item=>{
@@ -74,7 +74,7 @@ export function copilot(c){
       '<span class="sb-model-label">'+e(model.label)+'</span><span class="sb-model-arrow">⌄</span></button>'+
      (menuOpen?'<div class="sb-model-menu" id="sb-model-menu" role="listbox" aria-label="Approved model choices">'+
       '<div class="sb-model-menu-heading">CHOOSE AI MODEL</div>'+menu+
-      '<div class="sb-model-menu-note">Model choice takes effect only in a connected staff preview. All business tools remain read-only.</div></div>':'')+
+      '<div class="sb-model-menu-note">Available models depend on your workspace access. Business tools remain read-only.</div></div>':'')+
     '</div>'+
     '<button type="submit" class="sb-send" aria-label="Send question" title="Send question"'+hideIfBusy+'>'+(busy?"···":"↑")+'</button>'+
    '</div>'+
@@ -98,8 +98,8 @@ export function copilot(c){
    '<p class="disclosure">Selected model: '+e(model.label)+' ('+e(model.provider==="openrouter"?"OpenRouter":"Direct OpenAI")+
    '). Staff prompts are sent to the configured provider after authorization. Demo data is used; uploaded files are not forwarded to the model.</p></div></details>';
  }else{
-  out+='<div class="sb-copilot-connected-foot"><span><strong>Internal staff AI mode</strong> · Selected model: '+e(model.label)+' · Read-only workspace tools.</span>'+
-   button("Sign out of staff AI","disableGpt","","button-outline")+'</div>';
+  out+='<div class="sb-copilot-connected-foot"><span><strong>'+(isGuest?'Guest AI workspace':'Internal staff AI mode')+'</strong> · Selected model: '+e(model.label)+' · Read-only workspace tools.</span>'+
+   button(isGuest?"Leave guest session":"Sign out of staff AI","disableGpt","","button-outline")+'</div>';
  }
  out+='</div>';
  return out;
