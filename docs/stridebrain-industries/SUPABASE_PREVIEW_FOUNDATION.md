@@ -28,3 +28,11 @@
 The current Next.js preview route still uses the Redis-style optional quota adapter. The new Supabase database has NOT been connected to Vercel yet; do not enable `STRIDEBRAIN_DEMO_QUOTA_ENABLED=true` until the adapter is converted and tested.
 
 Before activation: choose a server-side Supabase connection strategy, grant a least-privilege database role permission to call the function, store secrets in Preview only, add cost/concurrency controls, run failure and concurrency tests, and confirm 100/500 limits. Anonymous prospect AI access remains disabled.
+
+
+## Vercel connection (prepared, not activated)
+- New public-schema REST RPC `stridebrain_reserve_demo_quota` is callable by service_role only, and forwards to the tenant-scoped private function.
+- Supabase RPC adapter `src/lib/stridebrain-demo/supabase-quota.js` is wired behind `STRIDEBRAIN_DEMO_QUOTA_BACKEND=supabase`.
+- Configure these **Preview-only server** variables in Vercel: `STRIDEBRAIN_DEMO_QUOTA_BACKEND=supabase`, `STRIDEBRAIN_DEMO_SUPABASE_URL=https://mdldasphquwufxazelmk.supabase.co`, `STRIDEBRAIN_DEMO_ORGANIZATION_ID=35c78a0b-b0fa-4e31-bf96-7e56047e5c1c`, and `STRIDEBRAIN_DEMO_SUPABASE_SECRET_KEY` from the new preview project. Never use NEXT_PUBLIC_, paste the key in chat, or reuse production keys.
+- **Do not enable** `STRIDEBRAIN_DEMO_QUOTA_ENABLED=true` until a real authenticated RPC test succeeds. This connection is currently code-complete but not live-verified.
+- The current service-role key has broad rights and must remain server-only. Before real company accounts, replace with dedicated least-privilege access, authenticated organization membership, key rotation and comprehensive auditing.
