@@ -24,7 +24,7 @@ export function copilot(c){
  const menuOpen=!!session.modelMenuOpen&&!busy;
  const greetingHour=new Date().getHours();
  const greeting=greetingHour<12?"Good morning":greetingHour<17?"Good afternoon":"Good evening";
- const displayStatus=isConnectedMode?(connected?"Connected · Read-only workspace tools":"Staff AI requested · Connection not yet verified"):"Sample mode · No AI provider call";
+ const displayStatus=isConnectedMode?(connected?"Connected · Read-only workspace tools":"AI session selected · Connection not yet verified"):"Sample answers · AI provider not connected";
  const brandLabel=isConnectedMode?"STAFF AI COPILOT":"DETERMINISTIC EXAMPLE COPILOT";
  const quick=quickActionsFor(p.id),ideas=ideasFor(p.id);
  const hideIfBusy=busy?" disabled":"";
@@ -49,7 +49,7 @@ export function copilot(c){
  }
  out+='<div class="sb-conversation">'+v.chat.map((msg,i)=>msg.role==="user"?
   '<div class="chat-message">'+e(msg.text)+'</div>':
-  '<div class="chat-answer"><div class="chat-answer-head"><span class="sb-answer-symbol">✳</span> STRIDEBRAIN · '+(msg.mode==="gpt"?e(msg.modelLabel||"CONNECTED MODEL")+" / WORKSPACE TOOLS":"SOURCE-LINKED SAMPLE")+'</div>'+
+  '<div class="chat-answer"><div class="chat-answer-head"><span class="sb-answer-symbol">✳</span> STRIDEBRAIN · '+(msg.mode==="gpt"?e(msg.modelLabel||"CONNECTED MODEL")+" / WORKSPACE TOOLS":"SOURCE-LINKED DEMO DATA")+'</div>'+
   msg.html+(msg.pending?'':'<div class="feedback-row"><span class="disclosure">Was this useful?</span><span><button type="button" class="feedback-btn" data-action="feedback" data-kind="Helpful" data-index="'+i+'">✓ Helpful</button> <button type="button" class="feedback-btn" data-action="feedback" data-kind="Needs review" data-index="'+i+'">⚑ Needs review</button></span></div>')+'</div>'
  ).join("")+'</div>';
  const last=v.chat[v.chat.length-1];
