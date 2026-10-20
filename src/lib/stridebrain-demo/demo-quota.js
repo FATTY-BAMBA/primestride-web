@@ -19,17 +19,23 @@ export async function enforceDemoQuota({sessionId,now=Date.now(),requestFn=fetch
  const limit=Number.isInteger(MAX_REQUESTS)&&MAX_REQUESTS>=1&&MAX_REQUESTS<=1000?MAX_REQUESTS:40;
  const date=new Date(now).toISOString().slice(0,10);
  const key="stridebrain:demo:v1:"+date+":"+sessionId;
- const script="local n=redis.call('INCR',KEYS[1]); if n==1 then redis.call('EXPIRE',KEYS[1],172800) end; return n";
+ const globalKey="stridebrain:demo:v1:"+date+":global";
+ const requestedGlobal=Number(process.env.STRIDEBRAIN_DEMO_GLOBAL_DAILY_REQUESTS||"150");
+ const globalLimit=Number.isInteger(requestedGlobal)&&requestedGlobal>=1&&requestedGlobal<=10000?requestedGlobal:150;
+ // Atomically reserve both a session and global allowance. No counter increments once blocked.
+ const script="local a=tonumber(redis.call('GET',KEYS[1]) or '0'); local b=tonumber(redis.call('GET',KEYS[2]) or '0'); if a>=tonumber(ARGV[1]) then return -1 end; if b>=tonumber(ARGV[2]) then return -2 end; a=redis.call('INCR',KEYS[1]); b=redis.call('INCR',KEYS[2]); if a==1 then redis.call('EXPIRE',KEYS[1],172800) end; if b==1 then redis.call('EXPIRE',KEYS[2],172800) end; return a";
  try{
   const response=await requestFn(settings.url+"/pipeline",{
    method:"POST",headers:{Authorization:"Bearer "+settings.token,"Content-Type":"application/json"},
-   body:JSON.stringify([["EVAL",script,"1",key]]),
+   body:JSON.stringify([["EVAL",script,"2",key,globalKey,String(limit),String(globalLimit)]]),
    signal:AbortSignal.timeout(2500)
   });
   if(!response.ok)return {ok:false,code:"DEMO_QUOTA_UNAVAILABLE"};
   const result=await response.json();
   const count=Number(result?.[0]?.result);
-  if(!Number.isInteger(count)||count<1)return {ok:false,code:"DEMO_QUOTA_UNAVAILABLE"};
-  return count>limit?{ok:false,code:"DEMO_QUOTA_EXCEEDED"}:{ok:true,enabled:true,remaining:limit-count};
+  if(count===-1)return {ok:false,code:"DEMO_QUOTA_EXCEEDED"};
+  if(count===-2)return {ok:false,code:"DEMO_GLOBAL_QUOTA_EXCEEDED"};
+  if(!Number.isInteger(count)||count<1||count>limit)return {ok:false,code:"DEMO_QUOTA_UNAVAILABLE"};
+  return {ok:true,enabled:true,remaining:limit-count};
  }catch{return {ok:false,code:"DEMO_QUOTA_UNAVAILABLE"};}
 }
