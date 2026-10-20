@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import {createHash} from "node:crypto";
 import {enforceDemoQuota} from "@/lib/stridebrain-demo/demo-quota";
+import {enforceSupabaseDemoQuota} from "@/lib/stridebrain-demo/supabase-quota";
 import {tokenMatches,isStaffSessionValid,SESSION_COOKIE} from "@/lib/stridebrain-demo/staff-session";
 import { runGptCopilot } from "@/lib/stridebrain-demo/copilot-runner";
 import { runOpenRouterCopilot } from "@/lib/stridebrain-demo/openrouter-runner";
@@ -64,7 +65,8 @@ export async function POST(request){
  // Staff-only by default. If distributed quotas are activated, quota exhaustion
  // or infrastructure failure blocks provider spend before starting any stream.
  const authorizedIdentity=request.cookies.get(SESSION_COOKIE)?.value||request.headers.get("x-stridebrain-operator-token")||"";
- const quota=await enforceDemoQuota({sessionId:createHash("sha256").update(authorizedIdentity).digest("hex")});
+ const sessionId=createHash("sha256").update(authorizedIdentity).digest("hex");
+ const quota=process.env.STRIDEBRAIN_DEMO_QUOTA_BACKEND==="supabase"?await enforceSupabaseDemoQuota({sessionId}):await enforceDemoQuota({sessionId});
  if(!quota.ok)return json(["DEMO_QUOTA_EXCEEDED","DEMO_GLOBAL_QUOTA_EXCEEDED"].includes(quota.code)?429:503,{
   code:quota.code,
   error:["DEMO_QUOTA_EXCEEDED","DEMO_GLOBAL_QUOTA_EXCEEDED"].includes(quota.code)?"The internal demo request allowance has been reached for today.":"AI preview quota protection is temporarily unavailable."
