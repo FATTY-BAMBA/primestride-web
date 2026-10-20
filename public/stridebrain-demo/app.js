@@ -100,7 +100,7 @@ async function loadIndustry(id){
 function gptAnswerCard(result){
  const content=String(result?.answer||"").slice(0,3800);
  const ids=[...new Set((Array.isArray(result.sourceIds)?result.sourceIds:[]).filter(id=>!!model.document(id)))].slice(0,12);
- const paragraphs=safeCopilotMarkdown(content,ids);
+ const paragraphs=safeCopilotMarkdown(content).replace(/\\[([A-Z][A-Z0-9-]{2,85})\\]/g,(full,id)=>ids.includes(id)?sourceButton(id):full);
  const allowed=new Set(["overview","projects","knowledge","quotes","work","suppliers","approvals","analytics","history","playbook","service"]);
  const actions=[...new Set((Array.isArray(result.actions)?result.actions:[]).filter(a=>allowed.has(a)))].slice(0,4);
  const labelMap={overview:"Business overview",projects:"Explore projects",knowledge:"Inspect knowledge",quotes:"Review quotes",work:"Work orders",suppliers:"Suppliers",approvals:"Pending approvals",analytics:"Analytics",history:"Past project estimates",playbook:"Industry playbook",service:"Customer replies"};
