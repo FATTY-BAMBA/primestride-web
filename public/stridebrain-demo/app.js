@@ -539,16 +539,19 @@ document.addEventListener("keydown",ev=>{
 document.addEventListener("dragover",ev=>{if(ev.target.closest("#intake-drop"))ev.preventDefault();});
 document.addEventListener("drop",ev=>{const area=ev.target.closest("#intake-drop");if(!area)return;ev.preventDefault();const file=ev.dataTransfer?.files?.[0];if(file)handleDocument(file);});
 async function restoreStaffPreview(){
- try{
-  const guest=await fetch("/api/stridebrain-demo/copilot/guest-session",{credentials:"same-origin",cache:"no-store"});
-  if(guest.ok&&(await guest.json()).active){copilotGuest=true;copilotMode="gpt";copilotConnected=false;if(model)render();return;}
- }catch{}
-
+ // A verified staff session always takes precedence on a browser that also holds
+ // a guest invitation. Staff must never be silently downgraded to guest mode.
  try{
   const response=await fetch("/api/stridebrain-demo/copilot/session",{credentials:"same-origin",cache:"no-store"});
-  if(!response.ok)return;
-  const info=await response.json();
-  if(info.active){copilotGuest=false;copilotMode="gpt";copilotConnected=false;if(model)render();}
+  if(response.ok&&(await response.json()).active){
+   copilotGuest=false;copilotMode="gpt";copilotConnected=false;if(model)render();return;
+  }
+ }catch{}
+ try{
+  const guest=await fetch("/api/stridebrain-demo/copilot/guest-session",{credentials:"same-origin",cache:"no-store"});
+  if(guest.ok&&(await guest.json()).active){
+   copilotGuest=true;copilotMode="gpt";copilotConnected=false;if(model)render();
+  }
  }catch{}
 }
 loadIndustry(pack.id).then(restoreStaffPreview);
