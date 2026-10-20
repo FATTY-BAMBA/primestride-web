@@ -1,0 +1,25 @@
+name: StrideBrain Demo Quality Gate
+on:
+  pull_request:
+    paths:
+      - 'public/stridebrain-demo/**'
+      - 'src/lib/stridebrain-demo/**'
+      - 'src/app/api/stridebrain-demo/**'
+      - 'tests/stridebrain-*.test.mjs'
+      - '.github/workflows/stridebrain-demo.yml'
+  push:
+    branches:
+      - feature/stridebrain-interiors-flagship-demo
+jobs:
+  static-and-unit-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check browser module syntax
+        run: |
+          for file in public/stridebrain-demo/*.js; do node --check "$file"; done
+      - name: Run StrideBrain regression tests
+        run: node --test tests/stridebrain-*.test.mjs
