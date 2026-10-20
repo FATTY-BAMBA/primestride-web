@@ -3,6 +3,7 @@ import {createHash} from "node:crypto";
 import {enforceDemoQuota} from "@/lib/stridebrain-demo/demo-quota";
 import {enforceSupabaseDemoQuota} from "@/lib/stridebrain-demo/supabase-quota";
 import {reserveDemoBudget} from "@/lib/stridebrain-demo/demo-budget";
+import {acquireDemoLease,releaseDemoLease} from "@/lib/stridebrain-demo/demo-concurrency";
 import {tokenMatches,isStaffSessionValid,SESSION_COOKIE} from "@/lib/stridebrain-demo/staff-session";
 import {guestSessionIdentity,GUEST_COOKIE} from "@/lib/stridebrain-demo/guest-session";
 import { runGptCopilot } from "@/lib/stridebrain-demo/copilot-runner";
@@ -80,15 +81,17 @@ export async function POST(request){
   code:quota.code,
   error:["DEMO_QUOTA_EXCEEDED","DEMO_GLOBAL_QUOTA_EXCEEDED"].includes(quota.code)?"The internal demo request allowance has been reached for today.":"AI preview quota protection is temporarily unavailable."
  });
+ const lease=await acquireDemoLease();
+ if(!lease.ok)return json(lease.code==="DEMO_CONCURRENCY_EXCEEDED"?429:503,{code:lease.code,error:"The preview is busy. Please retry shortly."});
  const budget=await reserveDemoBudget();
- if(!budget.ok)return json(budget.code==="DEMO_BUDGET_EXCEEDED"?429:503,{code:budget.code,error:"The preview AI spending allowance is unavailable or has been reached."});
+ if(!budget.ok){await releaseDemoLease(lease);return json(budget.code==="DEMO_BUDGET_EXCEEDED"?429:503,{code:budget.code,error:"The preview AI spending allowance is unavailable or has been reached."});}
  if(selected.provider==="openrouter"&&request.headers.get("accept")?.includes("text/event-stream")){
   const encoder=new TextEncoder();
   const stream=new ReadableStream({
    async start(controller){
     const emit=(type,payload)=>controller.enqueue(encoder.encode(`event: ${type}\ndata: ${JSON.stringify(payload)}\n\n`));
     try{
-     emit("status",{message:"Checking the fictional company records…"});
+     emit("status",{message:"Reviewing workspace records…"});
      const started=Date.now();let chunks=0,firstDeltaMs=null;
      const answer=await runOpenRouterCopilot({industry:parsed.industry,messages:parsed.messages,modelId:selected.id,apiKey:providerKey,
       onDelta:delta=>{if(firstDeltaMs===null)firstDeltaMs=Date.now()-started;chunks++;emit("delta",{text:delta});},onStatus:message=>emit("status",{message})});
@@ -98,7 +101,7 @@ export async function POST(request){
      const safeCode=typeof error?.copilotCode==="string"?error.copilotCode:"COPILOT_UNAVAILABLE";
      console.error("stridebrain_preview_copilot_stream_failure",{code:safeCode,provider:selected.provider,modelId:selected.id});
      emit("error",{code:safeCode,error:safeCode==="PROVIDER_TIMEOUT"?"The model timed out. The answer was not completed.":"The AI response could not be completed. Please retry."});
-    }finally{controller.close();}
+    }finally{await releaseDemoLease(lease);controller.close();}
    }
   });
   return new Response(stream,{headers:{...NO_STORE,"Content-Type":"text/event-stream; charset=utf-8","X-Accel-Buffering":"no"}});
@@ -108,14 +111,17 @@ export async function POST(request){
    const answer=await runOpenRouterCopilot({
     industry:parsed.industry,messages:parsed.messages,modelId:selected.id,apiKey:providerKey
    });
+   await releaseDemoLease(lease);
    return json(200,answer);
   }
   const answer=await runGptCopilot({
    industry:parsed.industry,messages:parsed.messages,apiKey:providerKey,
    model:process.env.STRIDEBRAIN_DEMO_OPENAI_MODEL||"gpt-5.6"
   });
+  await releaseDemoLease(lease);
   return json(200,{...answer,modelId:selected.id,modelLabel:selected.label,provider:"OpenAI"});
  }catch(error){
+  await releaseDemoLease(lease);
   // Return safe diagnostics only: never echo provider response bodies, requests, or credentials.
   const recognized=new Set(["PROVIDER_AUTH","PROVIDER_CREDITS","PROVIDER_ACCESS","MODEL_UNAVAILABLE","PROVIDER_TIMEOUT","PROVIDER_RATE_LIMIT","MODEL_REQUEST_REJECTED","PROVIDER_BAD_RESPONSE","PROVIDER_FAILURE","OPENROUTER_RATE_LIMIT","UPSTREAM_CAPACITY"]);
   const code=recognized.has(error?.copilotCode)?error.copilotCode:"COPILOT_UNAVAILABLE";
