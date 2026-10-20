@@ -24,9 +24,13 @@ test("atomic backend count enforces the daily ceiling",async()=>{
  assert.equal(allowed.ok,true);
  assert.equal(allowed.remaining,0);
  assert.equal(observed[0][0],"EVAL");
+ assert.equal(observed[0][2],"2");
+ assert.match(observed[0][4],/global/);
  assert.match(observed[0][3],/2026-10-20/);
- const blocked=await enforceDemoQuota({sessionId:identity,requestFn:async()=>({ok:true,json:async()=>[{result:3}]})});
+ const blocked=await enforceDemoQuota({sessionId:identity,requestFn:async()=>({ok:true,json:async()=>[{result:-1}]})});
  assert.equal(blocked.code,"DEMO_QUOTA_EXCEEDED");
+ const globalBlocked=await enforceDemoQuota({sessionId:identity,requestFn:async()=>({ok:true,json:async()=>[{result:-2}]})});
+ assert.equal(globalBlocked.code,"DEMO_GLOBAL_QUOTA_EXCEEDED");
 });
 test("redis errors never permit a provider call",async()=>{
  envSet({STRIDEBRAIN_DEMO_QUOTA_ENABLED:"true",STRIDEBRAIN_DEMO_REDIS_REST_URL:"https://redis.example.org",STRIDEBRAIN_DEMO_REDIS_REST_TOKEN:"test-token"});
