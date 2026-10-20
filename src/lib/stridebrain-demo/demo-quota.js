@@ -8,7 +8,7 @@ function config(){
  const url=process.env.STRIDEBRAIN_DEMO_REDIS_REST_URL||"";
  const token=process.env.STRIDEBRAIN_DEMO_REDIS_REST_TOKEN||"";
  if(!url.startsWith("https://")||!token)return null;
- return {url:url.replace(/\\/$/,""),token};
+ return {url:url.endsWith("/")?url.slice(0,-1):url,token};
 }
 export async function enforceDemoQuota({sessionId,now=Date.now(),requestFn=fetch}={}){
  if(process.env.STRIDEBRAIN_DEMO_QUOTA_ENABLED!=="true")
