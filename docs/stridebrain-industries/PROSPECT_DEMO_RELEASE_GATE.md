@@ -11,8 +11,8 @@
 - Set `STRIDEBRAIN_DEMO_QUOTA_ENABLED=true` to enforce a distributed daily request quota before the AI provider is called.
 - Requires a protected Upstash Redis REST-compatible endpoint:
   `STRIDEBRAIN_DEMO_REDIS_REST_URL` and `STRIDEBRAIN_DEMO_REDIS_REST_TOKEN`.
-- `STRIDEBRAIN_DEMO_MAX_DAILY_REQUESTS` defaults to 40 (per staff session, allowed range 1–1000).
-- `STRIDEBRAIN_DEMO_GLOBAL_DAILY_REQUESTS` defaults to 150 (shared across staff sessions, allowed range 1–10000).
+- `STRIDEBRAIN_DEMO_MAX_DAILY_REQUESTS` defaults to 100 (per staff session, allowed range 1–1000).
+- `STRIDEBRAIN_DEMO_GLOBAL_DAILY_REQUESTS` defaults to 500 (shared across staff sessions, allowed range 1–10000).
 - A single Redis Lua operation reserves both allowances atomically; exhausted allowances reject before paid provider calls.
 - The request counter uses server-side atomic Redis operations and expires after two days.
 - Quota storage unavailable => reject before provider call (fail closed).
