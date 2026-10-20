@@ -66,8 +66,10 @@ export async function POST(request){
     const emit=(type,payload)=>controller.enqueue(encoder.encode(`event: ${type}\ndata: ${JSON.stringify(payload)}\n\n`));
     try{
      emit("status",{message:"Checking the fictional company records…"});
+     const started=Date.now();let chunks=0,firstDeltaMs=null;
      const answer=await runOpenRouterCopilot({industry:parsed.industry,messages:parsed.messages,modelId:selected.id,apiKey:providerKey,
-      onDelta:delta=>emit("delta",{text:delta}),onStatus:message=>emit("status",{message})});
+      onDelta:delta=>{if(firstDeltaMs===null)firstDeltaMs=Date.now()-started;chunks++;emit("delta",{text:delta});},onStatus:message=>emit("status",{message})});
+     emit("metrics",{chunks,firstDeltaMs,totalMs:Date.now()-started});
      emit("result",answer);
     }catch(error){
      const safeCode=typeof error?.copilotCode==="string"?error.copilotCode:"COPILOT_UNAVAILABLE";
