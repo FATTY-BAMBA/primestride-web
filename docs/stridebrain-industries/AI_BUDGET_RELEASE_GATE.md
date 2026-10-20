@@ -1,0 +1,6 @@
+## Conservative Preview AI budget gate (2026-10-21)
+A separate `stridebrain.ai_budget_reservations` table and service-role-only RPC `stridebrain_reserve_demo_budget` have been deployed to Supabase. The API now supports an additional optional server-side gate, `STRIDEBRAIN_DEMO_BUDGET_ENABLED=true`, before provider invocation. Default reservation: 500000 micro-USD (US$0.50) per accepted request; default daily reserved cap: 10000000 micro-USD (US$10). Configure only on the StrideBrain feature-branch Preview environment after verifying provider cost exposure. **Currently off by default.**
+
+This is a deliberately conservative reservation ceiling, NOT measured provider spend or true accounting. Unused reservations are not refunded, and an unusually expensive provider response can exceed the reserved estimate. It therefore must not be advertised as a strict dollar spending guarantee. Add provider billing/cost reconciliation and per-model output ceilings before any public access. The existing 100/session and 500/global request quotas continue independently.
+
+Postgres reservation test: two US$0.50 reservations accepted at US$1 test cap, third denied, transaction rolled back. Feature remains disabled; guest access remains disabled.
