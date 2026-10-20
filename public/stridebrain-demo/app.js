@@ -270,7 +270,7 @@ async function perform(el){
    if(!chosen){toast("That model is not on the approved list.");return;}
    selectedModelId=chosen.id;copilotModelMenuOpen=false;copilotConnected=false;
    render();document.querySelector(".sb-model-trigger")?.focus();
-   toast(copilotMode==="gpt"?"Selected "+chosen.label+" for the next authorized model request.":"Selected "+chosen.label+". Connect staff AI to use this model; sample answers remain deterministic.");
+   toast(copilotMode==="gpt"?"Selected "+chosen.label+" for the next authorized model request.":"Selected "+chosen.label+". Staff AI access is required to use this model. The sample response mode remains available.");
  }
  else if(action==="newChat"){
    if(copilotBusy){toast("Wait for the current answer or disconnect first.");return;}
@@ -370,7 +370,7 @@ async function perform(el){
  else if(action==="quote"){view.quoteId=id;setPage("quotes");}
  else if(action==="gate"){
   const result=approveVariationGate(state,value,model);
-  if(result.ok){state.customerDraft.reviewed=false;save();render();toast("Simulated approval recorded.");}
+  if(result.ok){state.customerDraft.reviewed=false;save();render();toast("Sample approval recorded locally.");}
   else toast(result.reason);
  }else if(action==="commit"){
   const result=commitVariation(state,model);
@@ -378,7 +378,7 @@ async function perform(el){
   else toast(result.reason);
  }else if(action==="approval"){
   const a=model.byApproval.get(id);if(!a)return;
-  state.approvals[id]="Approved";event(state,"Simulated approval "+id+" · "+a.projectId);save();render();toast("Sample workspace approval recorded.");
+  state.approvals[id]="Approved";event(state,"Sample approval "+id+" · "+a.projectId);save();render();toast("Sample workspace approval recorded.");
  }else if(action==="task"){
   const t=model.tasks(state).find(x=>x.id===id);if(!t)return;
   if(id===state.readiness?.reviewTaskId&&t.status!=="Complete"){
@@ -402,7 +402,7 @@ async function perform(el){
   const draft=state.historyDraft;
   if(!draft?.result?.ok){toast("Create a supported historical estimate first.");return;}
   if(draft.fingerprint!==JSON.stringify(state.historyRequest)){toast("Inputs have changed; generate a fresh draft.");return;}
-  draft.reviewed=true;draft.reviewedAt=new Date().toISOString();event(state,"Simulated owner review of historical-cost estimate.");save();render();toast("Draft reviewed locally. No quotation was sent.");
+  draft.reviewed=true;draft.reviewedAt=new Date().toISOString();event(state,"Sample estimate reviewed locally.");save();render();toast("Draft reviewed locally. No quotation was sent.");
  }else if(action==="historyExport"){
   const draft=state.historyDraft;
   if(!draft?.reviewed||draft.fingerprint!==JSON.stringify(state.historyRequest)){toast("A current human-reviewed draft is required for export.");return;}
