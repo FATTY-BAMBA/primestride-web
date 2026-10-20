@@ -538,6 +538,11 @@ document.addEventListener("dragover",ev=>{if(ev.target.closest("#intake-drop"))e
 document.addEventListener("drop",ev=>{const area=ev.target.closest("#intake-drop");if(!area)return;ev.preventDefault();const file=ev.dataTransfer?.files?.[0];if(file)handleDocument(file);});
 async function restoreStaffPreview(){
  try{
+  const guest=await fetch("/api/stridebrain-demo/copilot/guest-session",{credentials:"same-origin",cache:"no-store"});
+  if(guest.ok&&(await guest.json()).active){copilotMode="gpt";copilotConnected=false;if(model)render();return;}
+ }catch{}
+
+ try{
   const response=await fetch("/api/stridebrain-demo/copilot/session",{credentials:"same-origin",cache:"no-store"});
   if(!response.ok)return;
   const info=await response.json();
