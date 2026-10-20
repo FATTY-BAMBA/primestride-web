@@ -24,7 +24,7 @@ export function copilot(c){
  const menuOpen=!!session.modelMenuOpen&&!busy;
  const greetingHour=new Date().getHours();
  const greeting=greetingHour<12?"Good morning":greetingHour<17?"Good afternoon":"Good evening";
- const displayStatus=isConnectedMode?(connected?"Connected · Read-only synthetic records":"Staff AI requested · Connection not yet verified"):"Sample mode · No AI provider call";
+ const displayStatus=isConnectedMode?(connected?"Connected · Read-only workspace tools":"Staff AI requested · Connection not yet verified"):"Sample mode · No AI provider call";
  const brandLabel=isConnectedMode?"STAFF AI COPILOT":"DETERMINISTIC EXAMPLE COPILOT";
  const quick=quickActionsFor(p.id),ideas=ideasFor(p.id);
  const hideIfBusy=busy?" disabled":"";
@@ -49,7 +49,7 @@ export function copilot(c){
  }
  out+='<div class="sb-conversation">'+v.chat.map((msg,i)=>msg.role==="user"?
   '<div class="chat-message">'+e(msg.text)+'</div>':
-  '<div class="chat-answer"><div class="chat-answer-head"><span class="sb-answer-symbol">✳</span> STRIDEBRAIN · '+(msg.mode==="gpt"?e(msg.modelLabel||"CONNECTED MODEL")+" / SYNTHETIC BUSINESS TOOLS":"SOURCE-LINKED SAMPLE")+'</div>'+
+  '<div class="chat-answer"><div class="chat-answer-head"><span class="sb-answer-symbol">✳</span> STRIDEBRAIN · '+(msg.mode==="gpt"?e(msg.modelLabel||"CONNECTED MODEL")+" / WORKSPACE TOOLS":"SOURCE-LINKED SAMPLE")+'</div>'+
   msg.html+(msg.pending?'':'<div class="feedback-row"><span class="disclosure">Was this useful?</span><span><button type="button" class="feedback-btn" data-action="feedback" data-kind="Helpful" data-index="'+i+'">✓ Helpful</button> <button type="button" class="feedback-btn" data-action="feedback" data-kind="Needs review" data-index="'+i+'">⚑ Needs review</button></span></div>')+'</div>'
  ).join("")+'</div>';
  const last=v.chat[v.chat.length-1];
@@ -88,7 +88,7 @@ export function copilot(c){
     '<button type="button" data-action="ask" data-prompt="'+e(item.prompt)+'" class="sb-context-idea"'+hideIfBusy+'><span>'+e(item.glyph)+'</span>'+e(item.label)+' ↗</button>'
    ).join("")+'</div></div>';
  }
- out+='<div class="sb-copilot-status"><span class="sb-status-dot"></span><span>'+e(displayStatus)+'</span><span class="sb-status-divider">·</span><span>Fictional company records · No automatic customer actions</span></div>';
+ out+='<div class="sb-copilot-status"><span class="sb-status-dot"></span><span>'+e(displayStatus)+'</span><span class="sb-status-divider">·</span><span>Demo data · No automatic external actions</span></div>';
  out+='</div>';
  if(!isConnectedMode){
   out+='<details class="copilot-operator-box"><summary><span><span aria-hidden="true">⚙</span> Enable staff AI (one-time access)</span><span>▾</span></summary>'+
@@ -96,9 +96,9 @@ export function copilot(c){
    '<label for="copilot-access-token" class="form-field">One-time staff access code<input type="password" id="copilot-access-token" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Enter once on this trusted browser"></label>'+
    '<div class="action-stack">'+button("Enable AI for this browser ↗","enableGpt","","button-secondary")+'</div>'+
    '<p class="disclosure">Selected model: '+e(model.label)+' ('+e(model.provider==="openrouter"?"OpenRouter":"Direct OpenAI")+
-   '). Staff prompts are sent to the configured provider after authorization. Demo materials stay fictional; uploaded files are never forwarded to the model.</p></div></details>';
+   '). Staff prompts are sent to the configured provider after authorization. Demo data is used; uploaded files are not forwarded to the model.</p></div></details>';
  }else{
-  out+='<div class="sb-copilot-connected-foot"><span><strong>Internal staff AI mode</strong> · Selected model: '+e(model.label)+' · Read-only synthetic tools.</span>'+
+  out+='<div class="sb-copilot-connected-foot"><span><strong>Internal staff AI mode</strong> · Selected model: '+e(model.label)+' · Read-only workspace tools.</span>'+
    button("Sign out of staff AI","disableGpt","","button-outline")+'</div>';
  }
  out+='</div>';
@@ -120,7 +120,7 @@ export function projects(c){
 export function knowledge(c){
  const {model:m,view:v}=c,kinds=["all",...new Set(m.seed.documents.map(d=>d.kind))],hits=m.searchDocuments(v.search,v.filter),pages=Math.max(1,Math.ceil(hits.length/18)),page=Math.min(v.pageIndex,pages-1),rows=hits.slice(page*18,(page+1)*18);
  v.pageIndex=page;
- let out=heading("Company knowledge hub","Inspect sources, revision labels, and clearly separated public guidance versus fictional company records.",tag(m.seed.documents.length+" indexed knowledge records"),"ONE SHARED KNOWLEDGE FOUNDATION");
+ let out=heading("Company knowledge hub","Inspect sources, revision labels, and clearly separated public guidance versus sample company records.",tag(m.seed.documents.length+" indexed knowledge records"),"ONE SHARED KNOWLEDGE FOUNDATION");
  const imported=c.documentSession?.report||null;
  if(imported){
   out+='<div class="history-mini"><span><strong>Temporary source in this browser:</strong> '+e(imported.fileName)+' · '+e(imported.classification.replace(/_/g," "))+' · '+(imported.reviewed?'Reviewed extraction':'Requires review')+'. This file is not part of the company knowledge index and disappears after refresh.</span>'+button("Inspect local file ↗","nav","intake","button-secondary")+'</div>';
@@ -128,8 +128,8 @@ export function knowledge(c){
  const publicCount=m.seed.documents.filter(d=>d.basisType==="PUBLIC_REFERENCE").length;
  const historicalCount=m.seed.documents.filter(d=>d.kind==="Historical cost record").length;
  const sampleCount=m.seed.documents.length-publicCount-historicalCount;
- out+='<div class="operational-cards">'+metric("Public references",publicCount,"Taiwan sources · original URLs")+metric("Fictional company files",sampleCount,"Sample company operations")+metric("Historical sample costs",historicalCount,"Not actual customer history")+metric("Pending company reviews",m.seed.documents.filter(d=>d.status==="Pending review").length,"Needs responsible review")+'</div>';
- out+='<div class="secondary-note" style="margin:15px 0">The knowledge hub deliberately separates <strong>publicly cited industry guidance</strong> from <strong>fictional company records and cost examples</strong>. Neither one verifies a specific customer’s pricing, permits or supplier status. Explore the <button type="button" class="table-btn" data-action="nav" data-value="playbook">industry operations playbook ↗</button>.</div>';
+ out+='<div class="operational-cards">'+metric("Public references",publicCount,"Taiwan sources · original URLs")+metric("Sample company files",sampleCount,"Sample company operations")+metric("Historical sample costs",historicalCount,"Not actual customer history")+metric("Pending company reviews",m.seed.documents.filter(d=>d.status==="Pending review").length,"Needs responsible review")+'</div>';
+ out+='<div class="secondary-note" style="margin:15px 0">The knowledge hub deliberately separates <strong>publicly cited industry guidance</strong> from <strong>sample company records and cost examples</strong>. Neither one verifies a specific customer’s pricing, permits or supplier status. Explore the <button type="button" class="table-btn" data-action="nav" data-value="playbook">industry operations playbook ↗</button>.</div>';
  const featuredPublic=m.seed.documents.filter(d=>d.basisType==="PUBLIC_REFERENCE").slice(0,3);
  if(featuredPublic.length)out+='<section class="section">'+section("Taiwan industry references","Original public sources with documented scope and applicability.",button("View all public references ↗","publicFilter","","button-secondary"))+'<div class="panel">'+featuredPublic.map(documentRow).join("")+'</div></section>';
  out+='<div class="filter-bar"><input class="input" data-input="search" value="'+e(v.search)+'" aria-label="Search knowledge" placeholder="Search names, IDs and full document text…"><select class="select" data-input="filter" aria-label="Filter document category">'+kinds.map(k=>'<option value="'+e(k)+'"'+(k===v.filter?" selected":"")+'>'+e(k==="all"?"All categories":k)+'</option>').join("")+'</select></div>';
@@ -137,7 +137,7 @@ export function knowledge(c){
 }
 function sourceProvenance(d,registry){
  if(d?.basisType==="BROWSER_LOCAL_SANDBOX")return '<div class="source-provenance synthetic"><strong>Local hypothetical cost precedent · temporary</strong><span>Derived from reviewer-mapped source rows in this browser tab. Completion and cost coverage were assumed for the fictional scenario. The file is not verified as real job history and the record is not persisted or shared.</span></div>';
- if(d?.basisType!=="PUBLIC_REFERENCE")return '<div class="source-provenance synthetic"><strong>Fictional demo record</strong><span>This content is illustrative company data, not independent evidence of prices, permits, employees or transactions.</span></div>';
+ if(d?.basisType!=="PUBLIC_REFERENCE")return '<div class="source-provenance synthetic"><strong>Demo data · Sample record</strong><span>This is sample company data, not independent evidence of prices, permits, employees or transactions.</span></div>';
  const sources=(d.evidenceIds||[]).map(id=>registry?.sources?.find(x=>x.id===id)).filter(Boolean);
  if(!sources.length)return '<div class="source-provenance"><strong>Public reference · original link</strong><span>No source registry available; verify the reference independently.</span></div>';
  return '<div class="source-provenance"><strong>Public-reference provenance · '+sources.length+' original source'+(sources.length===1?'':'s')+'</strong>'+
@@ -152,6 +152,6 @@ export function renderInspector(c){
  const ids=v.page==="readiness"?(getReadinessPack(p.id)?.sourceIds||[]):v.page==="playbook"?(c.industryEvidence?.cards.filter(x=>x.industry===p.id).slice(0,5).map(x=>x.id)||[]):v.page==="history"?(c.history?.records.filter(x=>x.status==="COMPLETE").slice(0,4).map(x=>x.sourceDocId)||[]):["copilot","service","quotes"].includes(v.page)?p.scenario.sourceIds:m.documentsFor(pr.id).slice(0,4).map(d=>d.id);
  out+='<div class="inspector-section">'+section("Relevant source evidence","Inspect the original sample content")+ids.map(id=>{let d=m.document(id);return d?'<button class="inspector-source" data-action="source" data-id="'+e(d.id)+'"><strong>'+e(d.title)+'</strong><small>'+e(d.id)+' · '+e(d.version)+' · '+e(d.status)+'</small></button>':"";}).join("")+'</div>';
  if(v.page==="quotes"){const x=s.variation;out+='<div class="inspector-section">'+section("Approval gates","Simulated local state")+'<div class="inspector-context"><strong>Supplier '+(x.supplier?"✓":"○")+' · Owner '+(x.owner?"✓":"○")+' · Customer '+(x.customer?"✓":"○")+'</strong></div></div>';}
- out+='<div class="inspector-section"><div class="suite-eyebrow">PROTOTYPE BOUNDARY</div><p class="disclosure">Data, companies and prices are fictional. No live AI, vendor feeds, LINE integration or server-side production storage is enabled.</p></div>';return out;
+ out+='<div class="inspector-section"><div class="suite-eyebrow">PROTOTYPE BOUNDARY</div><p class="disclosure">Company records and prices are demo data. No live AI, vendor feeds, LINE integration or server-side production storage is enabled.</p></div>';return out;
 }
 export function renderSourceModal(d,registry){return '<div class="evidence-modal"><div class="panel-header"><div><div class="suite-eyebrow">'+e(d.id)+' · '+e(d.version)+'</div><h2>'+e(d.title)+'</h2></div>'+button("Close ×","closeSource","","button-outline")+'</div>'+badge(d.status)+'<div class="doc-body" style="margin-top:14px">'+e(d.body)+'</div>'+sourceProvenance(d,registry)+'<div class="action-stack">'+button("Download .md","download",d.id,"button-primary")+button("Flag for review","sourceFeedback",d.id,"button-secondary")+'</div></div>';}
