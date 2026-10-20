@@ -137,11 +137,25 @@ async function ask(question){
    if(!response.body)throw Error("No streaming response was received.");
    const reader=response.body.getReader(),decoder=new TextDecoder();
    let buffer="",draft="",completed=false,streamMetrics=null;
-   const updateDraft=()=>{
+   let shown=0,painting=false;
+   const reducedMotion=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+   const paintDraft=()=>{
+    painting=false;
     if(active!==copilotRunId||pack.id!==activeIndustry)return;
     const node=document.querySelector('[data-streaming-answer="'+index+'"]');
-    if(node)node.textContent=draft;
+    if(!node)return;
+    // Reveal text already received. Do not fabricate provider tokens.
+    shown=reducedMotion?draft.length:Math.min(draft.length,shown+Math.max(6,Math.ceil((draft.length-shown)/9)));
+    node.textContent=draft.slice(0,shown);
+    if(shown<draft.length){painting=true;requestAnimationFrame(paintDraft);}
    };
+   const updateDraft=()=>{if(!painting){painting=true;requestAnimationFrame(paintDraft);}};
+   const finishDraft=()=>new Promise(resolve=>{
+    if(reducedMotion){shown=draft.length;updateDraft();resolve();return;}
+    const deadline=performance.now()+1400;
+    const check=()=>{if(active!==copilotRunId||shown>=draft.length||performance.now()>deadline){shown=draft.length;const node=document.querySelector('[data-streaming-answer="'+index+'"]');if(node)node.textContent=draft;resolve();}else requestAnimationFrame(check);};
+    check();
+   });
    view.chat[index].html='<div class="answer-card"><div class="suite-eyebrow">AI RESPONSE · STREAMING</div><p class="disclosure">Checking business records… Sources are verified after completion.</p><div class="copilot-stream-text" data-streaming-answer="'+index+'" aria-live="polite"></div></div>';
    render();
    while(true){
@@ -166,6 +180,7 @@ async function ask(question){
     }
    }
    if(!completed)throw Error("The streaming response ended before completion.");
+   await finishDraft();
    if(streamMetrics)console.info("stridebrain_stream_metrics",streamMetrics);
   }else{
    result=await response.json();
