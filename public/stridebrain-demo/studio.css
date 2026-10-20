@@ -509,3 +509,7 @@ body{background:#f7f9f6;font-size:14px}
 .copilot-gpt-prose p{line-height:1.7;margin:8px 0 12px}
 .copilot-gpt-prose ul,.copilot-gpt-prose ol{padding-left:22px;margin:10px 0 15px}
 .copilot-gpt-prose li{padding:3px 0;line-height:1.65}
+
+/* Clearly distinguish confirmed evidence disagreements from ordinary advice. */
+.copilot-gpt-prose .copilot-evidence-discrepancy{display:flex;gap:9px;align-items:center;padding:11px 14px;margin:20px 0 11px;border:1px solid #e2c8a2;border-radius:10px;background:#fff8ed;color:#79511e;font-weight:750}
+.copilot-gpt-prose .copilot-evidence-discrepancy::before{content:"!";display:inline-grid;place-items:center;width:20px;height:20px;flex:0 0 20px;border-radius:50%;background:#9d702a;color:white;font-size:12px}
