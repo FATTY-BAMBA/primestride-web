@@ -10,6 +10,29 @@ function inline(text){
  out=escapeHtml(out);
  return out.replace(/\uE000(\d+)\uE001/g,(_,i)=>placeholders[Number(i)]||"");
 }
+function cells(line){
+ const value=line.trim();
+ if(!value.includes("|"))return null;
+ const inner=value.replace(/^\\|/,"").replace(/\\|$/,"");
+ return inner.split("|").map(cell=>cell.trim());
+}
+function separator(line,count){
+ const parsed=cells(line);
+ return !!parsed&&parsed.length===count&&parsed.every(v=>/^:?-{3,}:?$/.test(v));
+}
+function tableAt(lines,i){
+ const heads=cells(lines[i]||"");
+ if(!heads||heads.length<2||heads.length>8||!separator(lines[i+1]||"",heads.length))return null;
+ const rows=[];let j=i+2;
+ while(j<lines.length){
+  const row=cells(lines[j]);
+  if(!row||row.length!==heads.length||rows.length>=30)break;
+  rows.push(row);j++;
+ }
+ const head="<thead><tr>"+heads.map(v=>"<th scope=\\"col\\">"+inline(v)+"</th>").join("")+"</tr></thead>";
+ const body="<tbody>"+rows.map(row=>"<tr>"+row.map(v=>"<td>"+inline(v)+"</td>").join("")+"</tr>").join("")+"</tbody>";
+ return {end:j,html:'<div class="copilot-table-scroll" role="region" aria-label="Business results table" tabindex="0"><table class="copilot-result-table">'+head+body+"</table></div>"};
+}
 export function safeCopilotMarkdown(value){
  // Some providers escape Markdown emphasis and line breaks inside plain-text completions.
  // Normalize only these predictable artifacts before safe HTML escaping.
@@ -17,7 +40,10 @@ export function safeCopilotMarkdown(value){
  const lines=String(value??"").slice(0,3800).replace(/\\\n/g,"\n").replace(/\r\n?/g,"\n").split("\n");
  const out=[];let list=null;
  function close(){if(list){out.push("</"+list+">");list=null;}}
- for(const raw of lines){
+ for(let i=0;i<lines.length;i++){
+  const tab=tableAt(lines,i);
+  if(tab){close();out.push(tab.html);i=tab.end-1;continue;}
+  const raw=lines[i];
   const line=raw.trim();
   if(!line){close();continue;}
   const header=line.match(/^(#{1,3})\s+(.+)$/);
