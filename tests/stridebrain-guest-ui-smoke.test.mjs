@@ -6,7 +6,7 @@ const view=readFileSync(new URL("../public/stridebrain-demo/views-primary.js",im
 const guest=readFileSync(new URL("../public/stridebrain-demo/guest-entry.js",import.meta.url),"utf8");
 test("guest sessions are restored independently of staff session",()=>{
  assert.match(app,/copilotGuest=true;copilotMode="gpt"/);
- assert.match(app,/copilotGuest\? "\/api\/stridebrain-demo\/copilot\/guest-session"/.source? /copilotGuest\?"\/api\/stridebrain-demo\/copilot\/guest-session"/ : /never/);
+ assert.ok(app.includes('copilotGuest?"/api/stridebrain-demo/copilot/guest-session"'));
  assert.match(app,/copilotGuest=false;copilotMode="gpt"/);
 });
 test("guest sign out and model labels never claim staff access",()=>{
