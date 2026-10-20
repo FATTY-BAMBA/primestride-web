@@ -21,7 +21,7 @@ export async function enforceDemoQuota({sessionId,now=Date.now(),requestFn=fetch
  const key="stridebrain:demo:v1:"+date+":"+sessionId;
  const globalKey="stridebrain:demo:v1:"+date+":global";
  const requestedGlobal=Number(process.env.STRIDEBRAIN_DEMO_GLOBAL_DAILY_REQUESTS||"500");
- const globalLimit=Number.isInteger(requestedGlobal)&&requestedGlobal>=1&&requestedGlobal<=10000?requestedGlobal:150;
+ const globalLimit=Number.isInteger(requestedGlobal)&&requestedGlobal>=1&&requestedGlobal<=10000?requestedGlobal:500;
  // Atomically reserve both a session and global allowance. No counter increments once blocked.
  const script="local a=tonumber(redis.call('GET',KEYS[1]) or '0'); local b=tonumber(redis.call('GET',KEYS[2]) or '0'); if a>=tonumber(ARGV[1]) then return -1 end; if b>=tonumber(ARGV[2]) then return -2 end; a=redis.call('INCR',KEYS[1]); b=redis.call('INCR',KEYS[2]); if a==1 then redis.call('EXPIRE',KEYS[1],172800) end; if b==1 then redis.call('EXPIRE',KEYS[2],172800) end; return a";
  try{
