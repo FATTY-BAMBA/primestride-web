@@ -99,11 +99,11 @@ async function loadIndustry(id){
 }
 function gptAnswerCard(result){
  const content=String(result?.answer||"").slice(0,3800);
- const paragraphs=safeCopilotMarkdown(content);
+ const ids=[...new Set((Array.isArray(result.sourceIds)?result.sourceIds:[]).filter(id=>!!model.document(id)))].slice(0,12);
+ const paragraphs=safeCopilotMarkdown(content,ids);
  const allowed=new Set(["overview","projects","knowledge","quotes","work","suppliers","approvals","analytics","history","playbook","service"]);
  const actions=[...new Set((Array.isArray(result.actions)?result.actions:[]).filter(a=>allowed.has(a)))].slice(0,4);
  const labelMap={overview:"Business overview",projects:"Explore projects",knowledge:"Inspect knowledge",quotes:"Review quotes",work:"Work orders",suppliers:"Suppliers",approvals:"Pending approvals",analytics:"Analytics",history:"Past project estimates",playbook:"Industry playbook",service:"Customer replies"};
- const ids=[...new Set((Array.isArray(result.sourceIds)?result.sourceIds:[]).filter(id=>!!model.document(id)))].slice(0,12);
  return '<div class="answer-card"><div class="suite-eyebrow">'+e(result.modelLabel||"AI model")+' · READ-ONLY DEMO ANSWER</div><div class="copilot-gpt-prose">'+paragraphs+'</div>'+
   (ids.length?'<div class="copilot-tool-sources"><strong>Inspect supporting sample records</strong><div>'+ids.map(sourceButton).join(" ")+'</div></div>':'<p class="disclosure">No cited record was returned for this conversational answer.</p>')+
   (actions.length?'<div class="answer-actions">'+actions.map(a=>'<button type="button" class="button-secondary" data-action="nav" data-value="'+a+'">'+e(labelMap[a])+' ↗</button>').join("")+'</div>':'')+
