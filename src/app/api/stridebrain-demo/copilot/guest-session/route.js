@@ -1,5 +1,6 @@
 import {NextResponse} from "next/server";
 import {createHmac} from "node:crypto";
+import {guestAttemptAddress} from "@/lib/stridebrain-demo/guest-attempt";
 import {guestEnabled,inviteIdentity,issueGuestSession,guestSessionIdentity,GUEST_COOKIE,guestCookieOptions} from "@/lib/stridebrain-demo/guest-session";
 export const runtime="nodejs";
 export const dynamic="force-dynamic";
@@ -19,7 +20,8 @@ export async function POST(request){
  const secret=process.env.STRIDEBRAIN_DEMO_SUPABASE_SECRET_KEY||"";
  const signing=process.env.STRIDEBRAIN_DEMO_GUEST_SESSION_SECRET||"";
  if(!/^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(base)||!secret||signing.length<32)return reply({active:false,code:"INVITE_GATE_UNAVAILABLE"},503);
- const forwarded=request.headers.get("x-forwarded-for")?.split(",")[0]?.trim()||"unknown";
+ const forwarded=guestAttemptAddress(request.headers);
+ if(!forwarded)return reply({active:false,code:"INVITE_GATE_UNAVAILABLE"},503);
  const attemptKey=createHmac("sha256",signing).update("invite-gate:"+forwarded).digest("hex");
  try{
   const gate=await fetch(base+"/rest/v1/rpc/stridebrain_guest_invite_gate",{method:"POST",headers:{"apikey":secret,Authorization:"Bearer "+secret,"Content-Type":"application/json"},body:JSON.stringify({p_subject_hash:attemptKey,p_limit:6}),cache:"no-store",signal:AbortSignal.timeout(3000)});
