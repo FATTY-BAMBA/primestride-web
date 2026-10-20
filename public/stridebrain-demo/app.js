@@ -136,7 +136,7 @@ async function ask(question){
   if(response.ok&&response.headers.get("content-type")?.includes("text/event-stream")){
    if(!response.body)throw Error("No streaming response was received.");
    const reader=response.body.getReader(),decoder=new TextDecoder();
-   let buffer="",draft="",completed=false;
+   let buffer="",draft="",completed=false,streamMetrics=null;
    const updateDraft=()=>{
     if(active!==copilotRunId||pack.id!==activeIndustry)return;
     const node=document.querySelector('[data-streaming-answer="'+index+'"]');
@@ -161,11 +161,12 @@ async function ask(question){
      }else if(type==="delta"&&typeof data.text==="string"){
       draft=(draft+data.text).slice(0,3800);
       updateDraft();
-     }else if(type==="result"){result=data;completed=true;}
+     }else if(type==="metrics"){streamMetrics=data;}else if(type==="result"){result=data;completed=true;}
      else if(type==="error")throw Error(String(data.error||"The model response was interrupted.").slice(0,180));
     }
    }
    if(!completed)throw Error("The streaming response ended before completion.");
+   if(streamMetrics)console.info("stridebrain_stream_metrics",streamMetrics);
   }else{
    result=await response.json();
    if(!response.ok)throw Error(String(result.error||"The GPT service is unavailable.").slice(0,180));
