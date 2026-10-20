@@ -1,11 +1,15 @@
 import {NextResponse} from "next/server";
-import {isStaffSessionValid,SESSION_COOKIE} from "@/lib/stridebrain-demo/staff-session";
+import {isStaffSessionValid,tokenMatches,SESSION_COOKIE} from "@/lib/stridebrain-demo/staff-session";
 export const runtime="nodejs";
 export const dynamic="force-dynamic";
 const headers={"Cache-Control":"private, no-store","X-Content-Type-Options":"nosniff"};
 function reply(data,status=200){return NextResponse.json(data,{status,headers});}
-export async function GET(request){
- if(!isStaffSessionValid(request.cookies.get(SESSION_COOKIE)?.value||""))return reply({connected:false,code:"DEMO_ACCESS_DENIED"},401);
+async function handle(request,allowHeader=false){
+ const origin=request.headers.get("origin");
+ if(origin&&origin!==new URL(request.url).origin)return reply({connected:false,code:"ORIGIN_DENIED"},403);
+ const cookieValid=isStaffSessionValid(request.cookies.get(SESSION_COOKIE)?.value||"");
+ const headerValid=allowHeader&&tokenMatches(request.headers.get("x-stridebrain-operator-token")||"");
+ if(!cookieValid&&!headerValid)return reply({connected:false,code:"DEMO_ACCESS_DENIED"},401);
  const url=process.env.STRIDEBRAIN_DEMO_SUPABASE_URL||"";
  const key=process.env.STRIDEBRAIN_DEMO_SUPABASE_SECRET_KEY||"";
  if(!/^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(url)||!key)return reply({connected:false,code:"SUPABASE_NOT_CONFIGURED"},503);
@@ -20,3 +24,6 @@ export async function GET(request){
   return reply({connected:true,quotaSchemaReady:true,organizationScopeReady:true,checkedAt:result.database_time_utc});
  }catch{return reply({connected:false,code:"SUPABASE_UNREACHABLE"},503);}
 }
+
+export async function GET(request){return handle(request,false);}
+export async function POST(request){return handle(request,true);}
