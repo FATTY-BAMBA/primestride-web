@@ -17,12 +17,12 @@ export function exampleAnswer(prompt,c){
   const report=c.documentSession?.report;
   const body=report?
    '<p>I read the file locally in this browser. The extraction found <strong>'+report.candidates.length+' candidate cost items</strong>, '+report.parts.length+' page or sheet sections, and '+report.findings.length+' review warnings. The detected type is <strong>'+e(report.classification.replace(/_/g," "))+'</strong>. This is not a verified company fact or a customer-ready quote.</p><p>Sample source positions: '+e(report.candidates.slice(0,3).map(x=>x.sourceRef).join(", ")||report.facts?.slice(0,3).map(x=>x.sourceRef).join(", ")||"not yet identified")+'</p>':
-   '<p>No uploaded source is available in this browser session. Open Document Intelligence, download a fictional sample PDF/Excel file, and select it to inspect.</p>';
+   '<p>No uploaded source is available in this browser session. Open Document Intelligence, download a sample PDF/Excel file, and select it to inspect.</p>';
   return {sources:[],html:wrap("Document extraction status",body,actions(button("Open document intelligence ↗","nav","intake","button-primary")))};
  }
  if(/past projects|previous jobs|historical|quote from history|similar jobs|past quotes|歷史|以往|過去|類似案例|歷史報價|智能報價/.test(question)){
   const h=c.history,ref=h?.records.filter(x=>x.status==="COMPLETE").slice(0,3).map(x=>x.sourceDocId)||[];
-  const body='<p>Use comparable completed work, normalized cost lines, explicit price adjustments, and human approval to prepare a source-linked new estimate. The current precedents are fictional sample jobs.</p>'+relevant(ref);
+  const body='<p>Use comparable completed work, normalized cost lines, explicit price adjustments, and human approval to prepare a source-linked new estimate. The current precedents are sample jobs.</p>'+relevant(ref);
   return {sources:ref,html:wrap("Historical Quotation Intelligence",body,actions(button("Review similar projects ↗","nav","history","button-primary")))};
  }
  if(/ready to|ready for|can we (start|proceed|release|print)|what.{0,40}(missing|blocking|ready)|release (the )?(job|project|press)|檢核結果|缺少什麼|可以開工|可否印刷|印前準備|施工前|進場前|準備好了/.test(question)){
@@ -31,7 +31,7 @@ export function exampleAnswer(prompt,c){
   const counted=latest&&JSON.stringify(latest.inputs)===JSON.stringify(report.inputs);
   const issues=report.checks.filter(x=>x.status==="hold");
   const cited=[...new Set(issues.slice(0,3).flatMap(x=>x.sourceIds))];
-  let body='<p>Based on manually entered <strong>fictional job conditions</strong>, this '+e(p.itemLabel)+' has <strong>'+report.counts.hold+' blocking evidence gaps</strong> and '+report.counts.review+' additional review flags. '+e(report.message)+'</p>';
+  let body='<p>Based on manually entered <strong>sample job conditions</strong>, this '+e(p.itemLabel)+' has <strong>'+report.counts.hold+' blocking evidence gaps</strong> and '+report.counts.review+' additional review flags. '+e(report.message)+'</p>';
   body+='<div class="pulse-grid"><div class="pulse-item"><strong>'+report.counts.pass+'</strong><small>Recorded as checked</small></div><div class="pulse-item"><strong>'+report.counts.hold+'</strong><small>Blocking gaps</small></div><div class="pulse-item"><strong>'+report.counts.review+'</strong><small>Expert/process review</small></div></div>';
   body+=issues.slice(0,3).map(x=>'<div class="prio-row"><div class="prio-main"><div class="prio-title">'+e(x.title)+'</div><div class="prio-sub">'+e(x.nextAction)+'</div></div>'+source(x.sourceIds[0])+'</div>').join("");
   body+='<p class="disclosure">'+(counted?'A browser-local screening has been recorded.':'This is a preview; the screening is not yet recorded.')+' No actual building review or print-file preflight was performed.</p>'+relevant(cited);
@@ -49,7 +49,7 @@ export function exampleAnswer(prompt,c){
   }
   const ids=selected.map(x=>x.id);
   const paragraphs=selected.slice(0,3).map(x=>'<div class="prio-row"><div class="prio-main"><div class="prio-title">'+e(x.titleZh)+' · '+e(x.titleEn)+'</div><div class="prio-sub">'+e(x.summary)+'</div><div class="disclosure" style="margin-top:5px">Scope limitation: '+e(x.limits)+'</div></div>'+source(x.id)+'</div>').join("");
-  const content='<p>I found '+selected.length+' relevant Taiwan public-reference notes. These are laws, official guidance or documented examples depending on the source type. They do not prove this fictional client is compliant or that vendor requirements are universal.</p>'+paragraphs+'<div class="answer-actions">'+button("Explore Taiwan guidance ↗","nav","playbook","button-primary")+button("Run operational check ↗","nav","readiness","button-outline")+'</div>';
+  const content='<p>I found '+selected.length+' relevant Taiwan public-reference notes. These are laws, official guidance or documented examples depending on the source type. They do not prove any specific company is compliant or that vendor requirements are universal.</p>'+paragraphs+'<div class="answer-actions">'+button("Explore Taiwan guidance ↗","nav","playbook","button-primary")+button("Run operational check ↗","nav","readiness","button-outline")+'</div>';
   return {sources:ids,html:wrap("Published Taiwan industry guidance",content)};
  }
  if(packTerm.test(question)||/change order|variation|material change|substitution|變更|替換/.test(question)){
@@ -66,7 +66,7 @@ export function exampleAnswer(prompt,c){
   const recommended=[...approvals.slice(0,3).map(a=>({projectId:a.projectId,title:a.title,reason:"Pending owner review before dependent work or customer promises",sourceDocId:a.sourceDocId,person:m.project(a.projectId)?.manager})),
   ...blocked.slice(0,2).map(t=>({projectId:t.projectId,title:t.title,reason:t.blockedBy||"Recorded work blockage",sourceDocId:t.sourceDocId,person:t.owner}))].slice(0,5);
   const refs=[...new Set(recommended.map(x=>x.sourceDocId))];
-  const body='<p>For the <strong>fictional example workspace</strong>, the recommended follow-up order is pending decisions first, then blocked work—not a learned customer lifetime-value ranking. No actual phone numbers or contact availability are connected.</p>'+
+  const body='<p>For the <strong>sample workspace</strong>, the recommended follow-up order is pending decisions first, then blocked work—not a learned customer lifetime-value ranking. No actual phone numbers or contact availability are connected.</p>'+
    recommended.map((r,i)=>'<div class="prio-row"><span class="prio-index">'+(i+1)+'</span><div class="prio-main"><div class="prio-title">'+e(r.person||"Assigned owner")+' · '+e(m.project(r.projectId)?.name)+'</div><div class="prio-sub">'+e(r.title)+' — '+e(r.reason)+'</div></div>'+source(r.sourceDocId)+'</div>').join("")+
    '<p class="disclosure">Before any external customer call, check the latest approved quote and account relationship. No call was made.</p>';
   return {sources:refs,html:wrap("Who to follow up with first",body,actions(button("Review approval queue","nav","approvals","button-primary"),button("Work blockers","nav","work","button-outline")))};
@@ -75,7 +75,7 @@ export function exampleAnswer(prompt,c){
   const day=m.seed.meta.date||"2026-10-18";
   const sent=m.seed.quotes.filter(q=>q.status==="Sent"&&q.lastUpdated===day);
   const priced=sent.reduce((sum,q)=>sum+q.amountExTax,0),refs=[...new Set(sent.map(q=>q.sourceDocId))];
-  const body='<p>On the fictional dataset’s recorded date <strong>'+e(day)+'</strong>, <strong>'+sent.length+'</strong> quote version(s) were marked “Sent”, with a proposed pre-tax total of <strong>'+money(priced)+'</strong>. This is not a live count for the real current date; delivery to a customer has not been independently verified.</p>'+relevant(refs)+
+  const body='<p>On the demo workspace’s recorded date <strong>'+e(day)+'</strong>, <strong>'+sent.length+'</strong> quote version(s) were marked “Sent”, with a proposed pre-tax total of <strong>'+money(priced)+'</strong>. This is not a live count for the real current date; delivery to a customer has not been independently verified.</p>'+relevant(refs)+
    '<p class="disclosure">Drafts, accepted contracts, invoices, and cash receipts are different operational states.</p>';
   return {sources:refs,html:wrap("Recorded quotation activity",body,actions(button("Inspect quotations","nav","quotes","button-primary")))};
  }
@@ -88,7 +88,7 @@ export function exampleAnswer(prompt,c){
  }
  if(/today|priority|attention|numbers|status|brief|overview|今天|狀態|優先|待辦/.test(question)){
   const pending=m.approvals(s).filter(a=>a.status==="Pending"),blocked=m.tasks(s).filter(t=>t.status==="Blocked"),ref=[pending[0]?.sourceDocId,blocked[0]?.sourceDocId].filter(Boolean);
-  const body='<p>In this fictional operational dataset there are <strong>'+sm.pending+' pending approvals</strong> and <strong>'+sm.blocked+' blocked work items</strong> across '+sm.projects+' '+e(p.itemLabelPlural)+'. These counts update when you change work and approval state.</p><div class="pulse-grid"><div class="pulse-item"><strong>'+sm.projects+'</strong><small>'+e(p.projectLabel)+'</small></div><div class="pulse-item"><strong>'+sm.pending+'</strong><small>Pending decisions</small></div><div class="pulse-item"><strong>'+sm.blocked+'</strong><small>Blocked tasks</small></div></div>'+relevant(ref);
+  const body='<p>In this sample operations snapshot there are <strong>'+sm.pending+' pending approvals</strong> and <strong>'+sm.blocked+' blocked work items</strong> across '+sm.projects+' '+e(p.itemLabelPlural)+'. These counts update when you change work and approval state.</p><div class="pulse-grid"><div class="pulse-item"><strong>'+sm.projects+'</strong><small>'+e(p.projectLabel)+'</small></div><div class="pulse-item"><strong>'+sm.pending+'</strong><small>Pending decisions</small></div><div class="pulse-item"><strong>'+sm.blocked+'</strong><small>Blocked tasks</small></div></div>'+relevant(ref);
   return {sources:ref,html:wrap("Your business pulse",body,actions(button("Review approvals","nav","approvals","button-primary"),button("Open work","nav","work","button-outline")))};
  }
  if(/quote|margin|profit|price|cost|financial|報價|毛利|成本|利潤/.test(question)){
@@ -102,7 +102,7 @@ export function exampleAnswer(prompt,c){
   return {sources:ref,html:wrap("Blocked work",body,actions(button("Open work tracker","nav","work","button-secondary")))};
  }
  if(/supplier|lead time|inventory|material|sourcing|vendor|供應商|庫存|材料/.test(question)){
-  const body='<p>The dataset has '+sm.suppliers+' fictional suppliers. Their sample prices and lead times are not externally verified. Do not infer confirmed stock or make delivery commitments from these records.</p>'+m.seed.suppliers.slice(0,4).map(x=>'<div class="line-item"><span>'+e(x.name)+' · '+e(x.category)+'</span><strong>'+x.leadTimeDays+' sample days</strong></div>').join("")+relevant(sc.sourceIds.slice(0,2));
+  const body='<p>The dataset has '+sm.suppliers+' sample suppliers. Their sample prices and lead times are not externally verified. Do not infer confirmed stock or make delivery commitments from these records.</p>'+m.seed.suppliers.slice(0,4).map(x=>'<div class="line-item"><span>'+e(x.name)+' · '+e(x.category)+'</span><strong>'+x.leadTimeDays+' sample days</strong></div>').join("")+relevant(sc.sourceIds.slice(0,2));
   return {sources:sc.sourceIds.slice(0,2),html:wrap("Materials and supplier context",body,actions(button("Open supplier records","nav","suppliers","button-secondary")))};
  }
  if(/customer|client|reply|email|line|message|客戶|客服|回覆|訊息/.test(question)){
@@ -112,7 +112,7 @@ export function exampleAnswer(prompt,c){
  // Full-text retrieval without inventing a narrative: return candidate documents and their states.
  const words=question.replace(/[^a-z0-9\u4e00-\u9fff ]/gi," ").split(/\s+/).filter(t=>t.length>=4);
  const ranked=m.seed.documents.map(d=>({d,score:words.reduce((n,w)=>n+(d.title+" "+d.body).toLowerCase().includes(w),0)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,4);
- if(!ranked.length)return {sources:[],html:wrap("More context needed",'<p>I could not identify an adequately relevant source from this synthetic company dataset. Please search by project/job, supplier, document type or a specific business rule. I will not fabricate an answer.</p>',actions(button("Browse knowledge","nav","knowledge","button-secondary")))};
+ if(!ranked.length)return {sources:[],html:wrap("More context needed",'<p>I could not identify an adequately relevant source from this sample workspace. Please search by project/job, supplier, document type or a specific business rule. I will not fabricate an answer.</p>',actions(button("Browse knowledge","nav","knowledge","button-secondary")))};
  const sourceIds=ranked.map(x=>x.d.id),body='<p>I found '+ranked.length+' potentially relevant documents. Check their actual text, version and review status before using the information.</p>'+ranked.map(x=>documentRow(x.d)).join("");
  return {sources:sourceIds,html:wrap("Matching company documents",body,actions(button("Open knowledge search","nav","knowledge","button-secondary")))};
 }
