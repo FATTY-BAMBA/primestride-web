@@ -107,7 +107,7 @@ function gptAnswerCard(result){
  return '<div class="answer-card"><div class="suite-eyebrow">'+e(result.modelLabel||"AI model")+' · READ-ONLY DEMO ANSWER</div><div class="copilot-gpt-prose">'+paragraphs+'</div>'+
   (ids.length?'<div class="copilot-tool-sources"><strong>Inspect supporting sample records</strong><div>'+ids.map(sourceButton).join(" ")+'</div></div>':'<p class="disclosure">No cited record was returned for this conversational answer.</p>')+
   (actions.length?'<div class="answer-actions">'+actions.map(a=>'<button type="button" class="button-secondary" data-action="nav" data-value="'+a+'">'+e(labelMap[a])+' ↗</button>').join("")+'</div>':'')+
-  '<p class="disclosure">Fictional sample data · '+e(result.asOf||"2026-10-18")+' snapshot · no live customer records or actions.</p></div>';
+  '<p class="disclosure">Demo data · '+e(result.asOf||"2026-10-18")+' snapshot · sample workspace</p></div>';
 }
 async function ask(question){
  const text=String(question||"").trim();if(!text||copilotBusy)return;
@@ -124,7 +124,7 @@ async function ask(question){
   .slice(-12).map(m=>({role:m.role,content:String(m.text||"").slice(0,m.role==="user"?1200:1800)}));
  copilotBusy=true;
  const index=view.chat.length;
- view.chat.push({role:"assistant",html:'<div class="answer-card"><div class="suite-eyebrow">READ-ONLY BUSINESS TOOLS</div><p class="muted">Checking the synthetic company records and composing an answer…</p></div>',sources:[],query:text,mode:"gpt",pending:true});
+ view.chat.push({role:"assistant",html:'<div class="answer-card"><div class="suite-eyebrow">READ-ONLY BUSINESS TOOLS</div><p class="muted">Reviewing workspace data and preparing your answer…</p></div>',sources:[],query:text,mode:"gpt",pending:true});
  render();window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});
  try{
   const response=await fetch("/api/stridebrain-demo/copilot",{
@@ -252,7 +252,7 @@ async function handleDocument(file){
  }catch(err){
   if(run!==documentLoadVersion||pack.id!==sourceIndustry)return;
   documentSession={loading:false,error:String(err?.message||err),report:null,reviewNote:"",bridgeForm:null,imported:null};
-  render();toast("Unable to read file. Check the source or try a fictional sample.");
+  render();toast("Unable to read file. Check the source or try a sample file.");
  }
 }
 async function perform(el){
@@ -280,7 +280,7 @@ async function perform(el){
  else if(action==="project"){
   const key=id||value;if(!model.project(key))return;view.projectId=key;view.projectDetail=true;setPage("projects");
  }else if(action==="intakeFixture"){
-  try{downloadLocal(sampleFile(pack.id,value));toast("Fictional "+value.toUpperCase()+" sample downloaded. Select it in Document Intelligence to test.");}
+  try{downloadLocal(sampleFile(pack.id,value));toast("Sample "+value.toUpperCase()+" file downloaded. Select it in Document Intelligence to test.");}
   catch(err){toast("Cannot create sample: "+err.message);}
  }else if(action==="intakeClear"){
   if(documentSession?.report&&!confirm("Clear the extracted document and any linked temporary cost precedent?"))return;
@@ -318,7 +318,7 @@ async function perform(el){
    documentSession.imported=result;
    state.historyRequest=safeRequest(historyData,{...state.historyRequest,category:form.category,tier:form.tier,location:form.location,quantity:form.jobQuantity,scope:result.record.scope,inquiry:""});
    state.historyDraft=null;
-   event(state,"A fictional browser-only completed-cost example was added after manual review.");
+   event(state,"A sample cost example was added to this browser workspace after review.");
    save();setPage("history");
    toast("Temporary sandbox precedent added. Not a verified real-world cost.");
  }else if(action==="bridgeRemove"){
@@ -378,7 +378,7 @@ async function perform(el){
   else toast(result.reason);
  }else if(action==="approval"){
   const a=model.byApproval.get(id);if(!a)return;
-  state.approvals[id]="Approved";event(state,"Simulated approval "+id+" · "+a.projectId);save();render();toast("Internal demo approval recorded.");
+  state.approvals[id]="Approved";event(state,"Simulated approval "+id+" · "+a.projectId);save();render();toast("Sample workspace approval recorded.");
  }else if(action==="task"){
   const t=model.tasks(state).find(x=>x.id===id);if(!t)return;
   if(id===state.readiness?.reviewTaskId&&t.status!=="Complete"){
@@ -396,7 +396,7 @@ async function perform(el){
   const result=historicalEstimate(historyData,state.historyRequest);
   if(!result.ok){toast("Cannot create a draft: "+result.reason);return;}
   state.historyDraft={result,createdAt:new Date().toISOString(),fingerprint:JSON.stringify(state.historyRequest),reviewed:false,reviewedAt:null};
-  event(state,"Historical draft prepared from "+result.comparables.length+" fictional precedent records.");
+  event(state,"Historical draft prepared from "+result.comparables.length+" sample cost records.");
   save();render();toast("Draft created. Human review is required.");
  }else if(action==="historyApprove"){
   const draft=state.historyDraft;
@@ -431,7 +431,7 @@ async function perform(el){
  }else if(action==="reviewFeedback"){
   const result=markFeedbackReviewed(state,id);if(result.ok){save();render();toast("Review recorded; source text was not changed.");}
  }else if(action==="reset"){
-  if(!confirm("Reset this industry's simulated approvals, tasks, feedback and drafts?"))return;
+  if(!confirm("Reset this sample workspace's approvals, tasks, feedback and drafts?"))return;
   state=resetDemoState(pack);state.historyRequest=historicalDefaults(historyData);state.readiness.inputs=initialReadiness(pack.id);view.chat=[];view.docId=null;view.quoteId=null;view.projectDetail=false;setPage("overview");toast("Sample state restored.");
  }
 }
