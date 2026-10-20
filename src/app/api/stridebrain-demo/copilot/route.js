@@ -3,6 +3,7 @@ import {createHash} from "node:crypto";
 import {enforceDemoQuota} from "@/lib/stridebrain-demo/demo-quota";
 import {enforceSupabaseDemoQuota} from "@/lib/stridebrain-demo/supabase-quota";
 import {tokenMatches,isStaffSessionValid,SESSION_COOKIE} from "@/lib/stridebrain-demo/staff-session";
+import {guestSessionIdentity,GUEST_COOKIE} from "@/lib/stridebrain-demo/guest-session";
 import { runGptCopilot } from "@/lib/stridebrain-demo/copilot-runner";
 import { runOpenRouterCopilot } from "@/lib/stridebrain-demo/openrouter-runner";
 import { validIndustry } from "@/lib/stridebrain-demo/copilot-tools";
@@ -45,7 +46,10 @@ export async function POST(request){
  const origin=request.headers.get("origin");
  if(origin&&origin!==new URL(request.url).origin)
   return json(403,{error:"Cross-origin requests are not allowed.",code:"ORIGIN_DENIED"});
- if(!(isStaffSessionValid(request.cookies.get(SESSION_COOKIE)?.value||"")||tokenMatches(request.headers.get("x-stridebrain-operator-token")||"")))
+ const staffCookieValid=isStaffSessionValid(request.cookies.get(SESSION_COOKIE)?.value||"");
+ const staffTokenValid=tokenMatches(request.headers.get("x-stridebrain-operator-token")||"");
+ const guestIdentity=guestSessionIdentity(request.cookies.get(GUEST_COOKIE)?.value||"");
+ if(!(staffCookieValid||staffTokenValid||guestIdentity))
   return json(401,{error:"Internal demo access was not authorized.",code:"DEMO_ACCESS_DENIED"});
  if((Number(request.headers.get("content-length"))||0)>24000)
   return json(413,{error:"This chat request is too large.",code:"REQUEST_TOO_LARGE"});
@@ -58,14 +62,18 @@ export async function POST(request){
  const parsed=parseChat(body);
  if(!parsed)return json(400,{error:"Expected an approved model, industry and bounded conversation.",code:"INVALID_CHAT"});
  const selected=findAllowedModel(parsed.modelId);
+ if(guestIdentity&&!staffCookieValid&&!staffTokenValid){
+  const guestModels=(process.env.STRIDEBRAIN_DEMO_GUEST_ALLOWED_MODELS||"").split(",").map(s=>s.trim()).filter(Boolean);
+  if(!guestModels.includes(parsed.modelId))return json(403,{code:"GUEST_MODEL_NOT_ALLOWED",error:"This model is not enabled for the guest preview."});
+ }
  if(!selected||!isModelAllowed(parsed.modelId,process.env.STRIDEBRAIN_DEMO_ALLOWED_MODELS||""))
   return json(403,{error:"This model has not been enabled for the staff demo.",code:"MODEL_NOT_ALLOWED"});
  const providerKey=selected.provider==="openrouter"?process.env.OPENROUTER_API_KEY:process.env.OPENAI_API_KEY;
  if(!providerKey)return json(503,{error:"The selected provider is not configured by the administrator.",code:"MODEL_NOT_CONFIGURED"});
  // Staff-only by default. If distributed quotas are activated, quota exhaustion
  // or infrastructure failure blocks provider spend before starting any stream.
- const authorizedIdentity=request.cookies.get(SESSION_COOKIE)?.value||request.headers.get("x-stridebrain-operator-token")||"";
- const sessionId=createHash("sha256").update(authorizedIdentity).digest("hex");
+ const authorizedIdentity=staffCookieValid?request.cookies.get(SESSION_COOKIE)?.value:staffTokenValid?request.headers.get("x-stridebrain-operator-token"):guestIdentity;
+ const sessionId=guestIdentity&&!staffCookieValid&&!staffTokenValid?guestIdentity:createHash("sha256").update(authorizedIdentity||"").digest("hex");
  const quota=process.env.STRIDEBRAIN_DEMO_QUOTA_BACKEND==="supabase"?await enforceSupabaseDemoQuota({sessionId}):await enforceDemoQuota({sessionId});
  if(!quota.ok)return json(["DEMO_QUOTA_EXCEEDED","DEMO_GLOBAL_QUOTA_EXCEEDED"].includes(quota.code)?429:503,{
   code:quota.code,
