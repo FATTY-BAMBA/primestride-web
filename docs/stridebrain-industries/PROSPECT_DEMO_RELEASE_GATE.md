@@ -33,3 +33,15 @@ Before enabling any anonymous prospect demo:
 
 ## Regression automation
 `.github/workflows/stridebrain-demo.yml` checks browser module syntax and runs the StrideBrain Node test suite on branch pushes/PRs. A successful build is not a substitute for browser acceptance or provider billing validation.
+
+
+## Next setup: protected Preview Redis quota backend (not configured as of 2026-10-20)
+1. In Vercel, provision a Redis/Upstash-compatible REST database, or use a vetted managed Redis REST endpoint. Grant access only to the `primestride-web` Preview environment. Confirm the endpoint accepts Redis `EVAL` via the `/pipeline` REST interface.
+2. Add server-only Preview variables: `STRIDEBRAIN_DEMO_REDIS_REST_URL` (HTTPS base URL) and `STRIDEBRAIN_DEMO_REDIS_REST_TOKEN`. Never paste credentials into chat or set NEXT_PUBLIC_ variables.
+3. Set `STRIDEBRAIN_DEMO_MAX_DAILY_REQUESTS=100` and `STRIDEBRAIN_DEMO_GLOBAL_DAILY_REQUESTS=500` in Preview if desired; these match code defaults.
+4. First verify storage with isolated mock and staging requests before activating `STRIDEBRAIN_DEMO_QUOTA_ENABLED=true`; when enabled, missing or unreachable Redis intentionally blocks AI responses.
+5. Redeploy the correct `feature/stridebrain-interiors-flagship-demo` branch. A staff-only `GET /api/stridebrain-demo/copilot/quota-status` shows configuration state, not secrets, after successful browser staff-session authentication.
+6. Run integration acceptance tests: 100th session request allowed, 101st blocked; 500th global request allowed, 501st blocked; backend outage blocks new provider requests. Use disposable test limits such as 2 and 3 rather than consuming paid calls for quota tests. Restore 100/500 after testing.
+7. Before prospect access, add monetary provider-side budgets, global concurrency controls, role-bound visitor sessions and cross-session isolation. Do not open staff keys or session endpoints publicly.
+
+Status: infrastructure provisioning and live Redis integration are not yet verified. No environment changes are made by the repository updates.
