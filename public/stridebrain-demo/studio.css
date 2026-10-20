@@ -487,3 +487,15 @@ body{background:#f7f9f6;font-size:14px}
 /* Stream draft text stays escaped/untrusted until the validated final answer arrives. */
 .sb-copilot .copilot-stream-text{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.75;font-size:14px;color:#263d33;min-height:48px}
 .sb-copilot .copilot-stream-text:empty::after{content:"Preparing response…";color:#738778}
+
+
+/* Source-grounded Copilot result tables */
+.copilot-gpt-prose .copilot-table-scroll{max-width:100%;overflow-x:auto;margin:18px 0 22px;border:1px solid #dce7df;border-radius:13px;background:#fff;box-shadow:0 2px 12px rgba(19,49,36,.035);scrollbar-width:thin}
+.copilot-gpt-prose .copilot-result-table{width:100%;min-width:590px;border-collapse:separate;border-spacing:0;text-align:left;font-size:13px;line-height:1.5}
+.copilot-gpt-prose .copilot-result-table th{padding:13px 16px;background:#f0f6f1;color:#476457;font-weight:750;font-size:12px;white-space:nowrap;border-bottom:1px solid #dae6dd}
+.copilot-gpt-prose .copilot-result-table td{padding:13px 16px;color:#314c3e;vertical-align:top;border-bottom:1px solid #edf2ed;overflow-wrap:anywhere}
+.copilot-gpt-prose .copilot-result-table tbody tr:last-child td{border-bottom:0}
+.copilot-gpt-prose .copilot-result-table tbody tr:nth-child(even){background:#fafcfb}
+.copilot-gpt-prose .copilot-result-table tbody tr:hover{background:#f4f9f6}
+.copilot-gpt-prose .copilot-table-scroll:focus-visible{outline:3px solid rgba(18,122,83,.3);outline-offset:2px}
+@media(max-width:630px){.copilot-gpt-prose .copilot-result-table{font-size:12px;min-width:540px}.copilot-gpt-prose .copilot-result-table th,.copilot-gpt-prose .copilot-result-table td{padding:10px 12px}}
