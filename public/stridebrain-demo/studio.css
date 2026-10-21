@@ -567,3 +567,9 @@ body{font-size:16px;line-height:1.55}
  .sb-brief-item .button-secondary{font-size:14px}
  .copilot-gpt-prose .copilot-result-table{font-size:13px}
 }
+
+/* Evidence-first owner brief: explanation and provenance stay readable. */
+.sb-brief-reason{font-size:13px!important;line-height:1.6;color:#486e5d;margin:5px 0!important}
+.sb-brief-source{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:6px}
+.sb-brief-item>button{flex-shrink:0;cursor:pointer}
+@media(max-width:650px){.sb-brief-reason{font-size:14px!important}.sb-brief-source{max-width:100%}}
