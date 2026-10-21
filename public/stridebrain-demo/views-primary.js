@@ -56,12 +56,12 @@ export function copilot(c){
  out+='<div class="sb-conversation">'+v.chat.map((msg,i)=>msg.role==="user"?
   '<div class="chat-message">'+e(msg.text)+'</div>':
   '<div class="chat-answer"><div class="chat-answer-head"><span class="sb-answer-symbol">✳</span> STRIDEBRAIN · '+(msg.mode==="gpt"?e(msg.modelLabel||"CONNECTED MODEL")+" / WORKSPACE TOOLS":"SOURCE-LINKED DEMO DATA")+'</div>'+
-  msg.html+(msg.pending?'':'<div class="feedback-row"><span class="disclosure">Was this useful?</span><span><button type="button" class="feedback-btn" data-action="feedback" data-kind="Helpful" data-index="'+i+'">✓ Helpful</button> <button type="button" class="feedback-btn" data-action="feedback" data-kind="Needs review" data-index="'+i+'">⚑ Needs review</button></span></div>')+'</div>'
+  msg.html+(msg.pending?'':'<div class="feedback-row"><span class="disclosure">'+(zh?"這個回答有幫助嗎？":"Was this useful?")+'</span><span><button type="button" class="feedback-btn" data-action="feedback" data-kind="Helpful" data-index="'+i+'">'+(zh?"✓ 有幫助":"✓ Helpful")+'</button> <button type="button" class="feedback-btn" data-action="feedback" data-kind="Needs review" data-index="'+i+'">'+(zh?"⚑ 需要改善":"⚑ Needs review")+'</button></span></div>')+'</div>'
  ).join("")+'</div>';
  const last=v.chat[v.chat.length-1];
  if(last?.role==="assistant"&&!last.pending&&last.mode==="gpt"){
   const next=followUpsFor(last.query,p.id,last.actions||[],last.text||"");
-  out+='<div class="sb-context-ideas sb-followup-ideas"><span class="sb-context-label">CONTINUE INVESTIGATING</span><div class="sb-context-idea-row">'+next.map(item=>
+  out+='<div class="sb-context-ideas sb-followup-ideas"><span class="sb-context-label">'+(zh?"繼續深入了解":"CONTINUE INVESTIGATING")+'</span><div class="sb-context-idea-row">'+next.map(item=>
    '<button type="button" data-action="ask" data-prompt="'+e(item.prompt)+'" class="sb-context-idea"'+hideIfBusy+'>'+e(item.label)+' ↗</button>'
   ).join("")+'</div></div>';
  }
@@ -79,8 +79,8 @@ export function copilot(c){
      '<button type="button" class="sb-model-trigger" data-action="modelMenu" aria-haspopup="listbox" aria-expanded="'+(menuOpen?"true":"false")+'" aria-controls="sb-model-menu" title="Choose an approved AI model"'+hideIfBusy+'>'+
       '<span class="sb-model-label">'+e(model.label)+'</span><span class="sb-model-arrow">⌄</span></button>'+
      (menuOpen?'<div class="sb-model-menu" id="sb-model-menu" role="listbox" aria-label="Approved model choices">'+
-      '<div class="sb-model-menu-heading">CHOOSE AI MODEL</div>'+menu+
-      '<div class="sb-model-menu-note">Available models depend on your workspace access. Business tools remain read-only.</div></div>':'')+
+      '<div class="sb-model-menu-heading">'+(zh?"選擇 AI 模型":"CHOOSE AI MODEL")+'</div>'+menu+
+      '<div class="sb-model-menu-note">'+(zh?"可用模型依工作區權限而定；所有業務工具目前僅供查詢。":"Available models depend on your workspace access. Business tools remain read-only.")+'</div></div>':'')+
     '</div>'+
     '<button type="submit" class="sb-send" aria-label="Send question" title="Send question"'+hideIfBusy+'>'+(busy?"···":"↑")+'</button>'+
    '</div>'+
@@ -89,7 +89,7 @@ export function copilot(c){
    '<button type="button" class="sb-shortcut" data-action="ask" data-prompt="'+e(item.prompt)+'" title="'+e(item.description)+'"'+hideIfBusy+'><span aria-hidden="true">'+e(item.glyph)+'</span>'+e(item.label)+'</button>'
  ).join("")+'</div>';
  if(empty){
-  out+='<div class="sb-context-ideas"><span class="sb-context-label">SUGGESTED FOR '+e(p.companyEn.toUpperCase())+'</span>'+
+  out+='<div class="sb-context-ideas"><span class="sb-context-label">'+(zh?"你可以這樣問 · ":"SUGGESTED FOR ")+''+e(p.companyEn.toUpperCase())+'</span>'+
    '<div class="sb-context-idea-row">'+ideas.map(item=>
     '<button type="button" data-action="ask" data-prompt="'+e(item.prompt)+'" class="sb-context-idea"'+hideIfBusy+'><span>'+e(item.glyph)+'</span>'+e(item.label)+' ↗</button>'
    ).join("")+'</div></div>';
