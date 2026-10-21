@@ -24,12 +24,13 @@ export function overview(c){
 }
 export function copilot(c){
  const {pack:p,view:v,copilotSession:session={}}=c;
+ const zh=c.locale!=="en";
  const isConnectedMode=session.mode==="gpt",isGuest=!!session.guest,connected=!!session.connected,busy=!!session.busy;
  const empty=v.chat.length===0,model=findAllowedModel(session.selectedModelId)||findAllowedModel(DEFAULT_MODEL_ID);
  const menuOpen=!!session.modelMenuOpen&&!busy;
  const greetingHour=new Date().getHours();
- const greeting=greetingHour<12?"Good morning":greetingHour<17?"Good afternoon":"Good evening";
- const displayStatus=isConnectedMode?(connected?"Connected · Read-only workspace tools":"AI session selected · Connection not yet verified"):"Sample answers · AI provider not connected";
+ const greeting=zh?(greetingHour<12?"早安":greetingHour<17?"午安":"晚安"):(greetingHour<12?"Good morning":greetingHour<17?"Good afternoon":"Good evening");
+ const displayStatus=isConnectedMode?(connected?(zh?"已連線 · 唯讀工作區工具":"Connected · Read-only workspace tools"):(zh?"AI 已啟用 · 尚未確認連線":"AI session selected · Connection not yet verified")):(zh?"示範回答 · 尚未連接 AI 模型":"Sample answers · AI provider not connected");
  const brandLabel=isConnectedMode?(isGuest?"STRIDEBRAIN AI COPILOT":"STAFF AI COPILOT"):"DETERMINISTIC EXAMPLE COPILOT";
  const quick=quickActionsFor(p.id),ideas=ideasFor(p.id);
  const hideIfBusy=busy?" disabled":"";
@@ -46,11 +47,11 @@ export function copilot(c){
   out+='<section class="sb-copilot-welcome">'+
    '<div class="sb-copilot-eyebrow"><span class="sb-brand-spark">✳</span> STRIDEBRAIN · '+e(p.companyEn.toUpperCase())+'</div>'+
    '<h1>'+e(greeting)+', '+e(p.owner)+'.</h1>'+
-   '<p>What can I help with across your '+e(p.short.toLowerCase())+' business today?</p>'+
+   '<p>'+(zh?'今天想先了解哪些專案、報價或待辦事項？':'What can I help with across your '+e(p.short.toLowerCase())+' business today?')+'</p>'+
    '</section>';
  }else{
-  out+='<div class="sb-copilot-session-head"><div><div class="sb-copilot-eyebrow">STRIDEBRAIN · '+e(p.companyEn.toUpperCase())+'</div><h1>Business conversation</h1><p>Ask follow-ups, explore sources, and move into the right workflow.</p></div>'+
-    '<button type="button" class="button-outline sb-new-chat" data-action="newChat">＋ New conversation</button></div>';
+  out+='<div class="sb-copilot-session-head"><div><div class="sb-copilot-eyebrow">STRIDEBRAIN · '+e(p.companyEn.toUpperCase())+'</div><h1>'+(zh?"營運對話":"Business conversation")+'</h1><p>'+(zh?"追問細節、查看資料來源，直接進入相關作業。":"Ask follow-ups, explore sources, and move into the right workflow.")+'</p></div>'+
+    '<button type="button" class="button-outline sb-new-chat" data-action="newChat">'+(zh?"＋ 新對話":"＋ New conversation")+'</button></div>';
  }
  out+='<div class="sb-conversation">'+v.chat.map((msg,i)=>msg.role==="user"?
   '<div class="chat-message">'+e(msg.text)+'</div>':
@@ -67,11 +68,11 @@ export function copilot(c){
  out+='<div class="sb-copilot-compose">';
  out+='<form id="ask-form" class="sb-composer">'+
   '<label class="sr-only" for="sb-composer-input">Ask StrideBrain</label>'+
-  '<textarea id="sb-composer-input" data-copilot-input rows="2" maxlength="1200" placeholder="Ask about quotes, priorities, suppliers, or your projects..."'+hideIfBusy+'>'+e(session.draft||"")+'</textarea>'+
+  '<textarea id="sb-composer-input" data-copilot-input rows="2" maxlength="1200" placeholder="'+(zh?"詢問報價、待辦事項、供應商或專案進度…":"Ask about quotes, priorities, suppliers, or your projects...")+'"'+hideIfBusy+'>'+e(session.draft||"")+'</textarea>'+
   '<div class="sb-composer-bottom">'+
    '<div class="sb-composer-left">'+
     '<button type="button" data-action="nav" data-value="intake" class="sb-composer-add" aria-label="Open Document Intelligence" title="Open Document Intelligence (files are not attached to Copilot)">＋</button>'+
-    '<span class="sb-composer-hint">Enter to send · Shift+Enter for a new line</span>'+
+    '<span class="sb-composer-hint">'+(zh?"Enter 送出 · Shift+Enter 換行":"Enter to send · Shift+Enter for a new line")+'</span>'+
    '</div>'+
    '<div class="sb-composer-right">'+
     '<div class="sb-model-container">'+
