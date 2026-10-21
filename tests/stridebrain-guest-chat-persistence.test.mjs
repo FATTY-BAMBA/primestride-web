@@ -26,3 +26,5 @@ test("persist only bounded conversation content, not browser-uploaded files",()=
 });
 
 test("guest chat scope is required before storage or restoration",()=>{assert.match(source,/guestChatScope\|\|""/);assert.match(source,/guestChatScope=info.chatScope/);});
+
+test("authenticated staff chat restores on refresh independently of guest",()=>{assert.match(source,/guestChatScope=info.chatScope;copilotMode="gpt";copilotConnected=false;restoreGuestChat\(\)/);assert.match(source,/copilotGuest\?"guest:":"staff:"/);});
