@@ -53,4 +53,5 @@ test("invalid invitation keeps guest on entry page",async()=>{
  assert.equal(app.redirects.length,0);
  assert.match(app.nodes.status.textContent,/找不到此體驗碼/);
 });
-\ntest("Traditional Chinese is the default guest language and English remains available",()=>{assert.match(source,/let language="zh-TW"/);assert.match(source,/applyLanguage\("zh-TW"\)/);assert.match(source,/data-language/);assert.match(source,/en:\{/);});\n
+
+test("Traditional Chinese is the default guest language and English remains available",()=>{assert.match(source,/let language="zh-TW"/);assert.match(source,/applyLanguage\("zh-TW"\)/);assert.match(source,/data-language/);assert.match(source,/en:\{/);});
