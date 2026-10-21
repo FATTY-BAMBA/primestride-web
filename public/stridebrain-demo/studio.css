@@ -601,3 +601,15 @@ body{font-size:16px;line-height:1.55}
 .sb-journey-link{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:20px 23px;border:1px solid #d4e4d8;background:#f2f8f3;border-radius:15px;margin-top:20px}
 .sb-journey-link strong{font-size:16px}.sb-journey-link p{font-size:14px;line-height:1.6;margin:5px 0 0}
 @media(max-width:780px){.sb-margin-grid{grid-template-columns:1fr}.sb-journey-link{flex-wrap:wrap}.sb-journey-link .button-primary{width:100%}}
+
+/* Evidence-backed cost coverage review, not an automatic quotation adjustment. */
+.sb-cost-coverage{padding:24px;background:#fffcf5;border:1px solid #eadfc8;border-radius:16px}
+.sb-cost-coverage h2{font-size:clamp(22px,2.3vw,28px);margin:9px 0}
+.sb-cost-coverage>p,.sb-coverage-empty{font-size:14px;line-height:1.7;color:#685c49}
+.sb-cost-coverage-row{display:flex;align-items:center;gap:16px;padding:16px 0;border-top:1px solid #eadfca}
+.sb-cost-coverage-row>div{flex:1;min-width:0}
+.sb-cost-coverage-row strong{font-size:16px}
+.sb-cost-coverage-row p{font-size:14px;line-height:1.65;margin:5px 0}
+.sb-cost-coverage-row .button-secondary{flex-shrink:0}
+.sb-coverage-empty{padding:15px;background:white;border-radius:10px}
+@media(max-width:700px){.sb-cost-coverage{padding:17px}.sb-cost-coverage-row{flex-wrap:wrap}.sb-cost-coverage-row .button-secondary{width:100%}}
