@@ -1,4 +1,5 @@
 import {NextResponse} from "next/server";
+import {createHash} from "node:crypto";
 import {tokenMatches,createStaffSession,isStaffSessionValid,cookieSettings,SESSION_COOKIE} from "@/lib/stridebrain-demo/staff-session";
 export const runtime="nodejs";
 export const dynamic="force-dynamic";
@@ -7,7 +8,9 @@ function reply(data,status=200){return NextResponse.json(data,{status,headers});
 function validOrigin(request){const origin=request.headers.get("origin");return !origin||origin===new URL(request.url).origin;}
 export async function GET(request){
  if(process.env.STRIDEBRAIN_DEMO_GPT_ENABLED!=="true")return reply({active:false});
- return reply({active:isStaffSessionValid(request.cookies.get(SESSION_COOKIE)?.value||"")});
+ const cookie=request.cookies.get(SESSION_COOKIE)?.value||"";
+ const active=isStaffSessionValid(cookie);
+ return reply({active,chatScope:active?createHash("sha256").update("stridebrain-staff-chat:"+cookie).digest("hex").slice(0,24):null});
 }
 export async function POST(request){
  if(!validOrigin(request))return reply({error:"Invalid origin"},403);
