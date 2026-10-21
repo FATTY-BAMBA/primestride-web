@@ -573,3 +573,15 @@ body{font-size:16px;line-height:1.55}
 .sb-brief-source{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:6px}
 .sb-brief-item>button{flex-shrink:0;cursor:pointer}
 @media(max-width:650px){.sb-brief-reason{font-size:14px!important}.sb-brief-source{max-width:100%}}
+
+/* Owner risk radar — observed records, not predicted loss. */
+.sb-risk-radar{padding:23px;border:1px solid #e5d9bd;border-radius:16px;background:#fffdf7}
+.sb-risk-radar h2{font-size:clamp(23px,2.4vw,29px);margin:8px 0}
+.sb-risk-radar>p{font-size:14px;line-height:1.6;color:#735f43}
+.sb-risk-item{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 0;border-bottom:1px solid #eee6d6}
+.sb-risk-item>div{flex:1;min-width:0}
+.sb-risk-item strong{font-size:16px;display:block}
+.sb-risk-item small{font-size:13px;color:#8a6b39}
+.sb-risk-item p{font-size:14px;line-height:1.6;margin:8px 0;color:#635946}
+.sb-risk-warning{font-weight:650}
+@media(max-width:650px){.sb-risk-radar{padding:17px}.sb-risk-item{flex-wrap:wrap}.sb-risk-item .button-secondary{width:100%}}
