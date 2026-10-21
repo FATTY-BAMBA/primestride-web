@@ -11,7 +11,7 @@ test("Taiwanese-first workspace has persistable, accessible bilingual selector",
  assert.match(app,/document\.documentElement\.lang/);
 });
 test("owner brief uses project-linked approvals and distinguishes sample snapshot",()=>{
- assert.match(primary,/m\.approvals\(s\)\.filter/);
+ assert.match(primary,/operationalSignals\(m,s\)/);
  assert.match(primary,/m\.project\(a\.projectId\)/);
  assert.match(primary,/每日營運晨報/);
  assert.match(primary,/不是即時|非即時監控/);
