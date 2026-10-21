@@ -18,6 +18,21 @@ import {getReadinessPack,initialReadiness,normalizeReadinessInput,evaluateReadin
 import {validateIndustryEvidence} from "./industry-evidence.js";
 import {validateHistory,historicalDefaults,safeRequest,historicalEstimate,estimateMarkdown} from "./historical-estimator.js";
 const $=id=>document.getElementById(id);
+let interfaceLocale="zh-TW";
+try{interfaceLocale=sessionStorage.getItem("stridebrain-interface-locale")==="en"?"en":"zh-TW";}catch{}
+function applyWorkspaceLanguage(){
+ document.documentElement.lang=interfaceLocale==="en"?"en":"zh-Hant";
+ const labels={overview:["總覽","Overview"],copilot:["StrideBrain 助理","StrideBrain Copilot"],projects:["專案管理","Projects"],knowledge:["知識中心","Knowledge hub"],service:["客戶服務","Customer service"],quotes:["報價管理","Quotations"],history:["歷史成本估價","Estimate from history"],work:["工作單","Work orders"],suppliers:["材料與供應商","Materials & suppliers"],approvals:["待審核事項","Approvals"],analytics:["營運分析","Analytics"],readiness:["作業檢查","Operational checks"],intake:["文件智慧整理","Document intelligence"],playbook:["產業作業指引","Industry playbook"],learning:["回饋與改善","Learning & feedback"]};
+ for(const [name,pair] of Object.entries(labels)){
+  const btn=document.querySelector('[data-action="nav"][data-value="'+name+'"]');if(!btn)continue;
+  const text=btn.querySelector("#nav-entities,#nav-quotations,#nav-work,#nav-materials");
+  if(text)text.textContent=pair[interfaceLocale==="en"?1:0];
+  else for(const node of btn.childNodes)if(node.nodeType===Node.TEXT_NODE&&node.textContent.trim()){node.textContent=" "+pair[interfaceLocale==="en"?1:0]+" ";break;}
+ }
+ for(const btn of document.querySelectorAll("[data-action=language]"))btn.setAttribute("aria-pressed",String(btn.dataset.value===interfaceLocale));
+ const page=labels[view.page];if(page)$("page-name").textContent=page[interfaceLocale==="en"?1:0];
+}
+
 const requested=new URLSearchParams(location.search).get("industry")||"interior";
 let pack=getPack(requested),model=null,state=null,historyData=null,industryEvidence=null,documentSession=null,toastHandle=null,documentLoadVersion=0;
 let copilotGuest=false,guestChatScope=null;
@@ -28,7 +43,7 @@ function toast(message){
  const el=$("toast");el.textContent=message;el.classList.add("visible");
  if(toastHandle)clearTimeout(toastHandle);toastHandle=setTimeout(()=>el.classList.remove("visible"),3500);
 }
-function context(){return {model,pack,state,view,history:historyData,industryEvidence,documentSession,copilotSession:{mode:copilotMode,guest:copilotGuest,connected:copilotConnected,busy:copilotBusy,selectedModelId,modelMenuOpen:copilotModelMenuOpen,draft:copilotDraft}};}
+function context(){return {model,pack,state,view,history:historyData,industryEvidence,documentSession,locale:interfaceLocale,copilotSession:{mode:copilotMode,guest:copilotGuest,connected:copilotConnected,busy:copilotBusy,selectedModelId,modelMenuOpen:copilotModelMenuOpen,draft:copilotDraft}};}
 const GUEST_CHAT_PREFIX="stridebrain-guest-chat-v1:";
 function guestChatKey(industry){return GUEST_CHAT_PREFIX+(copilotGuest?"guest:":"staff:")+guestChatScope+":"+industry;}
 function saveGuestChat(){
@@ -78,6 +93,7 @@ function render(){
  $("main").innerHTML=(mapping[view.page]||overview)(context())+(view.page==="intake"?historyBridgeSection(context()):"");
  $("inspector").innerHTML=renderInspector(context());
  $("page-name").textContent=pageTitle();
+ applyWorkspaceLanguage();
  document.querySelectorAll(".sidebar [data-action='nav']").forEach(b=>b.classList.toggle("active",b.dataset.value===view.page));
 }
 function updateShell(){
@@ -292,6 +308,7 @@ async function handleDocument(file){
 }
 async function perform(el){
  const action=el.dataset.action,id=el.dataset.id||"",value=el.dataset.value||"";
+ if(action==="language"){interfaceLocale=value==="en"?"en":"zh-TW";try{sessionStorage.setItem("stridebrain-interface-locale",interfaceLocale);}catch{}render();return;}
  if(action==="nav"){copilotModelMenuOpen=false;view.projectDetail=false;setPage(value);}
  else if(action==="modelMenu"){
    if(copilotBusy)return;
