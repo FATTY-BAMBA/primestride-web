@@ -15,7 +15,7 @@ test("guest messages restore after reload and industry changes",()=>{
 });
 test("new conversation persists clearing and guest signout deletes both stores",()=>{
  assert.match(source,/view\.chat=\[\];copilotDraft="";copilotModelMenuOpen=false;saveGuestChat\(\)/);
- assert.match(source,/if\(copilotGuest\)clearGuestChat\(\)/);
+ assert.match(source,/clearGuestChat\(\);/);
  assert.match(source,/key\?\.startsWith\(GUEST_CHAT_PREFIX\)/);
 });
 test("persist only bounded conversation content, not browser-uploaded files",()=>{
