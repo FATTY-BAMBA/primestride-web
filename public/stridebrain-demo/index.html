@@ -81,9 +81,9 @@ function showFailure(message){
  const retry=document.createElement("button");retry.className="button-primary";retry.textContent="重新載入 · Retry";retry.onclick=()=>location.reload();
  panel.append(title,detail,diagnostic,retry);main.replaceChildren(panel);
 }
+window.addEventListener("stridebrain:ready",()=>{completed=true;clearTimeout(timeout);},{once:true});
 try{
  await import("./app.js");
- completed=true;clearTimeout(timeout);
 }catch(error){showFailure(error?.message||"Module import failed");}
 </script>
 </body>
