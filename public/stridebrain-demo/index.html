@@ -66,6 +66,25 @@
 </div>
 <div class="evidence-overlay" id="evidence-overlay" role="dialog" aria-modal="true" aria-label="Document source evidence"></div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
-<script type="module" src="./app.js"></script>
+<script type="module">
+const loading=document.querySelector("#main .loading-screen");
+let completed=false;
+const timeout=setTimeout(()=>showFailure("Workspace startup timed out."),12000);
+function showFailure(message){
+ if(completed)return; completed=true;clearTimeout(timeout);
+ const main=document.getElementById("main");
+ if(!main||!main.querySelector(".loading-screen"))return;
+ const panel=document.createElement("div");panel.className="panel sb-boot-recovery";
+ const title=document.createElement("h2");title.textContent="無法開啟工作區 · Workspace couldn't start";
+ const detail=document.createElement("p");detail.textContent="示範程式載入失敗。請重新載入頁面；若問題持續，請將此畫面告知管理員。 / The demo could not initialize. Please retry.";
+ const diagnostic=document.createElement("code");diagnostic.textContent=String(message).slice(0,160);
+ const retry=document.createElement("button");retry.className="button-primary";retry.textContent="重新載入 · Retry";retry.onclick=()=>location.reload();
+ panel.append(title,detail,diagnostic,retry);main.replaceChildren(panel);
+}
+try{
+ await import("./app.js");
+ completed=true;clearTimeout(timeout);
+}catch(error){showFailure(error?.message||"Module import failed");}
+</script>
 </body>
 </html>
