@@ -110,20 +110,20 @@ async function loadIndustry(id){
  const next=getPack(id),previous={pack,model,state,view,historyData,industryEvidence,documentSession};
  $("main").innerHTML='<div class="loading-screen"><div class="loader-ring"></div><h2>Opening '+e(next.short)+'</h2><p>Connecting an industry pack to the shared operating workspace…</p></div>';
  try{
-  const result=await fetch(next.dataset,{cache:"no-store"});if(!result.ok)throw Error("Dataset unavailable: "+result.status);
-  const seed=await result.json();
-  const extra=await fetch("./seeds/source-enrichment.json",{cache:"no-store"});
-  if(!extra.ok)throw Error("Enriched source data unavailable: "+extra.status);
-  const enriched=await extra.json();const overrides=enriched[next.id]||{};
+  // Load independent demo assets concurrently; a stalled asset must not spin forever.
+  const assets=[next.dataset,"./seeds/source-enrichment.json","./seeds/historical-"+next.id+".json","./seeds/taiwan-industry-evidence.json"];
+  const datasets=await Promise.all(assets.map(async path=>{
+   const response=await fetch(path,{cache:"force-cache",signal:AbortSignal.timeout(12000)});
+   if(!response.ok)throw Error("Demo data unavailable ("+response.status+"): "+path);
+   return response.json();
+  }));
+  const [seed,enriched,historyPack,curated]=datasets;
+  const overrides=enriched[next.id]||{};
   for(const document of seed.documents){if(Object.prototype.hasOwnProperty.call(overrides,document.id))document.body=overrides[document.id];}
-  const historyResponse=await fetch("./seeds/historical-"+next.id+".json",{cache:"no-store"});
-  if(!historyResponse.ok)throw Error("Historical record pack unavailable: "+historyResponse.status);
-  const historyPack=await historyResponse.json();validateHistory(historyPack);
+  validateHistory(historyPack);
   const existing=new Set(seed.documents.map(d=>d.id));
   for(const document of historyPack.documents){if(!existing.has(document.id))seed.documents.push(document);}
-  const evidenceResult=await fetch("./seeds/taiwan-industry-evidence.json",{cache:"no-store"});
-  if(!evidenceResult.ok)throw Error("Curated Taiwan industry evidence unavailable: "+evidenceResult.status);
-  const curated=await evidenceResult.json();validateIndustryEvidence(curated);
+  validateIndustryEvidence(curated);
   const industryDocuments=curated.documents.filter(d=>d.industry===next.id);
   for(const document of industryDocuments){
     if(!existing.has(document.id)){seed.documents.push(document);existing.add(document.id);}
