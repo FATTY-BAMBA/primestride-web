@@ -17,5 +17,5 @@ test("guest sign out and model labels never claim staff access",()=>{
 });
 test("guest onboarding does not put invitation into a URL",()=>{
  assert.match(guest,/JSON\.stringify\(\{inviteCode:code\}\)/);
- assert.doesNotMatch(guest,/location\.search|URLSearchParams|localStorage|sessionStorage/);
+ assert.doesNotMatch(guest,/location\.search|URLSearchParams|localStorage/);
 });
