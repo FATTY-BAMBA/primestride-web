@@ -142,6 +142,7 @@ async function loadIndustry(id){
   const url=new URL(location.href);url.searchParams.set("industry",pack.id);history.replaceState({industry:pack.id},"",url);
   if(copilotMode==="gpt")restoreGuestChat();
   updateShell();render();toast(pack.name+" template loaded · "+model.seed.documents.length+" example source records.");
+  window.dispatchEvent(new Event("stridebrain:ready"));
  }catch(error){
   pack=previous.pack;model=previous.model;state=previous.state;historyData=previous.historyData;industryEvidence=previous.industryEvidence;documentSession=previous.documentSession;view=previous.view;
   if(model){updateShell();render();toast("Could not load the selected industry: "+error.message);}
