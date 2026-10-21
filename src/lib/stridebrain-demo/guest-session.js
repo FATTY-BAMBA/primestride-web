@@ -3,7 +3,7 @@ export const GUEST_COOKIE="stridebrain_demo_guest";
 const LIFETIME=24*3600;
 const dig=value=>createHash("sha256").update(value).digest("hex");
 function signingKey(){return process.env.STRIDEBRAIN_DEMO_GUEST_SESSION_SECRET||"";}
-export function guestEnabled(){return process.env.STRIDEBRAIN_DEMO_GUEST_ENABLED==="true"&&signingKey().length>=32&&process.env.STRIDEBRAIN_DEMO_QUOTA_ENABLED==="true"&&process.env.STRIDEBRAIN_DEMO_QUOTA_BACKEND==="supabase";}
+export function guestEnabled(){return process.env.STRIDEBRAIN_DEMO_GUEST_ENABLED==="true"&&signingKey().length>=32&&process.env.STRIDEBRAIN_DEMO_QUOTA_ENABLED==="true"&&process.env.STRIDEBRAIN_DEMO_QUOTA_BACKEND==="supabase"&&process.env.STRIDEBRAIN_DEMO_BUDGET_ENABLED==="true"&&process.env.STRIDEBRAIN_DEMO_CONCURRENCY_ENABLED==="true";}
 function allowedInviteHashes(now=Date.now()){
  const expirations=new Map((process.env.STRIDEBRAIN_DEMO_GUEST_INVITE_EXPIRATIONS||"").split(",").map(x=>x.trim().split(":")).filter(x=>x.length===2&&/^[a-f0-9]{64}$/.test(x[0])&&/^\d{10}$/.test(x[1])));
  return (process.env.STRIDEBRAIN_DEMO_GUEST_INVITE_HASHES||"").split(",").map(x=>x.trim().toLowerCase()).filter(hash=>/^[a-f0-9]{64}$/.test(hash)&&Number(expirations.get(hash)||0)*1000>now);
