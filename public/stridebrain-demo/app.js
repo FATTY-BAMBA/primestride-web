@@ -20,7 +20,7 @@ import {validateHistory,historicalDefaults,safeRequest,historicalEstimate,estima
 const $=id=>document.getElementById(id);
 const requested=new URLSearchParams(location.search).get("industry")||"interior";
 let pack=getPack(requested),model=null,state=null,historyData=null,industryEvidence=null,documentSession=null,toastHandle=null,documentLoadVersion=0;
-let copilotGuest=false;
+let copilotGuest=false,guestChatScope=null;
 let copilotMode="sample",copilotOperatorToken="",copilotConnected=false,copilotBusy=false,copilotRunId=0;
 let selectedModelId=DEFAULT_MODEL_ID,copilotModelMenuOpen=false,copilotDraft="";
 let view={page:"overview",projectId:null,projectDetail:false,docId:null,quoteId:null,chat:[],search:"",filter:"all",pageIndex:0,flowStep:null};
@@ -30,16 +30,16 @@ function toast(message){
 }
 function context(){return {model,pack,state,view,history:historyData,industryEvidence,documentSession,copilotSession:{mode:copilotMode,guest:copilotGuest,connected:copilotConnected,busy:copilotBusy,selectedModelId,modelMenuOpen:copilotModelMenuOpen,draft:copilotDraft}};}
 const GUEST_CHAT_PREFIX="stridebrain-guest-chat-v1:";
-function guestChatKey(industry){return GUEST_CHAT_PREFIX+industry;}
+function guestChatKey(industry){return GUEST_CHAT_PREFIX+guestChatScope+":"+industry;}
 function saveGuestChat(){
- if(!copilotGuest||!["interior","printing"].includes(pack.id))return;
+ if(!copilotGuest||!/^[a-f0-9]{24}$/.test(guestChatScope||"")||!["interior","printing"].includes(pack.id))return;
  try{
   const messages=view.chat.filter(m=>m.role==="user"||(m.role==="assistant"&&m.mode==="gpt"&&m.text)).slice(-12).map(m=>m.role==="user"?{role:"user",text:String(m.text||"").slice(0,1200)}:{role:"assistant",mode:"gpt",text:String(m.text||"").slice(0,3800),modelId:String(m.modelId||"").slice(0,100),modelLabel:String(m.modelLabel||"").slice(0,100),sourceIds:Array.isArray(m.sources)?m.sources.slice(0,12):[],actions:Array.isArray(m.actions)?m.actions.slice(0,4):[],query:String(m.query||"").slice(0,1200)});
   sessionStorage.setItem(guestChatKey(pack.id),JSON.stringify(messages));
  }catch{/* Private browsing or unavailable storage: chat remains usable in memory. */}
 }
 function restoreGuestChat(){
- if(!copilotGuest)return;
+ if(!copilotGuest||!/^[a-f0-9]{24}$/.test(guestChatScope||""))return;
  try{
   const stored=JSON.parse(sessionStorage.getItem(guestChatKey(pack.id))||"[]");
   if(!Array.isArray(stored))return;
@@ -54,7 +54,7 @@ function restoreGuestChat(){
  }catch{view.chat=[];}
 }
 function clearGuestChat(){
- try{for(const industry of ["interior","printing"])sessionStorage.removeItem(guestChatKey(industry));}catch{}
+ try{for(let i=sessionStorage.length-1;i>=0;i--){const key=sessionStorage.key(i);if(key?.startsWith(GUEST_CHAT_PREFIX))sessionStorage.removeItem(key);}}catch{}
 }
 function save(){
  // A user-opened document or derived source must never leak into persistent localStorage.
@@ -389,7 +389,7 @@ async function perform(el){
  }else if(action==="disableGpt"){
    await fetch(copilotGuest?"/api/stridebrain-demo/copilot/guest-session":"/api/stridebrain-demo/copilot/session",{method:"DELETE",credentials:"same-origin"}).catch(()=>{});
    if(copilotGuest)clearGuestChat();
-   copilotGuest=false;
+   guestChatScope=null;copilotGuest=false;
    copilotRunId++;copilotMode="sample";copilotOperatorToken="";copilotConnected=false;copilotBusy=false;copilotModelMenuOpen=false;copilotDraft="";
    view.chat=[];render();toast("Staff AI session signed out.");
  }else if(action==="projectBack"){view.projectDetail=false;render();}
@@ -579,8 +579,9 @@ async function restoreStaffPreview(){
  }catch{}
  try{
   const guest=await fetch("/api/stridebrain-demo/copilot/guest-session",{credentials:"same-origin",cache:"no-store"});
-  if(guest.ok&&(await guest.json()).active){
-   copilotGuest=true;copilotMode="gpt";copilotConnected=false;restoreGuestChat();if(model)render();
+  const info=guest.ok?await guest.json():{};
+  if(info.active&&/^[a-f0-9]{24}$/.test(info.chatScope||"")){
+   guestChatScope=info.chatScope;copilotGuest=true;copilotMode="gpt";copilotConnected=false;restoreGuestChat();if(model)render();
   }
  }catch{}
 }
