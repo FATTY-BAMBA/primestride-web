@@ -11,4 +11,5 @@ test("guest requires a valid invitation and enabled quota",()=>{setup();assert.e
 test("guest invitation revocation invalidates existing sessions",()=>{setup();const cookie=issueGuestSession(hash);process.env.STRIDEBRAIN_DEMO_GUEST_INVITE_HASHES="";assert.equal(guestSessionIdentity(cookie),null);});
 
 test("expired invitation rejects new entries and existing cookies",()=>{setup();const cookie=issueGuestSession(hash);process.env.STRIDEBRAIN_DEMO_GUEST_INVITE_EXPIRATIONS=hash+":"+Math.floor(Date.now()/1000-10);assert.equal(inviteIdentity(code),null);assert.equal(guestSessionIdentity(cookie),null);});
-\ntest("guest admission requires budget and concurrency protection",()=>{setup();process.env.STRIDEBRAIN_DEMO_BUDGET_ENABLED="false";assert.equal(guestEnabled(),false);setup();process.env.STRIDEBRAIN_DEMO_CONCURRENCY_ENABLED="false";assert.equal(guestEnabled(),false);});\n
+
+test("guest admission requires budget and concurrency protection",()=>{setup();process.env.STRIDEBRAIN_DEMO_BUDGET_ENABLED="false";assert.equal(guestEnabled(),false);setup();process.env.STRIDEBRAIN_DEMO_CONCURRENCY_ENABLED="false";assert.equal(guestEnabled(),false);});
