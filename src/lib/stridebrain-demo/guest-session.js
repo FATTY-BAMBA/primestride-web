@@ -36,3 +36,9 @@ export function guestSessionIdentity(value,now=Date.now()){
  return invites.includes(identity)?identity:null;
 }
 export const guestCookieOptions={httpOnly:true,secure:true,sameSite:"strict",path:"/api/stridebrain-demo",maxAge:LIFETIME};
+
+/** Public, non-authorizing storage namespace derived from invitation identity. */
+export function guestChatScope(identity){
+ if(!/^[a-f0-9]{64}$/.test(identity||"")||signingKey().length<32)return null;
+ return createHmac("sha256",signingKey()).update("stridebrain-guest-chat-scope-v1:"+identity).digest("hex").slice(0,24);
+}
