@@ -29,6 +29,33 @@ function toast(message){
  if(toastHandle)clearTimeout(toastHandle);toastHandle=setTimeout(()=>el.classList.remove("visible"),3500);
 }
 function context(){return {model,pack,state,view,history:historyData,industryEvidence,documentSession,copilotSession:{mode:copilotMode,guest:copilotGuest,connected:copilotConnected,busy:copilotBusy,selectedModelId,modelMenuOpen:copilotModelMenuOpen,draft:copilotDraft}};}
+const GUEST_CHAT_PREFIX="stridebrain-guest-chat-v1:";
+function guestChatKey(industry){return GUEST_CHAT_PREFIX+industry;}
+function saveGuestChat(){
+ if(!copilotGuest||!["interior","printing"].includes(pack.id))return;
+ try{
+  const messages=view.chat.filter(m=>m.role==="user"||(m.role==="assistant"&&m.mode==="gpt"&&m.text)).slice(-12).map(m=>m.role==="user"?{role:"user",text:String(m.text||"").slice(0,1200)}:{role:"assistant",mode:"gpt",text:String(m.text||"").slice(0,3800),modelId:String(m.modelId||"").slice(0,100),modelLabel:String(m.modelLabel||"").slice(0,100),sourceIds:Array.isArray(m.sources)?m.sources.slice(0,12):[],actions:Array.isArray(m.actions)?m.actions.slice(0,4):[],query:String(m.query||"").slice(0,1200)});
+  sessionStorage.setItem(guestChatKey(pack.id),JSON.stringify(messages));
+ }catch{/* Private browsing or unavailable storage: chat remains usable in memory. */}
+}
+function restoreGuestChat(){
+ if(!copilotGuest)return;
+ try{
+  const stored=JSON.parse(sessionStorage.getItem(guestChatKey(pack.id))||"[]");
+  if(!Array.isArray(stored))return;
+  view.chat=stored.slice(-12).flatMap(m=>{
+   if(m?.role==="user"&&typeof m.text==="string"&&m.text.length<=1200)return [{role:"user",text:m.text}];
+   if(m?.role==="assistant"&&m.mode==="gpt"&&typeof m.text==="string"&&m.text.length<=3800){
+    const result={answer:m.text,sourceIds:m.sourceIds,actions:m.actions,modelId:m.modelId,modelLabel:m.modelLabel};
+    return [{role:"assistant",html:gptAnswerCard(result),sources:result.sourceIds,actions:result.actions,query:m.query,modelId:result.modelId,modelLabel:result.modelLabel,text:result.answer,mode:"gpt"}];
+   }
+   return [];
+  });
+ }catch{view.chat=[];}
+}
+function clearGuestChat(){
+ try{for(const industry of ["interior","printing"])sessionStorage.removeItem(guestChatKey(industry));}catch{}
+}
 function save(){
  // A user-opened document or derived source must never leak into persistent localStorage.
  // Imported cost sources, imported quote drafts and inquiry metadata stay tab-only.
@@ -56,6 +83,7 @@ function updateShell(){
  document.title="StrideBrain · "+pack.companyEn+" | SME Demo";
 }
 async function loadIndustry(id){
+ saveGuestChat();
  copilotRunId++;copilotConnected=false;copilotOperatorToken="";copilotBusy=false;copilotModelMenuOpen=false;copilotDraft="";
  documentLoadVersion++; // cancel any in-flight local file parsing on industry switch
  const next=getPack(id),previous={pack,model,state,view,historyData,industryEvidence,documentSession};
@@ -91,6 +119,7 @@ async function loadIndustry(id){
   const preferCopilot=new URLSearchParams(location.search).get("view")==="copilot"||view.page==="copilot";
   view={page:preferCopilot?"copilot":"overview",projectId:pack.scenario.projectId,projectDetail:false,docId:null,quoteId:null,chat:[],search:"",filter:"all",pageIndex:0,flowStep:null};
   const url=new URL(location.href);url.searchParams.set("industry",pack.id);history.replaceState({industry:pack.id},"",url);
+  if(copilotGuest)restoreGuestChat();
   updateShell();render();toast(pack.name+" template loaded · "+model.seed.documents.length+" example source records.");
  }catch(error){
   pack=previous.pack;model=previous.model;state=previous.state;historyData=previous.historyData;industryEvidence=previous.industryEvidence;documentSession=previous.documentSession;view=previous.view;
@@ -118,7 +147,7 @@ async function ask(question){
  if(copilotMode!=="gpt"){
   const ans=exampleAnswer(text,context());
   view.chat.push({role:"assistant",html:ans.html,sources:ans.sources,query:text,mode:"sample",text:""});
-  render();window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});return;
+  saveGuestChat();render();window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});return;
  }
  const active=++copilotRunId,activeIndustry=pack.id,activeModel=selectedModelId;
  const recent=view.chat.filter(m=>m.role==="user"||(m.role==="assistant"&&m.mode==="gpt"&&m.text))
@@ -199,7 +228,7 @@ async function ask(question){
   view.chat[index]={role:"assistant",html:'<div class="answer-card"><div class="suite-eyebrow">AI RESPONSE INTERRUPTED</div><p>'+e(String(err?.message||"The model could not complete its answer."))+'</p><p class="disclosure">No completed AI answer was returned. Your staff session is retained; you can retry the question or choose another approved model.</p><button type="button" class="button-secondary" data-action="ask" data-prompt="'+e(text)+'">↻ Retry question</button></div>',sources:[],query:text,mode:"error",text:""};
   toast("The model response was interrupted. You can retry without entering your staff code again.");
  }finally{
-  if(active===copilotRunId){copilotBusy=false;render();window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});}
+  if(active===copilotRunId){copilotBusy=false;saveGuestChat();render();window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});}
  }
 }
 function openSource(id){
@@ -275,7 +304,7 @@ async function perform(el){
  }
  else if(action==="newChat"){
    if(copilotBusy){toast("Wait for the current answer or disconnect first.");return;}
-   copilotRunId++;view.chat=[];copilotDraft="";copilotModelMenuOpen=false;render();
+   copilotRunId++;view.chat=[];copilotDraft="";copilotModelMenuOpen=false;saveGuestChat();render();
    toast("Started a new local conversation.");
  }
  else if(action==="project"){
@@ -359,6 +388,7 @@ async function perform(el){
    }catch{toast("Could not establish a protected staff session.");}
  }else if(action==="disableGpt"){
    await fetch(copilotGuest?"/api/stridebrain-demo/copilot/guest-session":"/api/stridebrain-demo/copilot/session",{method:"DELETE",credentials:"same-origin"}).catch(()=>{});
+   if(copilotGuest)clearGuestChat();
    copilotGuest=false;
    copilotRunId++;copilotMode="sample";copilotOperatorToken="";copilotConnected=false;copilotBusy=false;copilotModelMenuOpen=false;copilotDraft="";
    view.chat=[];render();toast("Staff AI session signed out.");
@@ -550,7 +580,7 @@ async function restoreStaffPreview(){
  try{
   const guest=await fetch("/api/stridebrain-demo/copilot/guest-session",{credentials:"same-origin",cache:"no-store"});
   if(guest.ok&&(await guest.json()).active){
-   copilotGuest=true;copilotMode="gpt";copilotConnected=false;if(model)render();
+   copilotGuest=true;copilotMode="gpt";copilotConnected=false;restoreGuestChat();if(model)render();
   }
  }catch{}
 }
