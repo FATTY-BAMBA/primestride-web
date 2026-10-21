@@ -30,16 +30,16 @@ function toast(message){
 }
 function context(){return {model,pack,state,view,history:historyData,industryEvidence,documentSession,copilotSession:{mode:copilotMode,guest:copilotGuest,connected:copilotConnected,busy:copilotBusy,selectedModelId,modelMenuOpen:copilotModelMenuOpen,draft:copilotDraft}};}
 const GUEST_CHAT_PREFIX="stridebrain-guest-chat-v1:";
-function guestChatKey(industry){return GUEST_CHAT_PREFIX+guestChatScope+":"+industry;}
+function guestChatKey(industry){return GUEST_CHAT_PREFIX+(copilotGuest?"guest:":"staff:")+guestChatScope+":"+industry;}
 function saveGuestChat(){
- if(!copilotGuest||!/^[a-f0-9]{24}$/.test(guestChatScope||"")||!["interior","printing"].includes(pack.id))return;
+ if(copilotMode!=="gpt"||!/^[a-f0-9]{24}$/.test(guestChatScope||"")||!["interior","printing"].includes(pack.id))return;
  try{
   const messages=view.chat.filter(m=>m.role==="user"||(m.role==="assistant"&&m.mode==="gpt"&&m.text)).slice(-12).map(m=>m.role==="user"?{role:"user",text:String(m.text||"").slice(0,1200)}:{role:"assistant",mode:"gpt",text:String(m.text||"").slice(0,3800),modelId:String(m.modelId||"").slice(0,100),modelLabel:String(m.modelLabel||"").slice(0,100),sourceIds:Array.isArray(m.sources)?m.sources.slice(0,12):[],actions:Array.isArray(m.actions)?m.actions.slice(0,4):[],query:String(m.query||"").slice(0,1200)});
   sessionStorage.setItem(guestChatKey(pack.id),JSON.stringify(messages));
  }catch{/* Private browsing or unavailable storage: chat remains usable in memory. */}
 }
 function restoreGuestChat(){
- if(!copilotGuest||!/^[a-f0-9]{24}$/.test(guestChatScope||""))return;
+ if(copilotMode!=="gpt"||!/^[a-f0-9]{24}$/.test(guestChatScope||""))return;
  try{
   const stored=JSON.parse(sessionStorage.getItem(guestChatKey(pack.id))||"[]");
   if(!Array.isArray(stored))return;
@@ -119,7 +119,7 @@ async function loadIndustry(id){
   const preferCopilot=new URLSearchParams(location.search).get("view")==="copilot"||view.page==="copilot";
   view={page:preferCopilot?"copilot":"overview",projectId:pack.scenario.projectId,projectDetail:false,docId:null,quoteId:null,chat:[],search:"",filter:"all",pageIndex:0,flowStep:null};
   const url=new URL(location.href);url.searchParams.set("industry",pack.id);history.replaceState({industry:pack.id},"",url);
-  if(copilotGuest)restoreGuestChat();
+  if(copilotMode==="gpt")restoreGuestChat();
   updateShell();render();toast(pack.name+" template loaded · "+model.seed.documents.length+" example source records.");
  }catch(error){
   pack=previous.pack;model=previous.model;state=previous.state;historyData=previous.historyData;industryEvidence=previous.industryEvidence;documentSession=previous.documentSession;view=previous.view;
@@ -388,7 +388,7 @@ async function perform(el){
    }catch{toast("Could not establish a protected staff session.");}
  }else if(action==="disableGpt"){
    await fetch(copilotGuest?"/api/stridebrain-demo/copilot/guest-session":"/api/stridebrain-demo/copilot/session",{method:"DELETE",credentials:"same-origin"}).catch(()=>{});
-   if(copilotGuest)clearGuestChat();
+   clearGuestChat();
    guestChatScope=null;copilotGuest=false;
    copilotRunId++;copilotMode="sample";copilotOperatorToken="";copilotConnected=false;copilotBusy=false;copilotModelMenuOpen=false;copilotDraft="";
    view.chat=[];render();toast("Staff AI session signed out.");
@@ -573,8 +573,9 @@ async function restoreStaffPreview(){
  // a guest invitation. Staff must never be silently downgraded to guest mode.
  try{
   const response=await fetch("/api/stridebrain-demo/copilot/session",{credentials:"same-origin",cache:"no-store"});
-  if(response.ok&&(await response.json()).active){
-   copilotGuest=false;copilotMode="gpt";copilotConnected=false;if(model)render();return;
+  const info=response.ok?await response.json():{};
+  if(info.active&&/^[a-f0-9]{24}$/.test(info.chatScope||"")){
+   copilotGuest=false;guestChatScope=info.chatScope;copilotMode="gpt";copilotConnected=false;restoreGuestChat();if(model)render();return;
   }
  }catch{}
  try{
