@@ -26,7 +26,7 @@ test("disabled guest flag shows sample workspace path without login",async()=>{
  const app=setup({data:{active:false,available:false}});
  await tick();
  assert.equal(app.nodes.submit.disabled,true);
- assert.match(app.nodes.status.textContent,/sample workspace/);
+ assert.match(app.nodes.status.textContent,/示範工作區/);
  assert.equal(app.redirects.length,0);
 });
 test("returning guest is sent to Copilot without account signup",async()=>{
@@ -51,5 +51,6 @@ test("invalid invitation keeps guest on entry page",async()=>{
  app.nodes.code.value="x".repeat(30);
  await app.handlers.submit({preventDefault(){}});
  assert.equal(app.redirects.length,0);
- assert.match(app.nodes.status.textContent,/not recognized/);
+ assert.match(app.nodes.status.textContent,/找不到此體驗碼/);
 });
+\ntest("Traditional Chinese is the default guest language and English remains available",()=>{assert.match(source,/let language="zh-TW"/);assert.match(source,/applyLanguage\("zh-TW"\)/);assert.match(source,/data-language/);assert.match(source,/en:\{/);});\n
