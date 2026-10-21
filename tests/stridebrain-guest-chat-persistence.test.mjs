@@ -9,7 +9,7 @@ test("guest chat is tab-only and separated by industry",()=>{
  assert.doesNotMatch(source,/localStorage\.setItem\(guestChatKey/);
 });
 test("guest messages restore after reload and industry changes",()=>{
- assert.match(source,/if\(copilotGuest\)restoreGuestChat\(\)/);
+ assert.match(source,/if\(copilotMode==="gpt"\)restoreGuestChat\(\)/);
  assert.match(source,/copilotGuest=true;copilotMode="gpt";copilotConnected=false;restoreGuestChat\(\)/);
  assert.match(source,/async function loadIndustry\(id\)\{\s*saveGuestChat\(\)/);
 });
