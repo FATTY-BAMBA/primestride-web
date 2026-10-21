@@ -4,7 +4,7 @@ Guest sessions are signed HttpOnly SameSite=Strict 24-hour cookies. Invite codes
 Required Preview-only server settings before staged QA:
 - `STRIDEBRAIN_DEMO_GUEST_ENABLED=true` (currently **unset**, remains disabled)
 - `STRIDEBRAIN_DEMO_GUEST_SESSION_SECRET` (independent random secret, at least 32 characters)
-- `STRIDEBRAIN_DEMO_GUEST_INVITE_HASHES` (comma-separated SHA-256 digests of unique long invitation codes; never commit plaintext codes)
+- `STRIDEBRAIN_DEMO_GUEST_INVITE_HASHES` (comma-separated SHA-256 digests of unique long invitation codes; never commit plaintext codes)\n- `STRIDEBRAIN_DEMO_GUEST_INVITE_EXPIRATIONS` (required: comma-separated `<sha256 hash>:<UTC Unix expiry seconds>` pairs; missing or expired entries fail closed). Removing a hash or letting its expiration elapse invalidates both new invitations and existing browser sessions.
 - `STRIDEBRAIN_DEMO_GUEST_ALLOWED_MODELS` (explicit comma-separated approved model catalog identifiers; empty means no guest models)
 - Existing Supabase quota enabled and OpenRouter provider ready.
 Guest invitation exchange: POST `/api/stridebrain-demo/copilot/guest-session` same-origin JSON body `{"inviteCode":"..."}`. GET verifies current guest cookie; DELETE clears the cookie. Copilot POST allows valid guest cookies, but denies models outside the guest allowlist. Invitations should be distributed out-of-band and never placed in URL query strings.
