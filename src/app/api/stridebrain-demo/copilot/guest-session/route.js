@@ -1,13 +1,14 @@
 import {NextResponse} from "next/server";
 import {createHmac} from "node:crypto";
 import {guestAttemptAddress} from "@/lib/stridebrain-demo/guest-attempt";
-import {guestEnabled,inviteIdentity,issueGuestSession,guestSessionIdentity,GUEST_COOKIE,guestCookieOptions} from "@/lib/stridebrain-demo/guest-session";
+import {guestEnabled,inviteIdentity,issueGuestSession,guestSessionIdentity,GUEST_COOKIE,guestCookieOptions,guestChatScope} from "@/lib/stridebrain-demo/guest-session";
 export const runtime="nodejs";
 export const dynamic="force-dynamic";
 const headers={"Cache-Control":"private, no-store","X-Content-Type-Options":"nosniff"};
 const reply=(data,status=200)=>NextResponse.json(data,{status,headers});
 export async function GET(request){
- return reply({active:guestSessionIdentity(request.cookies.get(GUEST_COOKIE)?.value||"")!==null,available:guestEnabled()});
+ const identity=guestSessionIdentity(request.cookies.get(GUEST_COOKIE)?.value||"");
+ return reply({active:identity!==null,available:guestEnabled(),chatScope:identity?guestChatScope(identity):null});
 }
 export async function POST(request){
  const origin=request.headers.get("origin");
@@ -30,7 +31,7 @@ export async function POST(request){
  }catch{return reply({active:false,code:"INVITE_GATE_UNAVAILABLE"},503);}
  const identity=inviteIdentity(code);
  if(!identity)return reply({active:false,code:"INVALID_INVITATION"},401);
- const response=reply({active:true});
+ const response=reply({active:true,chatScope:guestChatScope(identity)});
  response.cookies.set(GUEST_COOKIE,issueGuestSession(identity),guestCookieOptions);
  return response;
 }
