@@ -530,3 +530,40 @@ body{background:#f7f9f6;font-size:14px}
 .sb-brief-item .button-secondary{white-space:nowrap}
 .sb-brief-foot{margin:14px 0 0!important;font-size:12px!important}
 @media(max-width:650px){.sb-owner-brief{padding:17px}.sb-brief-item{flex-wrap:wrap}.sb-brief-item .button-secondary{width:100%}.sb-lang-switch button{padding:5px 7px}}
+
+/* Readability pass — Taiwanese SME desktop/mobile pilot. Keep hierarchy, avoid tiny UI labels. */
+body{font-size:16px;line-height:1.55}
+.nav-items button{font-size:14px;line-height:1.45;padding:11px 12px;min-height:42px}
+.nav-section-label,.switcher-label{font-size:11px;letter-spacing:.095em}
+.industry-label,.industry-switcher{font-size:13px}
+.nav-new{font-size:10px;padding:2px 5px}
+.sidebar-profile small,.demo-status small{font-size:12px;line-height:1.5}
+.breadcrumb,.top-menu,.syn-label{font-size:13px}
+.section-head h2{font-size:21px;line-height:1.35}
+.section-head p,.notice{font-size:14px;line-height:1.65}
+.tile-top{font-size:14px}.tile-value{font-size:28px}.tile-foot{font-size:13px}
+.suite-eyebrow{font-size:11px;letter-spacing:.085em}
+.brief-header h1{font-size:clamp(28px,2.7vw,37px);line-height:1.23}
+.brief-header p,.brief-date{font-size:14px;line-height:1.65}
+.sb-owner-brief h2{font-size:clamp(23px,2.3vw,29px)}
+.sb-owner-brief>p,.sb-brief-foot{font-size:14px!important;line-height:1.65}
+.sb-brief-item{padding:15px 0;gap:14px}
+.sb-brief-item>span{font-size:14px}
+.sb-brief-item strong{font-size:16px;line-height:1.4}
+.sb-brief-item small{font-size:13px;line-height:1.5}
+.sb-brief-item .button-secondary{font-size:13px;min-height:38px}
+.inspector h3{font-size:18px}
+.inspector p,.inspector small,.inspector .text-small{font-size:13px;line-height:1.6}
+.sb-lang-switch button{font-size:13px;min-height:32px}
+.copilot-gpt-prose p,.copilot-gpt-prose li{font-size:15px;line-height:1.75}
+.copilot-gpt-prose .copilot-result-table{font-size:14px}
+.copilot-gpt-prose .copilot-result-table th{font-size:13px}
+.copilot-gpt-prose .source-ref{font-size:12px}
+@media(max-width:650px){
+ body{font-size:16px}
+ .main{padding-left:17px;padding-right:17px}
+ .sb-owner-brief{padding:18px}
+ .sb-brief-item strong{font-size:15px}
+ .sb-brief-item .button-secondary{font-size:14px}
+ .copilot-gpt-prose .copilot-result-table{font-size:13px}
+}
