@@ -37,7 +37,7 @@ export function copilot(c){
  const greetingHour=new Date().getHours();
  const greeting=zh?(greetingHour<12?"早安":greetingHour<17?"午安":"晚安"):(greetingHour<12?"Good morning":greetingHour<17?"Good afternoon":"Good evening");
  const displayStatus=isConnectedMode?(connected?(zh?"已連線 · 唯讀工作區工具":"Connected · Read-only workspace tools"):(zh?"AI 已啟用 · 尚未確認連線":"AI session selected · Connection not yet verified")):(zh?"示範回答 · 尚未連接 AI 模型":"Sample answers · AI provider not connected");
- const brandLabel=isConnectedMode?(isGuest?"STRIDEBRAIN AI COPILOT":"STAFF AI COPILOT"):"DETERMINISTIC EXAMPLE COPILOT";
+ const brandLabel=isConnectedMode?(isGuest?"STRIDEBRAIN AI COPILOT":"STAFF AI COPILOT"):(zh?"範例資料瀏覽":"SAMPLE DATA EXPLORER");
  const quick=quickActionsFor(p.id,c.locale),ideas=ideasFor(p.id,c.locale);
  const hideIfBusy=busy?" disabled":"";
  const ZH_MODELS={
@@ -110,16 +110,14 @@ export function copilot(c){
  out+='<div class="sb-copilot-status"><span class="sb-status-dot"></span><span>'+e(displayStatus)+'</span><span class="sb-status-divider">·</span><span>'+(zh?"示範資料 · 不會自動對外執行操作":"Demo data · No automatic external actions")+'</span></div>';
  out+='</div>';
  if(!isConnectedMode){
-  out+='<div class="sb-sample-disclosure" role="status" style="margin:12px 0;padding:12px 14px;border:1px solid #decfa8;border-radius:10px;background:#fffaf0;color:#5c4a28;font-size:.87rem">'+(zh?"目前為<strong>預設範例模式</strong>，不是即時 AI 對話。回答可能無法理解新問題，也不代表已呼叫您選擇的模型。啟用經授權的 AI 工作區後，才能使用 OpenRouter 與唯讀資料查詢。":"You are using <strong>prewritten example mode</strong>, not live AI. Responses may not understand new questions, and no selected AI model is being called. Authorized AI access is required for OpenRouter and read-only workspace queries.")+'</div>';
-  if(!new URLSearchParams(location.search).has("staff")){
-   out+='<p class="disclosure">'+(zh?"已受邀參與試用？請使用專屬邀請連結開啟，即可自動啟用 AI。":"Invited to the pilot? Open your personal invitation link to activate AI automatically.")+'</p>';
-  }else{
-  out+='<details class="copilot-operator-box"><summary><span><span aria-hidden="true">⚙</span> Enable staff AI (one-time access)</span><span>▾</span></summary>'+
-   '<div class="copilot-operator-inner"><p>Model selection is already visible in the composer, just like the reference. To actually use OpenRouter or the direct OpenAI model, an administrator must configure the provider API key <strong>on the server</strong> and enable the internal demo endpoint. Enter your separate staff code once on a trusted browser. A protected session will then keep AI available without repeated code entry. Never enter an OpenRouter or OpenAI API key here.</p>'+
-   '<label for="copilot-access-token" class="form-field">One-time staff access code<input type="password" id="copilot-access-token" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Enter once on this trusted browser"></label>'+
-   '<div class="action-stack">'+button("Enable AI for this browser ↗","enableGpt","","button-secondary")+'</div>'+
-   '<p class="disclosure">Selected model: '+e(model.label)+' ('+e(model.provider==="openrouter"?"OpenRouter":"Direct OpenAI")+
-   '). Staff prompts are sent to the configured provider after authorization. Demo data is used; uploaded files are not forwarded to the model.</p></div></details>';
+  const staffAccess=new URLSearchParams(location.search).has("staff");
+  out+='<div class="sb-sample-disclosure" role="status" style="margin:12px 0;padding:12px 14px;border:1px solid #dce5df;border-radius:10px;background:#f5f9f6;color:#355447;font-size:.87rem"><strong>'+(zh?"AI 試用尚未啟用":"AI trial not activated")+'</strong><p style="margin:5px 0 0">'+(zh?"目前可瀏覽示範資料與範例回答。使用專屬邀請連結後，就能開始與 AI 對話。":"You can explore sample data and example answers. Open your personal invitation link to start chatting with AI.")+'</p></div>';
+  if(staffAccess){
+   out+='<details class="copilot-operator-box"><summary><span><span aria-hidden="true">⚙</span> '+(zh?"管理員登入":"Administrator sign-in")+'</span><span>▾</span></summary>'+
+    '<div class="copilot-operator-inner"><p>'+(zh?"請輸入管理員提供的內部存取碼，以在此瀏覽器啟用 AI 助理。":"Enter your administrator-issued staff access code to activate AI on this browser.")+'</p>'+
+    '<label for="copilot-access-token" class="form-field">'+(zh?"內部人員存取碼":"Staff access code")+'<input type="password" id="copilot-access-token" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="'+(zh?"輸入存取碼":"Enter access code")+'"></label>'+
+    '<div class="action-stack">'+button(zh?"啟用 AI 助理 ↗":"Activate AI assistant ↗","enableGpt","","button-secondary")+'</div>'+
+    '<p class="disclosure">'+(zh?"所有示範資料僅供查詢，不會自動對外執行操作。":"Demo data is read-only and no external actions run automatically.")+'</p></div></details>';
   }
  }else{
   out+='<div class="sb-copilot-connected-foot"><span><strong>'+(isGuest?(zh?'訪客 AI 工作區':'Guest AI workspace'):(zh?'內部人員 AI 模式':'Internal staff AI mode'))+'</strong>'+ (zh?' · 已選模型：':' · Selected model: ')+e(model.label)+(zh?' · 工作區資料僅供查詢。':' · Read-only workspace tools.')+'</span>'+
