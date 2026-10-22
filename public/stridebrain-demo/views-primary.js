@@ -5,18 +5,8 @@ import {getReadinessPack} from "./readiness-rules.js";
 import {MODEL_CATALOG,DEFAULT_MODEL_ID,findAllowedModel} from "./model-catalog.js";
 import {quickActionsFor,ideasFor,followUpsFor} from "./copilot-suggestions.js";
 import {operationalSignals,riskRadarSignals} from "./operational-signals.js";
-const zhNames={
- "Material selection":"材料選定","Quotation revision":"報價修訂","Drawing issue":"圖面問題",
- "Client brief":"客戶需求摘要","Design agreement":"設計合約","Scope of works":"工程範圍",
- "Moodboard notes":"風格提案紀錄","Materials schedule":"材料排程表",
- "Supplier quotation":"供應商報價單","Change-order approval":"變更單核准",
- "Gross-margin calculation":"毛利率計算","Approved":"已核准","Pending review":"待審閱",
- "Songshan Residence":"松山住宅","Forest Office":"森境辦公室","In construction":"施工中"
-};
-function localizedName(value,zh){
- const text=String(value||"");if(!zh)return text;
- return Object.entries(zhNames).reduce((out,[en,cn])=>out.replaceAll(en,cn),text);
-}
+import {displayRecordText} from "./record-locale.js";
+const localizedName=(value,zh)=>displayRecordText(value,zh?"zh-TW":"en");
 export function overview(c){
  const {model:m,pack:p,state:s}=c,sm=m.summary(s),signals=operationalSignals(m,s),risk=riskRadarSignals(m,s),open=signals.ranked.slice(0,3);
 
