@@ -108,7 +108,7 @@ export function copilot(c){
    '<p class="disclosure">Selected model: '+e(model.label)+' ('+e(model.provider==="openrouter"?"OpenRouter":"Direct OpenAI")+
    '). Staff prompts are sent to the configured provider after authorization. Demo data is used; uploaded files are not forwarded to the model.</p></div></details>';
  }else{
-  out+='<div class="sb-copilot-connected-foot"><span><strong>'+(isGuest?(zh?'訪客 AI 工作區':'Guest AI workspace'):(zh?'內部人員 AI 模式':'Internal staff AI mode'))'</strong>'+ (zh?' · 已選模型：':' · Selected model: ')+e(model.label)+(zh?' · 工作區資料僅供查詢。':' · Read-only workspace tools.')+'</span>'+
+  out+='<div class="sb-copilot-connected-foot"><span><strong>'+(isGuest?(zh?'訪客 AI 工作區':'Guest AI workspace'):(zh?'內部人員 AI 模式':'Internal staff AI mode'))+'</strong>'+ (zh?' · 已選模型：':' · Selected model: ')+e(model.label)+(zh?' · 工作區資料僅供查詢。':' · Read-only workspace tools.')+'</span>'+
    button(isGuest?(zh?"離開訪客體驗":"Leave guest session"):(zh?"登出內部 AI":"Sign out of staff AI"),"disableGpt","","button-outline")+'</div>';
  }
  out+='</div>';
