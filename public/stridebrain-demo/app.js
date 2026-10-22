@@ -342,12 +342,6 @@ async function handleDocument(file){
 }
 async function perform(el){
  const action=el.dataset.action,id=el.dataset.id||"",value=el.dataset.value||"";
- if(action==="redeemGuestInvite"){
-  const code=$("sb-guest-invite")?.value?.trim()||"";
-  if(code.length<24||code.length>256){toast(interfaceLocale==="en"?"Enter a valid invitation code.":"請輸入有效的邀請碼。");return;}
-  await redeemInvitationFromFragment(code);
-  return;
- }
  if(action==="language"){interfaceLocale=value==="en"?"en":"zh-TW";try{sessionStorage.setItem("stridebrain-interface-locale",interfaceLocale);}catch{}updateShell();render();return;}
  if(action==="nav"){copilotModelMenuOpen=false;view.projectDetail=false;setPage(value);}
  else if(action==="modelMenu"){
