@@ -111,12 +111,16 @@ export function copilot(c){
  out+='</div>';
  if(!isConnectedMode){
   out+='<div class="sb-sample-disclosure" role="status" style="margin:12px 0;padding:12px 14px;border:1px solid #decfa8;border-radius:10px;background:#fffaf0;color:#5c4a28;font-size:.87rem">'+(zh?"目前為<strong>預設範例模式</strong>，不是即時 AI 對話。回答可能無法理解新問題，也不代表已呼叫您選擇的模型。啟用經授權的 AI 工作區後，才能使用 OpenRouter 與唯讀資料查詢。":"You are using <strong>prewritten example mode</strong>, not live AI. Responses may not understand new questions, and no selected AI model is being called. Authorized AI access is required for OpenRouter and read-only workspace queries.")+'</div>';
+  if(!new URLSearchParams(location.search).has("staff")){
+   out+='<p class="disclosure">'+(zh?"已受邀參與試用？請使用專屬邀請連結開啟，即可自動啟用 AI。":"Invited to the pilot? Open your personal invitation link to activate AI automatically.")+'</p>';
+  }else{
   out+='<details class="copilot-operator-box"><summary><span><span aria-hidden="true">⚙</span> Enable staff AI (one-time access)</span><span>▾</span></summary>'+
    '<div class="copilot-operator-inner"><p>Model selection is already visible in the composer, just like the reference. To actually use OpenRouter or the direct OpenAI model, an administrator must configure the provider API key <strong>on the server</strong> and enable the internal demo endpoint. Enter your separate staff code once on a trusted browser. A protected session will then keep AI available without repeated code entry. Never enter an OpenRouter or OpenAI API key here.</p>'+
    '<label for="copilot-access-token" class="form-field">One-time staff access code<input type="password" id="copilot-access-token" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Enter once on this trusted browser"></label>'+
    '<div class="action-stack">'+button("Enable AI for this browser ↗","enableGpt","","button-secondary")+'</div>'+
    '<p class="disclosure">Selected model: '+e(model.label)+' ('+e(model.provider==="openrouter"?"OpenRouter":"Direct OpenAI")+
    '). Staff prompts are sent to the configured provider after authorization. Demo data is used; uploaded files are not forwarded to the model.</p></div></details>';
+  }
  }else{
   out+='<div class="sb-copilot-connected-foot"><span><strong>'+(isGuest?(zh?'訪客 AI 工作區':'Guest AI workspace'):(zh?'內部人員 AI 模式':'Internal staff AI mode'))+'</strong>'+ (zh?' · 已選模型：':' · Selected model: ')+e(model.label)+(zh?' · 工作區資料僅供查詢。':' · Read-only workspace tools.')+'</span>'+
    button(isGuest?(zh?"離開訪客體驗":"Leave guest session"):(zh?"登出內部 AI":"Sign out of staff AI"),"disableGpt","","button-outline")+'</div>';
