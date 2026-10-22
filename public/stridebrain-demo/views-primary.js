@@ -112,6 +112,14 @@ export function copilot(c){
  if(!isConnectedMode){
   const staffAccess=new URLSearchParams(location.search).has("staff");
   out+='<div class="sb-sample-disclosure" role="status" style="margin:12px 0;padding:12px 14px;border:1px solid #dce5df;border-radius:10px;background:#f5f9f6;color:#355447;font-size:.87rem"><strong>'+(zh?"AI 試用尚未啟用":"AI trial not activated")+'</strong><p style="margin:5px 0 0">'+(zh?"目前可瀏覽示範資料與範例回答。使用專屬邀請連結後，就能開始與 AI 對話。":"You can explore sample data and example answers. Open your personal invitation link to start chatting with AI.")+'</p></div>';
+  if(!staffAccess){
+   out+='<div class="sb-invite-box" style="margin:12px 0;padding:14px;border:1px solid #dce5df;border-radius:10px">'+
+    '<strong>'+(zh?"已有試用邀請碼？":"Have a pilot invitation?")+'</strong>'+
+    '<p class="disclosure">'+(zh?"輸入邀請碼後，即可在此瀏覽器使用 AI 助理。":"Enter your invitation code to activate AI on this browser.")+'</p>'+
+    '<label for="sb-guest-invite" class="sr-only">'+(zh?"邀請碼":"Invitation code")+'</label>'+
+    '<input id="sb-guest-invite" class="input" type="password" autocomplete="off" spellcheck="false" placeholder="'+(zh?"輸入邀請碼":"Enter invitation code")+'">'+
+    '<div class="action-stack">'+button(zh?"開始使用 AI ↗":"Start using AI ↗","redeemGuestInvite","","button-primary")+'</div></div>';
+  }
   if(staffAccess){
    out+='<details class="copilot-operator-box"><summary><span><span aria-hidden="true">⚙</span> '+(zh?"管理員登入":"Administrator sign-in")+'</span><span>▾</span></summary>'+
     '<div class="copilot-operator-inner"><p>'+(zh?"請輸入管理員提供的內部存取碼，以在此瀏覽器啟用 AI 助理。":"Enter your administrator-issued staff access code to activate AI on this browser.")+'</p>'+
