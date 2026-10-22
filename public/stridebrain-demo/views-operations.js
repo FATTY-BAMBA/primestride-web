@@ -56,7 +56,6 @@ export function suppliers(c){
 }
 export function approvals(c){
  const zh=c.locale!=="en";
- const zh=c.locale!=="en";
  const {pack:p,state:s,model:m}=c,a=m.approvals(s),open=a.filter(x=>x.status==="Pending").length;
  let out=heading(zh?"審核與決策":"Approvals & decisions",zh?"保留人工確認與決策依據，清楚追蹤每個審核事項。":"Keep judgment with authorized people and preserve why an action was taken.",tag(open+(zh?" 件待審核":" pending decisions")),zh?"人工審核":"HUMAN-IN-THE-LOOP");
  out+='<div class="operational-cards">'+metric(zh?"待審核":"Pending",open,zh?"尚待確認":"Unreviewed requests")+metric(zh?"已核准":"Approved",a.length-open,zh?"示範決策紀錄":"Recorded sample decisions")+metric(zh?"申請總數":"Requests",a.length,zh?"可追溯來源文件":"Linked to source IDs")+metric(zh?"變更狀態":"Featured change",s.variation.committed?(zh?"已建立":"Committed"):(zh?"待確認":"Awaiting"),zh?"須依序審核":"Requires sequential gates")+'</div>';
