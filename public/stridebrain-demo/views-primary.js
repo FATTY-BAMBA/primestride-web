@@ -38,12 +38,19 @@ export function copilot(c){
  const brandLabel=isConnectedMode?(isGuest?"STRIDEBRAIN AI COPILOT":"STAFF AI COPILOT"):"DETERMINISTIC EXAMPLE COPILOT";
  const quick=quickActionsFor(p.id,c.locale),ideas=ideasFor(p.id,c.locale);
  const hideIfBusy=busy?" disabled":"";
+ const ZH_MODELS={
+ "anthropic/claude-sonnet-5.5":["日常營運","適合一般營運問題與自然對話"],
+ "openai/gpt-6-sol":["複雜分析","適合結構化分析與多步驟問題"],
+ "google/gemini-3.1-pro-preview-customtools":["深入推理","適合長篇資料及多工具分析（預覽）"],
+ "deepseek/deepseek-v4.1-flash":["快速回覆","適合重視效率的工具查詢"],
+ "openai-direct/gpt-5.6":["直接 API","使用另外設定的 OpenAI API 專案"]
+};
  const menu=MODEL_CATALOG.map(item=>{
   const selected=item.id===model.id;
   return '<button type="button" role="option" aria-selected="'+(selected?"true":"false")+'" class="sb-model-option'+(selected?" selected":"")+'" data-action="modelSelect" data-value="'+e(item.id)+'"'+hideIfBusy+'>'+
     '<span class="sb-model-option-main"><strong>'+e(item.label)+'</strong><span class="sb-model-check">'+(selected?"✓":"")+'</span></span>'+
-    '<span class="sb-model-purpose">'+e(item.purpose)+'</span>'+
-    '<span class="sb-model-desc">'+e(item.description)+'</span>'+
+    '<span class="sb-model-purpose">'+e(zh?(ZH_MODELS[item.id]?.[0]||item.purpose):item.purpose)+'</span>'+
+    '<span class="sb-model-desc">'+e(zh?(ZH_MODELS[item.id]?.[1]||item.description):item.description)+'</span>'+
     '<span class="sb-model-maker">'+e(item.provider==="openrouter"?"Via OpenRouter · "+item.maker:"Direct API · "+item.maker)+'</span></button>';
  }).join("");
  let out='<div class="sb-copilot '+(empty?"is-empty":"is-active")+'">';
@@ -75,18 +82,18 @@ export function copilot(c){
   '<textarea id="sb-composer-input" data-copilot-input rows="2" maxlength="1200" placeholder="'+(zh?"詢問報價、待辦事項、供應商或專案進度…":"Ask about quotes, priorities, suppliers, or your projects...")+'"'+hideIfBusy+'>'+e(session.draft||"")+'</textarea>'+
   '<div class="sb-composer-bottom">'+
    '<div class="sb-composer-left">'+
-    '<button type="button" data-action="nav" data-value="intake" class="sb-composer-add" aria-label="Open Document Intelligence" title="Open Document Intelligence (files are not attached to Copilot)">＋</button>'+
+    '<button type="button" data-action="nav" data-value="intake" class="sb-composer-add" aria-label="'+(zh?"開啟文件智慧整理":"Open Document Intelligence")+'" title="'+(zh?"開啟文件智慧整理（不會將檔案直接附加到 AI 對話）":"Open Document Intelligence (files are not attached to Copilot)")+'">＋</button>'+
     '<span class="sb-composer-hint">'+(zh?"Enter 送出 · Shift+Enter 換行":"Enter to send · Shift+Enter for a new line")+'</span>'+
    '</div>'+
    '<div class="sb-composer-right">'+
     '<div class="sb-model-container">'+
-     '<button type="button" class="sb-model-trigger" data-action="modelMenu" aria-haspopup="listbox" aria-expanded="'+(menuOpen?"true":"false")+'" aria-controls="sb-model-menu" title="Choose an approved AI model"'+hideIfBusy+'>'+
+     '<button type="button" class="sb-model-trigger" data-action="modelMenu" aria-haspopup="listbox" aria-expanded="'+(menuOpen?"true":"false")+'" aria-controls="sb-model-menu" title="'+(zh?"選擇允許使用的 AI 模型":"Choose an approved AI model")+'"'+hideIfBusy+'>'+
       '<span class="sb-model-label">'+e(model.label)+'</span><span class="sb-model-arrow">⌄</span></button>'+
-     (menuOpen?'<div class="sb-model-menu" id="sb-model-menu" role="listbox" aria-label="Approved model choices">'+
+     (menuOpen?'<div class="sb-model-menu" id="sb-model-menu" role="listbox" aria-label="'+(zh?"可選擇的 AI 模型":"Approved model choices")+'">'+
       '<div class="sb-model-menu-heading">'+(zh?"選擇 AI 模型":"CHOOSE AI MODEL")+'</div>'+menu+
       '<div class="sb-model-menu-note">'+(zh?"可用模型依工作區權限而定；所有業務工具目前僅供查詢。":"Available models depend on your workspace access. Business tools remain read-only.")+'</div></div>':'')+
     '</div>'+
-    '<button type="submit" class="sb-send" aria-label="Send question" title="Send question"'+hideIfBusy+'>'+(busy?"···":"↑")+'</button>'+
+    '<button type="submit" class="sb-send" aria-label="'+(zh?"送出問題":"Send question")+'" title="'+(zh?"送出問題":"Send question")+'"'+hideIfBusy+'>'+(busy?"···":"↑")+'</button>'+
    '</div>'+
   '</div></form>';
  out+='<div class="sb-shortcut-row">'+quick.map(item=>
