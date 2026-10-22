@@ -38,7 +38,7 @@ function applyWorkspaceLanguage(){
   ".top-menu":["探索知識中心 ↗","Explore knowledge ↗"]
  };
  for(const [selector,texts] of Object.entries(staticLabels)){const node=document.querySelector(selector);if(node&&selector!==".syn-label")node.textContent=texts[interfaceLocale==="en"?1:0];}
- for(const label of document.querySelectorAll(".nav-section-label"))label.textContent=label.closest("#nav-intel")?"智慧功能":(interfaceLocale==="en"?"WORKSPACE":"工作區");
+ document.querySelectorAll(".nav-section-label").forEach((label,index)=>{label.textContent=interfaceLocale==="en"?(index===0?"WORKSPACE":"INTELLIGENCE"):(index===0?"工作區":"智慧功能");});
  const page=labels[view.page];if(page)$("page-name").textContent=page[interfaceLocale==="en"?1:0];
 }
 
@@ -319,7 +319,7 @@ async function handleDocument(file){
 }
 async function perform(el){
  const action=el.dataset.action,id=el.dataset.id||"",value=el.dataset.value||"";
- if(action==="language"){interfaceLocale=value==="en"?"en":"zh-TW";try{sessionStorage.setItem("stridebrain-interface-locale",interfaceLocale);}catch{}render();return;}
+ if(action==="language"){interfaceLocale=value==="en"?"en":"zh-TW";try{sessionStorage.setItem("stridebrain-interface-locale",interfaceLocale);}catch{}updateShell();render();return;}
  if(action==="nav"){copilotModelMenuOpen=false;view.projectDetail=false;setPage(value);}
  else if(action==="modelMenu"){
    if(copilotBusy)return;
