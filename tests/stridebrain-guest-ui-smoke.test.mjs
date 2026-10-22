@@ -12,7 +12,7 @@ test("guest sessions are restored independently of staff session",()=>{
  assert.ok(restore.indexOf('"/api/stridebrain-demo/copilot/session"')<restore.indexOf('"/api/stridebrain-demo/copilot/guest-session"'),"Staff session must take precedence over guest on shared devices");
 });
 test("guest sign out and model labels never claim staff access",()=>{
- assert.match(view,/isGuest\?'Guest AI workspace':'Internal staff AI mode'/);
+ assert.match(view,/isGuest\?\(zh\?\x27訪客 AI 工作區\x27:\x27Guest AI workspace\x27\)/);
  assert.match(view,/isGuest\?\(zh\?"離開訪客體驗":"Leave guest session"\)/);
 });
 test("guest onboarding does not put invitation into a URL",()=>{
