@@ -36,7 +36,7 @@ export function copilot(c){
  const greeting=zh?(greetingHour<12?"早安":greetingHour<17?"午安":"晚安"):(greetingHour<12?"Good morning":greetingHour<17?"Good afternoon":"Good evening");
  const displayStatus=isConnectedMode?(connected?(zh?"已連線 · 唯讀工作區工具":"Connected · Read-only workspace tools"):(zh?"AI 已啟用 · 尚未確認連線":"AI session selected · Connection not yet verified")):(zh?"示範回答 · 尚未連接 AI 模型":"Sample answers · AI provider not connected");
  const brandLabel=isConnectedMode?(isGuest?"STRIDEBRAIN AI COPILOT":"STAFF AI COPILOT"):"DETERMINISTIC EXAMPLE COPILOT";
- const quick=quickActionsFor(p.id),ideas=ideasFor(p.id);
+ const quick=quickActionsFor(p.id,c.locale),ideas=ideasFor(p.id,c.locale);
  const hideIfBusy=busy?" disabled":"";
  const menu=MODEL_CATALOG.map(item=>{
   const selected=item.id===model.id;
@@ -64,7 +64,7 @@ export function copilot(c){
  ).join("")+'</div>';
  const last=v.chat[v.chat.length-1];
  if(last?.role==="assistant"&&!last.pending&&last.mode==="gpt"){
-  const next=followUpsFor(last.query,p.id,last.actions||[],last.text||"");
+  const next=followUpsFor(last.query,p.id,last.actions||[],last.text||"",c.locale);
   out+='<div class="sb-context-ideas sb-followup-ideas"><span class="sb-context-label">'+(zh?"繼續深入了解":"CONTINUE INVESTIGATING")+'</span><div class="sb-context-idea-row">'+next.map(item=>
    '<button type="button" data-action="ask" data-prompt="'+e(item.prompt)+'" class="sb-context-idea"'+hideIfBusy+'>'+e(item.label)+' ↗</button>'
   ).join("")+'</div></div>';
@@ -93,12 +93,12 @@ export function copilot(c){
    '<button type="button" class="sb-shortcut" data-action="ask" data-prompt="'+e(item.prompt)+'" title="'+e(item.description)+'"'+hideIfBusy+'><span aria-hidden="true">'+e(item.glyph)+'</span>'+e(item.label)+'</button>'
  ).join("")+'</div>';
  if(empty){
-  out+='<div class="sb-context-ideas"><span class="sb-context-label">'+(zh?"你可以這樣問 · ":"SUGGESTED FOR ")+''+e(p.companyEn.toUpperCase())+'</span>'+
+  out+='<div class="sb-context-ideas"><span class="sb-context-label">'+(zh?"你可以這樣問 · ":"SUGGESTED FOR ")+''+e(zh?p.company:p.companyEn.toUpperCase())+'</span>'+
    '<div class="sb-context-idea-row">'+ideas.map(item=>
     '<button type="button" data-action="ask" data-prompt="'+e(item.prompt)+'" class="sb-context-idea"'+hideIfBusy+'><span>'+e(item.glyph)+'</span>'+e(item.label)+' ↗</button>'
    ).join("")+'</div></div>';
  }
- out+='<div class="sb-copilot-status"><span class="sb-status-dot"></span><span>'+e(displayStatus)+'</span><span class="sb-status-divider">·</span><span>Demo data · No automatic external actions</span></div>';
+ out+='<div class="sb-copilot-status"><span class="sb-status-dot"></span><span>'+e(displayStatus)+'</span><span class="sb-status-divider">·</span><span>'+(zh?"示範資料 · 不會自動對外執行操作":"Demo data · No automatic external actions")+'</span></div>';
  out+='</div>';
  if(!isConnectedMode){
   out+='<details class="copilot-operator-box"><summary><span><span aria-hidden="true">⚙</span> Enable staff AI (one-time access)</span><span>▾</span></summary>'+
@@ -108,8 +108,8 @@ export function copilot(c){
    '<p class="disclosure">Selected model: '+e(model.label)+' ('+e(model.provider==="openrouter"?"OpenRouter":"Direct OpenAI")+
    '). Staff prompts are sent to the configured provider after authorization. Demo data is used; uploaded files are not forwarded to the model.</p></div></details>';
  }else{
-  out+='<div class="sb-copilot-connected-foot"><span><strong>'+(isGuest?'Guest AI workspace':'Internal staff AI mode')+'</strong> · Selected model: '+e(model.label)+' · Read-only workspace tools.</span>'+
-   button(isGuest?"Leave guest session":"Sign out of staff AI","disableGpt","","button-outline")+'</div>';
+  out+='<div class="sb-copilot-connected-foot"><span><strong>'+(isGuest?(zh?'訪客 AI 工作區':'Guest AI workspace'):(zh?'內部人員 AI 模式':'Internal staff AI mode'))+'</strong> · Selected model: '+e(model.label)+' · Read-only workspace tools.</span>'+
+   button(isGuest?(zh?"離開訪客體驗":"Leave guest session"):(zh?"登出內部 AI":"Sign out of staff AI"),"disableGpt","","button-outline")+'</div>';
  }
  out+='</div>';
  return out;
