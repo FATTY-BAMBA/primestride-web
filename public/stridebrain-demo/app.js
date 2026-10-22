@@ -35,9 +35,32 @@ function applyWorkspaceLanguage(){
   ".industry-label":["切換產業示範","Explore a different industry"],
   ".nav-section-label":["工作區","WORKSPACE"],
   ".syn-label":["示範資料","SAMPLE DATA"],
-  ".top-menu":["探索知識中心 ↗","Explore knowledge ↗"]
+  ".top-menu":["探索知識中心 ↗","Explore knowledge ↗"],
+  ".demo-status strong":["示範工作區","DEMO WORKSPACE"],
+  ".demo-status small":["示範資料 · 無須建立公司帳戶","Demo data · No company setup required"],
+  ".reset-btn":["↺ 重設產業示範","↺ Reset industry demo"],
+  ".sidebar-profile small":["示範工作區管理者","Demo workspace owner"]
+
  };
- for(const [selector,texts] of Object.entries(staticLabels)){const node=document.querySelector(selector);if(node&&selector!==".syn-label")node.textContent=texts[interfaceLocale==="en"?1:0];}
+ for(const [selector,texts] of Object.entries(staticLabels)){
+  const node=document.querySelector(selector);if(!node)continue;
+  const value=texts[interfaceLocale==="en"?1:0];
+  if(selector===".syn-label"){
+   const textNode=[...node.childNodes].find(child=>child.nodeType===Node.TEXT_NODE);
+   if(textNode)textNode.textContent=" "+value;else node.append(document.createTextNode(" "+value));
+  }else node.textContent=value;
+ }
+ const secondaryLabels={"NEW":["新功能","NEW"],"INTERACTIVE":["可互動","INTERACTIVE"],"RESEARCH":["研究資料","RESEARCH"]};
+ document.querySelectorAll(".nav-new").forEach(node=>{
+  const key=node.dataset.localeKey||node.textContent.trim();
+  if(secondaryLabels[key]){node.dataset.localeKey=key;node.textContent=secondaryLabels[key][interfaceLocale==="en"?1:0];}
+ });
+ const industrySelector=$("industry-switcher");
+ if(industrySelector)industrySelector.setAttribute("aria-label",interfaceLocale==="en"?"Change industry template":"切換產業範例");
+ const sidebar=document.querySelector(".sidebar");
+ if(sidebar)sidebar.setAttribute("aria-label",interfaceLocale==="en"?"Workspace navigation":"工作區導覽");
+ const inspector=$("inspector");
+ if(inspector)inspector.setAttribute("aria-label",interfaceLocale==="en"?"Context and source evidence":"工作脈絡與來源依據");
  document.querySelectorAll(".nav-section-label").forEach((label,index)=>{label.textContent=interfaceLocale==="en"?(index===0?"WORKSPACE":"INTELLIGENCE"):(index===0?"工作區":"智慧功能");});
  const page=labels[view.page];if(page)$("page-name").textContent=page[interfaceLocale==="en"?1:0];
 }
@@ -118,7 +141,7 @@ async function loadIndustry(id){
  copilotRunId++;copilotConnected=false;copilotOperatorToken="";copilotBusy=false;copilotModelMenuOpen=false;copilotDraft="";
  documentLoadVersion++; // cancel any in-flight local file parsing on industry switch
  const next=getPack(id),previous={pack,model,state,view,historyData,industryEvidence,documentSession};
- $("main").innerHTML='<div class="loading-screen"><div class="loader-ring"></div><h2>Opening '+e(next.short)+'</h2><p>Connecting an industry pack to the shared operating workspace…</p></div>';
+ $("main").innerHTML='<div class="loading-screen"><div class="loader-ring"></div><h2>'+(interfaceLocale==="en"?"Opening ":"正在開啟 ")+e(interfaceLocale==="en"?next.short:(next.id==="printing"?"印刷與包裝":"室內設計"))+'</h2><p>'+(interfaceLocale==="en"?"Connecting an industry pack to the shared operating workspace…":"正在載入產業示範資料與工作區…")+'</p></div>';
  try{
   // Load independent demo assets concurrently; a stalled asset must not spin forever.
   const assets=[next.dataset,"./seeds/source-enrichment.json","./seeds/historical-"+next.id+".json","./seeds/taiwan-industry-evidence.json"];
