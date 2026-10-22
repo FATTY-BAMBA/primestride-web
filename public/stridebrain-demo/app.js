@@ -30,6 +30,15 @@ function applyWorkspaceLanguage(){
   else for(const node of btn.childNodes)if(node.nodeType===Node.TEXT_NODE&&node.textContent.trim()){node.textContent=" "+pair[interfaceLocale==="en"?1:0]+" ";break;}
  }
  for(const btn of document.querySelectorAll("[data-action=language]"))btn.setAttribute("aria-pressed",String(btn.dataset.value===interfaceLocale));
+ const staticLabels={
+  ".switcher-label":["目前示範公司","ACTIVE DEMO COMPANY"],
+  ".industry-label":["切換產業示範","Explore a different industry"],
+  ".nav-section-label":["工作區","WORKSPACE"],
+  ".syn-label":["示範資料","SAMPLE DATA"],
+  ".top-menu":["探索知識中心 ↗","Explore knowledge ↗"]
+ };
+ for(const [selector,texts] of Object.entries(staticLabels)){const node=document.querySelector(selector);if(node&&selector!==".syn-label")node.textContent=texts[interfaceLocale==="en"?1:0];}
+ for(const label of document.querySelectorAll(".nav-section-label"))label.textContent=label.closest("#nav-intel")?"智慧功能":(interfaceLocale==="en"?"WORKSPACE":"工作區");
  const page=labels[view.page];if(page)$("page-name").textContent=page[interfaceLocale==="en"?1:0];
 }
 
@@ -97,11 +106,12 @@ function render(){
  document.querySelectorAll(".sidebar [data-action='nav']").forEach(b=>b.classList.toggle("active",b.dataset.value===view.page));
 }
 function updateShell(){
- $("company-name").textContent=pack.companyEn;$("company-subtitle").textContent=pack.company+" · "+pack.short;$("company-avatar").textContent=pack.symbol;
- $("owner-name").textContent=pack.owner;$("owner-initials").textContent=pack.ownerInitials;$("top-company").textContent=pack.companyEn;
+ const zh=interfaceLocale!=="en";
+ $("company-name").textContent=zh?pack.company:pack.companyEn;$("company-subtitle").textContent=zh?(pack.id==="printing"?"商用印刷 · 示範工作區":"室內設計 · 示範工作區"):(pack.company+" · "+pack.short);$("company-avatar").textContent=pack.symbol;
+ $("owner-name").textContent=pack.owner;$("owner-initials").textContent=pack.ownerInitials;$("top-company").textContent=zh?pack.company:pack.companyEn;
  $("nav-entities").textContent=pack.projectLabel;$("nav-quotations").textContent=pack.quoteLabel;$("nav-work").textContent=pack.orderLabel;$("nav-materials").textContent=pack.materialLabel;
- $("industry-switcher").innerHTML=listPacks().map(p=>'<option value="'+e(p.id)+'"'+(p.id===pack.id?" selected":"")+'>'+e(p.name)+" · "+e(p.companyEn)+"</option>").join("");
- document.title="StrideBrain · "+pack.companyEn+" | SME Demo";
+ $("industry-switcher").innerHTML=listPacks().map(p=>'<option value="'+e(p.id)+'"'+(p.id===pack.id?" selected":"")+'>'+e(zh?(p.id==="printing"?"印刷與包裝":"室內設計"):p.name)+" · "+e(zh?p.company:p.companyEn)+"</option>").join("");
+ document.title="StrideBrain · "+(zh?pack.company:pack.companyEn)+(zh?" | 營運示範":" | SME Demo");
 }
 async function loadIndustry(id){
  saveGuestChat();
