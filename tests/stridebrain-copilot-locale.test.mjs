@@ -21,3 +21,8 @@ test("Latest user question determines language, not historical assistant output"
  assert.equal(copilotReplyLocale([{role:"user",content:"請用中文回答"},{role:"assistant",content:"中文內容"},{role:"user",content:"What are our latest draft quotes?"}]),"en");
  assert.equal(copilotReplyLocale([]),"en");
 });
+
+test('short Chinese follow-ups remain Traditional Chinese',()=>{assert.equal(copilotReplyLocale([{role:'user',content:'為什麼？'}]),'zh-TW');assert.equal(copilotReplyLocale([{role:'user',content:'好'}]),'zh-TW');});
+test('validated interface locale governs ambiguous short questions',()=>{assert.equal(copilotReplyLocale([{role:'user',content:'Why?'}],'zh-TW'),'zh-TW');assert.equal(copilotReplyLocale([{role:'user',content:'？'}],'en'),'en');});
+test('explicit requested language overrides interface setting',()=>{assert.equal(copilotReplyLocale([{role:'user',content:'請用英文回答'}],'zh-TW'),'en');assert.equal(copilotReplyLocale([{role:'user',content:'Please answer in Traditional Chinese'}],'en'),'zh-TW');});
+test('punctuation-only follow-up inherits previous user language without UI setting',()=>{assert.equal(copilotReplyLocale([{role:'user',content:'有哪些待辦？'},{role:'assistant',content:'Prior English output'},{role:'user',content:'？'}]),'zh-TW');});

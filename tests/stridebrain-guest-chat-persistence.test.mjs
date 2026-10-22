@@ -1,37 +1,11 @@
-import test from "node:test";
-import assert from "node:assert/strict";
-import {readFileSync} from "node:fs";
-const source=readFileSync(new URL("../public/stridebrain-demo/app.js",import.meta.url),"utf8");
-test("guest chat is tab-only and separated by industry",()=>{
- assert.match(source,/sessionStorage\.setItem\(guestChatKey\(pack\.id\)/);
- assert.match(source,/const GUEST_CHAT_PREFIX="stridebrain-guest-chat-v1:"/);
- assert.match(source,/guestChatScope/);
- assert.doesNotMatch(source,/localStorage\.setItem\(guestChatKey/);
-});
-test("guest messages restore after reload and industry changes",()=>{
- assert.match(source,/if\(copilotMode==="gpt"\)restoreGuestChat\(\)/);
- assert.match(source,/copilotGuest=true;copilotMode="gpt";copilotConnected=false;restoreGuestChat\(\)/);
- assert.match(source,/async function loadIndustry\(id\)\{\s*saveGuestChat\(\)/);
-});
-test("new conversation persists clearing and guest signout deletes both stores",()=>{
- assert.match(source,/view\.chat=\[\];copilotDraft="";copilotModelMenuOpen=false;saveGuestChat\(\)/);
- assert.match(source,/clearGuestChat\(\);/);
- assert.match(source,/key\?\.startsWith\(prefix\)/);
-});
-test("persist only bounded conversation content, not browser-uploaded files",()=>{
- const persistence=source.slice(source.indexOf("function saveGuestChat()"),source.indexOf("function restoreGuestChat()"));
- assert.match(persistence,/slice\(-12\)/);
- assert.match(persistence,/\.slice\(0,3800\)/);
- assert.doesNotMatch(persistence,/documentSession|operatorToken|apiKey|fileData/);
-});
-
-test("guest chat scope is required before storage or restoration",()=>{assert.match(source,/guestChatScope\|\|""/);assert.match(source,/guestChatScope=info.chatScope/);});
-
-test("authenticated staff chat restores on refresh independently of guest",()=>{assert.match(source,/guestChatScope=info.chatScope;copilotMode="gpt";copilotConnected=false;restoreGuestChat\(\)/);assert.match(source,/copilotGuest\?"guest:":"staff:"/);});
-
-test("expired guest chat is purged and staff logout does not erase other scopes",()=>{
- assert.match(source,/function purgeUnclaimedGuestChats\(activeGuestScope\)/);
- assert.match(source,/else purgeUnclaimedGuestChats\(null\)/);
- assert.match(source,/function clearGuestChat\(scope=guestChatScope,guest=copilotGuest\)/);
- assert.match(source,/const prefix=GUEST_CHAT_PREFIX\+\(guest\?"guest:":"staff:"\)\+scope/);
-});
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {makeApp} from './helpers/stridebrain-app-harness.mjs';
+import {ready,signedOut,scope,response} from './helpers/stridebrain-session-fixtures.mjs';
+test('guest chat persists tab-only and restores after refresh',async()=>{const {c,storage}=makeApp();await c.restoreStaffPreview();c.view.chat=[{role:'user',text:'報價如何？'},{role:'assistant',mode:'gpt',text:'測試回覆',sources:[],actions:[]}];c.saveGuestChat();const key=`stridebrain-guest-chat-v1:guest:${scope}:interior`;assert.ok(storage.has(key));c.view.chat=[];c.restoreGuestChat();assert.equal(c.view.chat.length,2);assert.equal(c.view.chat[1].text,'測試回覆');});
+test('guest history is isolated by industry',async()=>{const {c}=makeApp();await c.restoreStaffPreview();c.view.chat=[{role:'user',text:'interior'}];c.saveGuestChat();c.pack.id='printing';c.restoreGuestChat();assert.equal(c.view.chat.length,0);c.pack.id='interior';c.restoreGuestChat();assert.equal(c.view.chat[0].text,'interior');});
+test('staff and guest have separate namespaces',()=>{const {c,storage}=makeApp();c.applySessionStatus({...ready,role:'staff'});c.view.chat=[{role:'user',text:'staff'}];c.saveGuestChat();assert.ok(storage.has(`stridebrain-guest-chat-v1:staff:${scope}:interior`));c.applySessionStatus(ready);assert.equal(c.view.chat.length,0);});
+test('unverified access cannot store or restore chat',()=>{const {c,storage}=makeApp();c.view.chat=[{role:'user',text:'not authorized'}];c.saveGuestChat();assert.equal(storage.size,0);});
+test('bounded messages are stored without uploaded documents or credentials',async()=>{const {c,storage}=makeApp();await c.restoreStaffPreview();c.documentSession={secret:'never store'};c.view.chat=Array.from({length:20},()=>({role:'user',text:'x'.repeat(1500)}));c.saveGuestChat();const messages=JSON.parse([...storage.values()][0]);assert.equal(messages.length,12);assert.equal(messages[0].text.length,1200);assert.ok(!JSON.stringify(messages).includes('secret'));});
+test('new chat persists clearing',async()=>{const {c}=makeApp();await c.restoreStaffPreview();c.view.chat=[{role:'user',text:'previous'}];c.saveGuestChat();c.view.chat=[];c.saveGuestChat();c.restoreGuestChat();assert.equal(c.view.chat.length,0);});
+test('verified expired session clears guest history without erasing unrelated staff scopes',async()=>{const {c,storage}=makeApp(()=>response(signedOut));storage.set(`stridebrain-guest-chat-v1:guest:${scope}:interior`,'[]');storage.set('stridebrain-guest-chat-v1:staff:other:interior','[]');await c.restoreStaffPreview();assert.equal(storage.size,1);assert.ok([...storage.keys()][0].includes('staff:other'));});

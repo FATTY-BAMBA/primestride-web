@@ -148,7 +148,7 @@ export async function streamOpenRouterFinal(payload,{apiKey,onDelta,requestFn=fe
  * Mockable for unit tests: requestModel(payload) returns OpenRouter-shaped
  * {choices:[{message:{role:"assistant",content,tool_calls}}]}.
  */
-export async function runOpenRouterCopilot({industry,messages,modelId,apiKey,requestModel,onDelta,onStatus}){
+export async function runOpenRouterCopilot({industry,messages,modelId,apiKey,requestModel,onDelta,onStatus,locale}){
  const selected=findAllowedModel(modelId);
  if(!selected||selected.provider!=="openrouter")throw Error("This model is not in the OpenRouter allowlist.");
  if(!validIndustry(industry))throw Error("Invalid demo industry.");
@@ -156,7 +156,7 @@ export async function runOpenRouterCopilot({industry,messages,modelId,apiKey,req
  if(!recent.length||recent.at(-1)?.role!=="user")throw Error("A new question is required.");
  const ask=requestModel||((payload)=>callOpenRouter(payload,{apiKey}));
  const chat=[
-  {role:"system",content:COPILOT_INSTRUCTIONS+"\nProvider: OpenRouter. The model is a reasoning interface to server-executed read-only tools, not an authoritative business record.\n"+copilotLanguageDirective(recent)},
+  {role:"system",content:COPILOT_INSTRUCTIONS+"\nProvider: OpenRouter. The model is a reasoning interface to server-executed read-only tools, not an authoritative business record.\n"+copilotLanguageDirective(recent,locale)},
   ...recent
  ];
  let usedTools=[],recordIds=[],answer="",totalCalls=0,round=0;

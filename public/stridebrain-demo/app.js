@@ -1,8 +1,10 @@
+import {copilotErrorMessage} from "./copilot-errors.js";
 import {getPack,listPacks} from "./industry-packs.js";
 import {WorkspaceModel,money,calculateVariation,escapeHtml as e,loadDemoState,saveDemoState,resetDemoState,event,setVariationInput,approveVariationGate,commitVariation,buildCustomerReply,reviewCustomerDraft,recordFeedback,markFeedbackReviewed} from "./core-model.js";
 import {overview,copilot,projects,knowledge,renderInspector,renderSourceModal} from "./views-primary.js";
 import {service,quotes,work,suppliers,approvals,analytics,learning} from "./views-operations.js";
-import {exampleAnswer} from "./assistant-rules.js";
+import {createSessionTransport,captureInvitation,createInvitationAttempt} from "./session-client.js";
+import {sessionGate} from "./session-view.js";
 import {source as sourceButton} from "./ui-shared.js";
 import {DEFAULT_MODEL_ID,findAllowedModel} from "./model-catalog.js";
 import {safeCopilotMarkdown} from "./copilot-format.js";
@@ -17,6 +19,10 @@ import {bridgeDefaults,createSandboxPrecedent,attachSandboxPrecedent,detachSandb
 import {getReadinessPack,initialReadiness,normalizeReadinessInput,evaluateReadiness,validateReadinessSources} from "./readiness-rules.js";
 import {validateIndustryEvidence} from "./industry-evidence.js";
 import {validateHistory,historicalDefaults,safeRequest,historicalEstimate,estimateMarkdown} from "./historical-estimator.js";
+const sessionTransport=createSessionTransport((...args)=>fetch(...args));
+let capturedInvitation=captureInvitation(location,history);
+let invitationAttempt=capturedInvitation===null?null:createInvitationAttempt(capturedInvitation,sessionTransport);
+capturedInvitation=null;
 const $=id=>document.getElementById(id);
 let interfaceLocale="zh-TW";
 try{interfaceLocale=sessionStorage.getItem("stridebrain-interface-locale")==="en"?"en":"zh-TW";}catch{}
@@ -68,14 +74,15 @@ function applyWorkspaceLanguage(){
 const requested=new URLSearchParams(location.search).get("industry")||"interior";
 let pack=getPack(requested),model=null,state=null,historyData=null,industryEvidence=null,documentSession=null,toastHandle=null,documentLoadVersion=0;
 let copilotGuest=false,guestChatScope=null;
-let copilotMode="sample",copilotOperatorToken="",copilotConnected=false,copilotBusy=false,copilotRunId=0;
+let copilotMode="checking",copilotOperatorToken="",copilotConnected=false,copilotBusy=false,copilotRunId=0;
+let copilotAccess={state:"checking",allowedModelIds:[]},sessionRefreshRun=0,sessionRefreshPromise=null;
 let selectedModelId=DEFAULT_MODEL_ID,copilotModelMenuOpen=false,copilotDraft="";
 let view={page:"overview",projectId:null,projectDetail:false,docId:null,quoteId:null,chat:[],search:"",filter:"all",pageIndex:0,flowStep:null};
 function toast(message){
  const el=$("toast");el.textContent=message;el.classList.add("visible");
  if(toastHandle)clearTimeout(toastHandle);toastHandle=setTimeout(()=>el.classList.remove("visible"),3500);
 }
-function context(){return {model,pack,state,view,history:historyData,industryEvidence,documentSession,locale:interfaceLocale,copilotSession:{mode:copilotMode,guest:copilotGuest,connected:copilotConnected,busy:copilotBusy,selectedModelId,modelMenuOpen:copilotModelMenuOpen,draft:copilotDraft}};}
+function context(){return {model,pack,state,view,history:historyData,industryEvidence,documentSession,locale:interfaceLocale,staffAccess:new URLSearchParams(location.search).has("staff"),copilotSession:{access:copilotAccess.state,allowedModelIds:copilotAccess.allowedModelIds,mode:copilotMode,guest:copilotGuest,connected:copilotConnected,busy:copilotBusy,selectedModelId,modelMenuOpen:copilotModelMenuOpen,draft:copilotDraft}};}
 const GUEST_CHAT_PREFIX="stridebrain-guest-chat-v1:";
 function guestChatKey(industry){return GUEST_CHAT_PREFIX+(copilotGuest?"guest:":"staff:")+guestChatScope+":"+industry;}
 function saveGuestChat(){
@@ -122,7 +129,7 @@ function pageTitle(){return view.page==="projects"?pack.projectLabel:view.page==
 function render(){
  if(!model)return;
  const mapping={overview,copilot,projects,knowledge,service,quotes,work,suppliers,approvals,analytics,learning,history:historyView,playbook,readiness:readinessView,intake:documentIntelligenceView};
- $("main").innerHTML=(mapping[view.page]||overview)(context())+(view.page==="intake"?historyBridgeSection(context()):"");
+ $("main").innerHTML=(view.page==="copilot"&&copilotAccess.state!=="ready"?sessionGate:(mapping[view.page]||overview))(context())+(view.page==="intake"?historyBridgeSection(context()):"");
  $("inspector").innerHTML=renderInspector(context());
  $("page-name").textContent=pageTitle();
  applyWorkspaceLanguage();
@@ -183,39 +190,41 @@ async function loadIndustry(id){
  }
 }
 function gptAnswerCard(result){
+ const zh=interfaceLocale!=="en";
  const content=String(result?.answer||"").slice(0,3800);
  const ids=[...new Set((Array.isArray(result.sourceIds)?result.sourceIds:[]).filter(id=>!!model.document(id)))].slice(0,12);
  const paragraphs=safeCopilotMarkdown(content).replace(/\[([A-Z][A-Z0-9-]{2,85})\]/g,(full,id)=>ids.includes(id)?sourceButton(id):full);
  const allowed=new Set(["overview","projects","knowledge","quotes","work","suppliers","approvals","analytics","history","playbook","service"]);
  const actions=[...new Set((Array.isArray(result.actions)?result.actions:[]).filter(a=>allowed.has(a)))].slice(0,4);
- const labelMap={overview:"Business overview",projects:"Explore projects",knowledge:"Inspect knowledge",quotes:"Review quotes",work:"Work orders",suppliers:"Suppliers",approvals:"Pending approvals",analytics:"Analytics",history:"Past project estimates",playbook:"Industry playbook",service:"Customer replies"};
- return '<div class="answer-card"><div class="suite-eyebrow">'+e(result.modelLabel||"AI model")+' · READ-ONLY DEMO ANSWER</div><div class="copilot-gpt-prose">'+paragraphs+'</div>'+
-  (ids.length?'<div class="copilot-tool-sources"><strong>Inspect supporting sample records</strong><div>'+ids.map(sourceButton).join(" ")+'</div></div>':'<p class="disclosure">No cited record was returned for this conversational answer.</p>')+
+ const labelMap=zh?{overview:"營運總覽",projects:"查看專案",knowledge:"查看知識資料",quotes:"查看報價",work:"工作單",suppliers:"供應商",approvals:"待審核事項",analytics:"營運分析",history:"歷史成本估價",playbook:"產業作業指引",service:"客戶回覆"}:{overview:"Business overview",projects:"Explore projects",knowledge:"Inspect knowledge",quotes:"Review quotes",work:"Work orders",suppliers:"Suppliers",approvals:"Pending approvals",analytics:"Analytics",history:"Past project estimates",playbook:"Industry playbook",service:"Customer replies"};
+ return '<div class="answer-card"><div class="suite-eyebrow">'+e(result.modelLabel||"AI model")+' · '+(zh?'AI 回覆':'AI answer')+'</div><div class="copilot-gpt-prose">'+paragraphs+'</div>'+
+  (ids.length?'<div class="copilot-tool-sources"><strong>'+(zh?'資料來源':'Supporting records')+'</strong><div>'+ids.map(sourceButton).join(" ")+'</div></div>':'<p class="disclosure">'+(zh?'此回覆未引用工作區紀錄。':'This answer does not cite workspace records.')+'</p>')+
   (actions.length?'<div class="answer-actions">'+actions.map(a=>'<button type="button" class="button-secondary" data-action="nav" data-value="'+a+'">'+e(labelMap[a])+' ↗</button>').join("")+'</div>':'')+
-  '<p class="disclosure">Demo data · '+e(result.asOf||"2026-10-18")+' snapshot · sample workspace</p></div>';
+  '<p class="disclosure">'+(zh?'示範資料 · ':'Sample data · ')+e(result.asOf||"2026-10-18")+'</p></div>';
 }
 async function ask(question){
  const text=String(question||"").trim();if(!text||copilotBusy)return;
+ if(copilotAccess.state!=="ready"||copilotMode!=="gpt"){
+  copilotDraft=text;view.page="copilot";render();return;
+ }
+ if(!copilotAccess.allowedModelIds.includes(selectedModelId)){
+  copilotDraft=text;await restoreStaffPreview();return;
+ }
  copilotDraft="";copilotModelMenuOpen=false;
  view.chat.push({role:"user",text});
  view.page="copilot";
- if(copilotMode!=="gpt"){
-  const ans=exampleAnswer(text,context());
-  view.chat.push({role:"assistant",html:ans.html,sources:ans.sources,query:text,mode:"sample",text:""});
-  saveGuestChat();render();window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});return;
- }
- const active=++copilotRunId,activeIndustry=pack.id,activeModel=selectedModelId;
+ const active=++copilotRunId,activeIndustry=pack.id,activeModel=selectedModelId,activeLocale=interfaceLocale;
  const recent=view.chat.filter(m=>m.role==="user"||(m.role==="assistant"&&m.mode==="gpt"&&m.text))
   .slice(-12).map(m=>({role:m.role,content:String(m.text||"").slice(0,m.role==="user"?1200:1800)}));
  copilotBusy=true;
  const index=view.chat.length;
- view.chat.push({role:"assistant",html:'<div class="answer-card"><div class="suite-eyebrow">READ-ONLY BUSINESS TOOLS</div><p class="muted">Reviewing workspace data and preparing your answer…</p></div>',sources:[],query:text,mode:"gpt",pending:true});
+ view.chat.push({role:"assistant",html:'<div class="answer-card"><p class="muted">'+(activeLocale==='en'?'Reviewing the relevant records…':'正在查閱相關資料…')+'</p></div>',sources:[],query:text,mode:"gpt",pending:true});
  render();window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});
  try{
   const response=await fetch("/api/stridebrain-demo/copilot",{
    method:"POST",cache:"no-store",credentials:"same-origin",
    headers:{"Content-Type":"application/json","Accept":activeModel.startsWith("openai-direct/")?"application/json":"text/event-stream"},
-   body:JSON.stringify({industry:activeIndustry,messages:recent,modelId:activeModel})
+   body:JSON.stringify({industry:activeIndustry,messages:recent,modelId:activeModel,locale:activeLocale})
   });
   let result;
   if(response.ok&&response.headers.get("content-type")?.includes("text/event-stream")){
@@ -241,7 +250,7 @@ async function ask(question){
     const check=()=>{if(active!==copilotRunId||shown>=draft.length||performance.now()>deadline){shown=draft.length;const node=document.querySelector('[data-streaming-answer="'+index+'"]');if(node)node.textContent=draft;resolve();}else requestAnimationFrame(check);};
     check();
    });
-   view.chat[index].html='<div class="answer-card"><div class="suite-eyebrow">AI RESPONSE · STREAMING</div><p class="disclosure">Checking business records… Sources are verified after completion.</p><div class="copilot-stream-text" data-streaming-answer="'+index+'" aria-live="polite"></div></div>';
+   view.chat[index].html='<div class="answer-card"><div class="suite-eyebrow">'+(activeLocale==='en'?'Preparing your answer':'正在整理回覆')+'</div><p class="disclosure">'+(activeLocale==='en'?'Sources will appear with the completed answer.':'回覆完成後將顯示資料來源。')+'</p><div class="copilot-stream-text" data-streaming-answer="'+index+'" aria-live="polite"></div></div>';
    render();
    while(true){
     const chunk=await reader.read();if(chunk.done)break;
@@ -256,12 +265,12 @@ async function ask(question){
      let data;try{data=JSON.parse(dataLine.slice(5).trim());}catch{continue;}
      if(type==="status"&&typeof data.message==="string"){
       const note=document.querySelector('[data-streaming-answer="'+index+'"]')?.previousElementSibling;
-      if(note)note.textContent=data.message.slice(0,130);
+      if(note)note.textContent=activeLocale==="en"?data.message.slice(0,130):(/Writing/.test(data.message)?"正在整理回覆…":"正在查閱相關資料…");
      }else if(type==="delta"&&typeof data.text==="string"){
       draft=(draft+data.text).slice(0,3800);
       updateDraft();
      }else if(type==="metrics"){streamMetrics=data;}else if(type==="result"){result=data;completed=true;}
-     else if(type==="error")throw Error(String(data.error||"The model response was interrupted.").slice(0,180));
+     else if(type==="error"){const error=new Error("Chat response interrupted");error.code=data.code;throw error;}
     }
    }
    if(!completed)throw Error("The streaming response ended before completion.");
@@ -269,7 +278,7 @@ async function ask(question){
    if(streamMetrics)console.info("stridebrain_stream_metrics",streamMetrics);
   }else{
    result=await response.json();
-   if(!response.ok)throw Error(String(result.error||"The GPT service is unavailable.").slice(0,180));
+   if(!response.ok){const error=new Error("Chat request failed");error.code=result.code;error.status=response.status;throw error;}
   }
   if(active!==copilotRunId||pack.id!==activeIndustry)return;
   if(!["gpt-readonly-demo","openrouter-readonly-demo"].includes(result.mode)||typeof result.answer!=="string"||result.modelId!==activeModel)throw Error("Unexpected model server response.");
@@ -280,8 +289,17 @@ async function ask(question){
   // Temporary provider failures must not erase a valid staff session or mix
   // synthetic sample answers into an incomplete real AI conversation.
   copilotConnected=false;
-  view.chat[index]={role:"assistant",html:'<div class="answer-card"><div class="suite-eyebrow">AI RESPONSE INTERRUPTED</div><p>'+e(String(err?.message||"The model could not complete its answer."))+'</p><p class="disclosure">No completed AI answer was returned. Your staff session is retained; you can retry the question or choose another approved model.</p><button type="button" class="button-secondary" data-action="ask" data-prompt="'+e(text)+'">↻ Retry question</button></div>',sources:[],query:text,mode:"error",text:""};
-  toast("The model response was interrupted. You can retry without entering your staff code again.");
+  copilotDraft=text;
+  const message=copilotErrorMessage(err?.code,interfaceLocale);
+  view.chat[index]={role:"assistant",html:'<div class="answer-card"><h3>'+(interfaceLocale==="en"?"Answer not completed":"回覆尚未完成")+'</h3><p>'+e(message)+'</p><button type="button" class="button-secondary" data-action="ask" data-prompt="'+e(text)+'">'+(interfaceLocale==="en"?"Retry question":"重試問題")+'</button></div>',sources:[],query:text,mode:"error",text:""};
+  if(err?.status===401||err?.code==="DEMO_ACCESS_DENIED"){
+   clearGuestChat();guestChatScope=null;view.chat=[];
+   copilotAccess={state:"signed_out",allowedModelIds:[],code:"SESSION_EXPIRED"};copilotMode="signed_out";
+  }
+  if(err?.code==="GUEST_MODEL_NOT_ALLOWED"||err?.code==="MODEL_NOT_ALLOWED"){
+   copilotAccess={state:"error",allowedModelIds:[]};copilotMode="error";
+  }
+  toast(message);
  }finally{
   if(active===copilotRunId){copilotBusy=false;saveGuestChat();render();window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});}
  }
@@ -342,6 +360,7 @@ async function handleDocument(file){
 }
 async function perform(el){
  const action=el.dataset.action,id=el.dataset.id||"",value=el.dataset.value||"";
+ if(action==="retrySession"){if(!copilotBusy)await restoreStaffPreview();return;}
  if(action==="language"){interfaceLocale=value==="en"?"en":"zh-TW";try{sessionStorage.setItem("stridebrain-interface-locale",interfaceLocale);}catch{}updateShell();render();return;}
  if(action==="nav"){copilotModelMenuOpen=false;view.projectDetail=false;setPage(value);}
  else if(action==="modelMenu"){
@@ -353,7 +372,7 @@ async function perform(el){
  else if(action==="modelSelect"){
    if(copilotBusy)return;
    const chosen=findAllowedModel(value);
-   if(!chosen){toast("That model is not on the approved list.");return;}
+   if(!chosen||copilotAccess.state!=="ready"||!copilotAccess.allowedModelIds.includes(chosen.id)){return;}
    selectedModelId=chosen.id;copilotModelMenuOpen=false;copilotConnected=false;
    render();document.querySelector(".sb-model-trigger")?.focus();
    toast(copilotMode==="gpt"?"Selected "+chosen.label+" for the next authorized model request.":"Selected "+chosen.label+". Staff AI access is required to use this model. The sample response mode remains available.");
@@ -435,20 +454,22 @@ async function perform(el){
  }
  else if(action==="enableGpt"){
    const token=$("copilot-access-token")?.value?.trim()||"";
-   if(token.length<20){toast("Enter the one-time staff access code.");return;}
+   if(token.length<20){toast(interfaceLocale==="en"?"Enter your staff access code.":"請輸入內部人員存取碼。");return;}
    try{
-    const response=await fetch("/api/stridebrain-demo/copilot/session",{method:"POST",credentials:"same-origin",cache:"no-store",headers:{"Content-Type":"application/json"},body:JSON.stringify({token})});
-    if(!response.ok){toast("Staff preview access could not be verified.");return;}
-    copilotGuest=false;copilotMode="gpt";copilotOperatorToken="";copilotConnected=false;copilotRunId++;view.chat=[];copilotModelMenuOpen=false;render();
-    toast("Staff AI enabled for this browser. You won't need the code again while the session is valid.");
-   }catch{toast("Could not establish a protected staff session.");}
+    await sessionTransport.request("/api/stridebrain-demo/copilot/session",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({token})});
+    const field=$("copilot-access-token");if(field)field.value="";
+    await restoreStaffPreview();
+   }catch{toast(interfaceLocale==="en"?"Sign-in could not be completed. Please retry.":"登入未完成，請重試。");}
  }else if(action==="disableGpt"){
-   await fetch(copilotGuest?"/api/stridebrain-demo/copilot/guest-session":"/api/stridebrain-demo/copilot/session",{method:"DELETE",credentials:"same-origin"}).catch(()=>{});
-   const wasGuest=copilotGuest;
-   clearGuestChat();
-   guestChatScope=null;copilotGuest=false;
-   copilotRunId++;copilotMode="sample";copilotOperatorToken="";copilotConnected=false;copilotBusy=false;copilotModelMenuOpen=false;copilotDraft="";
-   view.chat=[];render();toast(wasGuest?"Guest preview signed out.":"Staff AI session signed out.");
+   sessionRefreshRun++;sessionRefreshPromise=null;copilotRunId++;copilotBusy=false;copilotConnected=false;
+   invitationAttempt?.clear();invitationAttempt=null;
+   copilotAccess={state:"checking",allowedModelIds:[]};copilotMode="checking";render();
+   try{
+    await Promise.all(["/api/stridebrain-demo/copilot/guest-session","/api/stridebrain-demo/copilot/session"].map(url=>sessionTransport.request(url,{method:"DELETE"})));
+    clearGuestChat();purgeUnclaimedGuestChats(null);guestChatScope=null;copilotGuest=false;view.chat=[];copilotDraft="";
+    copilotAccess={state:"signed_out",allowedModelIds:[]};copilotMode="signed_out";render();
+    location.assign("./guest.html");
+   }catch{copilotAccess={state:"error",allowedModelIds:[]};copilotMode="error";render();}
  }else if(action==="projectBack"){view.projectDetail=false;render();}
  else if(action==="source")openSource(id);
  else if(action==="closeSource")closeSource();
@@ -625,58 +646,39 @@ document.addEventListener("keydown",ev=>{
 });
 document.addEventListener("dragover",ev=>{if(ev.target.closest("#intake-drop"))ev.preventDefault();});
 document.addEventListener("drop",ev=>{const area=ev.target.closest("#intake-drop");if(!area)return;ev.preventDefault();const file=ev.dataTransfer?.files?.[0];if(file)handleDocument(file);});
-async function redeemInvitationFromFragment(providedCode=null){
- // Keep invitation codes out of query strings, browser history and HTTP referrers.
- // The server alone validates the invitation, applies rate limits and issues an HttpOnly cookie.
- const match=location.hash.match(/^#invite=([^&]+)$/);
- if(providedCode===null&&!match)return false;
- let code=typeof providedCode==="string"?providedCode:"";
- if(providedCode===null){
-  try{code=decodeURIComponent(match[1]);}catch{}
-  history.replaceState(history.state,"",location.pathname+location.search);
+function applySessionStatus(info){
+ const sameIdentity=guestChatScope===info.chatScope&&copilotGuest===(info.role==="guest");
+ copilotAccess=info;copilotConnected=false;copilotModelMenuOpen=false;
+ if(info.active){
+  copilotGuest=info.role==="guest";guestChatScope=info.chatScope;
+  copilotMode=info.state==="ready"?"gpt":"unavailable";
+  if(!info.allowedModelIds.includes(selectedModelId))selectedModelId=info.defaultModelId||DEFAULT_MODEL_ID;
+  purgeUnclaimedGuestChats(copilotGuest?guestChatScope:null);
+  if(!sameIdentity){view.chat=[];if(model&&copilotMode==="gpt")restoreGuestChat();}
+ }else{
+  clearGuestChat();purgeUnclaimedGuestChats(null);guestChatScope=null;copilotGuest=false;view.chat=[];copilotMode="signed_out";
  }
- if(code.length<24||code.length>256){toast(interfaceLocale==="en"?"Invalid invitation link.":"邀請連結無效。");return false;}
- try{
-  const response=await fetch("/api/stridebrain-demo/copilot/guest-session",{
-   method:"POST",credentials:"same-origin",cache:"no-store",
-   headers:{"Content-Type":"application/json"},body:JSON.stringify({inviteCode:code})
-  });
-  const data=await response.json();
-  if(!response.ok||!data.active||!/^[a-f0-9]{24}$/.test(data.chatScope||"")){
-   toast(interfaceLocale==="en"?"Invitation unavailable or expired. Please request a new link.":"邀請已失效或暫時無法使用，請索取新的邀請連結。");
-   return false;
-  }
-  purgeUnclaimedGuestChats(data.chatScope);
-  guestChatScope=data.chatScope;copilotGuest=true;copilotMode="gpt";copilotConnected=false;
-  restoreGuestChat();if(model)render();
-  return true;
- }catch{
-  toast(interfaceLocale==="en"?"Could not verify invitation. Please try again.":"暫時無法驗證邀請，請重新開啟邀請連結。");
-  return false;
- }
+ if(model)render();
 }
 async function restoreStaffPreview(){
- // Invite is redeemed before checking prior sessions to avoid accidentally
- // keeping an unrelated staff account active on an invited guest's browser.
- if(location.hash.startsWith("#invite=")){await redeemInvitationFromFragment();if(copilotGuest)return;}
-
- // A verified staff session always takes precedence on a browser that also holds
- // a guest invitation. Staff must never be silently downgraded to guest mode.
- try{
-  const response=await fetch("/api/stridebrain-demo/copilot/session",{credentials:"same-origin",cache:"no-store"});
-  const info=response.ok?await response.json():{};
-  if(info.active&&/^[a-f0-9]{24}$/.test(info.chatScope||"")){
-   purgeUnclaimedGuestChats(null);
-   copilotGuest=false;guestChatScope=info.chatScope;copilotMode="gpt";copilotConnected=false;restoreGuestChat();if(model)render();return;
-  }
- }catch{}
- try{
-  const guest=await fetch("/api/stridebrain-demo/copilot/guest-session",{credentials:"same-origin",cache:"no-store"});
-  const info=guest.ok?await guest.json():{};
-  if(info.active&&/^[a-f0-9]{24}$/.test(info.chatScope||"")){
-   purgeUnclaimedGuestChats(info.chatScope);
-   guestChatScope=info.chatScope;copilotGuest=true;copilotMode="gpt";copilotConnected=false;restoreGuestChat();if(model)render();
-  }else purgeUnclaimedGuestChats(null);
- }catch{purgeUnclaimedGuestChats(null);}
+ if(sessionRefreshPromise)return sessionRefreshPromise;
+ const run=++sessionRefreshRun;
+ copilotAccess={...copilotAccess,state:"checking"};copilotMode="checking";copilotModelMenuOpen=false;
+ if(model)render();
+ sessionRefreshPromise=(async()=>{
+  try{
+   const info=invitationAttempt?await invitationAttempt.redeem():await sessionTransport.read();
+   if(run!==sessionRefreshRun)return;
+   invitationAttempt=null;applySessionStatus(info);
+  }catch(error){
+   if(run!==sessionRefreshRun)return;
+   if(error?.code==="INVALID_INVITATION")invitationAttempt=null;
+   copilotAccess={state:"error",allowedModelIds:[],code:error?.code||"SESSION_NETWORK"};copilotMode="error";
+   if(model)render();
+  }finally{if(run===sessionRefreshRun)sessionRefreshPromise=null;}
+ })();
+ return sessionRefreshPromise;
 }
-loadIndustry(pack.id).then(restoreStaffPreview);
+// Session verification begins immediately; Copilot is gated until it resolves.
+restoreStaffPreview();
+loadIndustry(pack.id);

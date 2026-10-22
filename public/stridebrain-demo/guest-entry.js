@@ -1,3 +1,4 @@
+import {createSessionTransport,captureInvitation,createInvitationAttempt} from "./session-client.js";
 const form=document.getElementById("invite-form"),field=document.getElementById("code"),button=document.getElementById("submit"),status=document.getElementById("status");
 const destination="/stridebrain-demo/index.html?industry=interior&view=copilot";
 const messages={
@@ -9,7 +10,49 @@ function applyLanguage(next){language=next==="en"?"en":"zh-TW";try{sessionStorag
 for(const node of document.querySelectorAll?.("[data-language]")||[])node.addEventListener("click",()=>applyLanguage(node.dataset.language));
 applyLanguage("zh-TW");
 function message(text,error=false){status.textContent=text;status.classList.toggle("error",error);}
-async function request(url,options={}){const r=await fetch(url,{credentials:"same-origin",cache:"no-store",...options});let data={};try{data=await r.json()}catch{}return {ok:r.ok,data};}
-async function check(){try{const {data}=await request("/api/stridebrain-demo/copilot/guest-session");if(data.active){message(messages[language].returning);window.location.assign(destination);return;}if(!data.available){button.disabled=true;message(messages[language].unavailable);}else message(messages[language].available);}catch{message(messages[language].error,true);}}
-form.addEventListener("submit",async event=>{event.preventDefault();const code=field.value.trim();field.value="";if(code.length<24)return message(messages[language].missing,true);button.disabled=true;message(messages[language].verifying);try{const r=await request("/api/stridebrain-demo/copilot/guest-session",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({inviteCode:code})});if(r.ok&&r.data.active){message(messages[language].success);window.location.assign(destination);return;}message(r.data.code==="GUEST_ACCESS_DISABLED"?messages[language].disabled:r.data.code==="INVALID_INVITATION"?messages[language].invalid:messages[language].failed,true);}catch{message(messages[language].network,true);}finally{button.disabled=false;}});
+const transport=createSessionTransport((...args)=>fetch(...args));
+let captured=captureInvitation(window.location,window.history);
+let pending=captured===null?null:createInvitationAttempt(captured,transport);
+captured=null;
+let busy=false,retryCheck=false;
+field.disabled=true;
+function activationError(error){
+ const code=error?.code;
+ if(code==="INVALID_INVITATION")return messages[language].invalid;
+ if(code==="GUEST_ACCESS_DISABLED")return messages[language].disabled;
+ if(code==="INVITE_RATE_LIMITED")return language==="en"?"Too many attempts. Please try again later.":"嘗試次數較多，請稍後重試。";
+ if(code==="SESSION_NOT_RETAINED")return language==="en"?"Your browser could not keep the sign-in. Please allow site cookies and retry.":"瀏覽器未能保留登入狀態。請允許此網站使用 Cookie 後重試。";
+ return messages[language].network;
+}
+async function verifyPending(){
+ if(busy)return;busy=true;button.disabled=true;message(messages[language].verifying);
+ try{
+  const info=await pending.redeem();pending=null;
+  if(info.active){message(messages[language].success);window.location.assign(destination);}
+ }catch(error){
+  if(error.code==="INVALID_INVITATION"){pending=null;field.disabled=false;}
+  message(activationError(error),true);
+  if(pending){field.disabled=true;button.textContent=language==="en"?"Retry connection":"重新連線";}
+ }finally{busy=false;button.disabled=false;}
+}
+async function check(){
+ if(pending){await verifyPending();return;}
+ retryCheck=false;button.disabled=true;field.disabled=true;
+ try{
+  const data=await transport.read();
+  if(data.active){message(messages[language].returning);window.location.assign(destination);return;}
+  if(!data.available){message(messages[language].unavailable);return;}
+  button.disabled=false;field.disabled=false;button.textContent=messages[language].submit;message(messages[language].available);
+ }catch{retryCheck=true;button.disabled=false;button.textContent=language==="en"?"Retry connection":"重新連線";message(messages[language].error,true);}
+}
+form.addEventListener("submit",async event=>{
+ event.preventDefault();if(busy)return;
+ if(retryCheck){await check();return;}
+ if(!pending){
+  const code=field.value.trim();field.value="";
+  if(code.length<24||code.length>256)return message(messages[language].missing,true);
+  pending=createInvitationAttempt(code,transport);
+ }
+ await verifyPending();
+});
 check();

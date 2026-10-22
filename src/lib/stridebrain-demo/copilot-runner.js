@@ -53,14 +53,14 @@ export async function callOpenAi(payload,{apiKey,requestFn=fetch,timeout=18000}=
   return data;
  }finally{clearTimeout(timer);}
 }
-export async function runGptCopilot({industry,messages,apiKey,model="gpt-5.6",requestModel}){
+export async function runGptCopilot({industry,messages,apiKey,model="gpt-5.6",requestModel,locale}){
  if(!validIndustry(industry))throw Error("Invalid demo industry.");
  const recent=normaliseMessages(messages);
  if(!recent.length||recent.at(-1)?.role!=="user")throw Error("Ask a new question to continue.");
  if(recent.at(-1).content.length>1200)throw Error("Question exceeds demo limit.");
  const ask=requestModel||((payload)=>callOpenAi(payload,{apiKey}));
  let input=[...recent],used=[],allIds=[],round=0,lastText="";
- const localizedInstructions=COPILOT_INSTRUCTIONS+"\n"+copilotLanguageDirective(recent);
+ const localizedInstructions=COPILOT_INSTRUCTIONS+"\n"+copilotLanguageDirective(recent,locale);
  for(;round<MAX_TOOL_ROUNDS;round++){
   const response=await ask({
    model,

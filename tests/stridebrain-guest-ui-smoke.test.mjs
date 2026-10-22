@@ -1,21 +1,10 @@
-import test from "node:test";
-import assert from "node:assert/strict";
-import {readFileSync} from "node:fs";
-const app=readFileSync(new URL("../public/stridebrain-demo/app.js",import.meta.url),"utf8");
-const view=readFileSync(new URL("../public/stridebrain-demo/views-primary.js",import.meta.url),"utf8");
-const guest=readFileSync(new URL("../public/stridebrain-demo/guest-entry.js",import.meta.url),"utf8");
-test("guest sessions are restored independently of staff session",()=>{
- assert.match(app,/copilotGuest=true;copilotMode="gpt"/);
- assert.ok(app.includes('copilotGuest?"/api/stridebrain-demo/copilot/guest-session"'));
- assert.match(app,/copilotGuest=false;copilotMode="gpt"/);
- const restore=app.slice(app.indexOf("async function restoreStaffPreview()"));
- assert.ok(restore.indexOf('"/api/stridebrain-demo/copilot/session"')<restore.indexOf('"/api/stridebrain-demo/copilot/guest-session"'),"Staff session must take precedence over guest on shared devices");
-});
-test("guest sign out and model labels never claim staff access",()=>{
- assert.match(view,/isGuest\?\(zh\?\x27訪客 AI 工作區\x27:\x27Guest AI workspace\x27\)/);
- assert.match(view,/isGuest\?\(zh\?"離開訪客體驗":"Leave guest session"\)/);
-});
-test("guest onboarding does not put invitation into a URL",()=>{
- assert.match(guest,/JSON\.stringify\(\{inviteCode:code\}\)/);
- assert.doesNotMatch(guest,/location\.search|URLSearchParams|localStorage/);
-});
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {sessionGate} from '../public/stridebrain-demo/session-view.js';
+import {copilot} from '../public/stridebrain-demo/views-primary.js';
+import {ready,modelId} from './helpers/stridebrain-session-fixtures.mjs';
+const base={locale:'zh-TW',pack:{id:'interior',company:'示範公司',companyEn:'Demo',owner:'Test',short:'Interior'},view:{chat:[]},copilotSession:{mode:'gpt',access:'ready',guest:true,allowedModelIds:[modelId],selectedModelId:modelId,modelMenuOpen:true}};
+test('checking and errors have no working composer or second code field',()=>{for(const access of ['checking','error','signed_out','unavailable']){const html=sessionGate({...base,copilotSession:{access,draft:'保留問題'}});assert.doesNotMatch(html,/id="ask-form"|sb-guest-invite|copilot-access-token/);assert.match(html,/保留問題/);}});
+test('transient error offers retry, not sign-in instructions',()=>{const html=sessionGate({...base,copilotSession:{access:'error'}});assert.match(html,/retrySession/);assert.doesNotMatch(html,/guest.html|OpenRouter|token|API/);});
+test('authorized guest sees only entitled model and no sample warning',()=>{const html=copilot(base);assert.match(html,/Claude Sonnet 5.5/);assert.doesNotMatch(html,/data-value="openai\/gpt-6-sol"|data-value="openai-direct|AI 試用尚未啟用|Enable staff AI/);assert.match(html,/離開訪客體驗/);});
+test('staff sign-in appears only on explicit administrator entry',()=>{assert.doesNotMatch(sessionGate({...base,copilotSession:{access:'signed_out'}}),/copilot-access-token/);assert.match(sessionGate({...base,staffAccess:true,copilotSession:{access:'signed_out'}}),/copilot-access-token/);});

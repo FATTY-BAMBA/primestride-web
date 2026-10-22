@@ -36,7 +36,7 @@ export function copilot(c){
  const menuOpen=!!session.modelMenuOpen&&!busy;
  const greetingHour=new Date().getHours();
  const greeting=zh?(greetingHour<12?"早安":greetingHour<17?"午安":"晚安"):(greetingHour<12?"Good morning":greetingHour<17?"Good afternoon":"Good evening");
- const displayStatus=isConnectedMode?(connected?(zh?"已連線 · 唯讀工作區工具":"Connected · Read-only workspace tools"):(zh?"AI 已啟用 · 尚未確認連線":"AI session selected · Connection not yet verified")):(zh?"示範回答 · 尚未連接 AI 模型":"Sample answers · AI provider not connected");
+ const displayStatus=isConnectedMode?(connected?(zh?"已連線 · 唯讀工作區工具":"Connected · Read-only workspace tools"):(zh?"可以開始提問":"Ready for your question")):(zh?"示範回答 · 尚未連接 AI 模型":"Sample answers · AI provider not connected");
  const brandLabel=isConnectedMode?(isGuest?"STRIDEBRAIN AI COPILOT":"STAFF AI COPILOT"):(zh?"範例資料瀏覽":"SAMPLE DATA EXPLORER");
  const quick=quickActionsFor(p.id,c.locale),ideas=ideasFor(p.id,c.locale);
  const hideIfBusy=busy?" disabled":"";
@@ -47,13 +47,13 @@ export function copilot(c){
  "deepseek/deepseek-v4.1-flash":["快速回覆","適合重視效率的工具查詢"],
  "openai-direct/gpt-5.6":["直接 API","使用另外設定的 OpenAI API 專案"]
 };
- const menu=MODEL_CATALOG.map(item=>{
+ const menu=MODEL_CATALOG.filter(item=>(session.allowedModelIds||[]).includes(item.id)).map(item=>{
   const selected=item.id===model.id;
   return '<button type="button" role="option" aria-selected="'+(selected?"true":"false")+'" class="sb-model-option'+(selected?" selected":"")+'" data-action="modelSelect" data-value="'+e(item.id)+'"'+hideIfBusy+'>'+
     '<span class="sb-model-option-main"><strong>'+e(item.label)+'</strong><span class="sb-model-check">'+(selected?"✓":"")+'</span></span>'+
     '<span class="sb-model-purpose">'+e(zh?(ZH_MODELS[item.id]?.[0]||item.purpose):item.purpose)+'</span>'+
     '<span class="sb-model-desc">'+e(zh?(ZH_MODELS[item.id]?.[1]||item.description):item.description)+'</span>'+
-    '<span class="sb-model-maker">'+e(item.provider==="openrouter"?"Via OpenRouter · "+item.maker:"Direct API · "+item.maker)+'</span></button>';
+    '<span class="sb-model-maker">'+e(item.maker)+'</span></button>';
  }).join("");
  let out='<div class="sb-copilot '+(empty?"is-empty":"is-active")+'">';
  if(empty){
@@ -68,7 +68,7 @@ export function copilot(c){
  }
  out+='<div class="sb-conversation">'+v.chat.map((msg,i)=>msg.role==="user"?
   '<div class="chat-message">'+e(msg.text)+'</div>':
-  '<div class="chat-answer"><div class="chat-answer-head"><span class="sb-answer-symbol">✳</span> STRIDEBRAIN · '+(msg.mode==="gpt"?e(msg.modelLabel||"CONNECTED MODEL")+(zh?" / 唯讀工作區工具":" / WORKSPACE TOOLS"):(zh?"預設範例回答 · 非即時 AI":"PREWRITTEN EXAMPLE · NOT LIVE AI"))+'</div>'+
+  '<div class="chat-answer"><div class="chat-answer-head"><span class="sb-answer-symbol">✳</span> STRIDEBRAIN · '+(msg.mode==="error"?(zh?"回覆尚未完成":"Answer not completed"):msg.mode==="gpt"?e(msg.modelLabel||"CONNECTED MODEL")+(zh?" / 唯讀工作區工具":" / WORKSPACE TOOLS"):(zh?"預設範例回答 · 非即時 AI":"PREWRITTEN EXAMPLE · NOT LIVE AI"))+'</div>'+
   msg.html+(msg.pending?'':'<div class="feedback-row"><span class="disclosure">'+(zh?"這個回答有幫助嗎？":"Was this useful?")+'</span><span><button type="button" class="feedback-btn" data-action="feedback" data-kind="Helpful" data-index="'+i+'">'+(zh?"✓ 有幫助":"✓ Helpful")+'</button> <button type="button" class="feedback-btn" data-action="feedback" data-kind="Needs review" data-index="'+i+'">'+(zh?"⚑ 需要改善":"⚑ Needs review")+'</button></span></div>')+'</div>'
  ).join("")+'</div>';
  const last=v.chat[v.chat.length-1];
