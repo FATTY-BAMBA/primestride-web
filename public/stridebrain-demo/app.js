@@ -342,6 +342,12 @@ async function handleDocument(file){
 }
 async function perform(el){
  const action=el.dataset.action,id=el.dataset.id||"",value=el.dataset.value||"";
+ if(action==="redeemGuestInvite"){
+  const code=$("sb-guest-invite")?.value?.trim()||"";
+  if(code.length<24||code.length>256){toast(interfaceLocale==="en"?"Enter a valid invitation code.":"請輸入有效的邀請碼。");return;}
+  await redeemInvitationFromFragment(code);
+  return;
+ }
  if(action==="language"){interfaceLocale=value==="en"?"en":"zh-TW";try{sessionStorage.setItem("stridebrain-interface-locale",interfaceLocale);}catch{}updateShell();render();return;}
  if(action==="nav"){copilotModelMenuOpen=false;view.projectDetail=false;setPage(value);}
  else if(action==="modelMenu"){
@@ -625,14 +631,16 @@ document.addEventListener("keydown",ev=>{
 });
 document.addEventListener("dragover",ev=>{if(ev.target.closest("#intake-drop"))ev.preventDefault();});
 document.addEventListener("drop",ev=>{const area=ev.target.closest("#intake-drop");if(!area)return;ev.preventDefault();const file=ev.dataTransfer?.files?.[0];if(file)handleDocument(file);});
-async function redeemInvitationFromFragment(){
+async function redeemInvitationFromFragment(providedCode=null){
  // Keep invitation codes out of query strings, browser history and HTTP referrers.
  // The server alone validates the invitation, applies rate limits and issues an HttpOnly cookie.
  const match=location.hash.match(/^#invite=([^&]+)$/);
- if(!match)return false;
- let code="";
- try{code=decodeURIComponent(match[1]);}catch{}
- history.replaceState(history.state,"",location.pathname+location.search);
+ if(providedCode===null&&!match)return false;
+ let code=typeof providedCode==="string"?providedCode:"";
+ if(providedCode===null){
+  try{code=decodeURIComponent(match[1]);}catch{}
+  history.replaceState(history.state,"",location.pathname+location.search);
+ }
  if(code.length<24||code.length>256){toast(interfaceLocale==="en"?"Invalid invitation link.":"邀請連結無效。");return false;}
  try{
   const response=await fetch("/api/stridebrain-demo/copilot/guest-session",{
