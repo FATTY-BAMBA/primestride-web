@@ -38,17 +38,52 @@ const INDUSTRY_IDEAS={
   {label:"Production blockers",glyph:"◇",prompt:"Which current print jobs are blocked and who should resolve their dependencies?"}
  ]
 };
-export function quickActionsFor(industry){
+const ZH_SHORTCUTS={
+ numbers:["今日營運數據","查看報價、待審核與受阻工作"],
+ quotes:["報價狀況","查看報價與待確認事項"],
+ followups:["追蹤待辦","優先處理卡關工作與審核"],
+ suppliers:["材料與供應商","查詢材料與供應商風險"],
+ financials:["財務與毛利","分析報價毛利與成本"]
+};
+const ZH_IDEAS={
+ interior:[
+  {label:"檢查松山變更單",prompt:"請用繁體中文整理松山石英檯面變更的成本依據與尚未核准事項。"},
+  {label:"估算新裝修案件",prompt:"請用繁體中文說明如何參考已完成的室內裝修案例來估算新客戶詢價。"},
+  {label:"查詢裝修規範",prompt:"請用繁體中文列出修訂圖面放行前應核對的台灣室內裝修規範及尚未確認事項。"}
+ ],
+ printing:[
+  {label:"檢查 A3 印前文件",prompt:"請用繁體中文說明 500 張 A3 海報印刷的印前檢查與未確認事項。"},
+  {label:"估算新印刷訂單",prompt:"請用繁體中文說明如何利用歷史印刷案件估算 500 張 A3 新訂單。"},
+  {label:"找出印製卡關項目",prompt:"請用繁體中文指出目前有哪些印刷工作卡關，以及需要確認的依賴事項。"}
+ ]
+};
+const ZH_QUICK_PROMPTS={
+ interior:{
+ numbers:"請用繁體中文整理示範工作區的待審核事項、受阻工作及近期報價重點。",
+ quotes:"請用繁體中文整理目前的報價數量、待確認版本及來源。",
+ followups:"請用繁體中文整理裝修專案最值得優先追蹤的待辦與原因。",
+ suppliers:"請用繁體中文指出材料供應商有哪些資訊尚待確認，切勿假設即時庫存。",
+ financials:"請用繁體中文分析示範報價的預估毛利率與成本限制。"
+ },
+ printing:{
+ numbers:"請用繁體中文整理示範印刷工作區的訂單、待審核、受阻工作及報價概況。",
+ quotes:"請用繁體中文整理印刷訂單報價與待確認事項。",
+ followups:"請用繁體中文說明應優先追蹤的印刷工單及原因。",
+ suppliers:"請用繁體中文指出紙材、交期與供應商有哪些事項需要查證。",
+ financials:"請用繁體中文分析印刷示範報價的成本與預估毛利率。"
+ }
+};
+export function quickActionsFor(industry,locale="en"){
  const key=industry==="printing"?"printing":"interior";
- return QUICK_ACTIONS.map(({id,label,glyph,description,prompts})=>({id,label,glyph,description,prompt:prompts[key]}));
+ return QUICK_ACTIONS.map(({id,label,glyph,description,prompts})=>locale==="zh-TW"?{id,label:ZH_SHORTCUTS[id][0],glyph,description:ZH_SHORTCUTS[id][1],prompt:ZH_QUICK_PROMPTS[key][id]}:{id,label,glyph,description,prompt:prompts[key]});
 }
-export function ideasFor(industry){return INDUSTRY_IDEAS[industry==="printing"?"printing":"interior"].map(item=>({...item}));}
+export function ideasFor(industry,locale="en"){const key=industry==="printing"?"printing":"interior";return INDUSTRY_IDEAS[key].map((item,i)=>locale==="zh-TW"?{...item,...ZH_IDEAS[key][i]}:{...item});}
 
 /**
  * Contextual next questions, derived from the user's current topic and safe
  * read-only workflow signals. Never imply a message was sent or quote approved.
  */
-export function followUpsFor(lastQuestion="",industry="interior",actions=[],lastAnswer=""){
+export function followUpsFor(lastQuestion="",industry="interior",actions=[],lastAnswer="",locale="en"){
  const answer=String(lastAnswer||"").slice(0,3800);
  const projectId=(answer.match(/\bPRJ-\d{3,6}\b/i)||[])[0]||"";
  const context=projectId?"For the sample project "+projectId+", ":"";
@@ -86,7 +121,7 @@ export function followUpsFor(lastQuestion="",industry="interior",actions=[],last
  if(context){
   prompts=prompts.map(([label,prompt])=>[label,context+prompt.charAt(0).toLowerCase()+prompt.slice(1)]);
  }
- if(chinese){
+ if(chinese||locale==="zh-TW"){
   const zhLabels={
    "Review cost evidence":"查看成本來源","Compare alternatives":"比較歷史案例","Identify approval gaps":"確認核准缺口",
    "Supplier risks":"供應商風險","Affected work":"影響哪些工作","Draft a request":"草擬詢價訊息",
