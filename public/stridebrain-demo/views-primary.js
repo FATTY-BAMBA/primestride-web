@@ -68,7 +68,7 @@ export function copilot(c){
  }
  out+='<div class="sb-conversation">'+v.chat.map((msg,i)=>msg.role==="user"?
   '<div class="chat-message">'+e(msg.text)+'</div>':
-  '<div class="chat-answer"><div class="chat-answer-head"><span class="sb-answer-symbol">✳</span> STRIDEBRAIN · '+(msg.mode==="gpt"?e(msg.modelLabel||"CONNECTED MODEL")+" / WORKSPACE TOOLS":"SOURCE-LINKED DEMO DATA")+'</div>'+
+  '<div class="chat-answer"><div class="chat-answer-head"><span class="sb-answer-symbol">✳</span> STRIDEBRAIN · '+(msg.mode==="gpt"?e(msg.modelLabel||"CONNECTED MODEL")+(zh?" / 唯讀工作區工具":" / WORKSPACE TOOLS"):(zh?"預設範例回答 · 非即時 AI":"PREWRITTEN EXAMPLE · NOT LIVE AI"))+'</div>'+
   msg.html+(msg.pending?'':'<div class="feedback-row"><span class="disclosure">'+(zh?"這個回答有幫助嗎？":"Was this useful?")+'</span><span><button type="button" class="feedback-btn" data-action="feedback" data-kind="Helpful" data-index="'+i+'">'+(zh?"✓ 有幫助":"✓ Helpful")+'</button> <button type="button" class="feedback-btn" data-action="feedback" data-kind="Needs review" data-index="'+i+'">'+(zh?"⚑ 需要改善":"⚑ Needs review")+'</button></span></div>')+'</div>'
  ).join("")+'</div>';
  const last=v.chat[v.chat.length-1];
@@ -110,6 +110,7 @@ export function copilot(c){
  out+='<div class="sb-copilot-status"><span class="sb-status-dot"></span><span>'+e(displayStatus)+'</span><span class="sb-status-divider">·</span><span>'+(zh?"示範資料 · 不會自動對外執行操作":"Demo data · No automatic external actions")+'</span></div>';
  out+='</div>';
  if(!isConnectedMode){
+  out+='<div class="sb-sample-disclosure" role="status" style="margin:12px 0;padding:12px 14px;border:1px solid #decfa8;border-radius:10px;background:#fffaf0;color:#5c4a28;font-size:.87rem">'+(zh?"目前為<strong>預設範例模式</strong>，不是即時 AI 對話。回答可能無法理解新問題，也不代表已呼叫您選擇的模型。啟用經授權的 AI 工作區後，才能使用 OpenRouter 與唯讀資料查詢。":"You are using <strong>prewritten example mode</strong>, not live AI. Responses may not understand new questions, and no selected AI model is being called. Authorized AI access is required for OpenRouter and read-only workspace queries.")+'</div>';
   out+='<details class="copilot-operator-box"><summary><span><span aria-hidden="true">⚙</span> Enable staff AI (one-time access)</span><span>▾</span></summary>'+
    '<div class="copilot-operator-inner"><p>Model selection is already visible in the composer, just like the reference. To actually use OpenRouter or the direct OpenAI model, an administrator must configure the provider API key <strong>on the server</strong> and enable the internal demo endpoint. Enter your separate staff code once on a trusted browser. A protected session will then keep AI available without repeated code entry. Never enter an OpenRouter or OpenAI API key here.</p>'+
    '<label for="copilot-access-token" class="form-field">One-time staff access code<input type="password" id="copilot-access-token" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Enter once on this trusted browser"></label>'+
