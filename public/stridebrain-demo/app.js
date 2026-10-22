@@ -625,7 +625,39 @@ document.addEventListener("keydown",ev=>{
 });
 document.addEventListener("dragover",ev=>{if(ev.target.closest("#intake-drop"))ev.preventDefault();});
 document.addEventListener("drop",ev=>{const area=ev.target.closest("#intake-drop");if(!area)return;ev.preventDefault();const file=ev.dataTransfer?.files?.[0];if(file)handleDocument(file);});
+async function redeemInvitationFromFragment(){
+ // Keep invitation codes out of query strings, browser history and HTTP referrers.
+ // The server alone validates the invitation, applies rate limits and issues an HttpOnly cookie.
+ const match=location.hash.match(/^#invite=([^&]+)$/);
+ if(!match)return false;
+ let code="";
+ try{code=decodeURIComponent(match[1]);}catch{}
+ history.replaceState(history.state,"",location.pathname+location.search);
+ if(code.length<24||code.length>256){toast(interfaceLocale==="en"?"Invalid invitation link.":"邀請連結無效。");return false;}
+ try{
+  const response=await fetch("/api/stridebrain-demo/copilot/guest-session",{
+   method:"POST",credentials:"same-origin",cache:"no-store",
+   headers:{"Content-Type":"application/json"},body:JSON.stringify({inviteCode:code})
+  });
+  const data=await response.json();
+  if(!response.ok||!data.active||!/^[a-f0-9]{24}$/.test(data.chatScope||"")){
+   toast(interfaceLocale==="en"?"Invitation unavailable or expired. Please request a new link.":"邀請已失效或暫時無法使用，請索取新的邀請連結。");
+   return false;
+  }
+  purgeUnclaimedGuestChats(data.chatScope);
+  guestChatScope=data.chatScope;copilotGuest=true;copilotMode="gpt";copilotConnected=false;
+  restoreGuestChat();if(model)render();
+  return true;
+ }catch{
+  toast(interfaceLocale==="en"?"Could not verify invitation. Please try again.":"暫時無法驗證邀請，請重新開啟邀請連結。");
+  return false;
+ }
+}
 async function restoreStaffPreview(){
+ // Invite is redeemed before checking prior sessions to avoid accidentally
+ // keeping an unrelated staff account active on an invited guest's browser.
+ if(location.hash.startsWith("#invite=")){await redeemInvitationFromFragment();if(copilotGuest)return;}
+
  // A verified staff session always takes precedence on a browser that also holds
  // a guest invitation. Staff must never be silently downgraded to guest mode.
  try{
