@@ -1,3 +1,4 @@
+import {needsPriorityReview,citedSourceIds,verifiedAnswer,requirePriorityCitations} from "./answer-quality.js";
 /**
  * OpenRouter multi-model adapter for StrideBrain's INTERNAL synthetic Copilot.
  *
@@ -36,10 +37,8 @@ function takeAnswer(message){
  return "";
 }
 function citationValidation(industry,ids,answer){
- const sourceIds=toolsForSourceIds(industry,ids);
- const known=new Set(sourceIds);
- const sanitized=String(answer||"").replace(/\[([A-Z][A-Z0-9-]{2,85})\]/g,(full,id)=>known.has(id)?full:"");
- return {sourceIds,answer:sanitized.slice(0,MAX_OUTPUT_CHARS)};
+ const sourceIds=toolsForSourceIds(industry,citedSourceIds(answer,ids));
+ return {sourceIds,answer:verifiedAnswer(answer,sourceIds)};
 }
 export async function callOpenRouter(payload,{apiKey,requestFn=fetch,timeout=24000}={}){
  if(typeof apiKey!=="string"||apiKey.length<8)throw Error("OpenRouter is not configured.");
@@ -159,7 +158,12 @@ export async function runOpenRouterCopilot({industry,messages,modelId,apiKey,req
   {role:"system",content:COPILOT_INSTRUCTIONS+"\nProvider: OpenRouter. The model is a reasoning interface to server-executed read-only tools, not an authoritative business record.\n"+copilotLanguageDirective(recent,locale)},
   ...recent
  ];
- let usedTools=[],recordIds=[],answer="",totalCalls=0,round=0;
+ const review=needsPriorityReview(recent)?runCopilotTool(industry,"list_priorities",{limit:3}):null;
+ if(review?.error)throw Error("Priority evidence review unavailable.");
+ // Server-executed read-only review, not a fabricated model answer.
+ if(review)chat.push({role:"assistant",content:null,tool_calls:[{id:"server_priority_review",type:"function",function:{name:"list_priorities",arguments:'{"limit":3}'}}]},
+  {role:"tool",tool_call_id:"server_priority_review",content:JSON.stringify(review)});
+ let usedTools=review?["list_priorities"]:[],recordIds=review?[...review.sourceIds]:[],answer="",totalCalls=0,round=0;
  for(;round<MAX_TOOL_ROUNDS;round++){
   if(round>0&&usedTools.length&&onDelta&&!requestModel){
    onStatus?.("Writing an evidence-grounded answer…");
@@ -181,7 +185,7 @@ export async function runOpenRouterCopilot({industry,messages,modelId,apiKey,req
   if(calls.length>MAX_TOOL_CALLS_PER_ROUND)throw Error("Tool request limit exceeded.");
   // Initial tool call is required. Models unable to obey are not accepted for this workflow.
   if(!calls.length){
-   if(round===0)throw Error("Selected provider did not supply required business evidence.");
+   if(round===0&&!review)throw Error("Selected provider did not supply required business evidence.");
    answer=takeAnswer(assistant);
    if(answer)break;
    throw Error("OpenRouter returned no usable answer.");
@@ -227,6 +231,7 @@ export async function runOpenRouterCopilot({industry,messages,modelId,apiKey,req
  }
  if(!answer)throw Error("The selected model produced no reliable answer.");
  const cited=citationValidation(industry,recordIds,answer);
+ requirePriorityCitations(review,cited.sourceIds);
  return {
   mode:"openrouter-readonly-demo",modelId:selected.id,modelLabel:selected.label,
   provider:"OpenRouter",answer:cited.answer,

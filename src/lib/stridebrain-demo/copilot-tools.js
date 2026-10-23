@@ -1,3 +1,4 @@
+import {reviewPriorities} from "./priority-review.js";
 /**
  * StrideBrain INTERNAL DEMO ONLY.
  * Read-only tools on bundled fictional industry records + cited public research.
@@ -109,7 +110,7 @@ function project(industry,projectId){
  const tasks=seed.workOrders.filter(w=>w.projectId===p.id).slice(0,15).map(w=>({id:w.id,title:w.title,status:w.status,owner:w.owner,dueDate:w.dueDate,sourceDocId:w.sourceDocId}));
  const approvals=seed.approvals.filter(a=>a.projectId===p.id).map(a=>({id:a.id,title:a.title,status:a.status,sourceDocId:a.sourceDocId}));
  const docs=seed.documents.filter(d=>d.projectId===p.id).slice(0,12).map(d=>({id:d.id,title:d.title,version:d.version,status:d.status}));
- return {found:true,isSynthetic:true,project:{id:p.id,name:p.name,stage:p.stage,type:p.type,client:p.client,manager:p.manager,location:p.city,recordedProgress:p.progress,provisionalBudget:p.budget,sampleTargetDate:p.targetDate},latestDraftQuote:latest?{id:latest.id,directCost:latest.directCost,priceExTax:latest.amountExTax,targetMargin:latest.grossMarginTarget,status:latest.status,sourceDocId:latest.sourceDocId}:null,tasks,approvals,documents:docs,sourceIds:distinct([...tasks.slice(0,3).map(x=>x.sourceDocId),...docs.slice(0,6).map(d=>d.id)])};
+ return {found:true,isSynthetic:true,reviewFindings:reviewPriorities(seed,{projectId:p.id,limit:1}),project:{id:p.id,name:p.name,stage:p.stage,type:p.type,client:p.client,manager:p.manager,location:p.city,recordedProgress:p.progress,provisionalBudget:p.budget,sampleTargetDate:p.targetDate},latestDraftQuote:latest?{id:latest.id,directCost:latest.directCost,priceExTax:latest.amountExTax,targetMargin:latest.grossMarginTarget,status:latest.status,sourceDocId:latest.sourceDocId}:null,tasks,approvals,documents:docs,sourceIds:distinct([latest?.sourceDocId,...approvals.map(x=>x.sourceDocId),...tasks.map(x=>x.sourceDocId),...docs.map(d=>d.id)])};
 }
 function quote(industry,projectId){
  const {seed}=pack(industry),p=resolveProject(seed,projectId);
@@ -122,26 +123,7 @@ function quote(industry,projectId){
  sourceIds:distinct(list.map(q=>q.sourceDocId)),
  disclaimer:"Sample quotation amounts—not recognized revenue, verified supplier costs, or collected cash."};
 }
-function priorities(industry,limit=6){
- const {seed}=pack(industry),max=Math.max(1,Math.min(8,Number(limit)||6));
- const approvals=seed.approvals.filter(a=>a.status==="Pending").map(a=>({
- priorityType:"pending_owner_review",id:a.id,projectId:a.projectId,
- projectName:seed.projects.find(p=>p.id===a.projectId)?.name,
- title:a.title,reason:"An unapproved decision must be reviewed before any dependent work or customer promise.",
- sourceDocId:a.sourceDocId
- }));
- const blocked=seed.workOrders.filter(w=>w.status==="Blocked").map(w=>({
- priorityType:"blocked_work",id:w.id,projectId:w.projectId,
- projectName:seed.projects.find(p=>p.id===w.projectId)?.name,
- title:w.title,reason:w.blockedBy||"The task is blocked and needs coordination.",
- dueDate:w.dueDate,sourceDocId:w.sourceDocId
- }));
- const items=[...approvals,...blocked].sort((a,b)=>
- (a.priorityType==="pending_owner_review"?0:1)-(b.priorityType==="pending_owner_review"?0:1)||
- text(a.dueDate).localeCompare(text(b.dueDate))
- ).slice(0,max);
- return {isSynthetic:true,prioritizationRule:"Pending approvals first, followed by recorded blocked work. This is a transparent demo heuristic, not a trained customer value model.",items,sourceIds:distinct(items.map(x=>x.sourceDocId)),note:"Suggested follow-ups are drafts; no calls, notifications or messages are made."};
-}
+function priorities(industry,limit=3){return reviewPriorities(pack(industry).seed,{limit});}
 function suppliers(industry,query){
  const {seed}=pack(industry),q=bounded(query),results=seed.suppliers.filter(x=>!q||[x.id,x.name,x.category].join(" ").toLowerCase().includes(q)).slice(0,8);
  return {isSynthetic:true,suppliers:results.map(x=>({id:x.id,name:x.name,category:x.category,exampleUnitPrice:x.sampleUnitPrice,exampleLeadTimeDays:x.leadTimeDays,priceChecked:x.priceChecked})),sourceIds:[],note:"Supplier details, example prices and lead times are demo data, not live vendor confirmations."};
@@ -173,7 +155,7 @@ const tools=[
  {name:"search_projects",description:"Search projects/jobs by name, city, manager, stage or ID in the selected sample workspace.",properties:{query:{type:"string"}}},
  {name:"get_project",description:"Get one matching project/job, sample tasks, approvals, documents and latest draft quote.",properties:{project_id:{type:"string"}}},
  {name:"get_quote",description:"Get current draft quotation and version history for a project/job. Exact deterministic recorded values, not revenue.",properties:{project_id:{type:"string"}}},
- {name:"list_priorities",description:"Get priority approvals and blocked tasks for owner follow-up. Read-only, deterministic ranking.",properties:{limit:{type:"integer"}}},
+ {name:"list_priorities",description:"Review ALL approvals, open work, deadlines and related document statuses before returning a project-diverse shortlist. Not a business-impact ranking. Read-only.",properties:{limit:{type:"integer"}}},
  {name:"search_company_knowledge",description:"Retrieve source-linked passages from the industry demo corpus and public Taiwan reference notes.",properties:{query:{type:"string"}}},
  {name:"get_suppliers",description:"Retrieve the sample supplier directory; pricing and lead times are unverified.",properties:{query:{type:"string"}}},
  {name:"find_historical_jobs",description:"Find completed sample jobs by category and quantity; do not infer current prices.",properties:{category:{type:"string"},quantity:{type:"integer"}}},
