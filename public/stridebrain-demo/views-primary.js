@@ -1,3 +1,4 @@
+import {renderOverview,renderConversationInspector,renderEvidenceDocument,roleChooser,renderProjectSignals} from "./experience-views.js";
 import {money,escapeHtml as e} from "./core-model.js";
 import {badge,button,source,sources,metric,heading,section,tag,recordCard,documentRow,quoteTable} from "./ui-shared.js";
 import {sourceUrlForDocument} from "./industry-evidence.js";
@@ -7,27 +8,7 @@ import {quickActionsFor,ideasFor,followUpsFor} from "./copilot-suggestions.js";
 import {operationalSignals,riskRadarSignals} from "./operational-signals.js";
 import {displayRecordText} from "./record-locale.js";
 const localizedName=(value,zh)=>displayRecordText(value,zh?"zh-TW":"en");
-export function overview(c){
- const {model:m,pack:p,state:s}=c,sm=m.summary(s),signals=operationalSignals(m,s),risk=riskRadarSignals(m,s),open=signals.ranked.slice(0,3);
-
- const zh=c.locale!=="en";
- const briefItems=open.map((a,i)=>'<div class="sb-brief-item"><span>0'+(i+1)+'</span><div><strong>'+e(localizedName(a.title,zh))+'</strong><small>'+e(localizedName(m.project(a.projectId)?.name||a.projectId,zh))+' · '+e(a.id)+'</small><p class="sb-brief-reason">'+(a.blockedCount>0?(zh?"優先檢視：同專案有 "+a.blockedCount+" 筆受阻工作，請先釐清是否與待審事項有關。":"Review first: "+a.blockedCount+" blocked work item(s) in this project; verify whether they relate to this approval."):(zh?"待人工確認 · 請核對來源文件後再決定後續作業":"Awaiting human review · Verify the source before deciding next steps"))+'</p>'+(a.sourceDocId?'<div class="sb-brief-source">'+source(a.sourceDocId)+'</div>':"")+'</div><button type="button" class="button-secondary" data-action="approval" data-id="'+e(a.id)+'">'+(zh?"審閱 ↗":"Review ↗")+'</button></div>').join("");
- const briefing='<section class="section sb-owner-brief"><div class="suite-eyebrow">'+(zh?"每日營運晨報 · 示範資料":"DAILY OPERATIONS BRIEF · DEMO DATA")+'</div><h2>'+(zh?"目前需要關注的三件事":"Three priorities worth your attention")+'</h2><p>'+(zh?"根據工作區紀錄整理。每項資訊都能追溯至專案與待審事項。":"Based on example records. Review each item's project and approval evidence.")+'</p>'+briefItems+'<p class="sb-brief-foot">'+(zh?"目前有 "+sm.pending+" 件待審事項及 "+sm.blocked+" 筆受阻工作；資料為範例快照，非即時監控。":"Snapshot: "+sm.pending+" pending approvals and "+sm.blocked+" blocked work items. Not a live feed.")+'</p></section>';
- let out='<section class="brief-header"><div class="suite-eyebrow">'+(zh?"營運總覽 · ":"BUSINESS PULSE · ")+e(zh?p.company:p.companyEn)+'</div><h1>'+(zh?"掌握重點。<br>推動每一項決策。":"Know what matters.<br>Move work forward.")+'</h1><p>'+(zh?"專案、報價、成本與團隊進度，集中在同一個工作區。":e(p.companyLine)+" "+e(p.outcomeLine))+'</p><div class="brief-actions">'+button(zh?"詢問 StrideBrain ↗":"Ask StrideBrain ↗","nav","copilot","button-primary")+'<span class="brief-date">'+(zh?"示範資料 · 2026 年 10 月 18 日":e(p.dateLabel))+'</span></div></section>';
- out+=briefing;
- const riskCards=risk.blocked.slice(0,3).map(item=>'<div class="sb-risk-item"><div><strong>'+e(localizedName(m.project(item.projectId)?.name||item.projectId,zh))+'</strong><small>'+e(item.projectId)+' · '+(zh?item.blockedCount+' 筆受阻工作':item.blockedCount+' blocked work items')+'</small><p>'+(zh?"已確認工作狀態為受阻；原因與影響需查看工作紀錄後判斷。":"Work items are recorded as blocked; inspect records before inferring causes or consequences.")+'</p><div class="sb-brief-source">'+item.sourceIds.slice(0,2).map(source).join(" ")+'</div></div>'+button(zh?"查看專案 ↗":"Explore project ↗","project",item.projectId,"button-secondary")+'</div>').join("");
- out+='<section class="section sb-risk-radar"><div class="suite-eyebrow">'+(zh?"異常與風險雷達 · 示範資料":"OPERATIONS RISK RADAR · DEMO DATA")+'</div><h2>'+(zh?"哪些工作可能需要介入？":"Where might work need attention?")+'</h2><p>'+(zh?"根據已記錄的受阻工作彙整，不代表已證實延誤或成本損失。":"Based on recorded blockers, not a claim of verified delays or financial losses.")+'</p>'+riskCards+(risk.missing.length?'<p class="sb-risk-warning">'+(zh?"部分待審事項的來源文件無法查到，請確認："+risk.missing.map(x=>x.approvalId).join("、"):"Some pending approvals refer to unavailable evidence: "+risk.missing.map(x=>x.approvalId).join(", "))+'</p>':"")+'</section>';
- out+='<div class="sb-journey-link"><div><strong>'+(zh?"下一步：評估報價與毛利":"Next: review price and margin")+'</strong><p>'+(zh?"先查明受阻工作與待審事項，再看看目前成本假設如何影響報價。":"Investigate blockers and approvals, then examine how cost assumptions affect quoted price.")+'</p></div>'+button(zh?"開啟毛利守門員 ↗":"Open Margin Guardian ↗","nav","quotes","button-primary")+'</div>';
- out+='<div class="operational-cards">'+metric(zh?"專案數":p.projectLabel,sm.projects,zh?"示範專案紀錄":"Connected demo records")+metric(zh?"待審核事項":"Open approvals",sm.pending,zh?"需要確認的決策":"Decisions require review")+metric(zh?"受阻工作":"Blocked work items",sm.blocked,zh?"等待解除的阻礙":"Dependencies need attention")+metric(zh?"報價提案總額":"Proposed quote portfolio",money(sm.latestQuoteTotal),zh?"提案金額，非實際營收":"Latest proposals; not revenue")+'</div>';
- out+='<section class="section">'+section(zh?"從一個問題開始":"Start with a question",zh?"直接詢問專案、報價、供應商與待辦事項。":"One entry point for knowledge, quotations and daily work.")+'<form id="ask-form" class="quick-command"><span style="font-size:20px;color:var(--mint)">✦</span><input aria-label="Ask StrideBrain" placeholder="'+e(zh?"今天有哪些專案或待審事項需要我先處理？":p.cue)+'" autocomplete="off"><button type="submit" class="button-primary">'+(zh?"送出 ↗":"Ask ↗")+'</button></form><div class="suggest-line">'+(zh?["今天最需要處理什麼？","有哪些工作被卡住？","哪些報價需要確認？","目前有哪些成本風險？"]:p.promptSuggestions).map(t=>'<button type="button" data-action="ask" data-prompt="'+e(t)+'">'+e(t)+'</button>').join("")+'</div></section>';
- out+='<div class="readiness-mini"><span>'+(zh?"<strong>開工前先確認：</strong>圖面、技術檢查及待審核事項是否齊全。":"<strong>Before a job can proceed:</strong> assess drawings, technical checks and outstanding approvals.")+'</span>'+button(zh?"進行作業檢查 ↗":"Run operational checks ↗","nav","readiness","button-secondary")+'</div>';
- out+='<div class="history-mini"><span>'+(zh?"<strong>收到新客戶詢價？</strong>參考歷史案例與成本，建立可追溯的估價草稿。":"<strong>New customer inquiry?</strong> Find comparable jobs and prepare a traceable estimate.")+'</span>'+button(zh?"參考歷史成本估價 ↗":"Estimate from history ↗","nav","history","button-secondary")+'</div>';
- out+='<div class="history-mini"><span>'+(zh?"<strong>收到報價或規格文件？</strong>使用範例或已去識別文件，核對內容並準備審閱草稿。":"<strong>Received a document?</strong> Review a sample or sanitized quotation or PDF specification.")+'</span>'+button(zh?"開啟文件智慧整理 ↗":"Open document intelligence ↗","nav","intake","button-secondary")+'</div>';
- out+='<section class="section split-feature"><div class="panel">'+section(zh?"待你確認的決策":"Decisions waiting for you",zh?"每項決策都能追溯到對應的工作紀錄。":"Every action links to a work record.",button(zh?"查看全部 ↗":"View all ↗","nav","approvals","button-link"))+open.map((a,i)=>'<div class="prio-row"><span class="prio-index">0'+(i+1)+'</span><div class="prio-main"><div class="prio-title">'+e(a.title)+'</div><div class="prio-sub">'+e(m.project(a.projectId)?.name)+' · '+e(a.id)+'</div></div><button type="button" class="prio-link" data-action="approval" data-id="'+e(a.id)+'">'+(zh?"審閱 ↗":"Review ↗")+'</button></div>').join("")+'</div><div class="feature-banner"><div class="suite-eyebrow">'+(zh?"完整工作流程示範":"FEATURED END-TO-END WORKFLOW")+'</div><h2>'+e(p.scenario.name)+'</h2><p>'+e(p.scenario.risk)+''+(zh?" 查核來源、檢視報價並確認審核流程後，再建立工作項目。":" Trace sources, review pricing and approvals before creating work.")+'</p>'+button(zh?"查看報價流程 ↗":"Open controlled workflow ↗","nav","quotes","button-primary")+'</div></section>';
- out+='<section class="section">'+section(zh?"專案一覽":p.projectLabel+" at a glance",zh?"報價、文件、狀態及負責人資訊集中管理。":"Quotations, source documents, status and responsibilities remain connected.",button(zh?"查看全部專案 ↗":"All "+p.projectLabel+" ↗","nav","projects","button-link"))+'<div class="cards-two">'+m.seed.projects.slice(0,4).map(p=>recordCard(p,c.locale)).join("")+'</div></section>';
- out+='<section class="section split-feature"><div class="panel">'+section(zh?"企業知識中心":"Shared company memory",zh?"讓規範與專案文件成為可查詢的知識。":"Existing rules and project files support all applications.",button(zh?"前往知識中心 ↗":"Knowledge hub ↗","nav","knowledge","button-link"))+'<div class="pulse-grid"><div class="pulse-item"><strong>'+sm.documents+'</strong><small>'+(zh?"知識來源":"Knowledge sources")+'</small></div><div class="pulse-item"><strong>'+sm.suppliers+'</strong><small>'+(zh?"供應商範例":"Supplier examples")+'</small></div><div class="pulse-item"><strong>'+sm.quotes+'</strong><small>'+(zh?"報價版本":"Quote versions")+'</small></div></div></div><div class="panel">'+section(zh?"持續改善":"Better over time",zh?"把回饋轉為可追蹤的審閱事項。":"Capture corrections and send them through responsible review.")+'<p class="text-small muted">'+(zh?"回饋會建立審閱事項，不會自動變成已核准的公司知識。":"Feedback is recorded for review, not automatically approved as company knowledge.")+'</p>'+button(zh?"回饋與改善 ↗":"Learning & feedback ↗","nav","learning","button-secondary")+'</div></section>';
- return out;
-}
+export function overview(c){return renderOverview(c);}
 export function copilot(c){
  const {pack:p,view:v,copilotSession:session={}}=c;
  const zh=c.locale!=="en";
@@ -80,7 +61,7 @@ export function copilot(c){
  }
  out+='<div class="sb-copilot-compose">';
  out+='<form id="ask-form" class="sb-composer">'+
-  '<label class="sr-only" for="sb-composer-input">Ask StrideBrain</label>'+
+  '<label class="sr-only" for="sb-composer-input">'+(zh?'詢問 StrideBrain':'Ask StrideBrain')+'</label>'+
   '<textarea id="sb-composer-input" data-copilot-input rows="2" maxlength="1200" placeholder="'+(zh?"詢問報價、待辦事項、供應商或專案進度…":"Ask about quotes, priorities, suppliers, or your projects...")+'"'+hideIfBusy+'>'+e(session.draft||"")+'</textarea>'+
   '<div class="sb-composer-bottom">'+
    '<div class="sb-composer-left">'+
@@ -123,21 +104,22 @@ export function copilot(c){
   out+='<div class="sb-copilot-connected-foot"><span><strong>'+(isGuest?(zh?'訪客 AI 工作區':'Guest AI workspace'):(zh?'內部人員 AI 模式':'Internal staff AI mode'))+'</strong>'+ (zh?' · 已選模型：':' · Selected model: ')+e(model.label)+(zh?' · 工作區資料僅供查詢。':' · Read-only workspace tools.')+'</span>'+
    button(isGuest?(zh?"離開訪客體驗":"Leave guest session"):(zh?"登出內部 AI":"Sign out of staff AI"),"disableGpt","","button-outline")+'</div>';
  }
+ if(empty)out+=roleChooser(c);
  out+='</div>';
  return out;
 }
 
 export function projects(c){
- const {model:m,pack:p,state:s,view:v}=c;
+ const {model:m,pack:p,state:s,view:v}=c,zh=c.locale!=="en",t=x=>displayRecordText(x,c.locale);
  if(v.projectDetail&&m.project(v.projectId)){
   const pr=m.project(v.projectId),docs=m.documentsFor(pr.id),work=m.tasksFor(pr.id,s),q=m.quotationsFor(pr.id),a=m.approvalsFor(pr.id,s);
-  let out=heading(pr.name,pr.id+" · "+pr.city+" · "+pr.manager,button("← All "+p.projectLabel,"projectBack","","button-outline"),"CONNECTED WORK RECORD");
-  out+='<div class="info-grid"><div class="info-field"><small>Sample budget</small><strong>'+money(pr.budget)+'</strong></div><div class="info-field"><small>Progress</small><strong>'+pr.progress+'%</strong></div><div class="info-field"><small>Sample target</small><strong>'+e(pr.targetDate)+'</strong></div></div>';
-  out+='<section class="section split-page"><div class="panel">'+section("Project knowledge",docs.length+" traceable source documents")+docs.slice(0,7).map(d=>documentRow(d,c.locale)).join("")+'</div><div class="panel">'+section("Execution", "Derived from the same work record")+'<div class="pulse-grid"><div class="pulse-item"><strong>'+work.length+'</strong><small>Tasks</small></div><div class="pulse-item"><strong>'+a.filter(x=>x.status==="Pending").length+'</strong><small>Pending approvals</small></div><div class="pulse-item"><strong>'+q.length+'</strong><small>Quote versions</small></div></div>'+work.slice(0,5).map(t=>'<div class="prio-row"><div class="prio-main"><div class="prio-title">'+e(t.title)+'</div><div class="prio-sub">'+e(t.owner)+' · '+e(t.dueDate)+'</div></div>'+badge(t.status)+'</div>').join("")+'</div></section>';
+  let out=heading(t(pr.name),pr.id+" · "+t(pr.city)+" · "+pr.manager,button(zh?"← 全部專案":"← All "+p.projectLabel,"projectBack","","button-outline"),"CONNECTED WORK RECORD");
+  out+='<div class="info-grid"><div class="info-field"><small>'+(zh?'示範預算':'Sample budget')+'</small><strong>'+money(pr.budget)+'</strong></div><div class="info-field"><small>'+(zh?'紀錄進度':'Progress')+'</small><strong>'+pr.progress+'%</strong></div><div class="info-field"><small>'+(zh?'示範目標日':'Sample target')+'</small><strong>'+e(pr.targetDate)+'</strong></div></div>';
+  out+='<section class="section split-page"><div class="panel">'+section("Project knowledge",docs.length+" traceable source documents")+docs.slice(0,7).map(d=>documentRow(d,c.locale)).join("")+'</div><div class="panel">'+section("Execution", "Derived from the same work record")+'<div class="pulse-grid"><div class="pulse-item"><strong>'+work.length+'</strong><small>'+(zh?'工作項目':'Tasks')+'</small></div><div class="pulse-item"><strong>'+a.filter(x=>x.status==="Pending").length+'</strong><small>'+(zh?'待確認事項':'Pending approvals')+'</small></div><div class="pulse-item"><strong>'+q.length+'</strong><small>'+(zh?'報價版本':'Quote versions')+'</small></div></div>'+work.slice(0,5).map(t=>'<div class="prio-row"><div class="prio-main"><div class="prio-title">'+e(displayRecordText(t.title,c.locale))+'</div><div class="prio-sub">'+e(t.owner)+' · '+e(t.dueDate)+'</div></div>'+badge(t.status,c.locale)+'</div>').join("")+'</div></section>';
   out+='<section class="section">'+section("Quotation revision history","Each historical version remains inspectable; only latest totals appear in analytics.")+quoteTable(c,q)+'</section>';return out;
  }
  const list=m.searchProjects(v.search);
- return heading(p.projectLabel,"One identity for source documents, quotations, work and approvals.",tag(list.length+" example "+p.itemLabelPlural),"CONNECTED WORK PORTFOLIO")+'<div class="filter-bar"><input class="input" data-input="search" aria-label="Find work" value="'+e(v.search)+'" placeholder="Search '+e(p.itemLabelPlural)+', team members and cities…"></div><div class="cards-two">'+list.map(recordCard).join("")+'</div>';
+ return heading(zh?"專案管理":p.projectLabel,zh?"從受阻工作、待確認決策與報價版本，找出要追查的專案。":"One identity for source documents, quotations, work and approvals.",tag(list.length+" example "+p.itemLabelPlural),zh?"專案紀錄":"CONNECTED WORK PORTFOLIO")+'<div class="filter-bar"><input class="input" data-input="search" aria-label="Find work" value="'+e(v.search)+'" placeholder="Search '+e(p.itemLabelPlural)+', team members and cities…"></div><div class="cards-two">'+list.map(pr=>'<div class="sb-project-tile">'+recordCard(pr,c.locale)+renderProjectSignals(c,pr)+'</div>').join("")+'</div>';
 }
 export function knowledge(c){
  const {model:m,view:v}=c,kinds=["all",...new Set(m.seed.documents.map(d=>d.kind))],hits=m.searchDocuments(v.search,v.filter),pages=Math.max(1,Math.ceil(hits.length/18)),page=Math.min(v.pageIndex,pages-1),rows=hits.slice(page*18,(page+1)*18);
@@ -167,6 +149,7 @@ function sourceProvenance(d,registry){
  '<p>Scope: '+e(sources.map(x=>x.caveat).join(' · '))+'</p></div>';
 }
 export function renderInspector(c){
+ if(c.view.page==="copilot")return renderConversationInspector(c);
  const zh=c.locale!=="en";
  const {model:m,pack:p,state:s,view:v}=c,pr=m.project(v.projectId)||m.project(p.scenario.projectId),d=m.document(v.docId);
  let out='<div class="inspector-eyebrow">'+(zh?"工作脈絡與資料來源":"CONTEXT & EVIDENCE")+'</div><h3>'+(zh?"目前工作內容":"Working context")+'</h3>';

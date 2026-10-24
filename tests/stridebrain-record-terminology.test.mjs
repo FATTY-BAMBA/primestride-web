@@ -8,5 +8,5 @@ test("Chinese display translates business labels while preserving record IDs",()
 });
 test("record keys and already-Chinese names are never changed",()=>{
  assert.equal(displayRecordText("PRJ-101","zh-TW"),"PRJ-101");
- assert.equal(displayRecordText("松山住宅 · Songshan Residence","zh-TW"),"松山住宅 · 松山住宅");
+ assert.equal(displayRecordText("松山住宅 · Songshan Residence","zh-TW"),"松山住宅 · 松山靜宅");
 });

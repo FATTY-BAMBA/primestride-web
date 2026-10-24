@@ -55,18 +55,18 @@ export async function callOpenAi(payload,{apiKey,requestFn=fetch,timeout=18000}=
   return data;
  }finally{clearTimeout(timer);}
 }
-export async function runGptCopilot({industry,messages,apiKey,model="gpt-5.6",requestModel,locale}){
+export async function runGptCopilot({industry,messages,apiKey,model="gpt-5.6",requestModel,locale,selectedProjectId}){
  if(!validIndustry(industry))throw Error("Invalid demo industry.");
  const recent=normaliseMessages(messages);
  if(!recent.length||recent.at(-1)?.role!=="user")throw Error("Ask a new question to continue.");
  if(recent.at(-1).content.length>1200)throw Error("Question exceeds demo limit.");
  let providerCalls=0;const deadline=Date.now()+45000;
  const ask=async payload=>{if(++providerCalls>4)throw Error("Provider call limit exceeded.");const remaining=deadline-Date.now();if(remaining<500)throw Object.assign(Error("Response deadline exceeded."),{copilotCode:"PROVIDER_TIMEOUT"});return (requestModel||((p)=>callOpenAi(p,{apiKey,timeout:Math.min(18000,remaining)})))(payload);};
- const ledger=createEvidenceLedger(industry),conversation=buildConversationEvidence(industry,recent);ledger.add(conversation);
+ const ledger=createEvidenceLedger(industry),conversation=buildConversationEvidence(industry,recent,selectedProjectId);ledger.add(conversation);
  const review=needsPriorityReview(recent)?runCopilotTool(industry,"list_priorities",{limit:3}):null;
  if(review?.error)throw Error("Priority evidence review unavailable.");
  if(review)ledger.add(review);
- let input=[...recent],used=review?["list_priorities"]:[],allIds=review?[...review.sourceIds]:[],round=0,lastText="";
+ let input=[...recent],used=[...(conversation.lookupNames||[]),...(review?["list_priorities"]:[])],allIds=review?[...review.sourceIds]:[],round=0,lastText="";
  if(review)input.push({type:"function_call",call_id:"server_priority_review",name:"list_priorities",arguments:'{"limit":3}'},{type:"function_call_output",call_id:"server_priority_review",output:JSON.stringify(review)});
  input.push({type:"function_call",call_id:"server_conversation_context",name:"conversation_context",arguments:'{}'},{type:"function_call_output",call_id:"server_conversation_context",output:JSON.stringify(conversation)});
  const localizedInstructions=COPILOT_INSTRUCTIONS+"\n"+copilotLanguageDirective(recent,locale);
@@ -112,6 +112,7 @@ export async function runGptCopilot({industry,messages,apiKey,model="gpt-5.6",re
   mode:"gpt-readonly-demo",
   answer:safeText.slice(0,MAX_OUTPUT_CHARS),
   sourceIds,
+  context:{mode:conversation.mode,selectedProjectId:conversation.selectedProjectId,candidateProjectIds:conversation.candidateProjectIds,pendingProjectSelection:conversation.pendingProjectSelection},
   actions:allowedActionsFromTools(used),
   usedTools:unique(used).slice(0,12),
   isSynthetic:true,

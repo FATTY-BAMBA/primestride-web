@@ -5,6 +5,7 @@ export const ANSWER_QUALITY_POLICY=[
  'Review statusChecks before suggesting approval or a work sequence. An approved document, completed work order, and pending approval are DIFFERENT record types. Describe them as statuses to reconcile, not a proven contradiction. Confirm the outstanding decision with the named contact before proposing approval.',
  'Only explicitApprovalReferences establish recorded links. Shared project/title/source and generic blockedBy text do not prove that an approval blocks a task. Do not invent supplier, material-to-price, or critical-path dependencies. Distinguish a task owner/project manager/requester from an authorized approver.',
  'For a three-priority request, provide up to three concise numbered actions. Each should say what needs attention, the recorded reason, the responsible contact or unknown owner, the next verification step, and relevant inline citations. Aim for 350-650 Traditional Chinese characters or 120-220 English words, excluding citations. Do not add unrelated background totals or a financial dashboard unless requested. These are style targets, not a reason to omit a material uncertainty.',
+ 'In Traditional Chinese, translate task and approval titles into natural Taiwan business language while preserving exact record IDs. Use absolute calendar dates (for example 2026-10-19), never tomorrow/today relative to an old snapshot. Present one useful recommendation and its evidence before any necessary qualification. Do not repeat reconciliation caveats under each item. Mention ties only for the exact IDs/counts in equalPriorityProjectIds, never infer that all remaining projects are tied.',
  'For a short follow-up, answer that question in 2-4 short sentences. Do not repeat the entire priority list or financial dashboard. Longer detail is appropriate only when requested.',
  'The interface already displays the demo snapshot date and source panel. Do not repeat that disclosure at the start and end of the answer, append a separate bibliography, or add a generic no-actions-performed paragraph. Include a safety caveat only when material.',
  'Cite only records actually supplied in this turn. Put citations next to the supported claim. Name structured approval/work IDs for register statuses, with the associated source link; do not imply that document text independently proves a different register status. Unused retrieved records must not be presented as supporting citations.',
@@ -19,7 +20,7 @@ export function needsPriorityReview(messages){
 }
 export function citedSourceIds(answer,available){
  const allowed=new Set(available),out=[];
- for(const match of String(answer).matchAll(/\[([A-Z][A-Z0-9-]{2,85})\]/g))if(allowed.has(match[1])&&!out.includes(match[1])&&out.length<12)out.push(match[1]);
+ for(const match of String(answer).matchAll(/\[([A-Z][A-Z0-9-]{2,85})\]/g))if(allowed.has(match[1])&&!out.includes(match[1]))out.push(match[1]);
  return out;
 }
 export function verifiedAnswer(answer,sourceIds){

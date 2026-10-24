@@ -148,7 +148,7 @@ export async function streamOpenRouterFinal(payload,{apiKey,onDelta,requestFn=fe
  * Mockable for unit tests: requestModel(payload) returns OpenRouter-shaped
  * {choices:[{message:{role:"assistant",content,tool_calls}}]}.
  */
-export async function runOpenRouterCopilot({industry,messages,modelId,apiKey,requestModel,onDelta,onStatus,locale}){
+export async function runOpenRouterCopilot({industry,messages,modelId,apiKey,requestModel,onDelta,onStatus,locale,selectedProjectId}){
  const selected=findAllowedModel(modelId);
  if(!selected||selected.provider!=="openrouter")throw Error("This model is not in the OpenRouter allowlist.");
  if(!validIndustry(industry))throw Error("Invalid demo industry.");
@@ -156,7 +156,7 @@ export async function runOpenRouterCopilot({industry,messages,modelId,apiKey,req
  if(!recent.length||recent.at(-1)?.role!=="user")throw Error("A new question is required.");
  let providerCalls=0;const deadline=Date.now()+45000;
  const ask=async payload=>{if(++providerCalls>4)throw Error("Provider call limit exceeded.");const remaining=deadline-Date.now();if(remaining<500)throw Object.assign(Error("Response deadline exceeded."),{copilotCode:"PROVIDER_TIMEOUT"});return (requestModel||((p)=>callOpenRouter(p,{apiKey,timeout:Math.min(24000,remaining)})))(payload);};
- const ledger=createEvidenceLedger(industry),conversation=buildConversationEvidence(industry,recent);ledger.add(conversation);
+ const ledger=createEvidenceLedger(industry),conversation=buildConversationEvidence(industry,recent,selectedProjectId);ledger.add(conversation);
  const chat=[
   {role:"system",content:COPILOT_INSTRUCTIONS+"\nProvider: OpenRouter. The model is a reasoning interface to server-executed read-only tools, not an authoritative business record.\n"+copilotLanguageDirective(recent,locale)},
   ...recent
@@ -169,7 +169,7 @@ export async function runOpenRouterCopilot({industry,messages,modelId,apiKey,req
   {role:"tool",tool_call_id:"server_priority_review",content:JSON.stringify(review)});
  chat.push({role:"assistant",content:null,tool_calls:[{id:"server_conversation_context",type:"function",function:{name:"conversation_context",arguments:'{}'}}]},
   {role:"tool",tool_call_id:"server_conversation_context",content:JSON.stringify(conversation)});
- let usedTools=review?["list_priorities"]:[],recordIds=review?[...review.sourceIds]:[],answer="",totalCalls=0,round=0;
+ let usedTools=[...(conversation.lookupNames||[]),...(review?["list_priorities"]:[])],recordIds=review?[...review.sourceIds]:[],answer="",totalCalls=0,round=0;
  for(;round<MAX_TOOL_ROUNDS;round++){
   if(round>0&&usedTools.length&&onDelta&&!requestModel){
    onStatus?.("Writing an evidence-grounded answer…");
@@ -246,6 +246,7 @@ export async function runOpenRouterCopilot({industry,messages,modelId,apiKey,req
   mode:"openrouter-readonly-demo",modelId:selected.id,modelLabel:selected.label,
   provider:"OpenRouter",answer:cited.answer,
   sourceIds:cited.sourceIds,
+  context:{mode:conversation.mode,selectedProjectId:conversation.selectedProjectId,candidateProjectIds:conversation.candidateProjectIds,pendingProjectSelection:conversation.pendingProjectSelection},
   actions:allowedActionsFromTools(usedTools),
   usedTools:unique(usedTools).slice(0,12),
   asOf:"2026-10-18",isSynthetic:true,noBusinessWrites:true,

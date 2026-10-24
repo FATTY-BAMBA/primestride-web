@@ -10,11 +10,13 @@ test("Taiwanese-first workspace has persistable, accessible bilingual selector",
  assert.match(app,/sessionStorage\.setItem\("stridebrain-interface-locale"/);
  assert.match(app,/document\.documentElement\.lang/);
 });
-test("owner brief uses project-linked approvals and distinguishes sample snapshot",()=>{
- assert.match(primary,/operationalSignals\(m,s\)/);
- assert.match(primary,/m\.project\(a\.projectId\)/);
- assert.match(primary,/每日營運晨報/);
- assert.match(primary,/不是即時|非即時監控/);
+test("owner brief uses the shared snapshot priority implementation and read-only navigation",()=>{
+ const experience=readFileSync(new URL("../public/stridebrain-demo/experience-views.js",import.meta.url),"utf8");
+ assert.match(primary,/renderOverview\(c\)/);
+ assert.match(experience,/reviewPriorities\(seed,/);
+ assert.match(experience,/共同資料日期/);
+ assert.match(experience,/data-priority-id/);
+ assert.doesNotMatch(experience,/data-action="approval"/);
 });
 test("language switch works without weakening guest/staff access",()=>{
  assert.match(app,/if\(action==="language"\)/);

@@ -1,3 +1,4 @@
+import {commercialReview} from "../../../public/stridebrain-demo/commercial-review.js";
 import enrichment from "../../../public/stridebrain-demo/seeds/source-enrichment.json";
 import {enrichedDocuments,registerSources,registerSourceId} from "../../../public/stridebrain-demo/register-evidence.js";
 import {reviewPriorities} from "./priority-review.js";
@@ -157,6 +158,7 @@ function workflow(industry,query){
 }
 /** tool schemas are STRICT. The model cannot authorize mutations through these functions. */
 const tools=[
+ {name:"review_quotations",description:"Compare recorded quotation costs and calculated margins using the same snapshot as the overview. Changes do not prove loss, cause, or comparable scope.",properties:{}},
  {name:"get_source",description:"Read exact source text as displayed in the workspace. REG- IDs are derived register snapshots; DOC/STD IDs are documents. Do not treat an associated document as proof of register fields.",properties:{source_id:{type:"string"}}},
  {name:"conversation_context",description:"Read a bounded directory of projects and contacts for conversational clarification. Not permission to approve or change records.",properties:{}},
  {name:"operations_snapshot",description:"Fetch demo-workspace metrics as of the snapshot date: projects, pending approvals, blockers, quote versions marked Sent, sum of latest draft quotes, and weighted proposed gross margin. Never use for live today data.",properties:{}},
@@ -175,6 +177,7 @@ export function runCopilotTool(industry,name,args={}){
  const a=typeof args==="object"&&args&&!Array.isArray(args)?args:{};
  try{
  switch(name){
+ case "review_quotations":{const items=commercialReview(pack(industry).seed);return {asOf:pack(industry).seed.meta.date,items,sourceIds:distinct(items.flatMap(x=>x.sourceIds))};}
  case "get_source":{const d=allDemoSources(industry).find(d=>d.id===text(a.source_id));return d?{id:d.id,projectId:d.projectId,kind:d.kind,evidenceKind:d.basisType==="DEMO_REGISTER"?"register":"document",title:d.title,version:d.version,body:d.body,sourceIds:[d.id]}:{found:false,sourceIds:[]};}
  case "conversation_context":{const {seed}=pack(industry);return {asOf:seed.meta.date,projects:seed.projects.map(p=>({id:p.id,name:p.name,manager:p.manager,sourceId:registerSourceId(p.id)})),sourceIds:seed.projects.map(p=>registerSourceId(p.id)),note:"Managers are contacts, not assumed authorized approvers."};}
  case "operations_snapshot":return snapshot(industry);
@@ -191,8 +194,8 @@ export function runCopilotTool(industry,name,args={}){
  }catch{return {error:"Requested sample record could not be retrieved.",sourceIds:[]};}
 }
 export const toolNames=tools.map(x=>x.name);
-export function toolsForSourceIds(industry,ids){const trusted=demoSourceIds(industry);return distinct(ids).filter(x=>trusted.has(x)).slice(0,16);}
+export function toolsForSourceIds(industry,ids){const trusted=demoSourceIds(industry);return distinct(ids).filter(x=>trusted.has(x));}
 export const allowedActionsFromTools=names=>{
- const map={get_source:"knowledge",conversation_context:"projects",operations_snapshot:"overview",search_projects:"projects",get_project:"projects",get_quote:"quotes",list_priorities:"approvals",search_company_knowledge:"knowledge",get_suppliers:"suppliers",find_historical_jobs:"history",industry_guidance:"playbook"};
+ const map={review_quotations:"quotes",get_source:"knowledge",conversation_context:"projects",operations_snapshot:"overview",search_projects:"projects",get_project:"projects",get_quote:"quotes",list_priorities:"approvals",search_company_knowledge:"knowledge",get_suppliers:"suppliers",find_historical_jobs:"history",industry_guidance:"playbook"};
  return distinct(names.map(n=>map[n]).filter(Boolean)).slice(0,5);
 };

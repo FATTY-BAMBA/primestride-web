@@ -34,6 +34,7 @@ function parseChat(body){
  if(!Array.isArray(body.messages)||!body.messages.length||body.messages.length>12)return null;
  if(body.modelId!==undefined&&typeof body.modelId!=="string")return null;
  if(body.locale!==undefined&&!["zh-TW","en"].includes(body.locale))return null;
+ if(body.selectedProjectId!==undefined&&body.selectedProjectId!==null&&(typeof body.selectedProjectId!=="string"||!/^(PRJ|JOB)-\d{1,8}$/.test(body.selectedProjectId)))return null;
  const messages=[];
  for(const m of body.messages){
   if(!m||typeof m!=="object"||Array.isArray(m)||!["user","assistant"].includes(m.role)||typeof m.content!=="string")return null;
@@ -41,7 +42,7 @@ function parseChat(body){
   messages.push({role:m.role,content:m.content});
  }
  if(messages.at(-1)?.role!=="user"||messages.at(-1).content.length>1200)return null;
- return {industry:body.industry,messages,modelId:body.modelId||DEFAULT_MODEL_ID,locale:body.locale};
+ return {industry:body.industry,messages,modelId:body.modelId||DEFAULT_MODEL_ID,locale:body.locale,selectedProjectId:body.selectedProjectId||null};
 }
 export async function POST(request){
  if(process.env.STRIDEBRAIN_DEMO_GPT_ENABLED!=="true")
@@ -94,7 +95,7 @@ export async function POST(request){
     try{
      emit("status",{message:"Reviewing workspace records…"});
      const started=Date.now();let chunks=0,firstDeltaMs=null;
-     const answer=await runOpenRouterCopilot({industry:parsed.industry,messages:parsed.messages,locale:parsed.locale,modelId:selected.id,apiKey:providerKey,
+     const answer=await runOpenRouterCopilot({industry:parsed.industry,messages:parsed.messages,locale:parsed.locale,selectedProjectId:parsed.selectedProjectId,modelId:selected.id,apiKey:providerKey,
       onDelta:delta=>{if(firstDeltaMs===null)firstDeltaMs=Date.now()-started;chunks++;emit("delta",{text:delta});},onStatus:message=>emit("status",{message})});
      emit("metrics",{chunks,firstDeltaMs,totalMs:Date.now()-started});
      emit("result",answer);
@@ -110,13 +111,13 @@ export async function POST(request){
  try{
   if(selected.provider==="openrouter"){
    const answer=await runOpenRouterCopilot({
-    industry:parsed.industry,messages:parsed.messages,locale:parsed.locale,modelId:selected.id,apiKey:providerKey
+    industry:parsed.industry,messages:parsed.messages,locale:parsed.locale,selectedProjectId:parsed.selectedProjectId,modelId:selected.id,apiKey:providerKey
    });
    await releaseDemoLease(lease);
    return json(200,answer);
   }
   const answer=await runGptCopilot({
-   industry:parsed.industry,messages:parsed.messages,locale:parsed.locale,apiKey:providerKey,
+   industry:parsed.industry,messages:parsed.messages,locale:parsed.locale,selectedProjectId:parsed.selectedProjectId,apiKey:providerKey,
    model:process.env.STRIDEBRAIN_DEMO_OPENAI_MODEL||"gpt-5.6"
   });
   await releaseDemoLease(lease);

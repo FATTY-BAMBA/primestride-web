@@ -1,3 +1,5 @@
+import {evidenceList} from "./evidence-presentation.js";
+import {DEMO_ROLES} from "./experience-views.js";
 import {copilotErrorMessage} from "./copilot-errors.js";
 import {getPack,listPacks} from "./industry-packs.js";
 import {WorkspaceModel,money,calculateVariation,escapeHtml as e,loadDemoState,saveDemoState,resetDemoState,event,setVariationInput,approveVariationGate,commitVariation,buildCustomerReply,reviewCustomerDraft,recordFeedback,markFeedbackReviewed} from "./core-model.js";
@@ -67,6 +69,7 @@ function applyWorkspaceLanguage(){
  if(sidebar)sidebar.setAttribute("aria-label",interfaceLocale==="en"?"Workspace navigation":"工作區導覽");
  const inspector=$("inspector");
  if(inspector)inspector.setAttribute("aria-label",interfaceLocale==="en"?"Context and source evidence":"工作脈絡與來源依據");
+ document.querySelectorAll("[data-nav-zh]").forEach(n=>{n.textContent=interfaceLocale==="en"?n.dataset.navEn:n.dataset.navZh;});
  document.querySelectorAll(".nav-section-label").forEach((label,index)=>{label.textContent=interfaceLocale==="en"?(index===0?"WORKSPACE":"INTELLIGENCE"):(index===0?"工作區":"智慧功能");});
  const page=labels[view.page];if(page)$("page-name").textContent=page[interfaceLocale==="en"?1:0];
 }
@@ -88,7 +91,7 @@ function guestChatKey(industry){return GUEST_CHAT_PREFIX+(copilotGuest?"guest:":
 function saveGuestChat(){
  if(copilotMode!=="gpt"||!/^[a-f0-9]{24}$/.test(guestChatScope||"")||!["interior","printing"].includes(pack.id))return;
  try{
-  const messages=view.chat.filter(m=>m.role==="user"||(m.role==="assistant"&&m.mode==="gpt"&&m.text)).slice(-12).map(m=>m.role==="user"?{role:"user",text:String(m.text||"").slice(0,1200)}:{role:"assistant",mode:"gpt",text:String(m.text||"").slice(0,3800),modelId:String(m.modelId||"").slice(0,100),modelLabel:String(m.modelLabel||"").slice(0,100),sourceIds:Array.isArray(m.sources)?m.sources.slice(0,12):[],actions:Array.isArray(m.actions)?m.actions.slice(0,4):[],query:String(m.query||"").slice(0,1200)});
+  const messages=view.chat.filter(m=>m.role==="user"||(m.role==="assistant"&&m.mode==="gpt"&&m.text)).slice(-12).map(m=>m.role==="user"?{role:"user",text:String(m.text||"").slice(0,1200)}:{role:"assistant",mode:"gpt",text:String(m.text||"").slice(0,3800),modelId:String(m.modelId||"").slice(0,100),modelLabel:String(m.modelLabel||"").slice(0,100),sourceIds:Array.isArray(m.sources)?m.sources:[],actions:Array.isArray(m.actions)?m.actions.slice(0,4):[],query:String(m.query||"").slice(0,1200),context:m.context||null});
   sessionStorage.setItem(guestChatKey(pack.id),JSON.stringify(messages));
  }catch{/* Private browsing or unavailable storage: chat remains usable in memory. */}
 }
@@ -100,11 +103,13 @@ function restoreGuestChat(){
   view.chat=stored.slice(-12).flatMap(m=>{
    if(m?.role==="user"&&typeof m.text==="string"&&m.text.length<=1200)return [{role:"user",text:m.text}];
    if(m?.role==="assistant"&&m.mode==="gpt"&&typeof m.text==="string"&&m.text.length<=3800){
-    const result={answer:m.text,sourceIds:m.sourceIds,actions:m.actions,modelId:m.modelId,modelLabel:m.modelLabel};
-    return [{role:"assistant",html:gptAnswerCard(result),sources:result.sourceIds,actions:result.actions,query:m.query,modelId:result.modelId,modelLabel:result.modelLabel,text:result.answer,mode:"gpt"}];
+    const result={answer:m.text,sourceIds:m.sourceIds,actions:m.actions,modelId:m.modelId,modelLabel:m.modelLabel,context:m.context||null};
+    return [{role:"assistant",html:gptAnswerCard(result),sources:result.sourceIds,actions:result.actions,query:m.query,modelId:result.modelId,modelLabel:result.modelLabel,text:result.answer,context:result.context||null,mode:"gpt"}];
    }
    return [];
   });
+  const restoredProject=view.chat.at(-1)?.context?.selectedProjectId;
+  view.copilotProjectId=model.project?.(restoredProject)?.id||null;
  }catch{view.chat=[];}
 }
 function clearGuestChat(scope=guestChatScope,guest=copilotGuest){
@@ -133,7 +138,7 @@ function render(){
  $("inspector").innerHTML=renderInspector(context());
  $("page-name").textContent=pageTitle();
  applyWorkspaceLanguage();
- document.querySelectorAll(".sidebar [data-action='nav']").forEach(b=>b.classList.toggle("active",b.dataset.value===view.page));
+ document.querySelectorAll(".sidebar [data-action='nav']").forEach(b=>{b.classList.toggle("active",b.dataset.value===view.page);if(b.dataset.value===view.page&&b.closest("details"))b.closest("details").open=true;});
 }
 function updateShell(){
  const zh=interfaceLocale!=="en";
@@ -192,13 +197,13 @@ async function loadIndustry(id){
 function gptAnswerCard(result){
  const zh=interfaceLocale!=="en";
  const content=String(result?.answer||"").slice(0,3800);
- const ids=[...new Set((Array.isArray(result.sourceIds)?result.sourceIds:[]).filter(id=>!!model.document(id)))].slice(0,12);
+ const ids=[...new Set((Array.isArray(result.sourceIds)?result.sourceIds:[]).filter(id=>!!model.document(id)))];
  const paragraphs=safeCopilotMarkdown(content).replace(/\[([A-Z][A-Z0-9-]{2,85})\]/g,(full,id)=>ids.includes(id)?sourceButton(id):full);
  const allowed=new Set(["overview","projects","knowledge","quotes","work","suppliers","approvals","analytics","history","playbook","service"]);
  const actions=[...new Set((Array.isArray(result.actions)?result.actions:[]).filter(a=>allowed.has(a)))].slice(0,4);
  const labelMap=zh?{overview:"營運總覽",projects:"查看專案",knowledge:"查看知識資料",quotes:"查看報價",work:"工作單",suppliers:"供應商",approvals:"待審核事項",analytics:"營運分析",history:"歷史成本估價",playbook:"產業作業指引",service:"客戶回覆"}:{overview:"Business overview",projects:"Explore projects",knowledge:"Inspect knowledge",quotes:"Review quotes",work:"Work orders",suppliers:"Suppliers",approvals:"Pending approvals",analytics:"Analytics",history:"Past project estimates",playbook:"Industry playbook",service:"Customer replies"};
  return '<div class="answer-card"><div class="suite-eyebrow">'+e(result.modelLabel||"AI model")+' · '+(zh?'AI 回覆':'AI answer')+'</div><div class="copilot-gpt-prose">'+paragraphs+'</div>'+
-  (ids.length?'<div class="copilot-tool-sources"><strong>'+(zh?'資料來源':'Supporting records')+'</strong><div>'+ids.map(sourceButton).join(" ")+'</div></div>':'<p class="disclosure">'+(zh?'此回覆未引用工作區紀錄。':'This answer does not cite workspace records.')+'</p>')+
+  evidenceList(ids,model,interfaceLocale)+
   (actions.length?'<div class="answer-actions">'+actions.map(a=>'<button type="button" class="button-secondary" data-action="nav" data-value="'+a+'">'+e(labelMap[a])+' ↗</button>').join("")+'</div>':'')+
   '<p class="disclosure">'+(zh?'示範資料 · ':'Sample data · ')+e(result.asOf||"2026-10-18")+'</p></div>';
 }
@@ -212,7 +217,7 @@ async function ask(question){
  }
  copilotDraft="";copilotModelMenuOpen=false;
  view.chat.push({role:"user",text});
- view.page="copilot";
+ view.page="copilot";view.docId=null;
  const active=++copilotRunId,activeIndustry=pack.id,activeModel=selectedModelId,activeLocale=interfaceLocale;
  const recent=view.chat.filter(m=>m.role==="user"||(m.role==="assistant"&&m.mode==="gpt"&&m.text))
   .slice(-12).map(m=>({role:m.role,content:String(m.text||"").slice(0,m.role==="user"?1200:1800)}));
@@ -224,7 +229,7 @@ async function ask(question){
   const response=await fetch("/api/stridebrain-demo/copilot",{
    method:"POST",cache:"no-store",credentials:"same-origin",
    headers:{"Content-Type":"application/json","Accept":activeModel.startsWith("openai-direct/")?"application/json":"text/event-stream"},
-   body:JSON.stringify({industry:activeIndustry,messages:recent,modelId:activeModel,locale:activeLocale})
+   body:JSON.stringify({industry:activeIndustry,messages:recent,modelId:activeModel,locale:activeLocale,selectedProjectId:view.copilotProjectId||null})
   });
   let result;
   if(response.ok&&response.headers.get("content-type")?.includes("text/event-stream")){
@@ -283,7 +288,8 @@ async function ask(question){
   if(active!==copilotRunId||pack.id!==activeIndustry)return;
   if(!["gpt-readonly-demo","openrouter-readonly-demo"].includes(result.mode)||typeof result.answer!=="string"||result.modelId!==activeModel)throw Error("Unexpected model server response.");
   copilotConnected=true;
-  view.chat[index]={role:"assistant",html:gptAnswerCard(result),sources:result.sourceIds,query:text,mode:"gpt",modelId:result.modelId,modelLabel:result.modelLabel,text:result.answer,actions:result.actions};
+  view.chat[index]={role:"assistant",html:gptAnswerCard(result),sources:result.sourceIds,query:text,mode:"gpt",modelId:result.modelId,modelLabel:result.modelLabel,text:result.answer,actions:result.actions,context:result.context||null};
+  if(result.context)view.copilotProjectId=model.project(result.context.selectedProjectId)?.id||null;
  }catch(err){
   if(active!==copilotRunId||pack.id!==activeIndustry)return;
   // Temporary provider failures must not erase a valid staff session or mix
@@ -361,6 +367,15 @@ async function handleDocument(file){
 async function perform(el){
  const action=el.dataset.action,id=el.dataset.id||"",value=el.dataset.value||"";
  if(action==="retrySession"){if(!copilotBusy)await restoreStaffPreview();return;}
+ if(action==="demoRole"){
+  if(!DEMO_ROLES[value])return;
+  view.demoRole=value;render();return;
+ }
+ if(action==="focusQuestion"){
+  const project=model.project(id);if(!project)return;
+  view.copilotProjectId=project.id;view.projectId=project.id;view.docId=null;
+  await ask(el.dataset.prompt||project.id);return;
+ }
  if(action==="language"){interfaceLocale=value==="en"?"en":"zh-TW";try{sessionStorage.setItem("stridebrain-interface-locale",interfaceLocale);}catch{}updateShell();render();return;}
  if(action==="nav"){copilotModelMenuOpen=false;view.projectDetail=false;setPage(value);}
  else if(action==="modelMenu"){
@@ -379,10 +394,11 @@ async function perform(el){
  }
  else if(action==="newChat"){
    if(copilotBusy){toast("Wait for the current answer or disconnect first.");return;}
-   copilotRunId++;view.chat=[];copilotDraft="";copilotModelMenuOpen=false;saveGuestChat();render();
+   copilotRunId++;view.chat=[];view.copilotProjectId=null;view.docId=null;copilotDraft="";copilotModelMenuOpen=false;saveGuestChat();render();
    toast("Started a new local conversation.");
  }
  else if(action==="project"){
+  if(model.project(id))view.copilotProjectId=id;
   const key=id||value;if(!model.project(key))return;view.projectId=key;view.projectDetail=true;setPage("projects");
  }else if(action==="intakeFixture"){
   try{downloadLocal(sampleFile(pack.id,value));toast("Sample "+value.toUpperCase()+" file downloaded. Select it in Document Intelligence to test.");}
