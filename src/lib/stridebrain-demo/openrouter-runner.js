@@ -1,3 +1,4 @@
+import {buildConversationEvidence,createEvidenceLedger} from "./conversation-evidence.js";
 import {needsPriorityReview,citedSourceIds,verifiedAnswer,requirePriorityCitations} from "./answer-quality.js";
 /**
  * OpenRouter multi-model adapter for StrideBrain's INTERNAL synthetic Copilot.
@@ -153,21 +154,27 @@ export async function runOpenRouterCopilot({industry,messages,modelId,apiKey,req
  if(!validIndustry(industry))throw Error("Invalid demo industry.");
  const recent=normaliseMessages(messages);
  if(!recent.length||recent.at(-1)?.role!=="user")throw Error("A new question is required.");
- const ask=requestModel||((payload)=>callOpenRouter(payload,{apiKey}));
+ let providerCalls=0;const deadline=Date.now()+45000;
+ const ask=async payload=>{if(++providerCalls>4)throw Error("Provider call limit exceeded.");const remaining=deadline-Date.now();if(remaining<500)throw Object.assign(Error("Response deadline exceeded."),{copilotCode:"PROVIDER_TIMEOUT"});return (requestModel||((p)=>callOpenRouter(p,{apiKey,timeout:Math.min(24000,remaining)})))(payload);};
+ const ledger=createEvidenceLedger(industry),conversation=buildConversationEvidence(industry,recent);ledger.add(conversation);
  const chat=[
   {role:"system",content:COPILOT_INSTRUCTIONS+"\nProvider: OpenRouter. The model is a reasoning interface to server-executed read-only tools, not an authoritative business record.\n"+copilotLanguageDirective(recent,locale)},
   ...recent
  ];
  const review=needsPriorityReview(recent)?runCopilotTool(industry,"list_priorities",{limit:3}):null;
  if(review?.error)throw Error("Priority evidence review unavailable.");
+ if(review)ledger.add(review);
  // Server-executed read-only review, not a fabricated model answer.
  if(review)chat.push({role:"assistant",content:null,tool_calls:[{id:"server_priority_review",type:"function",function:{name:"list_priorities",arguments:'{"limit":3}'}}]},
   {role:"tool",tool_call_id:"server_priority_review",content:JSON.stringify(review)});
+ chat.push({role:"assistant",content:null,tool_calls:[{id:"server_conversation_context",type:"function",function:{name:"conversation_context",arguments:'{}'}}]},
+  {role:"tool",tool_call_id:"server_conversation_context",content:JSON.stringify(conversation)});
  let usedTools=review?["list_priorities"]:[],recordIds=review?[...review.sourceIds]:[],answer="",totalCalls=0,round=0;
  for(;round<MAX_TOOL_ROUNDS;round++){
   if(round>0&&usedTools.length&&onDelta&&!requestModel){
    onStatus?.("Writing an evidence-grounded answer…");
-   answer=await streamOpenRouterFinal({model:selected.id,messages:[...chat,{role:"system",content:"Now provide the final answer using the tool evidence already supplied. Cite only provided source IDs and do not call more tools."}],max_tokens:1800},{apiKey,onDelta});
+   if(++providerCalls>4)throw Error("Provider call limit exceeded.");
+   answer=await streamOpenRouterFinal({model:selected.id,messages:[...chat,{role:"system",content:"Now provide the final answer using the tool evidence already supplied. Cite only provided source IDs and do not call more tools."}],max_tokens:1800},{apiKey,timeout:Math.max(500,Math.min(30000,deadline-Date.now()))}); // Buffer until identity and citation checks pass.
    break;
   }
   onStatus?.("Finding relevant business records…");
@@ -185,7 +192,7 @@ export async function runOpenRouterCopilot({industry,messages,modelId,apiKey,req
   if(calls.length>MAX_TOOL_CALLS_PER_ROUND)throw Error("Tool request limit exceeded.");
   // Initial tool call is required. Models unable to obey are not accepted for this workflow.
   if(!calls.length){
-   if(round===0&&!review)throw Error("Selected provider did not supply required business evidence.");
+   // Fresh server context already exists; a supported answer or clarification needs no redundant model tool call.
    answer=takeAnswer(assistant);
    if(answer)break;
    throw Error("OpenRouter returned no usable answer.");
@@ -209,7 +216,7 @@ export async function runOpenRouterCopilot({industry,messages,modelId,apiKey,req
    const args=parseToolArguments(call.function.arguments);
    const fact=runCopilotTool(industry,call.function.name,args);
    onStatus?.("Verified "+usedTools.length+" business lookups. Preparing answer…");
-   usedTools.push(call.function.name);
+   usedTools.push(call.function.name);ledger.add(fact);
    recordIds.push(...(Array.isArray(fact.sourceIds)?fact.sourceIds:[]));
    if(Array.isArray(fact.matches))
     recordIds.push(...fact.matches.map(x=>x.id).filter(Boolean));
@@ -230,8 +237,11 @@ export async function runOpenRouterCopilot({industry,messages,modelId,apiKey,req
   answer=takeAnswer(msg);
  }
  if(!answer)throw Error("The selected model produced no reliable answer.");
- const cited=citationValidation(industry,recordIds,answer);
- requirePriorityCitations(review,cited.sourceIds);
+ const problems=ledger.issues(answer);
+ if(problems.length){const fixed=await ask({model:selected.id,messages:[...chat,{role:"assistant",content:answer},{role:"system",content:ledger.repairInstruction(problems)}],tools:toolSchema,tool_choice:"none",max_tokens:1400,stream:false});answer=takeAnswer(fixed?.choices?.[0]?.message);if(!answer||ledger.issues(answer).length)throw Object.assign(Error("Answer evidence could not be verified."),{copilotCode:"EVIDENCE_MISSING"});}
+ const cited=citationValidation(industry,ledger.sourceIds(),answer);
+ requirePriorityCitations(conversation.clarificationRequired?null:review,cited.sourceIds);
+ if(onDelta)onDelta(cited.answer);
  return {
   mode:"openrouter-readonly-demo",modelId:selected.id,modelLabel:selected.label,
   provider:"OpenRouter",answer:cited.answer,

@@ -54,8 +54,8 @@ export function safeCopilotMarkdown(value){
   const header=line.match(/^(#{1,3})\s+(.+)$/);
   if(header){close();const level=Math.min(4,header[1].length+2);const discrepancy=/^(evidence discrepancy|資料不一致)(?:\s*[:：—-].*)?$/i.test(header[2].replace(/\*\*/g,"").trim());out.push("<h"+level+(discrepancy?' class="copilot-evidence-discrepancy" data-evidence-conflict="true"':"")+">"+inline(header[2])+"</h"+level+">");continue;}
   const bullet=line.match(/^[-*•]\s+(.+)$/);
-  const ordered=line.match(/^\d{1,2}[.)]\s+(.+)$/);
-  if(bullet||ordered){const type=bullet?"ul":"ol";if(list!==type){close();out.push("<"+type+">");list=type;}out.push("<li>"+inline((bullet||ordered)[1])+"</li>");continue;}
+  const ordered=line.match(/^(\d{1,2})[.)]\s+(.+)$/);
+  if(bullet||ordered){const type=bullet?"ul":"ol";if(list!==type){close();out.push("<"+type+(ordered&&Number(ordered[1])!==1?' start="'+Number(ordered[1])+'"':"")+">");list=type;}out.push("<li>"+inline(bullet?bullet[1]:ordered[2])+"</li>");continue;}
   close();out.push("<p>"+inline(line)+"</p>");
  }
  close();return out.join("");

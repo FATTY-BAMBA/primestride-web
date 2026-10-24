@@ -1,3 +1,5 @@
+import enrichment from "../../../public/stridebrain-demo/seeds/source-enrichment.json";
+import {enrichedDocuments,registerSources,registerSourceId} from "../../../public/stridebrain-demo/register-evidence.js";
 import {reviewPriorities} from "./priority-review.js";
 /**
  * StrideBrain INTERNAL DEMO ONLY.
@@ -10,7 +12,8 @@ import interiorHistory from "../../../public/stridebrain-demo/seeds/historical-i
 import printingHistory from "../../../public/stridebrain-demo/seeds/historical-printing.json";
 import curated from "../../../public/stridebrain-demo/seeds/taiwan-industry-evidence.json";
 
-const COLLECTIONS={interior:{seed:interior,history:interiorHistory},printing:{seed:printing,history:printingHistory}};
+const COLLECTIONS={interior:{seed:{...interior,documents:enrichedDocuments(interior,enrichment.interior)},history:interiorHistory},printing:{seed:{...printing,documents:enrichedDocuments(printing,enrichment.printing)},history:printingHistory}};
+export function workspaceEvidenceSeed(industry){return pack(industry).seed;}
 const MAX_SOURCE_LEN=460;
 export const validIndustry=id=>Object.prototype.hasOwnProperty.call(COLLECTIONS,id);
 const text=value=>typeof value==="string"?value:"";
@@ -45,7 +48,7 @@ const tokens=input=>{
 function pack(industry){if(!validIndustry(industry))throw Error("Unknown demo industry");return COLLECTIONS[industry];}
 export function allDemoSources(industry){
  const {seed,history}=pack(industry),refDocs=curated.documents.filter(d=>d.industry===industry);
- return [...seed.documents,...history.documents,...refDocs];
+ return [...seed.documents,...history.documents,...refDocs,...registerSources(seed)];
 }
 export function demoSourceIds(industry){return new Set(allDemoSources(industry).map(x=>x.id));}
 const latestQuote=(seed,projectId)=>seed.quotes.find(q=>q.projectId===projectId&&q.isLatest);
@@ -110,7 +113,7 @@ function project(industry,projectId){
  const tasks=seed.workOrders.filter(w=>w.projectId===p.id).slice(0,15).map(w=>({id:w.id,title:w.title,status:w.status,owner:w.owner,dueDate:w.dueDate,sourceDocId:w.sourceDocId}));
  const approvals=seed.approvals.filter(a=>a.projectId===p.id).map(a=>({id:a.id,title:a.title,status:a.status,sourceDocId:a.sourceDocId}));
  const docs=seed.documents.filter(d=>d.projectId===p.id).slice(0,12).map(d=>({id:d.id,title:d.title,version:d.version,status:d.status}));
- return {found:true,isSynthetic:true,reviewFindings:reviewPriorities(seed,{projectId:p.id,limit:1}),project:{id:p.id,name:p.name,stage:p.stage,type:p.type,client:p.client,manager:p.manager,location:p.city,recordedProgress:p.progress,provisionalBudget:p.budget,sampleTargetDate:p.targetDate},latestDraftQuote:latest?{id:latest.id,directCost:latest.directCost,priceExTax:latest.amountExTax,targetMargin:latest.grossMarginTarget,status:latest.status,sourceDocId:latest.sourceDocId}:null,tasks,approvals,documents:docs,sourceIds:distinct([latest?.sourceDocId,...approvals.map(x=>x.sourceDocId),...tasks.map(x=>x.sourceDocId),...docs.map(d=>d.id)])};
+ return {found:true,isSynthetic:true,reviewFindings:reviewPriorities(seed,{projectId:p.id,limit:1}),project:{id:p.id,name:p.name,stage:p.stage,type:p.type,client:p.client,manager:p.manager,location:p.city,recordedProgress:p.progress,provisionalBudget:p.budget,sampleTargetDate:p.targetDate},latestDraftQuote:latest?{id:latest.id,directCost:latest.directCost,priceExTax:latest.amountExTax,targetMargin:latest.grossMarginTarget,status:latest.status,sourceDocId:latest.sourceDocId}:null,tasks,approvals,documents:docs,sourceIds:distinct([registerSourceId(p.id),latest?registerSourceId(latest.id):null,...approvals.map(x=>registerSourceId(x.id)),...tasks.map(x=>registerSourceId(x.id))])};
 }
 function quote(industry,projectId){
  const {seed}=pack(industry),p=resolveProject(seed,projectId);
@@ -118,9 +121,12 @@ function quote(industry,projectId){
  const list=seed.quotes.filter(q=>q.projectId===p.id).sort((a,b)=>a.revision-b.revision);
  const current=list.find(q=>q.isLatest)||null;
  return {found:true,projectId:p.id,projectName:p.name,
- latestProposal:current?{id:current.id,revision:current.revision,priceExTax:current.amountExTax,directCost:current.directCost,computedGrossProfit:current.amountExTax-current.directCost,targetMargin:current.grossMarginTarget,status:current.status,illustrativeTax:current.tax,totalWithTax:current.totalWithTax}:null,
- revisions:list.map(q=>({id:q.id,revision:q.revision,status:q.status,priceExTax:q.amountExTax,sourceDocId:q.sourceDocId})),
- sourceIds:distinct(list.map(q=>q.sourceDocId)),
+ latestProposal:current?{id:current.id,revision:current.revision,priceExTax:current.amountExTax,directCost:current.directCost,computedGrossProfit:current.amountExTax-current.directCost,targetMargin:current.grossMarginTarget,status:current.status,registerSourceId:registerSourceId(current.id),illustrativeTax:current.tax,totalWithTax:current.totalWithTax}:null,
+ revisions:list.map(q=>({id:q.id,revision:q.revision,status:q.status,priceExTax:q.amountExTax,directCost:q.directCost,calculatedGrossProfit:q.amountExTax-q.directCost,registerSourceId:registerSourceId(q.id),linkedDocumentId:q.sourceDocId})),
+ sourceIds:list.map(q=>registerSourceId(q.id)),
+ evidenceKind:"quotation_register",
+ valueBasis:"Whole-project amounts come from quotation register rows, not linked supplier document text. Gross profit is calculated from price minus direct cost.",
+ linkedDocuments:distinct(list.map(q=>q.sourceDocId)).map(id=>{const d=seed.documents.find(d=>d.id===id);return {id,title:d?.title,relationship:"associated_document_not_proof_of_register_amounts",readByThisTool:false};}),
  disclaimer:"Sample quotation amounts—not recognized revenue, verified supplier costs, or collected cash."};
 }
 function priorities(industry,limit=3){return reviewPriorities(pack(industry).seed,{limit});}
@@ -151,6 +157,8 @@ function workflow(industry,query){
 }
 /** tool schemas are STRICT. The model cannot authorize mutations through these functions. */
 const tools=[
+ {name:"get_source",description:"Read exact source text as displayed in the workspace. REG- IDs are derived register snapshots; DOC/STD IDs are documents. Do not treat an associated document as proof of register fields.",properties:{source_id:{type:"string"}}},
+ {name:"conversation_context",description:"Read a bounded directory of projects and contacts for conversational clarification. Not permission to approve or change records.",properties:{}},
  {name:"operations_snapshot",description:"Fetch demo-workspace metrics as of the snapshot date: projects, pending approvals, blockers, quote versions marked Sent, sum of latest draft quotes, and weighted proposed gross margin. Never use for live today data.",properties:{}},
  {name:"search_projects",description:"Search projects/jobs by name, city, manager, stage or ID in the selected sample workspace.",properties:{query:{type:"string"}}},
  {name:"get_project",description:"Get one matching project/job, sample tasks, approvals, documents and latest draft quote.",properties:{project_id:{type:"string"}}},
@@ -167,6 +175,8 @@ export function runCopilotTool(industry,name,args={}){
  const a=typeof args==="object"&&args&&!Array.isArray(args)?args:{};
  try{
  switch(name){
+ case "get_source":{const d=allDemoSources(industry).find(d=>d.id===text(a.source_id));return d?{id:d.id,projectId:d.projectId,kind:d.kind,evidenceKind:d.basisType==="DEMO_REGISTER"?"register":"document",title:d.title,version:d.version,body:d.body,sourceIds:[d.id]}:{found:false,sourceIds:[]};}
+ case "conversation_context":{const {seed}=pack(industry);return {asOf:seed.meta.date,projects:seed.projects.map(p=>({id:p.id,name:p.name,manager:p.manager,sourceId:registerSourceId(p.id)})),sourceIds:seed.projects.map(p=>registerSourceId(p.id)),note:"Managers are contacts, not assumed authorized approvers."};}
  case "operations_snapshot":return snapshot(industry);
  case "search_projects":return projects(industry,text(a.query).slice(0,130));
  case "get_project":return project(industry,text(a.project_id).slice(0,120));
@@ -183,6 +193,6 @@ export function runCopilotTool(industry,name,args={}){
 export const toolNames=tools.map(x=>x.name);
 export function toolsForSourceIds(industry,ids){const trusted=demoSourceIds(industry);return distinct(ids).filter(x=>trusted.has(x)).slice(0,16);}
 export const allowedActionsFromTools=names=>{
- const map={operations_snapshot:"overview",search_projects:"projects",get_project:"projects",get_quote:"quotes",list_priorities:"approvals",search_company_knowledge:"knowledge",get_suppliers:"suppliers",find_historical_jobs:"history",industry_guidance:"playbook"};
+ const map={get_source:"knowledge",conversation_context:"projects",operations_snapshot:"overview",search_projects:"projects",get_project:"projects",get_quote:"quotes",list_priorities:"approvals",search_company_knowledge:"knowledge",get_suppliers:"suppliers",find_historical_jobs:"history",industry_guidance:"playbook"};
  return distinct(names.map(n=>map[n]).filter(Boolean)).slice(0,5);
 };

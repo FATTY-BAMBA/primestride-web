@@ -1,3 +1,4 @@
+import {registerSources} from "./register-evidence.js";
 import {evaluateReadiness} from "./readiness-rules.js";
 /**
  * StrideBrain demo domain engine.
@@ -52,7 +53,7 @@ export function stageTone(status){
  return "neutral";
 }
 export class WorkspaceModel{
-  constructor(seed,pack){this.seed=seed;this.pack=pack;this.validation=validateSeed(seed,pack);this.byProject=new Map(seed.projects.map(x=>[x.id,x]));this.bySource=new Map(seed.documents.map(x=>[x.id,x]));this.byQuote=new Map(seed.quotes.map(x=>[x.id,x]));this.byTask=new Map(seed.workOrders.map(x=>[x.id,x]));this.byApproval=new Map(seed.approvals.map(x=>[x.id,x]));}
+  constructor(seed,pack){this.seed=seed;this.pack=pack;this.validation=validateSeed(seed,pack);this.byProject=new Map(seed.projects.map(x=>[x.id,x]));this.bySource=new Map([...seed.documents,...registerSources(seed)].map(x=>[x.id,x]));this.byQuote=new Map(seed.quotes.map(x=>[x.id,x]));this.byTask=new Map(seed.workOrders.map(x=>[x.id,x]));this.byApproval=new Map(seed.approvals.map(x=>[x.id,x]));}
   project(id){return this.byProject.get(id)||null;}
   document(id){return this.bySource.get(id)||null;}
   quote(id){return this.byQuote.get(id)||null;}

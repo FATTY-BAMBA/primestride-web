@@ -45,8 +45,8 @@ const server=https.createServer({key:fs.readFileSync(tmp+'/key.pem'),cert:fs.rea
   const session=getSessionStatus(jar(cookies));
   if(session.state!=='ready')return json({code:'DEMO_ACCESS_DENIED'},401);
   if(!session.allowedModelIds.includes(body.modelId))return json({code:'GUEST_MODEL_NOT_ALLOWED'},403);
-  const answer=(body.locale==='en'?'Test response to: ':'測試回覆：')+body.messages.at(-1).content+' [DOC-1006]';
-  const result={mode:'openrouter-readonly-demo',modelId:body.modelId,modelLabel:'Test model',answer,sourceIds:['DOC-1006'],actions:['quotes'],asOf:'2026-10-18'};
+  const answer=(body.locale==='en'?'Test response to: ':'測試回覆：')+body.messages.at(-1).content+' [REG-Q-1005] [DOC-1010]';
+  const result={mode:'openrouter-readonly-demo',modelId:body.modelId,modelLabel:'Test model',answer,sourceIds:['REG-Q-1005','DOC-1010'],actions:['quotes'],asOf:'2026-10-18'};
   res.writeHead(200,{'Content-Type':'text/event-stream','Cache-Control':'no-store'});
   res.write('event: status\ndata: '+JSON.stringify({message:'Finding relevant business records…'})+'\n\n');
   res.write('event: delta\ndata: '+JSON.stringify({text:answer})+'\n\n');
@@ -75,6 +75,15 @@ try{
  assert.ok(!(await page.evaluate(()=>document.cookie)).includes(GUEST_COOKIE));report('one invitation creates protected session; no second code in chat');
  await page.fill('#sb-composer-input','請整理待辦事項');await page.click('.sb-send');await page.waitForSelector('.copilot-gpt-prose');
  assert.equal(chats.length,1);assert.equal(chats[0].locale,'zh-TW');assert.equal(chats[0].modelId,modelId);assert.match(await page.locator('.copilot-gpt-prose').innerText(),/請整理待辦事項/);report('question reaches AI route and displays streamed response with source');
+ await page.locator('[data-action="source"][data-id="REG-Q-1005"]').first().click();
+ assert.match(await page.locator('#inspector').innerText(),/1570800/);
+ assert.match(await page.locator('#inspector').innerText(),/377000/);
+ report('quotation register source opens exact totals and calculation');
+ await page.locator('[data-action="source"][data-id="DOC-1010"]').first().click();
+ assert.match(await page.locator('#inspector').innerText(),/60,000/);
+ assert.doesNotMatch(await page.locator('#inspector').innerText(),/1,570,800|1570800/);
+ report('supplier source remains the incremental estimate, not the project quote');
+
  await page.fill('#sb-composer-input','為什麼？');await page.click('.sb-send');await page.waitForFunction(()=>document.querySelectorAll('.copilot-gpt-prose').length===2);
  assert.equal(chats.at(-1).locale,'zh-TW');assert.ok(chats.at(-1).messages.length>=3);report('Chinese follow-up retains language and conversation');
  await page.reload();await page.waitForSelector('#sb-composer-input');assert.equal(exchangeCount,1);assert.equal(await page.locator('.copilot-gpt-prose').count(),2);report('refresh restores chat without a second invitation');

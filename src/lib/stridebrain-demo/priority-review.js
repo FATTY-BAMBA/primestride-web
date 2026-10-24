@@ -1,3 +1,4 @@
+import {registerSourceId} from "../../../public/stridebrain-demo/register-evidence.js";
 /** Read-only review of structured registers. No model-generated scores or writes. */
 const DAY=86400000;
 const list=x=>Array.isArray(x)?x:[];
@@ -37,7 +38,7 @@ function approvalCheck(a,project,tasks,docs){
   interpretation:'Different record types can legitimately have different statuses; not a proven contradiction or dependency.',
   suggestedContact:project?.manager||a.requestedBy||null,
   contactBasis:project?.manager?'project_manager':a.requestedBy?'requester_not_assigned_approver':'not_recorded',
-  sourceIds:unique([doc?.id,...completed.slice(0,2).map(w=>docs.has(w.sourceDocId)?w.sourceDocId:null)])};
+  sourceIds:unique([registerSourceId(a.id),doc?.id,...completed.slice(0,2).map(w=>registerSourceId(w.id))])};
 }
 function dependencies(task,approvals){
  const raw=[task.blockedBy,task.approvalId,...list(task.dependsOn)].filter(x=>typeof x==='string').join(' ');
@@ -76,7 +77,7 @@ export function reviewPriorities(seed,{limit=3,projectId=null}={}){
   const work=actions.filter(a=>a.projectId===p.id).sort(compare);if(!work.length)return [];
   const primary=work[0],relatedChecks=[...checks.values()].filter(c=>approvals.some(a=>a.id===c.approvalId&&a.projectId===p.id)&&c.needsReconciliation)
    .sort((a,b)=>Number(primary.explicitApprovalReferences.some(x=>x.id===b.approvalId))-Number(primary.explicitApprovalReferences.some(x=>x.id===a.approvalId))||text(a.approvalId).localeCompare(text(b.approvalId)));
-  const sourceIds=unique([docs.has(primary.sourceDocId)?primary.sourceDocId:null,...relatedChecks.slice(0,2).flatMap(c=>c.sourceIds)]);
+  const sourceIds=unique([registerSourceId(primary.id),registerSourceId(p.id),...relatedChecks.slice(0,2).flatMap(c=>c.sourceIds)]);
   return [{id:primary.id,projectId:p.id,projectName:p.name,projectStage:p.stage,manager:p.manager||null,
    primaryAction:primary,rankKey:primary.rankKey,daysFromSnapshot:delta(primary.dueDate,asOf),
    openApprovalCount:approvals.filter(a=>a.projectId===p.id&&pending(a)).length,
@@ -94,6 +95,6 @@ export function reviewPriorities(seed,{limit=3,projectId=null}={}){
    candidateActions:actions.length,projectsWithActions:projectReviews.length,itemsShown:selected.length,
    openRecordsWithoutDueDate:approvals.filter(pending).filter(a=>day(a.dueDate)===null).length+tasks.filter(w=>!complete(w)&&day(w.dueDate)===null).length},
   items:selected,sourceIds:unique(selected.flatMap(x=>x.sourceIds)),
-  evidenceBasis:'Structured approval/work/project registers and referenced document metadata; source links are associated documents, not proof of every register field.',
+  evidenceBasis:'REG- sources prove structured register fields. DOC- sources prove only their displayed document contents, not linked register values.',
   limitations:['Dates are compared with the dataset snapshot, not the current calendar.','Business impact, customer commitments and a complete critical path are not recorded.','Same project, title or source does not prove a dependency. Verify status before recommending approval.']};
 }

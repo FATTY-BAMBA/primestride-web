@@ -5,7 +5,7 @@ import {readFileSync} from 'node:fs';
 register('./helpers/stridebrain-json-loader.mjs',import.meta.url);
 const {reviewPriorities}=await import('../src/lib/stridebrain-demo/priority-review.js');
 const {needsPriorityReview,citedSourceIds,verifiedAnswer,ANSWER_QUALITY_POLICY}=await import('../src/lib/stridebrain-demo/answer-quality.js');
-const {runCopilotTool}=await import('../src/lib/stridebrain-demo/copilot-tools.js');
+const {runCopilotTool,allDemoSources}=await import('../src/lib/stridebrain-demo/copilot-tools.js');
 const {runOpenRouterCopilot}=await import('../src/lib/stridebrain-demo/openrouter-runner.js');
 const {runGptCopilot,COPILOT_INSTRUCTIONS}=await import('../src/lib/stridebrain-demo/copilot-runner.js');
 const modelId='anthropic/claude-sonnet-5.5';
@@ -34,7 +34,7 @@ test('invalid calendar dates and missing snapshot do not invent deadlines',()=>{
 test('completed work alone does not become a recommended action',()=>{const s=fixture();s.approvals=[];s.workOrders.forEach(w=>w.status='Complete');assert.equal(reviewPriorities(s).items.length,0);});
 test('ties are disclosed rather than justified by IDs',()=>{const s=fixture();s.workOrders[2].dueDate=s.workOrders[1].dueDate;const r=reviewPriorities(s);assert.ok(r.items[0].equalPriorityProjectIds.length>0);});
 test('missing primary document is not fabricated into a source link',()=>{const s=fixture();s.documents=s.documents.filter(d=>d.id!=='DOC-3');assert.ok(!reviewPriorities(s).sourceIds.includes('DOC-3'));});
-test('both actual seed reviews fit complete tool JSON without truncation',()=>{for(const s of [interior,printing])for(const limit of [3,6]){const r=reviewPriorities(s,{limit});assert.ok(JSON.stringify(r).length<14000);assert.ok(r.sourceIds.every(id=>s.documents.some(d=>d.id===id)));}});
+test('both actual seed reviews fit complete tool JSON without truncation',()=>{for(const s of [interior,printing])for(const limit of [3,6]){const r=reviewPriorities(s,{limit});assert.ok(JSON.stringify(r).length<14000);assert.ok(r.sourceIds.every(id=>allDemoSources(s===interior?'interior':'printing').some(d=>d.id===id)));}});
 test('source panel contains only citations in this answer, not all retrieved records',()=>{const ids=citedSourceIds('Check [DOC-3], then [DOC-1].',['DOC-1','DOC-2','DOC-3']);assert.deepEqual(ids,['DOC-3','DOC-1']);});
 test('unknown and previous-turn-only citations are not trusted',()=>{const text='Check [DOC-9] and [DOC-1].';const ids=citedSourceIds(text,['DOC-1']);assert.deepEqual(ids,['DOC-1']);assert.ok(!verifiedAnswer(text,ids).includes('DOC-9'));});
 test('citation selection occurs before the twelve-link display cap',()=>{const pool=Array.from({length:25},(_,i)=>'DOC-'+i);assert.deepEqual(citedSourceIds('Check [DOC-24].',pool),['DOC-24']);});
