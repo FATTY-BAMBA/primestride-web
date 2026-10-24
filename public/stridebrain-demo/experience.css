@@ -1,0 +1,12 @@
+.sb-role-entry{margin:18px 0;padding:18px;border:1px solid var(--line,#dbe4e0);border-radius:14px;background:var(--panel,#fff)}
+.sb-role-entry p{margin:0 0 12px}.sb-role-entry .btn-row{display:flex;gap:8px;flex-wrap:wrap}.sb-role-entry [aria-pressed=true]{border-color:#366958;background:#edf6f1}
+.sb-role-question{display:block;margin-top:12px;padding:10px;text-align:left;border:0;background:transparent;color:inherit;font:inherit;cursor:pointer}
+.sb-guided-path{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0}.sb-guided-path button{flex:1;min-width:130px}
+.sb-evidence-more{margin-top:10px}.sb-evidence-more summary{cursor:pointer;font-size:.85rem;padding:6px 0}.sb-evidence-more>div{display:flex;flex-wrap:wrap;gap:5px;padding:10px 0}
+.sb-commercial-item{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:20px 0;border-top:1px solid var(--line,#dbe4e0)}
+.sb-commercial-item strong,.sb-commercial-item small{display:block}.sb-commercial-item small{margin-top:6px;color:var(--muted,#65736e)}.sb-commercial-item p{margin:8px 0;font-size:.9rem}
+.sb-nav-group{margin:12px 0}.sb-nav-group>summary{padding:10px 14px;cursor:pointer;font-size:.82rem;color:#c4d3d3;list-style-position:inside}
+.sb-project-tile .project-card{width:100%;height:auto}.sb-project-signals{display:flex;gap:8px;flex-wrap:wrap;padding:12px 6px;font-size:.8rem}.sb-project-signals span{border:1px solid var(--line,#dbe4e0);padding:5px 8px;border-radius:7px}
+.workspace-avatar{user-select:none;margin-right:7px}.inspector .action-stack{display:flex;flex-direction:column;align-items:stretch;gap:8px}.inspector .action-stack button{white-space:normal;text-align:left}
+.sb-owner-brief .sb-brief-item{align-items:start}.sb-owner-brief .sb-brief-item small{display:block;margin-top:6px}
+@media(max-width:760px){.sb-commercial-item{display:block}.sb-commercial-item>button{margin-top:12px}.sb-role-entry{padding:12px}.sb-guided-path button{min-width:42%}.sb-owner-brief .sb-brief-item{grid-template-columns:24px 1fr}.sb-owner-brief .sb-brief-item>button{grid-column:2}.sb-commercial-item .source-ref{margin:4px 0}}

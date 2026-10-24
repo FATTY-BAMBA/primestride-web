@@ -1,0 +1,5 @@
+﻿job_id,source,incremental_item,sample_direct_cost_twd,supplier_confirmed
+JOB-201,PRDOC-2007,Recycled 170gsm stock uplift,1500,NO
+JOB-201,PRDOC-2007,Press setup and changeover,500,NO
+JOB-201,PRDOC-2007,Finishing/handling,400,NO
+JOB-201,PRDOC-2007,TOTAL SAMPLE DIRECT COST,2400,NO

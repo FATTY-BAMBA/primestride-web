@@ -1,0 +1,1729 @@
+{
+  "meta": {
+    "mode": "SYNTHETIC_HISTORY",
+    "industry": "interior",
+    "disclaimer": "All past jobs and costs are invented solely to test quote reasoning.",
+    "generatedAt": "2026-10-18"
+  },
+  "unit": "ping",
+  "categories": [
+    {
+      "id": "residential_renovation",
+      "label": "Residential renovation"
+    },
+    {
+      "id": "office_fitout",
+      "label": "Office fit-out"
+    },
+    {
+      "id": "retail_fitout",
+      "label": "Retail fit-out"
+    }
+  ],
+  "tiers": [
+    "standard",
+    "premium",
+    "economy"
+  ],
+  "locations": [
+    "Taipei",
+    "New Taipei",
+    "Taoyuan",
+    "Taichung",
+    "Hsinchu"
+  ],
+  "costCodes": [
+    {
+      "id": "design",
+      "label": "Design & planning"
+    },
+    {
+      "id": "demolition",
+      "label": "Site preparation & demolition"
+    },
+    {
+      "id": "carpentry",
+      "label": "Cabinetry and carpentry"
+    },
+    {
+      "id": "electrical",
+      "label": "Electrical works"
+    },
+    {
+      "id": "plumbing",
+      "label": "Plumbing & wet areas"
+    },
+    {
+      "id": "flooring",
+      "label": "Flooring & finishes"
+    },
+    {
+      "id": "painting",
+      "label": "Painting & surface prep"
+    },
+    {
+      "id": "coordination",
+      "label": "Site coordination"
+    }
+  ],
+  "defaults": {
+    "category": "residential_renovation",
+    "tier": "standard",
+    "location": "Taipei",
+    "quantity": 28,
+    "scope": [
+      "design",
+      "demolition",
+      "carpentry",
+      "electrical",
+      "plumbing",
+      "flooring",
+      "painting",
+      "coordination"
+    ],
+    "margin": 25,
+    "escalation": 5,
+    "contingency": 7
+  },
+  "records": [
+    {
+      "id": "IH-001",
+      "sourceDocId": "HIST-INT-001",
+      "title": "民生光宅",
+      "category": "residential_renovation",
+      "tier": "standard",
+      "location": "Taipei",
+      "completedAt": "2026-06-05",
+      "quantity": 27,
+      "unit": "ping",
+      "scope": [
+        "design",
+        "demolition",
+        "carpentry",
+        "electrical",
+        "plumbing",
+        "flooring",
+        "painting",
+        "coordination"
+      ],
+      "lines": [
+        {
+          "code": "design",
+          "label": "Design & planning",
+          "unitCost": 4093.6,
+          "quantity": 27,
+          "unit": "ping",
+          "actualCost": 110527
+        },
+        {
+          "code": "demolition",
+          "label": "Site preparation & demolition",
+          "unitCost": 3036,
+          "quantity": 27,
+          "unit": "ping",
+          "actualCost": 81972
+        },
+        {
+          "code": "carpentry",
+          "label": "Cabinetry and carpentry",
+          "unitCost": 18894.4,
+          "quantity": 27,
+          "unit": "ping",
+          "actualCost": 510149
+        },
+        {
+          "code": "electrical",
+          "label": "Electrical works",
+          "unitCost": 6348.8,
+          "quantity": 27,
+          "unit": "ping",
+          "actualCost": 171418
+        },
+        {
+          "code": "plumbing",
+          "label": "Plumbing & wet areas",
+          "unitCost": 5172.8,
+          "quantity": 27,
+          "unit": "ping",
+          "actualCost": 139666
+        },
+        {
+          "code": "flooring",
+          "label": "Flooring & finishes",
+          "unitCost": 7873.6,
+          "quantity": 27,
+          "unit": "ping",
+          "actualCost": 212587
+        },
+        {
+          "code": "painting",
+          "label": "Painting & surface prep",
+          "unitCost": 3952,
+          "quantity": 27,
+          "unit": "ping",
+          "actualCost": 106704
+        },
+        {
+          "code": "coordination",
+          "label": "Site coordination",
+          "unitCost": 5764,
+          "quantity": 27,
+          "unit": "ping",
+          "actualCost": 155628
+        }
+      ],
+      "finalDirectCost": 1488651,
+      "historicQuoteExTax": 1984868,
+      "status": "COMPLETE",
+      "currency": "TWD",
+      "synthetic": true
+    },
+    {
+      "id": "IH-002",
+      "sourceDocId": "HIST-INT-002",
+      "title": "和平木語",
+      "category": "residential_renovation",
+      "tier": "standard",
+      "location": "Taipei",
+      "completedAt": "2026-07-06",
+      "quantity": 29,
+      "unit": "ping",
+      "scope": [
+        "design",
+        "demolition",
+        "carpentry",
+        "electrical",
+        "plumbing",
+        "flooring",
+        "painting",
+        "coordination"
+      ],
+      "lines": [
+        {
+          "code": "design",
+          "label": "Design & planning",
+          "unitCost": 4460.82,
+          "quantity": 29,
+          "unit": "ping",
+          "actualCost": 129364
+        },
+        {
+          "code": "demolition",
+          "label": "Site preparation & demolition",
+          "unitCost": 3301.2,
+          "quantity": 29,
+          "unit": "ping",
+          "actualCost": 95735
+        },
+        {
+          "code": "carpentry",
+          "label": "Cabinetry and carpentry",
+          "unitCost": 20580,
+          "quantity": 29,
+          "unit": "ping",
+          "actualCost": 596820
+        },
+        {
+          "code": "electrical",
+          "label": "Electrical works",
+          "unitCost": 6197.52,
+          "quantity": 29,
+          "unit": "ping",
+          "actualCost": 179728
+        },
+        {
+          "code": "plumbing",
+          "label": "Plumbing & wet areas",
+          "unitCost": 5631.78,
+          "quantity": 29,
+          "unit": "ping",
+          "actualCost": 163322
+        },
+        {
+          "code": "flooring",
+          "label": "Flooring & finishes",
+          "unitCost": 7692.72,
+          "quantity": 29,
+          "unit": "ping",
+          "actualCost": 223089
+        },
+        {
+          "code": "painting",
+          "label": "Painting & surface prep",
+          "unitCost": 4300.8,
+          "quantity": 29,
+          "unit": "ping",
+          "actualCost": 124723
+        },
+        {
+          "code": "coordination",
+          "label": "Site coordination",
+          "unitCost": 5636.4,
+          "quantity": 29,
+          "unit": "ping",
+          "actualCost": 163456
+        }
+      ],
+      "finalDirectCost": 1676237,
+      "historicQuoteExTax": 2234983,
+      "status": "COMPLETE",
+      "currency": "TWD",
+      "synthetic": true
+    },
+    {
+      "id": "IH-003",
+      "sourceDocId": "HIST-INT-003",
+      "title": "內湖春邸",
+      "category": "residential_renovation",
+      "tier": "standard",
+      "location": "Taipei",
+      "completedAt": "2025-11-07",
+      "quantity": 25,
+      "unit": "ping",
+      "scope": [
+        "design",
+        "demolition",
+        "carpentry",
+        "electrical",
+        "plumbing",
+        "flooring",
+        "painting",
+        "coordination"
+      ],
+      "lines": [
+        {
+          "code": "design",
+          "label": "Design & planning",
+          "unitCost": 4227.07,
+          "quantity": 25,
+          "unit": "ping",
+          "actualCost": 105677
+        },
+        {
+          "code": "demolition",
+          "label": "Site preparation & demolition",
+          "unitCost": 2810.88,
+          "quantity": 25,
+          "unit": "ping",
+          "actualCost": 70272
+        },
+        {
+          "code": "carpentry",
+          "label": "Cabinetry and carpentry",
+          "unitCost": 19493.38,
+          "quantity": 25,
+          "unit": "ping",
+          "actualCost": 487335
+        },
+        {
+          "code": "electrical",
+          "label": "Electrical works",
+          "unitCost": 5880.58,
+          "quantity": 25,
+          "unit": "ping",
+          "actualCost": 147015
+        },
+        {
+          "code": "plumbing",
+          "label": "Plumbing & wet areas",
+          "unitCost": 5332.22,
+          "quantity": 25,
+          "unit": "ping",
+          "actualCost": 133306
+        },
+        {
+          "code": "flooring",
+          "label": "Flooring & finishes",
+          "unitCost": 7296,
+          "quantity": 25,
+          "unit": "ping",
+          "actualCost": 182400
+        },
+        {
+          "code": "painting",
+          "label": "Painting & surface prep",
+          "unitCost": 3655.68,
+          "quantity": 25,
+          "unit": "ping",
+          "actualCost": 91392
+        },
+        {
+          "code": "coordination",
+          "label": "Site coordination",
+          "unitCost": 5343.36,
+          "quantity": 25,
+          "unit": "ping",
+          "actualCost": 133584
+        }
+      ],
+      "finalDirectCost": 1350981,
+      "historicQuoteExTax": 1801308,
+      "status": "COMPLETE",
+      "currency": "TWD",
+      "synthetic": true
+    },
+    {
+      "id": "IH-004",
+      "sourceDocId": "HIST-INT-004",
+      "title": "中和溫居",
+      "category": "residential_renovation",
+      "tier": "standard",
+      "location": "New Taipei",
+      "completedAt": "2026-04-08",
+      "quantity": 32,
+      "unit": "ping",
+      "scope": [
+        "design",
+        "demolition",
+        "carpentry",
+        "electrical",
+        "plumbing",
+        "flooring",
+        "painting",
+        "coordination"
+      ],
+      "lines": [
+        {
+          "code": "design",
+          "label": "Design & planning",
+          "unitCost": 4011.73,
+          "quantity": 32,
+          "unit": "ping",
+          "actualCost": 128375
+        },
+        {
+          "code": "demolition",
+          "label": "Site preparation & demolition",
+          "unitCost": 2975.28,
+          "quantity": 32,
+          "unit": "ping",
+          "actualCost": 95209
+        },
+        {
+          "code": "carpentry",
+          "label": "Cabinetry and carpentry",
+          "unitCost": 18516.51,
+          "quantity": 32,
+          "unit": "ping",
+          "actualCost": 592528
+        },
+        {
+          "code": "electrical",
+          "label": "Electrical works",
+          "unitCost": 6221.82,
+          "quantity": 32,
+          "unit": "ping",
+          "actualCost": 199098
+        },
+        {
+          "code": "plumbing",
+          "label": "Plumbing & wet areas",
+          "unitCost": 5069.34,
+          "quantity": 32,
+          "unit": "ping",
+          "actualCost": 162219
+        },
+        {
+          "code": "flooring",
+          "label": "Flooring & finishes",
+          "unitCost": 7716.13,
+          "quantity": 32,
+          "unit": "ping",
+          "actualCost": 246916
+        },
+        {
+          "code": "painting",
+          "label": "Painting & surface prep",
+          "unitCost": 3872.96,
+          "quantity": 32,
+          "unit": "ping",
+          "actualCost": 123935
+        },
+        {
+          "code": "coordination",
+          "label": "Site coordination",
+          "unitCost": 5648.72,
+          "quantity": 32,
+          "unit": "ping",
+          "actualCost": 180759
+        }
+      ],
+      "finalDirectCost": 1729039,
+      "historicQuoteExTax": 2305385,
+      "status": "COMPLETE",
+      "currency": "TWD",
+      "synthetic": true
+    },
+    {
+      "id": "IH-005",
+      "sourceDocId": "HIST-INT-005",
+      "title": "信義微光",
+      "category": "residential_renovation",
+      "tier": "premium",
+      "location": "Taipei",
+      "completedAt": "2026-05-09",
+      "quantity": 24,
+      "unit": "ping",
+      "scope": [
+        "design",
+        "demolition",
+        "carpentry",
+        "electrical",
+        "plumbing",
+        "flooring",
+        "painting",
+        "coordination"
+      ],
+      "lines": [
+        {
+          "code": "design",
+          "label": "Design & planning",
+          "unitCost": 5597.69,
+          "quantity": 24,
+          "unit": "ping",
+          "actualCost": 134345
+        },
+        {
+          "code": "demolition",
+          "label": "Site preparation & demolition",
+          "unitCost": 4142.53,
+          "quantity": 24,
+          "unit": "ping",
+          "actualCost": 99421
+        },
+        {
+          "code": "carpentry",
+          "label": "Cabinetry and carpentry",
+          "unitCost": 25824.96,
+          "quantity": 24,
+          "unit": "ping",
+          "actualCost": 619799
+        },
+        {
+          "code": "electrical",
+          "label": "Electrical works",
+          "unitCost": 7777,
+          "quantity": 24,
+          "unit": "ping",
+          "actualCost": 186648
+        },
+        {
+          "code": "plumbing",
+          "label": "Plumbing & wet areas",
+          "unitCost": 7067.08,
+          "quantity": 24,
+          "unit": "ping",
+          "actualCost": 169610
+        },
+        {
+          "code": "flooring",
+          "label": "Flooring & finishes",
+          "unitCost": 9653.26,
+          "quantity": 24,
+          "unit": "ping",
+          "actualCost": 231678
+        },
+        {
+          "code": "painting",
+          "label": "Painting & surface prep",
+          "unitCost": 5396.89,
+          "quantity": 24,
+          "unit": "ping",
+          "actualCost": 129525
+        },
+        {
+          "code": "coordination",
+          "label": "Site coordination",
+          "unitCost": 7072.88,
+          "quantity": 24,
+          "unit": "ping",
+          "actualCost": 169749
+        }
+      ],
+      "finalDirectCost": 1740775,
+      "historicQuoteExTax": 2321033,
+      "status": "COMPLETE",
+      "currency": "TWD",
+      "synthetic": true
+    },
+    {
+      "id": "IH-006",
+      "sourceDocId": "HIST-INT-006",
+      "title": "大安木屋",
+      "category": "residential_renovation",
+      "tier": "premium",
+      "location": "Taipei",
+      "completedAt": "2025-09-10",
+      "quantity": 33,
+      "unit": "ping",
+      "scope": [
+        "design",
+        "demolition",
+        "carpentry",
+        "electrical",
+        "plumbing",
+        "flooring",
+        "painting",
+        "coordination"
+      ],
+      "lines": [
+        {
+          "code": "design",
+          "label": "Design & planning",
+          "unitCost": 6134.54,
+          "quantity": 33,
+          "unit": "ping",
+          "actualCost": 202440
+        },
+        {
+          "code": "demolition",
+          "label": "Site preparation & demolition",
+          "unitCost": 4079.29,
+          "quantity": 33,
+          "unit": "ping",
+          "actualCost": 134617
+        },
+        {
+          "code": "carpentry",
+          "label": "Cabinetry and carpentry",
+          "unitCost": 28289.76,
+          "quantity": 33,
+          "unit": "ping",
+          "actualCost": 933562
+        },
+        {
+          "code": "electrical",
+          "label": "Electrical works",
+          "unitCost": 8534.19,
+          "quantity": 33,
+          "unit": "ping",
+          "actualCost": 281628
+        },
+        {
+          "code": "plumbing",
+          "label": "Plumbing & wet areas",
+          "unitCost": 7738.39,
+          "quantity": 33,
+          "unit": "ping",
+          "actualCost": 255367
+        },
+        {
+          "code": "flooring",
+          "label": "Flooring & finishes",
+          "unitCost": 10588.32,
+          "quantity": 33,
+          "unit": "ping",
+          "actualCost": 349415
+        },
+        {
+          "code": "painting",
+          "label": "Painting & surface prep",
+          "unitCost": 5305.31,
+          "quantity": 33,
+          "unit": "ping",
+          "actualCost": 175075
+        },
+        {
+          "code": "coordination",
+          "label": "Site coordination",
+          "unitCost": 7754.55,
+          "quantity": 33,
+          "unit": "ping",
+          "actualCost": 255900
+        }
+      ],
+      "finalDirectCost": 2588004,
+      "historicQuoteExTax": 3450672,
+      "status": "COMPLETE",
+      "currency": "TWD",
+      "synthetic": true
+    },
+    {
+      "id": "IH-007",
+      "sourceDocId": "HIST-INT-007",
+      "title": "板橋青寓",
+      "category": "residential_renovation",
+      "tier": "standard",
+      "location": "New Taipei",
+      "completedAt": "2025-08-11",
+      "quantity": 30,
+      "unit": "ping",
+      "scope": [
+        "design",
+        "demolition",
+        "carpentry",
+        "electrical",
+        "plumbing",
+        "flooring",
+        "painting",
+        "coordination"
+      ],
+      "lines": [
+        {
+          "code": "design",
+          "label": "Design & planning",
+          "unitCost": 3888.92,
+          "quantity": 30,
+          "unit": "ping",
+          "actualCost": 116668
+        },
+        {
+          "code": "demolition",
+          "label": "Site preparation & demolition",
+          "unitCost": 2884.2,
+          "quantity": 30,
+          "unit": "ping",
+          "actualCost": 86526
+        },
+        {
+          "code": "carpentry",
+          "label": "Cabinetry and carpentry",
+          "unitCost": 17949.68,
+          "quantity": 30,
+          "unit": "ping",
+          "actualCost": 538490
+        },
+        {
+          "code": "electrical",
+          "label": "Electrical works",
+          "unitCost": 6031.36,
+          "quantity": 30,
+          "unit": "ping",
+          "actualCost": 180941
+        },
+        {
+          "code": "plumbing",
+          "label": "Plumbing & wet areas",
+          "unitCost": 4914.16,
+          "quantity": 30,
+          "unit": "ping",
+          "actualCost": 147425
+        },
+        {
+          "code": "flooring",
+          "label": "Flooring & finishes",
+          "unitCost": 7479.92,
+          "quantity": 30,
+          "unit": "ping",
+          "actualCost": 224398
+        },
+        {
+          "code": "painting",
+          "label": "Painting & surface prep",
+          "unitCost": 3754.4,
+          "quantity": 30,
+          "unit": "ping",
+          "actualCost": 112632
+        },
+        {
+          "code": "coordination",
+          "label": "Site coordination",
+          "unitCost": 5475.8,
+          "quantity": 30,
+          "unit": "ping",
+          "actualCost": 164274
+        }
+      ],
+      "finalDirectCost": 1571354,
+      "historicQuoteExTax": 2095139,
+      "status": "COMPLETE",
+      "currency": "TWD",
+      "synthetic": true
+    },
+    {
+      "id": "IH-008",
+      "sourceDocId": "HIST-INT-008",
+      "title": "桃園晨曦",
+      "category": "residential_renovation",
+      "tier": "economy",
+      "location": "Taoyuan",
+      "completedAt": "2024-11-12",
+      "quantity": 26,
+      "unit": "ping",
+      "scope": [
+        "design",
+        "demolition",
+        "carpentry",
+        "electrical",
+        "plumbing",
+        "flooring",
+        "painting",
+        "coordination"
+      ],
+      "lines": [
+        {
+          "code": "design",
+          "label": "Design & planning",
+          "unitCost": 3363.46,
+          "quantity": 26,
+          "unit": "ping",
+          "actualCost": 87450
+        },
+        {
+          "code": "demolition",
+          "label": "Site preparation & demolition",
+          "unitCost": 2489.1,
+          "quantity": 26,
+          "unit": "ping",
+          "actualCost": 64717
+        },
+        {
+          "code": "carpentry",
+          "label": "Cabinetry and carpentry",
+          "unitCost": 15517.32,
+          "quantity": 26,
+          "unit": "ping",
+          "actualCost": 403450
+        },
+        {
+          "code": "electrical",
+          "label": "Electrical works",
+          "unitCost": 4672.93,
+          "quantity": 26,
+          "unit": "ping",
+          "actualCost": 121496
+        },
+        {
+          "code": "plumbing",
+          "label": "Plumbing & wet areas",
+          "unitCost": 4246.36,
+          "quantity": 26,
+          "unit": "ping",
+          "actualCost": 110405
+        },
+        {
+          "code": "flooring",
+          "label": "Flooring & finishes",
+          "unitCost": 5800.31,
+          "quantity": 26,
+          "unit": "ping",
+          "actualCost": 150808
+        },
+        {
+          "code": "painting",
+          "label": "Painting & surface prep",
+          "unitCost": 3242.8,
+          "quantity": 26,
+          "unit": "ping",
+          "actualCost": 84313
+        },
+        {
+          "code": "coordination",
+          "label": "Site coordination",
+          "unitCost": 4249.85,
+          "quantity": 26,
+          "unit": "ping",
+          "actualCost": 110496
+        }
+      ],
+      "finalDirectCost": 1133135,
+      "historicQuoteExTax": 1510847,
+      "status": "COMPLETE",
+      "currency": "TWD",
+      "synthetic": true
+    },
+    {
+      "id": "IH-009",
+      "sourceDocId": "HIST-INT-009",
+      "title": "南港居間",
+      "category": "residential_renovation",
+      "tier": "standard",
+      "location": "Taipei",
+      "completedAt": "2026-03-13",
+      "quantity": 35,
+      "unit": "ping",
+      "scope": [
+        "design",
+        "demolition",
+        "carpentry",
+        "electrical",
+        "plumbing",
+        "flooring",
+        "painting",
+        "coordination"
+      ],
+      "lines": [
+        {
+          "code": "design",
+          "label": "Design & planning",
+          "unitCost": 4711.42,
+          "quantity": 35,
+          "unit": "ping",
+          "actualCost": 164900
+        },
+        {
+          "code": "demolition",
+          "label": "Site preparation & demolition",
+          "unitCost": 3132.96,
+          "quantity": 35,
+          "unit": "ping",
+          "actualCost": 109654
+        },
+        {
+          "code": "carpentry",
+          "label": "Cabinetry and carpentry",
+          "unitCost": 21726.99,
+          "quantity": 35,
+          "unit": "ping",
+          "actualCost": 760445
+        },
+        {
+          "code": "electrical",
+          "label": "Electrical works",
+          "unitCost": 6554.39,
+          "quantity": 35,
+          "unit": "ping",
+          "actualCost": 229404
+        },
+        {
+          "code": "plumbing",
+          "label": "Plumbing & wet areas",
+          "unitCost": 5943.21,
+          "quantity": 35,
+          "unit": "ping",
+          "actualCost": 208012
+        },
+        {
+          "code": "flooring",
+          "label": "Flooring & finishes",
+          "unitCost": 8132,
+          "quantity": 35,
+          "unit": "ping",
+          "actualCost": 284620
+        },
+        {
+          "code": "painting",
+          "label": "Painting & surface prep",
+          "unitCost": 4074.56,
+          "quantity": 35,
+          "unit": "ping",
+          "actualCost": 142610
+        },
+        {
+          "code": "coordination",
+          "label": "Site coordination",
+          "unitCost": 5955.62,
+          "quantity": 35,
+          "unit": "ping",
+          "actualCost": 208447
+        }
+      ],
+      "finalDirectCost": 2108092,
+      "historicQuoteExTax": 2810789,
+      "status": "COMPLETE",
+      "currency": "TWD",
+      "synthetic": true
+    },
+    {
+      "id": "IH-010",
+      "sourceDocId": "HIST-INT-010",
+      "title": "北投安家",
+      "category": "residential_renovation",
+      "tier": "standard",
+      "location": "Taipei",
+      "completedAt": "2025-12-14",
+      "quantity": 22,
+      "unit": "ping",
+      "scope": [
+        "design",
+        "demolition",
+        "carpentry",
+        "electrical",
+        "plumbing",
+        "flooring",
+        "painting",
+        "coordination"
+      ],
+      "lines": [
+        {
+          "code": "design",
+          "label": "Design & planning",
+          "unitCost": 3970.79,
+          "quantity": 22,
+          "unit": "ping",
+          "actualCost": 87357
+        },
+        {
+          "code": "demolition",
+          "label": "Site preparation & demolition",
+          "unitCost": 2944.92,
+          "quantity": 22,
+          "unit": "ping",
+          "actualCost": 64788
+        },
+        {
+          "code": "carpentry",
+          "label": "Cabinetry and carpentry",
+          "unitCost": 18327.57,
+          "quantity": 22,
+          "unit": "ping",
+          "actualCost": 403207
+        },
+        {
+          "code": "electrical",
+          "label": "Electrical works",
+          "unitCost": 6158.34,
+          "quantity": 22,
+          "unit": "ping",
+          "actualCost": 135483
+        },
+        {
+          "code": "plumbing",
+          "label": "Plumbing & wet areas",
+          "unitCost": 5017.62,
+          "quantity": 22,
+          "unit": "ping",
+          "actualCost": 110388
+        },
+        {
+          "code": "flooring",
+          "label": "Flooring & finishes",
+          "unitCost": 7637.39,
+          "quantity": 22,
+          "unit": "ping",
+          "actualCost": 168023
+        },
+        {
+          "code": "painting",
+          "label": "Painting & surface prep",
+          "unitCost": 3833.44,
+          "quantity": 22,
+          "unit": "ping",
+          "actualCost": 84336
+        },
+        {
+          "code": "coordination",
+          "label": "Site coordination",
+          "unitCost": 5591.08,
+          "quantity": 22,
+          "unit": "ping",
+          "actualCost": 123004
+        }
+      ],
+      "finalDirectCost": 1176586,
+      "historicQuoteExTax": 1568781,
+      "status": "COMPLETE",
+      "currency": "TWD",
+      "synthetic": true
+    },
+    {
+      "id": "IH-011",
+      "sourceDocId": "HIST-INT-011",
+      "title": "內湖青川",
+      "category": "residential_renovation",
+      "tier": "standard",
+      "location": "Taipei",
+      "completedAt": "2026-08-15",
+      "quantity": 28,
+      "unit": "ping",
+      "scope": [
+        "design",
+        "demolition",
+        "carpentry",
+        "electrical",
+        "plumbing",
+        "flooring",
+        "painting",
+        "coordination"
+      ],
+      "lines": [
+        {
+          "code": "design",
+          "label": "Design & planning",
+          "unitCost": 4375.85,
+          "quantity": 28,
+          "unit": "ping",
+          "actualCost": 122524
+        },
+        {
+          "code": "demolition",
+          "label": "Site preparation & demolition",
+          "unitCost": 3238.32,
+          "quantity": 28,
+          "unit": "ping",
+          "actualCost": 90673
+        },
+        {
+          "code": "carpentry",
+          "label": "Cabinetry and carpentry",
+          "unitCost": 20188,
+          "quantity": 28,
+          "unit": "ping",
+          "actualCost": 565264
+        },
+        {
+          "code": "electrical",
+          "label": "Electrical works",
+          "unitCost": 6079.47,
+          "quantity": 28,
+          "unit": "ping",
+          "actualCost": 170225
+        },
+        {
+          "code": "plumbing",
+          "label": "Plumbing & wet areas",
+          "unitCost": 5524.51,
+          "quantity": 28,
+          "unit": "ping",
+          "actualCost": 154686
+        },
+        {
+          "code": "flooring",
+          "label": "Flooring & finishes",
+          "unitCost": 7546.19,
+          "quantity": 28,
+          "unit": "ping",
+          "actualCost": 211293
+        },
+        {
+          "code": "painting",
+          "label": "Painting & surface prep",
+          "unitCost": 4218.88,
+          "quantity": 28,
+          "unit": "ping",
+          "actualCost": 118129
+        },
+        {
+          "code": "coordination",
+          "label": "Site coordination",
+          "unitCost": 5529.04,
+          "quantity": 28,
+          "unit": "ping",
+          "actualCost": 154813
+        }
+      ],
+      "finalDirectCost": 1587607,
+      "historicQuoteExTax": 2116809,
+      "status": "COMPLETE",
+      "currency": "TWD",
+      "synthetic": true
+    },
+    {
+      "id": "IH-012",
+      "sourceDocId": "HIST-INT-012",
+      "title": "台中日光",
+      "category": "residential_renovation",
+      "tier": "premium",
+      "location": "Taichung",
+      "completedAt": "2026-01-16",
+      "quantity": 38,
+      "unit": "ping",
+      "scope": [
+        "design",
+        "demolition",
+        "carpentry",
+        "electrical",
+        "plumbing",
+        "flooring",
+        "painting",
+        "coordination"
+      ],
+      "lines": [
+        {
+          "code": "design",
+          "label": "Design & planning",
+          "unitCost": 5563.88,
+          "quantity": 38,
+          "unit": "ping",
+          "actualCost": 211427
+        },
+        {
+          "code": "demolition",
+          "label": "Site preparation & demolition",
+          "unitCost": 3699.82,
+          "quantity": 38,
+          "unit": "ping",
+          "actualCost": 140593
+        },
+        {
+          "code": "carpentry",
+          "label": "Cabinetry and carpentry",
+          "unitCost": 25658.16,
+          "quantity": 38,
+          "unit": "ping",
+          "actualCost": 975010
+        },
+        {
+          "code": "electrical",
+          "label": "Electrical works",
+          "unitCost": 7740.31,
+          "quantity": 38,
+          "unit": "ping",
+          "actualCost": 294132
+        },
+        {
+          "code": "plumbing",
+          "label": "Plumbing & wet areas",
+          "unitCost": 7018.54,
+          "quantity": 38,
+          "unit": "ping",
+          "actualCost": 266705
+        },
+        {
+          "code": "flooring",
+          "label": "Flooring & finishes",
+          "unitCost": 9603.36,
+          "quantity": 38,
+          "unit": "ping",
+          "actualCost": 364928
+        },
+        {
+          "code": "painting",
+          "label": "Painting & surface prep",
+          "unitCost": 4811.79,
+          "quantity": 38,
+          "unit": "ping",
+          "actualCost": 182848
+        },
+        {
+          "code": "coordination",
+          "label": "Site coordination",
+          "unitCost": 7033.2,
+          "quantity": 38,
+          "unit": "ping",
+          "actualCost": 267262
+        }
+      ],
+      "finalDirectCost": 2702905,
+      "historicQuoteExTax": 3603873,
+      "status": "COMPLETE",
+      "currency": "TWD",
+      "synthetic": true
+    },
+    {
+      "id": "IH-013",
+      "sourceDocId": "HIST-INT-013",
+      "title": "南港聯合辦公",
+      "category": "office_fitout",
+      "tier": "standard",
+      "location": "Taipei",
+      "completedAt": "2026-04-17",
+      "quantity": 42,
+      "unit": "ping",
+      "scope": [
+        "design",
+        "demolition",
+        "carpentry",
+        "electrical",
+        "flooring",
+        "painting",
+        "coordination"
+      ],
+      "lines": [
+        {
+          "code": "design",
+          "label": "Design & planning",
+          "unitCost": 3684.24,
+          "quantity": 42,
+          "unit": "ping",
+          "actualCost": 154738
+        },
+        {
+          "code": "demolition",
+          "label": "Site preparation & demolition",
+          "unitCost": 2732.4,
+          "quantity": 42,
+          "unit": "ping",
+          "actualCost": 114761
+        },
+        {
+          "code": "carpentry",
+          "label": "Cabinetry and carpentry",
+          "unitCost": 17004.96,
+          "quantity": 42,
+          "unit": "ping",
+          "actualCost": 714208
+        },
+        {
+          "code": "electrical",
+          "label": "Electrical works",
+          "unitCost": 5713.92,
+          "quantity": 42,
+          "unit": "ping",
+          "actualCost": 239985
+        },
+        {
+          "code": "flooring",
+          "label": "Flooring & finishes",
+          "unitCost": 6675.84,
+          "quantity": 42,
+          "unit": "ping",
+          "actualCost": 280385
+        },
+        {
+          "code": "painting",
+          "label": "Painting & surface prep",
+          "unitCost": 3729.6,
+          "quantity": 42,
+          "unit": "ping",
+          "actualCost": 156643
+        },
+        {
+          "code": "coordination",
+          "label": "Site coordination",
+          "unitCost": 4890.6,
+          "quantity": 42,
+          "unit": "ping",
+          "actualCost": 205405
+        }
+      ],
+      "finalDirectCost": 1866125,
+      "historicQuoteExTax": 2488167,
+      "status": "COMPLETE",
+      "currency": "TWD",
+      "synthetic": true
+    },
+    {
+      "id": "IH-014",
+      "sourceDocId": "HIST-INT-014",
+      "title": "中山工作室",
+      "category": "office_fitout",
+      "tier": "standard",
+      "location": "Taipei",
+      "completedAt": "2025-10-18",
+      "quantity": 33,
+      "unit": "ping",
+      "scope": [
+        "design",
+        "demolition",
+        "carpentry",
+        "electrical",
+        "flooring",
+        "painting",
+        "coordination"
+      ],
+      "lines": [
+        {
+          "code": "design",
+          "label": "Design & planning",
+          "unitCost": 3611.14,
+          "quantity": 33,
+          "unit": "ping",
+          "actualCost": 119168
+        },
+        {
+          "code": "demolition",
+          "label": "Site preparation & demolition",
+          "unitCost": 2672.4,
+          "quantity": 33,
+          "unit": "ping",
+          "actualCost": 88189
+        },
+        {
+          "code": "carpentry",
+          "label": "Cabinetry and carpentry",
+          "unitCost": 16660,
+          "quantity": 33,
+          "unit": "ping",
+          "actualCost": 549780
+        },
+        {
+          "code": "electrical",
+          "label": "Electrical works",
+          "unitCost": 5017.04,
+          "quantity": 33,
+          "unit": "ping",
+          "actualCost": 165562
+        },
+        {
+          "code": "flooring",
+          "label": "Flooring & finishes",
+          "unitCost": 6537.52,
+          "quantity": 33,
+          "unit": "ping",
+          "actualCost": 215738
+        },
+        {
+          "code": "painting",
+          "label": "Painting & surface prep",
+          "unitCost": 3277.6,
+          "quantity": 33,
+          "unit": "ping",
+          "actualCost": 108161
+        },
+        {
+          "code": "coordination",
+          "label": "Site coordination",
+          "unitCost": 4787.2,
+          "quantity": 33,
+          "unit": "ping",
+          "actualCost": 157978
+        }
+      ],
+      "finalDirectCost": null,
+      "historicQuoteExTax": 1872768,
+      "status": "QUOTE_ONLY",
+      "currency": "TWD",
+      "synthetic": true
+    },
+    {
+      "id": "IH-015",
+      "sourceDocId": "HIST-INT-015",
+      "title": "新竹展示間",
+      "category": "retail_fitout",
+      "tier": "premium",
+      "location": "Hsinchu",
+      "completedAt": "2025-07-19",
+      "quantity": 31,
+      "unit": "ping",
+      "scope": [
+        "design",
+        "demolition",
+        "carpentry",
+        "electrical",
+        "plumbing",
+        "flooring",
+        "coordination"
+      ],
+      "lines": [
+        {
+          "code": "design",
+          "label": "Design & planning",
+          "unitCost": 5326.11,
+          "quantity": 31,
+          "unit": "ping",
+          "actualCost": 165109
+        },
+        {
+          "code": "demolition",
+          "label": "Site preparation & demolition",
+          "unitCost": 3541.71,
+          "quantity": 31,
+          "unit": "ping",
+          "actualCost": 109793
+        },
+        {
+          "code": "carpentry",
+          "label": "Cabinetry and carpentry",
+          "unitCost": 24561.65,
+          "quantity": 31,
+          "unit": "ping",
+          "actualCost": 761411
+        },
+        {
+          "code": "electrical",
+          "label": "Electrical works",
+          "unitCost": 7409.53,
+          "quantity": 31,
+          "unit": "ping",
+          "actualCost": 229695
+        },
+        {
+          "code": "plumbing",
+          "label": "Plumbing & wet areas",
+          "unitCost": 6718.6,
+          "quantity": 31,
+          "unit": "ping",
+          "actualCost": 208277
+        },
+        {
+          "code": "flooring",
+          "label": "Flooring & finishes",
+          "unitCost": 9192.96,
+          "quantity": 31,
+          "unit": "ping",
+          "actualCost": 284982
+        },
+        {
+          "code": "coordination",
+          "label": "Site coordination",
+          "unitCost": 6333.47,
+          "quantity": 31,
+          "unit": "ping",
+          "actualCost": 196338
+        }
+      ],
+      "finalDirectCost": null,
+      "historicQuoteExTax": 2607473,
+      "status": "COST_INCOMPLETE",
+      "currency": "TWD",
+      "synthetic": true
+    },
+    {
+      "id": "IH-016",
+      "sourceDocId": "HIST-INT-016",
+      "title": "松江住宅提案",
+      "category": "residential_renovation",
+      "tier": "standard",
+      "location": "Taipei",
+      "completedAt": "2026-09-20",
+      "quantity": 27,
+      "unit": "ping",
+      "scope": [
+        "design",
+        "demolition",
+        "carpentry",
+        "electrical",
+        "plumbing",
+        "flooring",
+        "painting",
+        "coordination"
+      ],
+      "lines": [
+        {
+          "code": "design",
+          "label": "Design & planning",
+          "unitCost": 4134.54,
+          "quantity": 27,
+          "unit": "ping",
+          "actualCost": 111633
+        },
+        {
+          "code": "demolition",
+          "label": "Site preparation & demolition",
+          "unitCost": 3066.36,
+          "quantity": 27,
+          "unit": "ping",
+          "actualCost": 82792
+        },
+        {
+          "code": "carpentry",
+          "label": "Cabinetry and carpentry",
+          "unitCost": 19083.34,
+          "quantity": 27,
+          "unit": "ping",
+          "actualCost": 515250
+        },
+        {
+          "code": "electrical",
+          "label": "Electrical works",
+          "unitCost": 6412.29,
+          "quantity": 27,
+          "unit": "ping",
+          "actualCost": 173132
+        },
+        {
+          "code": "plumbing",
+          "label": "Plumbing & wet areas",
+          "unitCost": 5224.53,
+          "quantity": 27,
+          "unit": "ping",
+          "actualCost": 141062
+        },
+        {
+          "code": "flooring",
+          "label": "Flooring & finishes",
+          "unitCost": 7952.34,
+          "quantity": 27,
+          "unit": "ping",
+          "actualCost": 214713
+        },
+        {
+          "code": "painting",
+          "label": "Painting & surface prep",
+          "unitCost": 3991.52,
+          "quantity": 27,
+          "unit": "ping",
+          "actualCost": 107771
+        },
+        {
+          "code": "coordination",
+          "label": "Site coordination",
+          "unitCost": 5821.64,
+          "quantity": 27,
+          "unit": "ping",
+          "actualCost": 157184
+        }
+      ],
+      "finalDirectCost": null,
+      "historicQuoteExTax": 2004716,
+      "status": "QUOTE_ONLY",
+      "currency": "TWD",
+      "synthetic": true
+    }
+  ],
+  "documents": [
+    {
+      "id": "HIST-INT-001",
+      "projectId": null,
+      "title": "Historical costing · 民生光宅",
+      "kind": "Historical cost record",
+      "version": "v1.0",
+      "status": "Synthetic reconciled",
+      "owner": "Fictional costing team",
+      "date": "2026-06-05",
+      "sourceType": "Synthetic cost ledger",
+      "body": "# Synthetic Historical Project — 民生光宅\n\nProject ID: IH-001\nReference: HIST-INT-001\nClosed-date example: 2026-06-05\nType: residential_renovation\nFinish tier: standard\nLocation: Taipei\nQuantity: 27 ping\nCost completeness: COMPLETE\n\n## Example direct costs\n| Cost line | Quantity | Cost per ping (TWD) | Extended cost (TWD) |\n|---|---:|---:|---:|\n| Design & planning | 27 | 4093.60 | 110527 |\n| Site preparation & demolition | 27 | 3036.00 | 81972 |\n| Cabinetry and carpentry | 27 | 18894.40 | 510149 |\n| Electrical works | 27 | 6348.80 | 171418 |\n| Plumbing & wet areas | 27 | 5172.80 | 139666 |\n| Flooring & finishes | 27 | 7873.60 | 212587 |\n| Painting & surface prep | 27 | 3952.00 | 106704 |\n| Site coordination | 27 | 5764.00 | 155628 |\n\nTotal direct cost: NT$1,488,651\nHistoric example quotation before tax: NT$1,984,868\n\nThis record is **entirely fictional**. Its 'complete' flag means only complete within the demo dataset; it is not externally verified, an actual client job, or a current supplier price. Do not rely on it for live commercial quotations.\n"
+    },
+    {
+      "id": "HIST-INT-002",
+      "projectId": null,
+      "title": "Historical costing · 和平木語",
+      "kind": "Historical cost record",
+      "version": "v1.0",
+      "status": "Synthetic reconciled",
+      "owner": "Fictional costing team",
+      "date": "2026-07-06",
+      "sourceType": "Synthetic cost ledger",
+      "body": "# Synthetic Historical Project — 和平木語\n\nProject ID: IH-002\nReference: HIST-INT-002\nClosed-date example: 2026-07-06\nType: residential_renovation\nFinish tier: standard\nLocation: Taipei\nQuantity: 29 ping\nCost completeness: COMPLETE\n\n## Example direct costs\n| Cost line | Quantity | Cost per ping (TWD) | Extended cost (TWD) |\n|---|---:|---:|---:|\n| Design & planning | 29 | 4460.82 | 129364 |\n| Site preparation & demolition | 29 | 3301.20 | 95735 |\n| Cabinetry and carpentry | 29 | 20580.00 | 596820 |\n| Electrical works | 29 | 6197.52 | 179728 |\n| Plumbing & wet areas | 29 | 5631.78 | 163322 |\n| Flooring & finishes | 29 | 7692.72 | 223089 |\n| Painting & surface prep | 29 | 4300.80 | 124723 |\n| Site coordination | 29 | 5636.40 | 163456 |\n\nTotal direct cost: NT$1,676,237\nHistoric example quotation before tax: NT$2,234,983\n\nThis record is **entirely fictional**. Its 'complete' flag means only complete within the demo dataset; it is not externally verified, an actual client job, or a current supplier price. Do not rely on it for live commercial quotations.\n"
+    },
+    {
+      "id": "HIST-INT-003",
+      "projectId": null,
+      "title": "Historical costing · 內湖春邸",
+      "kind": "Historical cost record",
+      "version": "v1.0",
+      "status": "Synthetic reconciled",
+      "owner": "Fictional costing team",
+      "date": "2025-11-07",
+      "sourceType": "Synthetic cost ledger",
+      "body": "# Synthetic Historical Project — 內湖春邸\n\nProject ID: IH-003\nReference: HIST-INT-003\nClosed-date example: 2025-11-07\nType: residential_renovation\nFinish tier: standard\nLocation: Taipei\nQuantity: 25 ping\nCost completeness: COMPLETE\n\n## Example direct costs\n| Cost line | Quantity | Cost per ping (TWD) | Extended cost (TWD) |\n|---|---:|---:|---:|\n| Design & planning | 25 | 4227.07 | 105677 |\n| Site preparation & demolition | 25 | 2810.88 | 70272 |\n| Cabinetry and carpentry | 25 | 19493.38 | 487335 |\n| Electrical works | 25 | 5880.58 | 147015 |\n| Plumbing & wet areas | 25 | 5332.22 | 133306 |\n| Flooring & finishes | 25 | 7296.00 | 182400 |\n| Painting & surface prep | 25 | 3655.68 | 91392 |\n| Site coordination | 25 | 5343.36 | 133584 |\n\nTotal direct cost: NT$1,350,981\nHistoric example quotation before tax: NT$1,801,308\n\nThis record is **entirely fictional**. Its 'complete' flag means only complete within the demo dataset; it is not externally verified, an actual client job, or a current supplier price. Do not rely on it for live commercial quotations.\n"
+    },
+    {
+      "id": "HIST-INT-004",
+      "projectId": null,
+      "title": "Historical costing · 中和溫居",
+      "kind": "Historical cost record",
+      "version": "v1.0",
+      "status": "Synthetic reconciled",
+      "owner": "Fictional costing team",
+      "date": "2026-04-08",
+      "sourceType": "Synthetic cost ledger",
+      "body": "# Synthetic Historical Project — 中和溫居\n\nProject ID: IH-004\nReference: HIST-INT-004\nClosed-date example: 2026-04-08\nType: residential_renovation\nFinish tier: standard\nLocation: New Taipei\nQuantity: 32 ping\nCost completeness: COMPLETE\n\n## Example direct costs\n| Cost line | Quantity | Cost per ping (TWD) | Extended cost (TWD) |\n|---|---:|---:|---:|\n| Design & planning | 32 | 4011.73 | 128375 |\n| Site preparation & demolition | 32 | 2975.28 | 95209 |\n| Cabinetry and carpentry | 32 | 18516.51 | 592528 |\n| Electrical works | 32 | 6221.82 | 199098 |\n| Plumbing & wet areas | 32 | 5069.34 | 162219 |\n| Flooring & finishes | 32 | 7716.13 | 246916 |\n| Painting & surface prep | 32 | 3872.96 | 123935 |\n| Site coordination | 32 | 5648.72 | 180759 |\n\nTotal direct cost: NT$1,729,039\nHistoric example quotation before tax: NT$2,305,385\n\nThis record is **entirely fictional**. Its 'complete' flag means only complete within the demo dataset; it is not externally verified, an actual client job, or a current supplier price. Do not rely on it for live commercial quotations.\n"
+    },
+    {
+      "id": "HIST-INT-005",
+      "projectId": null,
+      "title": "Historical costing · 信義微光",
+      "kind": "Historical cost record",
+      "version": "v1.0",
+      "status": "Synthetic reconciled",
+      "owner": "Fictional costing team",
+      "date": "2026-05-09",
+      "sourceType": "Synthetic cost ledger",
+      "body": "# Synthetic Historical Project — 信義微光\n\nProject ID: IH-005\nReference: HIST-INT-005\nClosed-date example: 2026-05-09\nType: residential_renovation\nFinish tier: premium\nLocation: Taipei\nQuantity: 24 ping\nCost completeness: COMPLETE\n\n## Example direct costs\n| Cost line | Quantity | Cost per ping (TWD) | Extended cost (TWD) |\n|---|---:|---:|---:|\n| Design & planning | 24 | 5597.69 | 134345 |\n| Site preparation & demolition | 24 | 4142.53 | 99421 |\n| Cabinetry and carpentry | 24 | 25824.96 | 619799 |\n| Electrical works | 24 | 7777.00 | 186648 |\n| Plumbing & wet areas | 24 | 7067.08 | 169610 |\n| Flooring & finishes | 24 | 9653.26 | 231678 |\n| Painting & surface prep | 24 | 5396.89 | 129525 |\n| Site coordination | 24 | 7072.88 | 169749 |\n\nTotal direct cost: NT$1,740,775\nHistoric example quotation before tax: NT$2,321,033\n\nThis record is **entirely fictional**. Its 'complete' flag means only complete within the demo dataset; it is not externally verified, an actual client job, or a current supplier price. Do not rely on it for live commercial quotations.\n"
+    },
+    {
+      "id": "HIST-INT-006",
+      "projectId": null,
+      "title": "Historical costing · 大安木屋",
+      "kind": "Historical cost record",
+      "version": "v1.0",
+      "status": "Synthetic reconciled",
+      "owner": "Fictional costing team",
+      "date": "2025-09-10",
+      "sourceType": "Synthetic cost ledger",
+      "body": "# Synthetic Historical Project — 大安木屋\n\nProject ID: IH-006\nReference: HIST-INT-006\nClosed-date example: 2025-09-10\nType: residential_renovation\nFinish tier: premium\nLocation: Taipei\nQuantity: 33 ping\nCost completeness: COMPLETE\n\n## Example direct costs\n| Cost line | Quantity | Cost per ping (TWD) | Extended cost (TWD) |\n|---|---:|---:|---:|\n| Design & planning | 33 | 6134.54 | 202440 |\n| Site preparation & demolition | 33 | 4079.29 | 134617 |\n| Cabinetry and carpentry | 33 | 28289.76 | 933562 |\n| Electrical works | 33 | 8534.19 | 281628 |\n| Plumbing & wet areas | 33 | 7738.39 | 255367 |\n| Flooring & finishes | 33 | 10588.32 | 349415 |\n| Painting & surface prep | 33 | 5305.31 | 175075 |\n| Site coordination | 33 | 7754.55 | 255900 |\n\nTotal direct cost: NT$2,588,004\nHistoric example quotation before tax: NT$3,450,672\n\nThis record is **entirely fictional**. Its 'complete' flag means only complete within the demo dataset; it is not externally verified, an actual client job, or a current supplier price. Do not rely on it for live commercial quotations.\n"
+    },
+    {
+      "id": "HIST-INT-007",
+      "projectId": null,
+      "title": "Historical costing · 板橋青寓",
+      "kind": "Historical cost record",
+      "version": "v1.0",
+      "status": "Synthetic reconciled",
+      "owner": "Fictional costing team",
+      "date": "2025-08-11",
+      "sourceType": "Synthetic cost ledger",
+      "body": "# Synthetic Historical Project — 板橋青寓\n\nProject ID: IH-007\nReference: HIST-INT-007\nClosed-date example: 2025-08-11\nType: residential_renovation\nFinish tier: standard\nLocation: New Taipei\nQuantity: 30 ping\nCost completeness: COMPLETE\n\n## Example direct costs\n| Cost line | Quantity | Cost per ping (TWD) | Extended cost (TWD) |\n|---|---:|---:|---:|\n| Design & planning | 30 | 3888.92 | 116668 |\n| Site preparation & demolition | 30 | 2884.20 | 86526 |\n| Cabinetry and carpentry | 30 | 17949.68 | 538490 |\n| Electrical works | 30 | 6031.36 | 180941 |\n| Plumbing & wet areas | 30 | 4914.16 | 147425 |\n| Flooring & finishes | 30 | 7479.92 | 224398 |\n| Painting & surface prep | 30 | 3754.40 | 112632 |\n| Site coordination | 30 | 5475.80 | 164274 |\n\nTotal direct cost: NT$1,571,354\nHistoric example quotation before tax: NT$2,095,139\n\nThis record is **entirely fictional**. Its 'complete' flag means only complete within the demo dataset; it is not externally verified, an actual client job, or a current supplier price. Do not rely on it for live commercial quotations.\n"
+    },
+    {
+      "id": "HIST-INT-008",
+      "projectId": null,
+      "title": "Historical costing · 桃園晨曦",
+      "kind": "Historical cost record",
+      "version": "v1.0",
+      "status": "Synthetic reconciled",
+      "owner": "Fictional costing team",
+      "date": "2024-11-12",
+      "sourceType": "Synthetic cost ledger",
+      "body": "# Synthetic Historical Project — 桃園晨曦\n\nProject ID: IH-008\nReference: HIST-INT-008\nClosed-date example: 2024-11-12\nType: residential_renovation\nFinish tier: economy\nLocation: Taoyuan\nQuantity: 26 ping\nCost completeness: COMPLETE\n\n## Example direct costs\n| Cost line | Quantity | Cost per ping (TWD) | Extended cost (TWD) |\n|---|---:|---:|---:|\n| Design & planning | 26 | 3363.46 | 87450 |\n| Site preparation & demolition | 26 | 2489.10 | 64717 |\n| Cabinetry and carpentry | 26 | 15517.32 | 403450 |\n| Electrical works | 26 | 4672.93 | 121496 |\n| Plumbing & wet areas | 26 | 4246.36 | 110405 |\n| Flooring & finishes | 26 | 5800.31 | 150808 |\n| Painting & surface prep | 26 | 3242.80 | 84313 |\n| Site coordination | 26 | 4249.85 | 110496 |\n\nTotal direct cost: NT$1,133,135\nHistoric example quotation before tax: NT$1,510,847\n\nThis record is **entirely fictional**. Its 'complete' flag means only complete within the demo dataset; it is not externally verified, an actual client job, or a current supplier price. Do not rely on it for live commercial quotations.\n"
+    },
+    {
+      "id": "HIST-INT-009",
+      "projectId": null,
+      "title": "Historical costing · 南港居間",
+      "kind": "Historical cost record",
+      "version": "v1.0",
+      "status": "Synthetic reconciled",
+      "owner": "Fictional costing team",
+      "date": "2026-03-13",
+      "sourceType": "Synthetic cost ledger",
+      "body": "# Synthetic Historical Project — 南港居間\n\nProject ID: IH-009\nReference: HIST-INT-009\nClosed-date example: 2026-03-13\nType: residential_renovation\nFinish tier: standard\nLocation: Taipei\nQuantity: 35 ping\nCost completeness: COMPLETE\n\n## Example direct costs\n| Cost line | Quantity | Cost per ping (TWD) | Extended cost (TWD) |\n|---|---:|---:|---:|\n| Design & planning | 35 | 4711.42 | 164900 |\n| Site preparation & demolition | 35 | 3132.96 | 109654 |\n| Cabinetry and carpentry | 35 | 21726.99 | 760445 |\n| Electrical works | 35 | 6554.39 | 229404 |\n| Plumbing & wet areas | 35 | 5943.21 | 208012 |\n| Flooring & finishes | 35 | 8132.00 | 284620 |\n| Painting & surface prep | 35 | 4074.56 | 142610 |\n| Site coordination | 35 | 5955.62 | 208447 |\n\nTotal direct cost: NT$2,108,092\nHistoric example quotation before tax: NT$2,810,789\n\nThis record is **entirely fictional**. Its 'complete' flag means only complete within the demo dataset; it is not externally verified, an actual client job, or a current supplier price. Do not rely on it for live commercial quotations.\n"
+    },
+    {
+      "id": "HIST-INT-010",
+      "projectId": null,
+      "title": "Historical costing · 北投安家",
+      "kind": "Historical cost record",
+      "version": "v1.0",
+      "status": "Synthetic reconciled",
+      "owner": "Fictional costing team",
+      "date": "2025-12-14",
+      "sourceType": "Synthetic cost ledger",
+      "body": "# Synthetic Historical Project — 北投安家\n\nProject ID: IH-010\nReference: HIST-INT-010\nClosed-date example: 2025-12-14\nType: residential_renovation\nFinish tier: standard\nLocation: Taipei\nQuantity: 22 ping\nCost completeness: COMPLETE\n\n## Example direct costs\n| Cost line | Quantity | Cost per ping (TWD) | Extended cost (TWD) |\n|---|---:|---:|---:|\n| Design & planning | 22 | 3970.79 | 87357 |\n| Site preparation & demolition | 22 | 2944.92 | 64788 |\n| Cabinetry and carpentry | 22 | 18327.57 | 403207 |\n| Electrical works | 22 | 6158.34 | 135483 |\n| Plumbing & wet areas | 22 | 5017.62 | 110388 |\n| Flooring & finishes | 22 | 7637.39 | 168023 |\n| Painting & surface prep | 22 | 3833.44 | 84336 |\n| Site coordination | 22 | 5591.08 | 123004 |\n\nTotal direct cost: NT$1,176,586\nHistoric example quotation before tax: NT$1,568,781\n\nThis record is **entirely fictional**. Its 'complete' flag means only complete within the demo dataset; it is not externally verified, an actual client job, or a current supplier price. Do not rely on it for live commercial quotations.\n"
+    },
+    {
+      "id": "HIST-INT-011",
+      "projectId": null,
+      "title": "Historical costing · 內湖青川",
+      "kind": "Historical cost record",
+      "version": "v1.0",
+      "status": "Synthetic reconciled",
+      "owner": "Fictional costing team",
+      "date": "2026-08-15",
+      "sourceType": "Synthetic cost ledger",
+      "body": "# Synthetic Historical Project — 內湖青川\n\nProject ID: IH-011\nReference: HIST-INT-011\nClosed-date example: 2026-08-15\nType: residential_renovation\nFinish tier: standard\nLocation: Taipei\nQuantity: 28 ping\nCost completeness: COMPLETE\n\n## Example direct costs\n| Cost line | Quantity | Cost per ping (TWD) | Extended cost (TWD) |\n|---|---:|---:|---:|\n| Design & planning | 28 | 4375.85 | 122524 |\n| Site preparation & demolition | 28 | 3238.32 | 90673 |\n| Cabinetry and carpentry | 28 | 20188.00 | 565264 |\n| Electrical works | 28 | 6079.47 | 170225 |\n| Plumbing & wet areas | 28 | 5524.51 | 154686 |\n| Flooring & finishes | 28 | 7546.19 | 211293 |\n| Painting & surface prep | 28 | 4218.88 | 118129 |\n| Site coordination | 28 | 5529.04 | 154813 |\n\nTotal direct cost: NT$1,587,607\nHistoric example quotation before tax: NT$2,116,809\n\nThis record is **entirely fictional**. Its 'complete' flag means only complete within the demo dataset; it is not externally verified, an actual client job, or a current supplier price. Do not rely on it for live commercial quotations.\n"
+    },
+    {
+      "id": "HIST-INT-012",
+      "projectId": null,
+      "title": "Historical costing · 台中日光",
+      "kind": "Historical cost record",
+      "version": "v1.0",
+      "status": "Synthetic reconciled",
+      "owner": "Fictional costing team",
+      "date": "2026-01-16",
+      "sourceType": "Synthetic cost ledger",
+      "body": "# Synthetic Historical Project — 台中日光\n\nProject ID: IH-012\nReference: HIST-INT-012\nClosed-date example: 2026-01-16\nType: residential_renovation\nFinish tier: premium\nLocation: Taichung\nQuantity: 38 ping\nCost completeness: COMPLETE\n\n## Example direct costs\n| Cost line | Quantity | Cost per ping (TWD) | Extended cost (TWD) |\n|---|---:|---:|---:|\n| Design & planning | 38 | 5563.88 | 211427 |\n| Site preparation & demolition | 38 | 3699.82 | 140593 |\n| Cabinetry and carpentry | 38 | 25658.16 | 975010 |\n| Electrical works | 38 | 7740.31 | 294132 |\n| Plumbing & wet areas | 38 | 7018.54 | 266705 |\n| Flooring & finishes | 38 | 9603.36 | 364928 |\n| Painting & surface prep | 38 | 4811.79 | 182848 |\n| Site coordination | 38 | 7033.20 | 267262 |\n\nTotal direct cost: NT$2,702,905\nHistoric example quotation before tax: NT$3,603,873\n\nThis record is **entirely fictional**. Its 'complete' flag means only complete within the demo dataset; it is not externally verified, an actual client job, or a current supplier price. Do not rely on it for live commercial quotations.\n"
+    },
+    {
+      "id": "HIST-INT-013",
+      "projectId": null,
+      "title": "Historical costing · 南港聯合辦公",
+      "kind": "Historical cost record",
+      "version": "v1.0",
+      "status": "Synthetic reconciled",
+      "owner": "Fictional costing team",
+      "date": "2026-04-17",
+      "sourceType": "Synthetic cost ledger",
+      "body": "# Synthetic Historical Project — 南港聯合辦公\n\nProject ID: IH-013\nReference: HIST-INT-013\nClosed-date example: 2026-04-17\nType: office_fitout\nFinish tier: standard\nLocation: Taipei\nQuantity: 42 ping\nCost completeness: COMPLETE\n\n## Example direct costs\n| Cost line | Quantity | Cost per ping (TWD) | Extended cost (TWD) |\n|---|---:|---:|---:|\n| Design & planning | 42 | 3684.24 | 154738 |\n| Site preparation & demolition | 42 | 2732.40 | 114761 |\n| Cabinetry and carpentry | 42 | 17004.96 | 714208 |\n| Electrical works | 42 | 5713.92 | 239985 |\n| Flooring & finishes | 42 | 6675.84 | 280385 |\n| Painting & surface prep | 42 | 3729.60 | 156643 |\n| Site coordination | 42 | 4890.60 | 205405 |\n\nTotal direct cost: NT$1,866,125\nHistoric example quotation before tax: NT$2,488,167\n\nThis record is **entirely fictional**. Its 'complete' flag means only complete within the demo dataset; it is not externally verified, an actual client job, or a current supplier price. Do not rely on it for live commercial quotations.\n"
+    },
+    {
+      "id": "HIST-INT-014",
+      "projectId": null,
+      "title": "Historical costing · 中山工作室",
+      "kind": "Historical cost record",
+      "version": "v1.0",
+      "status": "Excluded from cost benchmarking",
+      "owner": "Fictional costing team",
+      "date": "2025-10-18",
+      "sourceType": "Synthetic cost ledger",
+      "body": "# Synthetic Historical Project — 中山工作室\n\nProject ID: IH-014\nReference: HIST-INT-014\nClosed-date example: 2025-10-18\nType: office_fitout\nFinish tier: standard\nLocation: Taipei\nQuantity: 33 ping\nCost completeness: QUOTE_ONLY\n\n## Example direct costs\n| Cost line | Quantity | Cost per ping (TWD) | Extended cost (TWD) |\n|---|---:|---:|---:|\n| Design & planning | 33 | 3611.14 | 119168 |\n| Site preparation & demolition | 33 | 2672.40 | 88189 |\n| Cabinetry and carpentry | 33 | 16660.00 | 549780 |\n| Electrical works | 33 | 5017.04 | 165562 |\n| Flooring & finishes | 33 | 6537.52 | 215738 |\n| Painting & surface prep | 33 | 3277.60 | 108161 |\n| Site coordination | 33 | 4787.20 | 157978 |\n\nTotal direct cost: UNAVAILABLE (not eligible)\nHistoric example quotation before tax: NT$1,872,768\n\nThis record is **entirely fictional**. Its 'complete' flag means only complete within the demo dataset; it is not externally verified, an actual client job, or a current supplier price. Do not rely on it for live commercial quotations.\n"
+    },
+    {
+      "id": "HIST-INT-015",
+      "projectId": null,
+      "title": "Historical costing · 新竹展示間",
+      "kind": "Historical cost record",
+      "version": "v1.0",
+      "status": "Excluded from cost benchmarking",
+      "owner": "Fictional costing team",
+      "date": "2025-07-19",
+      "sourceType": "Synthetic cost ledger",
+      "body": "# Synthetic Historical Project — 新竹展示間\n\nProject ID: IH-015\nReference: HIST-INT-015\nClosed-date example: 2025-07-19\nType: retail_fitout\nFinish tier: premium\nLocation: Hsinchu\nQuantity: 31 ping\nCost completeness: COST_INCOMPLETE\n\n## Example direct costs\n| Cost line | Quantity | Cost per ping (TWD) | Extended cost (TWD) |\n|---|---:|---:|---:|\n| Design & planning | 31 | 5326.11 | 165109 |\n| Site preparation & demolition | 31 | 3541.71 | 109793 |\n| Cabinetry and carpentry | 31 | 24561.65 | 761411 |\n| Electrical works | 31 | 7409.53 | 229695 |\n| Plumbing & wet areas | 31 | 6718.60 | 208277 |\n| Flooring & finishes | 31 | 9192.96 | 284982 |\n| Site coordination | 31 | 6333.47 | 196338 |\n\nTotal direct cost: UNAVAILABLE (not eligible)\nHistoric example quotation before tax: NT$2,607,473\n\nThis record is **entirely fictional**. Its 'complete' flag means only complete within the demo dataset; it is not externally verified, an actual client job, or a current supplier price. Do not rely on it for live commercial quotations.\n"
+    },
+    {
+      "id": "HIST-INT-016",
+      "projectId": null,
+      "title": "Historical costing · 松江住宅提案",
+      "kind": "Historical cost record",
+      "version": "v1.0",
+      "status": "Excluded from cost benchmarking",
+      "owner": "Fictional costing team",
+      "date": "2026-09-20",
+      "sourceType": "Synthetic cost ledger",
+      "body": "# Synthetic Historical Project — 松江住宅提案\n\nProject ID: IH-016\nReference: HIST-INT-016\nClosed-date example: 2026-09-20\nType: residential_renovation\nFinish tier: standard\nLocation: Taipei\nQuantity: 27 ping\nCost completeness: QUOTE_ONLY\n\n## Example direct costs\n| Cost line | Quantity | Cost per ping (TWD) | Extended cost (TWD) |\n|---|---:|---:|---:|\n| Design & planning | 27 | 4134.54 | 111633 |\n| Site preparation & demolition | 27 | 3066.36 | 82792 |\n| Cabinetry and carpentry | 27 | 19083.34 | 515250 |\n| Electrical works | 27 | 6412.29 | 173132 |\n| Plumbing & wet areas | 27 | 5224.53 | 141062 |\n| Flooring & finishes | 27 | 7952.34 | 214713 |\n| Painting & surface prep | 27 | 3991.52 | 107771 |\n| Site coordination | 27 | 5821.64 | 157184 |\n\nTotal direct cost: UNAVAILABLE (not eligible)\nHistoric example quotation before tax: NT$2,004,716\n\nThis record is **entirely fictional**. Its 'complete' flag means only complete within the demo dataset; it is not externally verified, an actual client job, or a current supplier price. Do not rely on it for live commercial quotations.\n"
+    }
+  ]
+}

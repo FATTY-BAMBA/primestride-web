@@ -1,0 +1,10 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {sessionGate} from '../public/stridebrain-demo/session-view.js';
+import {copilot} from '../public/stridebrain-demo/views-primary.js';
+import {ready,modelId} from './helpers/stridebrain-session-fixtures.mjs';
+const base={locale:'zh-TW',pack:{id:'interior',company:'示範公司',companyEn:'Demo',owner:'Test',short:'Interior'},view:{chat:[]},copilotSession:{mode:'gpt',access:'ready',guest:true,allowedModelIds:[modelId],selectedModelId:modelId,modelMenuOpen:true}};
+test('checking and errors have no working composer or second code field',()=>{for(const access of ['checking','error','signed_out','unavailable']){const html=sessionGate({...base,copilotSession:{access,draft:'保留問題'}});assert.doesNotMatch(html,/id="ask-form"|sb-guest-invite|copilot-access-token/);assert.match(html,/保留問題/);}});
+test('transient error offers retry, not sign-in instructions',()=>{const html=sessionGate({...base,copilotSession:{access:'error'}});assert.match(html,/retrySession/);assert.doesNotMatch(html,/guest.html|OpenRouter|token|API/);});
+test('authorized guest sees only entitled model and no sample warning',()=>{const html=copilot(base);assert.match(html,/Claude Sonnet 5.5/);assert.doesNotMatch(html,/data-value="openai\/gpt-6-sol"|data-value="openai-direct|AI 試用尚未啟用|Enable staff AI/);assert.match(html,/離開訪客體驗/);});
+test('staff sign-in appears only on explicit administrator entry',()=>{assert.doesNotMatch(sessionGate({...base,copilotSession:{access:'signed_out'}}),/copilot-access-token/);assert.match(sessionGate({...base,staffAccess:true,copilotSession:{access:'signed_out'}}),/copilot-access-token/);});
