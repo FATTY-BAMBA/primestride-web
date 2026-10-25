@@ -1,7 +1,7 @@
 import {evidenceList} from "./evidence-presentation.js";
 import {DEMO_ROLES} from "./experience-views.js";
 import {aiTeamView} from "./views-ai-team.js";
-import {runAgent,selectAgent,recordModelAgentPlan,approveAndExecuteAgentAction} from "./ai-team.js";
+import {runAgent,selectAgent,recordModelAgentPlan,recordEmailReceipt,approveAndExecuteAgentAction} from "./ai-team.js";
 import {copilotErrorMessage} from "./copilot-errors.js";
 import {getPack,listPacks} from "./industry-packs.js";
 import {WorkspaceModel,money,calculateVariation,escapeHtml as e,loadDemoState,saveDemoState,resetDemoState,event,setVariationInput,approveVariationGate,commitVariation,buildCustomerReply,reviewCustomerDraft,recordFeedback,markFeedbackReviewed} from "./core-model.js";
@@ -82,12 +82,13 @@ let copilotGuest=false,guestChatScope=null;
 let copilotMode="checking",copilotOperatorToken="",copilotConnected=false,copilotBusy=false,copilotRunId=0;
 let copilotAccess={state:"checking",allowedModelIds:[]},sessionRefreshRun=0,sessionRefreshPromise=null;
 let selectedModelId=DEFAULT_MODEL_ID,copilotModelMenuOpen=false,copilotDraft="";
-let view={page:"overview",projectId:null,projectDetail:false,docId:null,quoteId:null,chat:[],search:"",filter:"all",pageIndex:0,flowStep:null,agentDecisionId:null};
+let emailConnector={state:"unknown",configured:false,roleAllowed:false,sender:null,provider:null};
+let view={page:"overview",projectId:null,projectDetail:false,docId:null,quoteId:null,chat:[],search:"",filter:"all",pageIndex:0,flowStep:null,agentDecisionId:null,emailDecisionId:null};
 function toast(message){
  const el=$("toast");el.textContent=message;el.classList.add("visible");
  if(toastHandle)clearTimeout(toastHandle);toastHandle=setTimeout(()=>el.classList.remove("visible"),3500);
 }
-function context(){return {model,pack,state,view,history:historyData,industryEvidence,documentSession,locale:interfaceLocale,staffAccess:new URLSearchParams(location.search).has("staff"),copilotSession:{access:copilotAccess.state,allowedModelIds:copilotAccess.allowedModelIds,mode:copilotMode,guest:copilotGuest,connected:copilotConnected,busy:copilotBusy,selectedModelId,modelMenuOpen:copilotModelMenuOpen,draft:copilotDraft}};}
+function context(){return {model,pack,state,view,history:historyData,industryEvidence,documentSession,locale:interfaceLocale,emailConnector,staffAccess:new URLSearchParams(location.search).has("staff"),copilotSession:{access:copilotAccess.state,allowedModelIds:copilotAccess.allowedModelIds,mode:copilotMode,guest:copilotGuest,connected:copilotConnected,busy:copilotBusy,selectedModelId,modelMenuOpen:copilotModelMenuOpen,draft:copilotDraft}};}
 const GUEST_CHAT_PREFIX="stridebrain-guest-chat-v1:";
 function guestChatKey(industry){return GUEST_CHAT_PREFIX+(copilotGuest?"guest:":"staff:")+guestChatScope+":"+industry;}
 function saveGuestChat(){
@@ -384,6 +385,15 @@ async function runModelDrivenAgentPlan(agentId){
   return recordModelAgentPlan(state,model,payload);
  }catch{return {ok:false,reason:interfaceLocale==="en"?"The AI teammate planning request could not be completed.":"AI 同事目前無法完成規劃請求。"};}
 }
+async function refreshEmailConnector(){
+ emailConnector={...emailConnector,state:"checking"};render();
+ try{
+  const response=await fetch("/api/stridebrain-demo/email/status",{method:"GET",cache:"no-store",credentials:"same-origin",headers:{Accept:"application/json"}});
+  const payload=await response.json().catch(()=>null);
+  emailConnector={state:response.ok?"ready":"error",configured:payload?.configured===true,roleAllowed:payload?.roleAllowed===true,sender:payload?.sender||null,provider:payload?.provider||null,limits:payload?.limits||null};
+ }catch{emailConnector={state:"error",configured:false,roleAllowed:false,sender:null,provider:null};}
+ render();
+}
 async function perform(el){
  const action=el.dataset.action,id=el.dataset.id||"",value=el.dataset.value||"";
  if(action==="retrySession"){if(!copilotBusy)await restoreStaffPreview();return;}
@@ -405,6 +415,26 @@ async function perform(el){
   const result=approveAndExecuteAgentAction(state,value||id);
   if(result.ok){save();render();toast(interfaceLocale==="en"?"Approved action completed and follow-up task created.":"已批准並完成動作，追蹤待辦已建立。");}
   else toast(result.reason);return;
+ }
+ if(action==="agentEmailPrepare"){
+  view.emailDecisionId=value||id;view.agentDecisionId=value||id;await refreshEmailConnector();return;
+ }
+ if(action==="agentEmailCancel"){view.emailDecisionId=null;render();return;}
+ if(action==="agentEmailSend"){
+  const itemId=value||id,run=state.aiTeam?.runs?.find(r=>r.id===state.aiTeam?.activeRunId),item=run?.items?.find(x=>x.id===itemId);
+  const box=document.querySelector('.sb-email-composer[data-item-id="'+itemId+'"]');
+  if(!item||!box){toast(interfaceLocale==="en"?"Email preview is no longer available.":"寄信預覽已失效。");return;}
+  const to=box.querySelector('[name="email-to"]')?.value||"",subject=box.querySelector('[name="email-subject"]')?.value||"",body=box.querySelector('[name="email-body"]')?.value||"";
+  const buttonEl=box.querySelector('[data-action="agentEmailSend"]');if(buttonEl)buttonEl.disabled=true;
+  try{
+   const response=await fetch("/api/stridebrain-demo/email/send",{method:"POST",cache:"no-store",credentials:"same-origin",headers:{"Content-Type":"application/json","Accept":"application/json"},
+    body:JSON.stringify({to,subject,body,actionId:item.id,projectId:item.projectId,recordId:item.recordId})});
+   const payload=await response.json().catch(()=>null);
+   if(!response.ok){toast(interfaceLocale==="en"?"Email was not sent ("+(payload?.code||response.status)+").":"郵件未寄出（"+(payload?.code||response.status)+"）。");render();return;}
+   recordEmailReceipt(state,item.id,payload.receipt);view.emailDecisionId=null;save();render();
+   toast(interfaceLocale==="en"?"Microsoft 365 accepted the email for sending.":"Microsoft 365 已接受郵件寄送。");
+  }catch{toast(interfaceLocale==="en"?"Email send request failed.":"郵件寄送請求失敗。");render();}
+  return;
  }
  if(action==="demoRole"){
   if(!DEMO_ROLES[value])return;

@@ -12,7 +12,7 @@ const {chromium}=await import(process.env.STRIDEBRAIN_PLAYWRIGHT_MODULE||'playwr
 setupEnv();
 const tmp=fs.mkdtempSync(path.join(os.tmpdir(),'stridebrain-browser-'));
 execFileSync('openssl',['req','-x509','-newkey','rsa:2048','-nodes','-keyout',tmp+'/key.pem','-out',tmp+'/cert.pem','-subj','/CN=localhost','-days','1'],{stdio:'ignore'});
-let fault=null,slow=false,chatFailure=0,exchangeCount=0,uiResponse=null;
+let fault=null,slow=false,chatFailure=0,exchangeCount=0,uiResponse=null,emailSendRequests=0;
 const chats=[],agentPlans=[],requests=[],errors=[],checks=[];
 const publicRoot=path.resolve('public');
 const server=https.createServer({key:fs.readFileSync(tmp+'/key.pem'),cert:fs.readFileSync(tmp+'/cert.pem')},async(req,res)=>{
@@ -20,6 +20,12 @@ const server=https.createServer({key:fs.readFileSync(tmp+'/key.pem'),cert:fs.rea
  requests.push({path:pathname,referer:req.headers.referer||''});
  const cookies=Object.fromEntries((req.headers.cookie||'').split(';').filter(Boolean).map(x=>{const [k,...v]=x.trim().split('=');return [k,v.join('=')];}));
  const json=(data,status=200)=>{res.writeHead(status,{'Content-Type':'application/json','Cache-Control':'no-store'});res.end(JSON.stringify(data));};
+ if(pathname==='/api/stridebrain-demo/email/status'){
+  return json({enabled:true,configured:true,provider:'microsoft-graph',sender:'ops@example.com',roleAllowed:false,limits:{singleRecipient:true,attachments:false,bcc:false,bulk:false,requiresApproval:true}});
+ }
+ if(pathname==='/api/stridebrain-demo/email/send'){
+  emailSendRequests++;return json({code:'EMAIL_STAFF_ONLY'},403);
+ }
  if(pathname==='/api/stridebrain-demo/copilot/status'){
   if(slow)await new Promise(r=>setTimeout(r,800));
   if(fault==='network'){req.socket.destroy();return;}
@@ -111,6 +117,12 @@ try{
  assert.match(await page.locator('.sb-agent-timeline').innerText(),/已查閱目前優先紀錄/);
  await page.locator('.sb-draft-details summary').first().click();
  assert.match(await page.locator('.sb-draft-details').first().innerText(),/尚未送出/);
+ assert.equal(await page.locator('[data-action="agentEmailPrepare"]').count(),1);
+ await page.locator('[data-action="agentEmailPrepare"]').click();
+ await page.waitForSelector('.sb-email-composer');
+ assert.match(await page.locator('.sb-email-composer').innerText(),/目前僅限工作人員寄信/);
+ assert.equal(emailSendRequests,0);
+ await page.locator('[data-action="agentEmailCancel"]').click();
  await page.locator('[data-action="agentExecute"]').first().click();
  assert.match(await page.locator('.sb-decision-card').first().innerText(),/已完成 ✓/);
  await page.click('[data-action="agentSelect"][data-value="project-coordinator"]');

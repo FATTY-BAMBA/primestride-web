@@ -5,7 +5,7 @@ import {readFileSync} from "node:fs";
 register("./helpers/stridebrain-json-loader.mjs",import.meta.url);
 const {WorkspaceModel}=await import("../public/stridebrain-demo/core-model.js");
 const {getPack}=await import("../public/stridebrain-demo/industry-packs.js");
-const {listAgents,runAgent,selectAgent,recordModelAgentPlan,approveAndExecuteAgentAction,defaultAiTeamState}=await import("../public/stridebrain-demo/ai-team.js");
+const {listAgents,runAgent,selectAgent,recordModelAgentPlan,recordEmailReceipt,approveAndExecuteAgentAction,defaultAiTeamState}=await import("../public/stridebrain-demo/ai-team.js");
 const seed=JSON.parse(readFileSync("public/stridebrain-interiors/seed.json","utf8")),model=new WorkspaceModel(seed,getPack("interior"));
 const state=()=>({variation:{},tasks:{},approvals:{},readiness:{},aiTeam:defaultAiTeamState(),audit:[]});
 
@@ -22,3 +22,5 @@ test("model plans are normalized into the same approval-required runtime action"
 test("browser runtime rejects model proposals without a valid project or evidence",()=>{const s=state();const x=recordModelAgentPlan(s,model,{agentId:"operations-assistant",proposals:[{projectId:"PRJ-999",recordId:"WO-X",contact:"Nobody",title:"Bad",sourceIds:[],draftZh:"x",draftEn:"x"}]});assert.equal(x.ok,false);assert.equal(s.aiTeam.generatedTasks.length,0);});
 
 test("model-driven quote plan stays an internal review and approval-required task",()=>{const s=state();const x=recordModelAgentPlan(s,model,{agentId:"quote-margin-guardian",modelLabel:"Test model",asOf:"2026-10-18",summary:"Reviewed recorded quote.",timeline:[{tool:"review_quotations",status:"completed",label:"已檢查報價"}],proposals:[{projectId:"PRJ-101",recordId:"Q-1005",contact:"Mei Lin",title:"複核 Q-1005",rationale:"確認版本、成本與試算毛利。",sourceIds:["REG-Q-1005"],draftZh:"內部複核，不是實際獲利判定。",draftEn:"Internal review; not a realized-profit determination."}]});assert.equal(x.ok,true);assert.equal(x.run.agentId,"quote-margin-guardian");assert.equal(x.run.items[0].draftKind,"review");assert.equal(x.run.items[0].proposedAction.kind,"create_internal_task");assert.equal(s.aiTeam.generatedTasks.length,0);});
+
+test("accepted external email receipt is stored separately from internal task completion",()=>{const s=state(),r=runAgent(s,model,"project-coordinator").run;const item=r.items[0];const x=recordEmailReceipt(s,item.id,{receiptId:"email_test123",provider:"microsoft-graph",status:"accepted",acceptedAt:"2026-10-25T10:00:00.000Z",to:"leo@example.com",subject:"Follow-up"});assert.equal(x.ok,true);assert.equal(s.aiTeam.emailReceipts.length,1);assert.equal(s.aiTeam.emailReceipts[0].itemId,item.id);assert.equal(item.state,"prepared");assert.equal(s.aiTeam.generatedTasks.length,0);});
