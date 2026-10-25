@@ -1,7 +1,7 @@
 import {evidenceList} from "./evidence-presentation.js";
 import {DEMO_ROLES} from "./experience-views.js";
 import {aiTeamView} from "./views-ai-team.js";
-import {runOperationsAssistant,approveAndExecuteAgentAction} from "./ai-team.js";
+import {runAgent,selectAgent,approveAndExecuteAgentAction} from "./ai-team.js";
 import {copilotErrorMessage} from "./copilot-errors.js";
 import {getPack,listPacks} from "./industry-packs.js";
 import {WorkspaceModel,money,calculateVariation,escapeHtml as e,loadDemoState,saveDemoState,resetDemoState,event,setVariationInput,approveVariationGate,commitVariation,buildCustomerReply,reviewCustomerDraft,recordFeedback,markFeedbackReviewed} from "./core-model.js";
@@ -369,8 +369,12 @@ async function handleDocument(file){
 async function perform(el){
  const action=el.dataset.action,id=el.dataset.id||"",value=el.dataset.value||"";
  if(action==="retrySession"){if(!copilotBusy)await restoreStaffPreview();return;}
+ if(action==="agentSelect"){
+  const result=selectAgent(state,value||id);if(result.ok){save();view.page="team";render();}else toast(result.reason);return;
+ }
  if(action==="agentRun"){
-  runOperationsAssistant(state,model);save();view.page="team";render();toast(interfaceLocale==="en"?"Operations Assistant prepared today’s work.":"營運特助已完成第一輪整理，等你確認。");return;
+  const result=runAgent(state,model,value||state.aiTeam?.activeAgentId);if(!result.ok){toast(result.reason);return;}
+  save();view.page="team";render();toast(interfaceLocale==="en"?result.run.items.length+" actions prepared for review.":"AI 同事已準備 "+result.run.items.length+" 項工作，等你確認。");return;
  }
  if(action==="agentExecute"){
   const result=approveAndExecuteAgentAction(state,value||id);
