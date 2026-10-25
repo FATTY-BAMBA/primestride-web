@@ -44,7 +44,7 @@ function parseChat(body){
  }
  if(messages.at(-1)?.role!=="user"||messages.at(-1).content.length>1200)return null;
  if(body.mode!==undefined&&!["chat","agent-plan"].includes(body.mode))return null;
- if(body.agentId!==undefined&&body.agentId!=="operations-assistant")return null;
+ if(body.agentId!==undefined&&!["operations-assistant","project-coordinator","quote-margin-guardian"].includes(body.agentId))return null;
  return {industry:body.industry,messages,modelId:body.modelId||DEFAULT_MODEL_ID,locale:body.locale,selectedProjectId:body.selectedProjectId||null,mode:body.mode||"chat",agentId:body.agentId||null};
 }
 export async function POST(request){

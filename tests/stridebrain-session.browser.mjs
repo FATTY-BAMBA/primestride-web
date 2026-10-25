@@ -47,10 +47,16 @@ const server=https.createServer({key:fs.readFileSync(tmp+'/key.pem'),cert:fs.rea
   if(!session.allowedModelIds.includes(body.modelId))return json({code:'GUEST_MODEL_NOT_ALLOWED'},403);
   if(body.mode==='agent-plan'){
    agentPlans.push(body);
-   return json({mode:'agent-plan',agentId:'operations-assistant',modelId:body.modelId,modelLabel:'Test model',provider:'OpenRouter',summary:'已查核資料並準備一項追蹤工作。',asOf:'2026-10-18',steps:3,
+   const common={mode:'agent-plan',agentId:body.agentId,modelId:body.modelId,modelLabel:'Test model',provider:'OpenRouter',asOf:'2026-10-18',executionPolicy:{automatic:['read_records','draft'],approval:['create_internal_task'],blocked:['send_external_message','modify_business_records','approve_quote','payment']}};
+   if(body.agentId==='project-coordinator')return json({...common,summary:'已查核專案並準備一項協調工作。',steps:4,
+    timeline:[{tool:'list_priorities',status:'completed',label:'已查閱目前優先紀錄'},{tool:'get_project',status:'completed',label:'已查閱專案 PRJ-104'},{tool:'get_source',status:'completed',label:'已讀取依據 REG-WO-1040'},{tool:'propose_followup',status:'prepared',label:'已準備一項需批准的追蹤工作'}],
+    proposals:[{projectId:'PRJ-104',recordId:'WO-1040',contact:'Leo Huang',title:'確認交接準備進度',rationale:'交接工作接近記錄到期日，需要確認目前狀態與下一位負責人。',sourceIds:['REG-WO-1040'],draftZh:'請確認 WO-1040 目前進度與下一個交接人。此訊息尚未送出。',draftEn:'Please confirm WO-1040 status and next handoff owner. This message has not been sent.'}]});
+   if(body.agentId==='quote-margin-guardian')return json({...common,summary:'已檢查報價版本、直接成本與試算毛利，準備一項內部複核工作。',steps:4,
+    timeline:[{tool:'review_quotations',status:'completed',label:'已檢查報價版本、成本與試算毛利'},{tool:'get_quote',status:'completed',label:'已查閱報價 PRJ-101'},{tool:'get_source',status:'completed',label:'已讀取依據 REG-Q-1005'},{tool:'propose_followup',status:'prepared',label:'已準備一項需批准的追蹤工作'}],
+    proposals:[{projectId:'PRJ-101',recordId:'Q-1005',contact:'Mei Lin',title:'複核 Q-1005 報價與試算毛利',rationale:'需要確認報價版本、直接成本與試算毛利是否仍為目前可比範圍。',sourceIds:['REG-Q-1005'],draftZh:'請複核 Q-1005 的版本、直接成本與試算毛利；這不是實際獲利判定。',draftEn:'Review Q-1005 version, direct cost and calculated margin; this is not a realized-profit determination.'}]});
+   return json({...common,summary:'已查核資料並準備一項追蹤工作。',steps:3,
     timeline:[{tool:'list_priorities',status:'completed',label:'已查閱目前優先紀錄'},{tool:'get_project',status:'completed',label:'已查閱專案 PRJ-101'},{tool:'propose_followup',status:'prepared',label:'已準備一項需批准的追蹤工作'}],
-    proposals:[{projectId:'PRJ-101',recordId:'WO-1001',contact:'Mei Lin',title:'確認現場丈量進度',rationale:'工作單接近到期日。',sourceIds:['REG-WO-1001'],draftZh:'請確認 WO-1001 現場丈量目前進度。此訊息尚未送出。',draftEn:'Please confirm WO-1001 status. This message has not been sent.'}],
-    executionPolicy:{automatic:['read_records','draft'],approval:['create_internal_task'],blocked:['send_external_message','modify_business_records','approve_quote','payment']}});
+    proposals:[{projectId:'PRJ-101',recordId:'WO-1001',contact:'Mei Lin',title:'確認現場丈量進度',rationale:'工作單接近到期日。',sourceIds:['REG-WO-1001'],draftZh:'請確認 WO-1001 現場丈量目前進度。此訊息尚未送出。',draftEn:'Please confirm WO-1001 status. This message has not been sent.'}]});
   }
   chats.push(body);
   const answer=(body.locale==='en'?'Test response to: ':'測試回覆：')+body.messages.at(-1).content+' [REG-Q-1005] [DOC-1010]';
@@ -110,19 +116,20 @@ try{
  await page.click('[data-action="agentSelect"][data-value="project-coordinator"]');
  assert.equal(await page.locator('.sb-decision-card').count(),0);
  await page.click('[data-action="agentRun"][data-value="project-coordinator"]');await page.waitForSelector('.sb-decision-card');
- assert.equal(await page.locator('.sb-decision-card').count(),3);
- const secondDecision=page.locator('[data-action="agentDecision"]').filter({hasText:'查看脈絡'}).nth(1);
- await secondDecision.click();
- assert.match(await page.locator('#inspector').innerText(),/AI 工作脈絡/);
- assert.match(await page.locator('#inspector').innerText(),/待你確認/);
- assert.equal(await page.locator('.sb-decision-card.selected').count(),1);
- assert.match(await page.locator('.sb-decision-card.selected').innerText(),/目前查看中/);
+ assert.equal(agentPlans.length,2);
+ assert.equal(agentPlans[1].agentId,'project-coordinator');
+ assert.equal(await page.locator('.sb-decision-card').count(),1);
+ assert.match(await page.locator('#inspector').innerText(),/PRJ-104/);
  await page.locator('.sb-draft-details summary').first().click();
- assert.match(await page.locator('.sb-draft-details').first().innerText(),/卡點|交接|尚未送出/);
+ assert.match(await page.locator('.sb-draft-details').first().innerText(),/交接|尚未送出/);
  await page.click('[data-action="agentSelect"][data-value="quote-margin-guardian"]');
  assert.equal(await page.locator('.sb-decision-card').count(),0);
  await page.click('[data-action="agentRun"][data-value="quote-margin-guardian"]');await page.waitForSelector('.sb-decision-card');
+ assert.equal(agentPlans.length,3);
+ assert.equal(agentPlans[2].agentId,'quote-margin-guardian');
+ assert.equal(await page.locator('.sb-decision-card').count(),1);
  assert.ok(await page.locator('.sb-agent-sources [data-id^="REG-Q-"]').count()>=1);
+ assert.match(await page.locator('#inspector').innerText(),/Q-1005/);
  await page.locator('.sb-draft-details summary').first().click();
  assert.match(await page.locator('.sb-draft-details').first().innerText(),/毛利|複核/);
  await page.click('#nav-main [data-value="work"]');

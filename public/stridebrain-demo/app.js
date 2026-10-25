@@ -366,13 +366,18 @@ async function handleDocument(file){
   render();toast("Unable to read file. Check the source or try a sample file.");
  }
 }
-async function runModelDrivenOperationsPlan(){
+async function runModelDrivenAgentPlan(agentId){
  if(copilotMode!=="gpt"||copilotAccess.state!=="ready"||!copilotAccess.allowedModelIds.includes(selectedModelId)||selectedModelId.startsWith("openai-direct/"))return {ok:false,reason:interfaceLocale==="en"?"An approved OpenRouter model session is required for model-driven planning.":"模型驅動規劃需要已授權的 OpenRouter 模型工作階段。"};
- const goal=interfaceLocale==="en"?"Review the current workspace priorities, inspect the evidence you need, and prepare up to three useful internal follow-ups for my approval.":"請檢查目前工作區最需要關注的事項，查閱必要依據，並準備最多三項需要我批准的內部追蹤工作。";
+ const goals={
+  "operations-assistant":interfaceLocale==="en"?"Review the current workspace priorities, inspect the evidence you need, and prepare up to three useful internal follow-ups for my approval.":"請檢查目前工作區最需要關注的事項，查閱必要依據，並準備最多三項需要我批准的內部追蹤工作。",
+  "project-coordinator":interfaceLocale==="en"?"Review recorded blockers, due dates, approvals and handoffs. Inspect the relevant project evidence and prepare up to three coordination follow-ups for my approval.":"請檢查記錄中的受阻工作、到期日、審核與交接，查閱相關專案依據，並準備最多三項需要我批准的協調追蹤工作。",
+  "quote-margin-guardian":interfaceLocale==="en"?"Review quotation versions, direct costs and calculated margins. Inspect the relevant quote evidence and prepare up to three internal review tasks for my approval. Do not treat calculated margin as realized profit or loss.":"請檢查報價版本、直接成本與試算毛利，查閱相關報價依據，並準備最多三項需要我批准的內部複核工作。不要把試算毛利當成實際獲利或虧損。"
+ };
+ const goal=goals[agentId];if(!goal)return {ok:false,reason:"Unknown AI teammate."};
  try{
   const response=await fetch("/api/stridebrain-demo/copilot",{method:"POST",cache:"no-store",credentials:"same-origin",
    headers:{"Content-Type":"application/json","Accept":"application/json"},
-   body:JSON.stringify({industry:pack.id,messages:[{role:"user",content:goal}],modelId:selectedModelId,locale:interfaceLocale,mode:"agent-plan",agentId:"operations-assistant"})
+   body:JSON.stringify({industry:pack.id,messages:[{role:"user",content:goal}],modelId:selectedModelId,locale:interfaceLocale,mode:"agent-plan",agentId})
   });
   const payload=await response.json().catch(()=>null);
   if(!response.ok)return {ok:false,reason:copilotErrorMessage(payload?.code,interfaceLocale)};
@@ -392,7 +397,7 @@ async function perform(el){
  }
  if(action==="agentRun"){
   const agentId=value||state.aiTeam?.activeAgentId;
-  const result=agentId==="operations-assistant"?await runModelDrivenOperationsPlan():runAgent(state,model,agentId);
+  const result=await runModelDrivenAgentPlan(agentId);
   if(!result.ok){toast(result.reason);return;}
   save();view.page="team";view.agentDecisionId=result.run.items.find(x=>x.state!=="completed")?.id||result.run.items[0]?.id||null;render();toast(interfaceLocale==="en"?result.run.items.length+" actions prepared for review.":"AI 同事已準備 "+result.run.items.length+" 項工作，等你確認。");return;
  }

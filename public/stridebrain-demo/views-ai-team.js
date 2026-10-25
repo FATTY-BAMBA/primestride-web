@@ -14,7 +14,7 @@ const permissions=zh=>[
  {title:zh?"需要你批准":"Needs approval",text:zh?"建立內部追蹤待辦。":"Create an internal follow-up task."},
  {title:zh?"目前不會做":"Not allowed",text:zh?"對外發訊、修改商務資料、核准報價或付款。":"Send externally, edit business records, approve quotes or make payments."}
 ];
-const humanStep=(step,zh)=>{const map={list_priorities:zh?"查看今日優先紀錄":"Review today's priorities",get_project:zh?"檢查專案工作脈絡":"Inspect project context",get_source:zh?"讀取相關依據":"Read supporting evidence",propose_followup:zh?"準備待批准的追蹤工作":"Prepare approval-required follow-up"};return step?.label||map[step?.tool]||(zh?"查閱工作資料":"Review workspace data");};
+const humanStep=(step,zh)=>{const map={list_priorities:zh?"查看今日優先紀錄":"Review today's priorities",review_quotations:zh?"檢查報價、成本與試算毛利":"Review quotes, costs and calculated margins",get_project:zh?"檢查專案工作脈絡":"Inspect project context",get_quote:zh?"檢查報價版本":"Inspect quotation versions",get_source:zh?"讀取相關依據":"Read supporting evidence",propose_followup:zh?"準備待批准的追蹤工作":"Prepare approval-required follow-up"};return step?.label||map[step?.tool]||(zh?"查閱工作資料":"Review workspace data");};
 
 export function aiTeamView(c){
  const {model:m,state:s}=c,zh=c.locale!=="en",team=normaliseAiTeamState(s.aiTeam),agents=listAgents();

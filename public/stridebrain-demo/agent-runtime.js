@@ -9,13 +9,13 @@ const registry={
   permissions:{automatic:["read_records","calculate","draft"],approval:["create_internal_task"],blocked:["send_external_message","modify_business_records","approve_quote","payment"]}
  },
  "project-coordinator":{
-  id:"project-coordinator",nameZh:"專案協調員",nameEn:"Project Coordinator",version:"v0.2",
+  id:"project-coordinator",nameZh:"專案協調員",nameEn:"Project Coordinator",version:"v0.4",
   descriptionZh:"盯期限、受阻工作、交接與責任人，準備協調動作。",descriptionEn:"Tracks deadlines, blockers, handoffs and owners, then prepares coordination actions.",
   planner:planProjectCoordinator,
   permissions:{automatic:["read_records","calculate","draft"],approval:["create_internal_task"],blocked:["send_external_message","modify_business_records","approve_quote","payment"]}
  },
  "quote-margin-guardian":{
-  id:"quote-margin-guardian",nameZh:"估價與毛利守門員",nameEn:"Quote & Margin Guardian",version:"v0.2",
+  id:"quote-margin-guardian",nameZh:"估價與毛利守門員",nameEn:"Quote & Margin Guardian",version:"v0.4",
   descriptionZh:"檢查報價版本、成本與試算毛利，準備需要人工複核的工作。",descriptionEn:"Reviews quote versions, costs and calculated margins, then prepares human review work.",
   planner:planQuoteGuardian,
   permissions:{automatic:["read_records","calculate","draft"],approval:["create_internal_task"],blocked:["send_external_message","modify_business_records","approve_quote","payment"]}
@@ -58,17 +58,19 @@ export function activeAgentRun(state,agentId=state.aiTeam?.activeAgentId){
 export function recordModelAgentPlan(state,model,plan){
  state.aiTeam=normaliseAiTeamState(state.aiTeam);
  const agent=AGENT_DEFINITIONS[plan?.agentId];
- if(!agent||agent.id!=="operations-assistant"||!Array.isArray(plan?.proposals))return {ok:false,reason:"Invalid AI teammate plan."};
- const runId="MP-OA-"+Date.now().toString(36);
+ if(!agent||!Array.isArray(plan?.proposals))return {ok:false,reason:"Invalid AI teammate plan."};
+ const initials=agent.id.split("-").map(x=>x[0]).join("").toUpperCase();
+ const runId="MP-"+initials+"-"+Date.now().toString(36);
  const items=plan.proposals.slice(0,3).flatMap((p,index)=>{
   const project=model.project?.(p?.projectId);
   const sourceIds=Array.isArray(p?.sourceIds)?[...new Set(p.sourceIds.filter(x=>typeof x==="string"&&x.length>=3&&x.length<=90))].slice(0,6):[];
   if(!project||!sourceIds.length||typeof p?.recordId!=="string"||typeof p?.contact!=="string"||typeof p?.title!=="string")return [];
+  if(agent.id==="quote-margin-guardian"&&!/^Q-[A-Z0-9-]+$/.test(p.recordId))return [];
   return [{
    id:runId+"-"+(index+1),projectId:project.id,projectName:project.name,recordId:String(p.recordId).slice(0,90),
    title:String(p.title).slice(0,120),contact:String(p.contact).slice(0,80),dueDate:null,sourceIds,
-   taskTitle:"AI follow-up · "+String(p.title).slice(0,100),draftZh:String(p.draftZh||"").slice(0,600),draftEn:String(p.draftEn||"").slice(0,600),
-   draftKind:"message",rationale:String(p.rationale||"").slice(0,320),state:"prepared",preparedAt:now(),approvedAt:null,executedAt:null,generatedTaskId:null,
+   taskTitle:agent.nameEn+" · "+String(p.title).slice(0,100),draftZh:String(p.draftZh||"").slice(0,600),draftEn:String(p.draftEn||"").slice(0,600),
+   draftKind:agent.id==="quote-margin-guardian"?"review":"message",rationale:String(p.rationale||"").slice(0,320),state:"prepared",preparedAt:now(),approvedAt:null,executedAt:null,generatedTaskId:null,
    proposedAction:{kind:"create_internal_task"}
   }];
  });
@@ -80,7 +82,7 @@ export function recordModelAgentPlan(state,model,plan){
   notice:"The model prepared proposals only. StrideBrain revalidated them and still requires human approval before creating any internal task."};
  state.aiTeam.runs.unshift(run);state.aiTeam.runs=state.aiTeam.runs.slice(0,24);state.aiTeam.activeAgentId=agent.id;state.aiTeam.activeRunId=runId;
  state.audit=Array.isArray(state.audit)?state.audit:[];
- state.audit.unshift({at:new Date().toLocaleString("en-TW",{hour12:false}),text:"Model-driven Operations Assistant prepared "+items.length+" validated proposals for human review."});
+ state.audit.unshift({at:new Date().toLocaleString("en-TW",{hour12:false}),text:"Model-driven "+agent.nameEn+" prepared "+items.length+" validated proposals for human review."});
  state.audit=state.audit.slice(0,60);
  return {ok:true,run};
 }
