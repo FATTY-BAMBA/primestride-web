@@ -13,7 +13,7 @@ setupEnv();
 const tmp=fs.mkdtempSync(path.join(os.tmpdir(),'stridebrain-browser-'));
 execFileSync('openssl',['req','-x509','-newkey','rsa:2048','-nodes','-keyout',tmp+'/key.pem','-out',tmp+'/cert.pem','-subj','/CN=localhost','-days','1'],{stdio:'ignore'});
 let fault=null,slow=false,chatFailure=0,exchangeCount=0,uiResponse=null;
-const chats=[],requests=[],errors=[],checks=[];
+const chats=[],agentPlans=[],requests=[],errors=[],checks=[];
 const publicRoot=path.resolve('public');
 const server=https.createServer({key:fs.readFileSync(tmp+'/key.pem'),cert:fs.readFileSync(tmp+'/cert.pem')},async(req,res)=>{
  const pathname=new URL(req.url,'https://localhost').pathname;
@@ -40,11 +40,19 @@ const server=https.createServer({key:fs.readFileSync(tmp+'/key.pem'),cert:fs.rea
  }
  if(pathname==='/api/stridebrain-demo/copilot'&&req.method==='POST'){
   let raw='';for await(const piece of req)raw+=piece;
-  const body=JSON.parse(raw);chats.push(body);
+  const body=JSON.parse(raw);
   if(chatFailure)return json({code:chatFailure===401?'DEMO_ACCESS_DENIED':'PROVIDER_FAILURE',error:'PRIVATE PROVIDER DIAGNOSTICS'},chatFailure);
   const session=getSessionStatus(jar(cookies));
   if(session.state!=='ready')return json({code:'DEMO_ACCESS_DENIED'},401);
   if(!session.allowedModelIds.includes(body.modelId))return json({code:'GUEST_MODEL_NOT_ALLOWED'},403);
+  if(body.mode==='agent-plan'){
+   agentPlans.push(body);
+   return json({mode:'agent-plan',agentId:'operations-assistant',modelId:body.modelId,modelLabel:'Test model',provider:'OpenRouter',summary:'已查核資料並準備一項追蹤工作。',asOf:'2026-10-18',steps:3,
+    timeline:[{tool:'list_priorities',status:'completed',label:'已查閱目前優先紀錄'},{tool:'get_project',status:'completed',label:'已查閱專案 PRJ-101'},{tool:'propose_followup',status:'prepared',label:'已準備一項需批准的追蹤工作'}],
+    proposals:[{projectId:'PRJ-101',recordId:'WO-1001',contact:'Mei Lin',title:'確認現場丈量進度',rationale:'工作單接近到期日。',sourceIds:['REG-WO-1001'],draftZh:'請確認 WO-1001 現場丈量目前進度。此訊息尚未送出。',draftEn:'Please confirm WO-1001 status. This message has not been sent.'}],
+    executionPolicy:{automatic:['read_records','draft'],approval:['create_internal_task'],blocked:['send_external_message','modify_business_records','approve_quote','payment']}});
+  }
+  chats.push(body);
   const answer=(body.locale==='en'?'Test response to: ':'測試回覆：')+body.messages.at(-1).content+' [REG-Q-1005] [DOC-1010]';
   const result={mode:'openrouter-readonly-demo',modelId:body.modelId,modelLabel:'Test model',answer,sourceIds:['REG-Q-1005','DOC-1010'],actions:['quotes'],asOf:'2026-10-18',...(uiResponse||{})};
   res.writeHead(200,{'Content-Type':'text/event-stream','Cache-Control':'no-store'});
@@ -83,8 +91,11 @@ try{
  assert.match(await page.locator('#main').innerText(),/AI 團隊|AI 營運團隊/);
  assert.equal(await page.locator('.sb-agent-action').count(),0);
  await page.click('[data-action="agentRun"]');await page.waitForSelector('.sb-agent-action');
- assert.equal(await page.locator('.sb-agent-action').count(),3);
- assert.equal(await page.locator('[data-action="agentExecute"]').count(),3);
+ assert.equal(agentPlans.length,1);
+ assert.equal(agentPlans[0].mode,'agent-plan');
+ assert.equal(await page.locator('.sb-agent-action').count(),1);
+ assert.equal(await page.locator('[data-action="agentExecute"]').count(),1);
+ assert.match(await page.locator('.sb-agent-timeline').innerText(),/已查閱目前優先紀錄/);
  assert.match(await page.locator('.sb-agent-draft').first().innerText(),/尚未送出/);
  await page.locator('[data-action="agentExecute"]').first().click();
  assert.match(await page.locator('.sb-agent-action').first().innerText(),/已完成 ✓/);

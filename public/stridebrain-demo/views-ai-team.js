@@ -30,6 +30,7 @@ export function aiTeamView(c){
   button(run?(zh?'重新整理工作 ↻':'Refresh work ↻'):(zh?'開始工作 ↗':'Start work ↗'),'agentRun',selected.id,'button-primary')+'</section>';
 
  if(run){
+  if(run.modelDriven&&run.timeline?.length)out+='<section class="section sb-agent-timeline"><div class="suite-eyebrow">'+(zh?'AI 執行軌跡 · '+e(run.modelLabel||''):'AI WORK TRACE · '+e(run.modelLabel||''))+'</div><h2>'+(zh?'這位 AI 同事剛才做了什麼':'What the AI teammate just did')+'</h2><div class="sb-agent-timeline-list">'+run.timeline.map((step,index)=>'<div><span>0'+(index+1)+'</span><strong>'+e(step.label)+'</strong><small>'+e(step.tool)+'</small></div>').join('')+'</div><p class="secondary-note">'+(zh?'這些步驟只讀取資料與準備提案；尚未執行任何外部動作。':'These steps only read data and prepared proposals; no external action was executed.')+'</p></section>';
   out+='<div class="operational-cards"><div class="metric-card"><small>'+(zh?'待確認':'Waiting')+'</small><strong>'+prepared+'</strong><span>'+(zh?'需要你的決定':'need your decision')+'</span></div><div class="metric-card"><small>'+(zh?'已完成':'Completed')+'</small><strong>'+completed+'</strong><span>'+(zh?'內部示範待辦':'internal demo tasks')+'</span></div><div class="metric-card"><small>'+(zh?'上次執行':'Last run')+'</small><strong>'+e(formatTime(run.createdAt,zh))+'</strong><span>'+e(run.asOf||'')+'</span></div></div>';
 
   out+='<section class="section"><h2>'+(zh?'等你確認的工作':'Work waiting for you')+'</h2><div class="sb-agent-action-list">'+run.items.map((item,index)=>{

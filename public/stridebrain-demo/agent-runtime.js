@@ -3,7 +3,7 @@ import {planOperationsAssistant,planProjectCoordinator,planQuoteGuardian} from "
 const now=()=>new Date().toISOString();
 const registry={
  "operations-assistant":{
-  id:"operations-assistant",nameZh:"營運特助",nameEn:"Operations Assistant",version:"v0.2",
+  id:"operations-assistant",nameZh:"營運特助",nameEn:"Operations Assistant",version:"v0.3",
   descriptionZh:"整理優先事項、查核來源、準備追蹤訊息與待辦。",descriptionEn:"Reviews priorities and prepares evidence-backed follow-ups and tasks.",
   planner:planOperationsAssistant,
   permissions:{automatic:["read_records","calculate","draft"],approval:["create_internal_task"],blocked:["send_external_message","modify_business_records","approve_quote","payment"]}
@@ -54,6 +54,35 @@ export function runAgent(state,model,agentId=state.aiTeam?.activeAgentId){
 export function activeAgentRun(state,agentId=state.aiTeam?.activeAgentId){
  state.aiTeam=normaliseAiTeamState(state.aiTeam);
  return state.aiTeam.runs.find(r=>r.agentId===agentId&&r.id===state.aiTeam.activeRunId)||state.aiTeam.runs.find(r=>r.agentId===agentId)||null;
+}
+export function recordModelAgentPlan(state,model,plan){
+ state.aiTeam=normaliseAiTeamState(state.aiTeam);
+ const agent=AGENT_DEFINITIONS[plan?.agentId];
+ if(!agent||agent.id!=="operations-assistant"||!Array.isArray(plan?.proposals))return {ok:false,reason:"Invalid AI teammate plan."};
+ const runId="MP-OA-"+Date.now().toString(36);
+ const items=plan.proposals.slice(0,3).flatMap((p,index)=>{
+  const project=model.project?.(p?.projectId);
+  const sourceIds=Array.isArray(p?.sourceIds)?[...new Set(p.sourceIds.filter(x=>typeof x==="string"&&x.length>=3&&x.length<=90))].slice(0,6):[];
+  if(!project||!sourceIds.length||typeof p?.recordId!=="string"||typeof p?.contact!=="string"||typeof p?.title!=="string")return [];
+  return [{
+   id:runId+"-"+(index+1),projectId:project.id,projectName:project.name,recordId:String(p.recordId).slice(0,90),
+   title:String(p.title).slice(0,120),contact:String(p.contact).slice(0,80),dueDate:null,sourceIds,
+   taskTitle:"AI follow-up · "+String(p.title).slice(0,100),draftZh:String(p.draftZh||"").slice(0,600),draftEn:String(p.draftEn||"").slice(0,600),
+   draftKind:"message",rationale:String(p.rationale||"").slice(0,320),state:"prepared",preparedAt:now(),approvedAt:null,executedAt:null,generatedTaskId:null,
+   proposedAction:{kind:"create_internal_task"}
+  }];
+ });
+ if(!items.length)return {ok:false,reason:"The model plan did not contain a valid evidence-backed proposal."};
+ const run={id:runId,agentId:agent.id,createdAt:now(),asOf:plan.asOf||null,status:"waiting_for_approval",items,
+  summary:{prepared:items.length,completed:0},basis:plan.summary||"Model-driven plan grounded in read-only StrideBrain tools.",
+  permissions:agent.permissions,modelDriven:true,modelLabel:String(plan.modelLabel||plan.modelId||"AI model").slice(0,100),
+  timeline:Array.isArray(plan.timeline)?plan.timeline.slice(0,12).map(x=>({tool:String(x?.tool||"").slice(0,60),status:String(x?.status||"").slice(0,30),label:String(x?.label||"").slice(0,160)})):[],
+  notice:"The model prepared proposals only. StrideBrain revalidated them and still requires human approval before creating any internal task."};
+ state.aiTeam.runs.unshift(run);state.aiTeam.runs=state.aiTeam.runs.slice(0,24);state.aiTeam.activeAgentId=agent.id;state.aiTeam.activeRunId=runId;
+ state.audit=Array.isArray(state.audit)?state.audit:[];
+ state.audit.unshift({at:new Date().toLocaleString("en-TW",{hour12:false}),text:"Model-driven Operations Assistant prepared "+items.length+" validated proposals for human review."});
+ state.audit=state.audit.slice(0,60);
+ return {ok:true,run};
 }
 export function approveAndExecuteAgentAction(state,itemId){
  state.aiTeam=normaliseAiTeamState(state.aiTeam);

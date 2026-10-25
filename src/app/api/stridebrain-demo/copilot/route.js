@@ -8,6 +8,7 @@ import {tokenMatches,isStaffSessionValid,SESSION_COOKIE} from "@/lib/stridebrain
 import {guestSessionIdentity,GUEST_COOKIE} from "@/lib/stridebrain-demo/guest-session";
 import { runGptCopilot } from "@/lib/stridebrain-demo/copilot-runner";
 import { runOpenRouterCopilot } from "@/lib/stridebrain-demo/openrouter-runner";
+import { runAgentPlanner } from "@/lib/stridebrain-demo/agent-planner-runner";
 import { validIndustry } from "@/lib/stridebrain-demo/copilot-tools";
 import { DEFAULT_MODEL_ID,findAllowedModel,isModelAllowed } from "../../../../../public/stridebrain-demo/model-catalog.js";
 
@@ -42,7 +43,9 @@ function parseChat(body){
   messages.push({role:m.role,content:m.content});
  }
  if(messages.at(-1)?.role!=="user"||messages.at(-1).content.length>1200)return null;
- return {industry:body.industry,messages,modelId:body.modelId||DEFAULT_MODEL_ID,locale:body.locale,selectedProjectId:body.selectedProjectId||null};
+ if(body.mode!==undefined&&!["chat","agent-plan"].includes(body.mode))return null;
+ if(body.agentId!==undefined&&body.agentId!=="operations-assistant")return null;
+ return {industry:body.industry,messages,modelId:body.modelId||DEFAULT_MODEL_ID,locale:body.locale,selectedProjectId:body.selectedProjectId||null,mode:body.mode||"chat",agentId:body.agentId||null};
 }
 export async function POST(request){
  if(process.env.STRIDEBRAIN_DEMO_GPT_ENABLED!=="true")
@@ -87,6 +90,18 @@ export async function POST(request){
  if(!lease.ok)return json(lease.code==="DEMO_CONCURRENCY_EXCEEDED"?429:503,{code:lease.code,error:"The preview is busy. Please retry shortly."});
  const budget=await reserveDemoBudget();
  if(!budget.ok){await releaseDemoLease(lease);return json(budget.code==="DEMO_BUDGET_EXCEEDED"?429:503,{code:budget.code,error:"The preview AI spending allowance is unavailable or has been reached."});}
+ if(parsed.mode==="agent-plan"){
+  if(selected.provider!=="openrouter"){await releaseDemoLease(lease);return json(400,{code:"AGENT_MODEL_UNSUPPORTED",error:"This agent preview currently requires an approved OpenRouter model."});}
+  try{
+   const plan=await runAgentPlanner({industry:parsed.industry,goal:parsed.messages.at(-1).content,locale:parsed.locale||"zh-TW",agentId:parsed.agentId||"operations-assistant",modelId:selected.id,apiKey:providerKey});
+   await releaseDemoLease(lease);
+   return json(200,{...plan,modelLabel:selected.label,provider:"OpenRouter"});
+  }catch(error){
+   await releaseDemoLease(lease);
+   const code=["INVALID_INDUSTRY","UNSUPPORTED_AGENT"].includes(error?.message)?error.message:"AGENT_PLAN_FAILED";
+   return json(code==="AGENT_PLAN_FAILED"?502:400,{code,error:"The AI teammate could not prepare a plan."});
+  }
+ }
  if(selected.provider==="openrouter"&&request.headers.get("accept")?.includes("text/event-stream")){
   const encoder=new TextEncoder();
   const stream=new ReadableStream({

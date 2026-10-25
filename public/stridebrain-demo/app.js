@@ -1,7 +1,7 @@
 import {evidenceList} from "./evidence-presentation.js";
 import {DEMO_ROLES} from "./experience-views.js";
 import {aiTeamView} from "./views-ai-team.js";
-import {runAgent,selectAgent,approveAndExecuteAgentAction} from "./ai-team.js";
+import {runAgent,selectAgent,recordModelAgentPlan,approveAndExecuteAgentAction} from "./ai-team.js";
 import {copilotErrorMessage} from "./copilot-errors.js";
 import {getPack,listPacks} from "./industry-packs.js";
 import {WorkspaceModel,money,calculateVariation,escapeHtml as e,loadDemoState,saveDemoState,resetDemoState,event,setVariationInput,approveVariationGate,commitVariation,buildCustomerReply,reviewCustomerDraft,recordFeedback,markFeedbackReviewed} from "./core-model.js";
@@ -366,6 +366,19 @@ async function handleDocument(file){
   render();toast("Unable to read file. Check the source or try a sample file.");
  }
 }
+async function runModelDrivenOperationsPlan(){
+ if(copilotMode!=="gpt"||copilotAccess.state!=="ready"||!copilotAccess.allowedModelIds.includes(selectedModelId)||selectedModelId.startsWith("openai-direct/"))return {ok:false,reason:interfaceLocale==="en"?"An approved OpenRouter model session is required for model-driven planning.":"模型驅動規劃需要已授權的 OpenRouter 模型工作階段。"};
+ const goal=interfaceLocale==="en"?"Review the current workspace priorities, inspect the evidence you need, and prepare up to three useful internal follow-ups for my approval.":"請檢查目前工作區最需要關注的事項，查閱必要依據，並準備最多三項需要我批准的內部追蹤工作。";
+ try{
+  const response=await fetch("/api/stridebrain-demo/copilot",{method:"POST",cache:"no-store",credentials:"same-origin",
+   headers:{"Content-Type":"application/json","Accept":"application/json"},
+   body:JSON.stringify({industry:pack.id,messages:[{role:"user",content:goal}],modelId:selectedModelId,locale:interfaceLocale,mode:"agent-plan",agentId:"operations-assistant"})
+  });
+  const payload=await response.json().catch(()=>null);
+  if(!response.ok)return {ok:false,reason:copilotErrorMessage(payload?.code,interfaceLocale)};
+  return recordModelAgentPlan(state,model,payload);
+ }catch{return {ok:false,reason:interfaceLocale==="en"?"The AI teammate planning request could not be completed.":"AI 同事目前無法完成規劃請求。"};}
+}
 async function perform(el){
  const action=el.dataset.action,id=el.dataset.id||"",value=el.dataset.value||"";
  if(action==="retrySession"){if(!copilotBusy)await restoreStaffPreview();return;}
@@ -373,7 +386,9 @@ async function perform(el){
   const result=selectAgent(state,value||id);if(result.ok){save();view.page="team";render();}else toast(result.reason);return;
  }
  if(action==="agentRun"){
-  const result=runAgent(state,model,value||state.aiTeam?.activeAgentId);if(!result.ok){toast(result.reason);return;}
+  const agentId=value||state.aiTeam?.activeAgentId;
+  const result=agentId==="operations-assistant"?await runModelDrivenOperationsPlan():runAgent(state,model,agentId);
+  if(!result.ok){toast(result.reason);return;}
   save();view.page="team";render();toast(interfaceLocale==="en"?result.run.items.length+" actions prepared for review.":"AI 同事已準備 "+result.run.items.length+" 項工作，等你確認。");return;
  }
  if(action==="agentExecute"){
