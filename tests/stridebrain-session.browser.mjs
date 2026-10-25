@@ -97,6 +97,8 @@ try{
  assert.equal(await page.locator('[data-action="agentExecute"]').count(),1);
  assert.match(await page.locator('.sb-run-summary').innerText(),/我已檢查目前的專案/);
  assert.equal(await page.locator('.sb-summary-preview button').count(),1);
+ assert.equal(await page.locator('.sb-summary-preview button.active').count(),1);
+ assert.equal(await page.locator('.sb-decision-card.selected').count(),1);
  assert.match(await page.locator('#inspector').innerText(),/PRJ-101/);
  assert.match(await page.locator('#inspector').innerText(),/REG-WO-1001/);
  await page.locator('.sb-agent-timeline summary').click();
@@ -109,10 +111,12 @@ try{
  assert.equal(await page.locator('.sb-decision-card').count(),0);
  await page.click('[data-action="agentRun"][data-value="project-coordinator"]');await page.waitForSelector('.sb-decision-card');
  assert.equal(await page.locator('.sb-decision-card').count(),3);
- const secondDecision=page.locator('[data-action="agentDecision"]').filter({hasText:'在右側查看'}).nth(1);
+ const secondDecision=page.locator('[data-action="agentDecision"]').filter({hasText:'查看脈絡'}).nth(1);
  await secondDecision.click();
  assert.match(await page.locator('#inspector').innerText(),/AI 工作脈絡/);
  assert.match(await page.locator('#inspector').innerText(),/待你確認/);
+ assert.equal(await page.locator('.sb-decision-card.selected').count(),1);
+ assert.match(await page.locator('.sb-decision-card.selected').innerText(),/目前查看中/);
  await page.locator('.sb-draft-details summary').first().click();
  assert.match(await page.locator('.sb-draft-details').first().innerText(),/卡點|交接|尚未送出/);
  await page.click('[data-action="agentSelect"][data-value="quote-margin-guardian"]');

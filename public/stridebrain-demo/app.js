@@ -386,7 +386,9 @@ async function perform(el){
   const result=selectAgent(state,value||id);if(result.ok){save();view.page="team";view.agentDecisionId=null;render();}else toast(result.reason);return;
  }
  if(action==="agentDecision"){
-  view.agentDecisionId=value||id;view.docId=null;render();return;
+  const decisionId=value||id;view.agentDecisionId=decisionId;view.docId=null;render();
+  requestAnimationFrame(()=>document.querySelector('[data-decision-id="'+decisionId+'"]')?.scrollIntoView({behavior:"smooth",block:"center"}));
+  return;
  }
  if(action==="agentRun"){
   const agentId=value||state.aiTeam?.activeAgentId;
