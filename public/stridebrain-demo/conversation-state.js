@@ -25,7 +25,8 @@ export function resolveConversation(seed,messages,{selectedProjectId=null}={}){
  const evidenceFollowup=/來源|哪份|文件|證據|\bsource|\bdocument|\bevidence/i.test(latest);
  const clarificationRequired=explicitUnknown||(singular&&candidateProjectIds.length!==1)||awaitingChoice;
  // Look past clarification-only turns to the last answer that actually cited evidence.
- const previousEvidence=recent.slice(0,-1).reverse().find(m=>m.role==='assistant'&&/\[(?:REG-|DOC-|PRDOC-|STD-|PRSTD-)/.test(m.content||''))?.content||'';
+ const clarificationLike=value=>/[?？]/.test(String(value||''))&&/(哪一個|哪個|指的是|還是|which (?:project|one)|which one)/i.test(String(value||''));
+ const previousEvidence=recent.slice(0,-1).reverse().find(m=>m.role==='assistant'&&!clarificationLike(m.content)&&/\[(?:REG-|DOC-|PRDOC-|STD-|PRSTD-)/.test(m.content||''))?.content||'';
  const citationIds=text=>[...String(text).matchAll(/\[([A-Z][A-Z0-9-]{2,85})\]/g)].map(m=>m[1]);
  const directIds=latest.match(/\b(?:REG-)?(?:PRJ|JOB|DOC|PRDOC|STD|PRSTD|Q|PRQ|WO|PRWO|APR|PRAPR)-[A-Z0-9-]+\b/g)||[];
  return {resolution,clarificationRequired,evidenceFollowup,pendingProjectSelection:clarificationRequired,

@@ -59,7 +59,9 @@ export class WorkspaceModel{
   quote(id){return this.byQuote.get(id)||null;}
   task(id){return this.byTask.get(id)||null;}
   approvals(state){return this.seed.approvals.map(a=>({...a,status:state.approvals?.[a.id]||a.status}));}
-  tasks(state){const tasks=this.seed.workOrders.map(w=>({...w,status:state.tasks?.[w.id]||w.status}));if(state.variation?.committed){tasks.unshift({id:this.pack.scenario.newWorkId,projectId:this.pack.scenario.projectId,title:this.pack.scenario.downstreamTask,owner:this.pack.owner,status:state.tasks?.[this.pack.scenario.newWorkId]||"Upcoming",dueDate:"To be confirmed",blockedBy:null,sourceDocId:this.pack.scenario.sourceIds[0],synthetic:true});}if(state.readiness?.reviewTaskCreated&&state.readiness?.reviewTaskId){
+  tasks(state){const tasks=this.seed.workOrders.map(w=>({...w,status:state.tasks?.[w.id]||w.status}));
+ const aiTasks=Array.isArray(state.aiTeam?.generatedTasks)?state.aiTeam.generatedTasks:[];
+ for(const task of aiTasks.slice().reverse())if(task?.id&&!tasks.some(x=>x.id===task.id))tasks.unshift({...task,status:state.tasks?.[task.id]||task.status||"Upcoming",synthetic:true});if(state.variation?.committed){tasks.unshift({id:this.pack.scenario.newWorkId,projectId:this.pack.scenario.projectId,title:this.pack.scenario.downstreamTask,owner:this.pack.owner,status:state.tasks?.[this.pack.scenario.newWorkId]||"Upcoming",dueDate:"To be confirmed",blockedBy:null,sourceDocId:this.pack.scenario.sourceIds[0],synthetic:true});}if(state.readiness?.reviewTaskCreated&&state.readiness?.reviewTaskId){
  const r=state.readiness,taskId=r.reviewTaskId;
  const last=r.assessment;
  const taskStatus=state.tasks?.[taskId]||(last?.counts?.hold>0?"Blocked":"Upcoming");
@@ -94,10 +96,10 @@ export class WorkspaceModel{
     return this.seed.projects.filter(p=>!q||[p.id,p.name,p.type,p.city,p.manager,p.description||""].join(" ").toLowerCase().includes(q));
   }
 }
-function defaults(pack){return {variation:{cost:pack.scenario.cost,margin:pack.scenario.margin,supplier:false,owner:false,customer:false,committed:false},tasks:{},approvals:{},customerDraft:{lang:"zh",text:"",reviewed:false,reviewedAt:null},historyRequest:null,historyDraft:null,readiness:{inputs:null,assessment:null,reviewTaskCreated:false,reviewTaskId:null,reviewTaskTitle:null,reviewTaskSourceId:null},feedback:[],audit:[]};}
+function defaults(pack){return {variation:{cost:pack.scenario.cost,margin:pack.scenario.margin,supplier:false,owner:false,customer:false,committed:false},tasks:{},approvals:{},customerDraft:{lang:"zh",text:"",reviewed:false,reviewedAt:null},historyRequest:null,historyDraft:null,readiness:{inputs:null,assessment:null,reviewTaskCreated:false,reviewTaskId:null,reviewTaskTitle:null,reviewTaskSourceId:null},aiTeam:{activeRunId:null,runs:[],generatedTasks:[]},feedback:[],audit:[]};}
 export function loadDemoState(pack){
  const fresh=defaults(pack);try{const old=JSON.parse(localStorage.getItem("stridebrain-demo-v2-"+pack.id)||"null");if(!old)return fresh;
-  return {variation:{...fresh.variation,...old.variation},tasks:old.tasks||{},approvals:old.approvals||{},customerDraft:{...fresh.customerDraft,...old.customerDraft},historyRequest:old.historyRequest||null,historyDraft:old.historyDraft||null,readiness:{...fresh.readiness,...old.readiness},feedback:Array.isArray(old.feedback)?old.feedback:[],audit:Array.isArray(old.audit)?old.audit:[]};
+  return {variation:{...fresh.variation,...old.variation},tasks:old.tasks||{},approvals:old.approvals||{},customerDraft:{...fresh.customerDraft,...old.customerDraft},historyRequest:old.historyRequest||null,historyDraft:old.historyDraft||null,readiness:{...fresh.readiness,...old.readiness},aiTeam:{...fresh.aiTeam,...(old.aiTeam||{}),runs:Array.isArray(old.aiTeam?.runs)?old.aiTeam.runs:[],generatedTasks:Array.isArray(old.aiTeam?.generatedTasks)?old.aiTeam.generatedTasks:[]},feedback:Array.isArray(old.feedback)?old.feedback:[],audit:Array.isArray(old.audit)?old.audit:[]};
  }catch{return fresh;}
 }
 export function saveDemoState(pack,state){try{localStorage.setItem("stridebrain-demo-v2-"+pack.id,JSON.stringify(state));return true;}catch{return false;}}

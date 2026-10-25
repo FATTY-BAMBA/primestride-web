@@ -1,0 +1,14 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import {register} from "node:module";
+import {readFileSync} from "node:fs";
+register("./helpers/stridebrain-json-loader.mjs",import.meta.url);
+const {WorkspaceModel}=await import("../public/stridebrain-demo/core-model.js");
+const {getPack}=await import("../public/stridebrain-demo/industry-packs.js");
+const {runOperationsAssistant,approveAndExecuteAgentAction,defaultAiTeamState}=await import("../public/stridebrain-demo/ai-team.js");
+const seed=JSON.parse(readFileSync("public/stridebrain-interiors/seed.json","utf8")),model=new WorkspaceModel(seed,getPack("interior"));
+const state=()=>({variation:{},tasks:{},approvals:{},readiness:{},aiTeam:defaultAiTeamState(),audit:[]});
+test("operations assistant prepares three bounded actions without executing them",()=>{const s=state(),r=runOperationsAssistant(s,model);assert.equal(r.items.length,3);assert.equal(s.aiTeam.generatedTasks.length,0);assert.ok(r.items.every(x=>x.state==="prepared"&&x.draftZh.includes("尚未送出")));});
+test("human approval creates one internal demo follow-up task and audit entry",()=>{const s=state(),r=runOperationsAssistant(s,model),x=approveAndExecuteAgentAction(s,r.items[0].id);assert.equal(x.ok,true);assert.equal(s.aiTeam.generatedTasks.length,1);assert.match(s.aiTeam.generatedTasks[0].id,/^AI-WO-/);assert.equal(r.items[0].state,"completed");assert.ok(s.audit.some(a=>a.text.includes("Human approved")));});
+test("generated AI task becomes visible in the normal work-order model",()=>{const s=state(),r=runOperationsAssistant(s,model);approveAndExecuteAgentAction(s,r.items[0].id);const tasks=model.tasks(s);assert.ok(tasks.some(x=>x.id===r.items[0].generatedTaskId&&x.synthetic));});
+test("AI teammate never claims or performs outbound sending",()=>{const s=state(),r=runOperationsAssistant(s,model);assert.match(r.notice,/no outbound message is sent/i);assert.ok(r.items.every(x=>!Object.hasOwn(x,"sentAt")));});

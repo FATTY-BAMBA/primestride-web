@@ -1,5 +1,7 @@
 import {evidenceList} from "./evidence-presentation.js";
 import {DEMO_ROLES} from "./experience-views.js";
+import {aiTeamView} from "./views-ai-team.js";
+import {runOperationsAssistant,approveAndExecuteAgentAction} from "./ai-team.js";
 import {copilotErrorMessage} from "./copilot-errors.js";
 import {getPack,listPacks} from "./industry-packs.js";
 import {WorkspaceModel,money,calculateVariation,escapeHtml as e,loadDemoState,saveDemoState,resetDemoState,event,setVariationInput,approveVariationGate,commitVariation,buildCustomerReply,reviewCustomerDraft,recordFeedback,markFeedbackReviewed} from "./core-model.js";
@@ -30,7 +32,7 @@ let interfaceLocale="zh-TW";
 try{interfaceLocale=sessionStorage.getItem("stridebrain-interface-locale")==="en"?"en":"zh-TW";}catch{}
 function applyWorkspaceLanguage(){
  document.documentElement.lang=interfaceLocale==="en"?"en":"zh-Hant";
- const labels={overview:["總覽","Overview"],copilot:["StrideBrain 助理","StrideBrain Copilot"],projects:["專案管理","Projects"],knowledge:["知識中心","Knowledge hub"],service:["客戶服務","Customer service"],quotes:["報價管理","Quotations"],history:["歷史成本估價","Estimate from history"],work:["工作單","Work orders"],suppliers:["材料與供應商","Materials & suppliers"],approvals:["待審核事項","Approvals"],analytics:["營運分析","Analytics"],readiness:["作業檢查","Operational checks"],intake:["文件智慧整理","Document intelligence"],playbook:["產業作業指引","Industry playbook"],learning:["回饋與改善","Learning & feedback"]};
+ const labels={overview:["總覽","Overview"],copilot:["StrideBrain 助理","StrideBrain Copilot"],team:["AI 團隊","AI Team"],projects:["專案管理","Projects"],knowledge:["知識中心","Knowledge hub"],service:["客戶服務","Customer service"],quotes:["報價管理","Quotations"],history:["歷史成本估價","Estimate from history"],work:["工作單","Work orders"],suppliers:["材料與供應商","Materials & suppliers"],approvals:["待審核事項","Approvals"],analytics:["營運分析","Analytics"],readiness:["作業檢查","Operational checks"],intake:["文件智慧整理","Document intelligence"],playbook:["產業作業指引","Industry playbook"],learning:["回饋與改善","Learning & feedback"]};
  for(const [name,pair] of Object.entries(labels)){
   const btn=document.querySelector('[data-action="nav"][data-value="'+name+'"]');if(!btn)continue;
   const text=btn.querySelector("#nav-entities,#nav-quotations,#nav-work,#nav-materials");
@@ -130,10 +132,10 @@ function setPage(page,reset=true){
  view.page=page;if(reset){view.search="";view.filter="all";view.pageIndex=0;}
  render();window.scrollTo({top:0,behavior:"smooth"});
 }
-function pageTitle(){return view.page==="projects"?pack.projectLabel:view.page==="quotes"?pack.quoteLabel:view.page==="work"?pack.orderLabel:{overview:"Overview",copilot:"StrideBrain Copilot",knowledge:"Knowledge hub",service:"Customer service",suppliers:"Suppliers",approvals:"Approvals",analytics:"Analytics",learning:"Learning & feedback",history:"Historical estimates",playbook:"Industry playbook",readiness:"Operational checks",intake:"Document intelligence"}[view.page]||"Overview";}
+function pageTitle(){return view.page==="projects"?pack.projectLabel:view.page==="quotes"?pack.quoteLabel:view.page==="work"?pack.orderLabel:{overview:"Overview",copilot:"StrideBrain Copilot",team:"AI Team",knowledge:"Knowledge hub",service:"Customer service",suppliers:"Suppliers",approvals:"Approvals",analytics:"Analytics",learning:"Learning & feedback",history:"Historical estimates",playbook:"Industry playbook",readiness:"Operational checks",intake:"Document intelligence"}[view.page]||"Overview";}
 function render(){
  if(!model)return;
- const mapping={overview,copilot,projects,knowledge,service,quotes,work,suppliers,approvals,analytics,learning,history:historyView,playbook,readiness:readinessView,intake:documentIntelligenceView};
+ const mapping={overview,copilot,team:aiTeamView,projects,knowledge,service,quotes,work,suppliers,approvals,analytics,learning,history:historyView,playbook,readiness:readinessView,intake:documentIntelligenceView};
  $("main").innerHTML=(view.page==="copilot"&&copilotAccess.state!=="ready"?sessionGate:(mapping[view.page]||overview))(context())+(view.page==="intake"?historyBridgeSection(context()):"");
  $("inspector").innerHTML=renderInspector(context());
  $("page-name").textContent=pageTitle();
@@ -367,6 +369,14 @@ async function handleDocument(file){
 async function perform(el){
  const action=el.dataset.action,id=el.dataset.id||"",value=el.dataset.value||"";
  if(action==="retrySession"){if(!copilotBusy)await restoreStaffPreview();return;}
+ if(action==="agentRun"){
+  runOperationsAssistant(state,model);save();view.page="team";render();toast(interfaceLocale==="en"?"Operations Assistant prepared today’s work.":"營運特助已完成第一輪整理，等你確認。");return;
+ }
+ if(action==="agentExecute"){
+  const result=approveAndExecuteAgentAction(state,value||id);
+  if(result.ok){save();render();toast(interfaceLocale==="en"?"Approved action completed and follow-up task created.":"已批准並完成動作，追蹤待辦已建立。");}
+  else toast(result.reason);return;
+ }
  if(action==="demoRole"){
   if(!DEMO_ROLES[value])return;
   view.demoRole=value;render();return;
