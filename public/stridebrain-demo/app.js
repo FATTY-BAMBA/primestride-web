@@ -82,7 +82,7 @@ let copilotGuest=false,guestChatScope=null;
 let copilotMode="checking",copilotOperatorToken="",copilotConnected=false,copilotBusy=false,copilotRunId=0;
 let copilotAccess={state:"checking",allowedModelIds:[]},sessionRefreshRun=0,sessionRefreshPromise=null;
 let selectedModelId=DEFAULT_MODEL_ID,copilotModelMenuOpen=false,copilotDraft="";
-let view={page:"overview",projectId:null,projectDetail:false,docId:null,quoteId:null,chat:[],search:"",filter:"all",pageIndex:0,flowStep:null};
+let view={page:"overview",projectId:null,projectDetail:false,docId:null,quoteId:null,chat:[],search:"",filter:"all",pageIndex:0,flowStep:null,agentDecisionId:null};
 function toast(message){
  const el=$("toast");el.textContent=message;el.classList.add("visible");
  if(toastHandle)clearTimeout(toastHandle);toastHandle=setTimeout(()=>el.classList.remove("visible"),3500);
@@ -383,13 +383,16 @@ async function perform(el){
  const action=el.dataset.action,id=el.dataset.id||"",value=el.dataset.value||"";
  if(action==="retrySession"){if(!copilotBusy)await restoreStaffPreview();return;}
  if(action==="agentSelect"){
-  const result=selectAgent(state,value||id);if(result.ok){save();view.page="team";render();}else toast(result.reason);return;
+  const result=selectAgent(state,value||id);if(result.ok){save();view.page="team";view.agentDecisionId=null;render();}else toast(result.reason);return;
+ }
+ if(action==="agentDecision"){
+  view.agentDecisionId=value||id;view.docId=null;render();return;
  }
  if(action==="agentRun"){
   const agentId=value||state.aiTeam?.activeAgentId;
   const result=agentId==="operations-assistant"?await runModelDrivenOperationsPlan():runAgent(state,model,agentId);
   if(!result.ok){toast(result.reason);return;}
-  save();view.page="team";render();toast(interfaceLocale==="en"?result.run.items.length+" actions prepared for review.":"AI 同事已準備 "+result.run.items.length+" 項工作，等你確認。");return;
+  save();view.page="team";view.agentDecisionId=result.run.items.find(x=>x.state!=="completed")?.id||result.run.items[0]?.id||null;render();toast(interfaceLocale==="en"?result.run.items.length+" actions prepared for review.":"AI 同事已準備 "+result.run.items.length+" 項工作，等你確認。");return;
  }
  if(action==="agentExecute"){
   const result=approveAndExecuteAgentAction(state,value||id);

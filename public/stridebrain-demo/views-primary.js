@@ -4,6 +4,7 @@ import {badge,button,source,sources,metric,heading,section,tag,recordCard,docume
 import {sourceUrlForDocument} from "./industry-evidence.js";
 import {getReadinessPack} from "./readiness-rules.js";
 import {MODEL_CATALOG,DEFAULT_MODEL_ID,findAllowedModel} from "./model-catalog.js";
+import {activeAgentRun,listAgents} from "./ai-team.js";
 import {quickActionsFor,ideasFor,followUpsFor} from "./copilot-suggestions.js";
 import {operationalSignals,riskRadarSignals} from "./operational-signals.js";
 import {displayRecordText} from "./record-locale.js";
@@ -148,8 +149,20 @@ function sourceProvenance(d,registry){
  sources.map(src=>{const url=sourceUrlForDocument({...d,sourceUrl:src.url});return url?'<a href="'+e(url)+'" target="_blank" rel="noopener noreferrer"><span>'+e(src.title)+'</span><small>'+e(src.publisher)+' · '+e(src.kind)+' · '+e(src.locator)+'</small><b>↗</b></a>':'';}).join('')+
  '<p>Scope: '+e(sources.map(x=>x.caveat).join(' · '))+'</p></div>';
 }
+function renderAiTeamInspector(c){
+ const zh=c.locale!=="en",t=x=>displayRecordText(x,c.locale),run=activeAgentRun(c.state,c.state.aiTeam?.activeAgentId),agents=listAgents();
+ const agent=agents.find(x=>x.id===c.state.aiTeam?.activeAgentId),item=run?.items.find(x=>x.id===c.view.agentDecisionId)||run?.items.find(x=>x.state!=="completed")||run?.items[0];
+ let out='<div class="inspector-eyebrow">'+(zh?'AI 工作脈絡':'AI WORK CONTEXT')+'</div>';
+ if(!item)return out+'<h3>'+(zh?'尚未選擇工作':'No work selected')+'</h3><p>'+(zh?'執行巡檢後，這裡會跟著你目前查看的 AI 建議顯示專案、負責人與來源。':'After a review, this panel follows the AI recommendation you are inspecting.')+'</p>';
+ const pr=c.model.project(item.projectId);
+ out+='<div class="inspector-section"><div class="suite-eyebrow">'+e(agent?(zh?agent.nameZh:agent.nameEn):'AI')+' · '+e(item.recordId)+'</div><h3>'+e(t(item.title))+'</h3><p>'+e(item.projectId)+' · '+e(t(pr?.name||item.projectName))+' · '+e(item.contact)+'</p><div class="inspector-context"><strong>'+(item.state==="completed"?(zh?'已完成':'Completed'):(zh?'待你確認':'Needs your review'))+'</strong><small>'+e(item.rationale||(zh?'AI 已根據目前紀錄準備下一步。':'AI prepared a next step from the current records.'))+'</small></div></div>';
+ out+='<div class="inspector-section">'+section(zh?'本項查核依據':'Evidence for this item',zh?'只顯示這項 AI 建議實際引用的來源':'Only sources actually used by this AI recommendation')+item.sourceIds.map(id=>{const d=c.model.document(id);return d?'<button class="inspector-source" data-action="source" data-id="'+e(d.id)+'"><strong>'+e(localizedName(d.title,zh))+'</strong><small>'+e(d.id)+' · '+e(d.version)+' · '+e(localizedName(d.status,zh))+'</small></button>':'';}).join('')+'</div>';
+ out+='<div class="inspector-section"><div class="suite-eyebrow">'+(zh?'下一步':'NEXT STEP')+'</div><p class="disclosure">'+(item.state==="completed"?(zh?'這項工作已建立內部追蹤待辦；沒有對外發送訊息。':'An internal follow-up task was created. No external message was sent.'):(zh?'你可以回到左側查看草稿與依據，再決定是否建立內部待辦。':'Review the draft and evidence on the left, then decide whether to create the internal task.'))+'</p>'+button(zh?'查看專案 ↗':'Open project ↗','project',item.projectId,'button-secondary')+'</div>';
+ return out;
+}
 export function renderInspector(c){
  if(c.view.page==="copilot")return renderConversationInspector(c);
+ if(c.view.page==="team")return renderAiTeamInspector(c);
  const zh=c.locale!=="en";
  const {model:m,pack:p,state:s,view:v}=c,pr=m.project(v.projectId)||m.project(p.scenario.projectId),d=m.document(v.docId);
  let out='<div class="inspector-eyebrow">'+(zh?"工作脈絡與資料來源":"CONTEXT & EVIDENCE")+'</div><h3>'+(zh?"目前工作內容":"Working context")+'</h3>';
