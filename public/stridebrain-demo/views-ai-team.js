@@ -6,44 +6,33 @@ import {listAgents,activeAgentRun,normaliseAiTeamState} from "./ai-team.js";
 const formatTime=(value,zh)=>{if(!value)return "—";try{return new Date(value).toLocaleString(zh?"zh-TW":"en-TW",{hour12:false,month:"numeric",day:"numeric",hour:"2-digit",minute:"2-digit"});}catch{return value;}};
 const name=(agent,zh)=>zh?agent.nameZh:agent.nameEn;
 const desc=(agent,zh)=>zh?agent.descriptionZh:agent.descriptionEn;
-const permissionText=(agent,key,zh)=>{
- const n=agent.permissions[key]?.length||0;
- if(key==="automatic")return zh?"唯讀查詢、計算、整理與草擬。":"Read-only lookup, calculations, organization and drafts.";
- if(key==="approval")return zh?"建立內部追蹤待辦。":"Create internal follow-up tasks.";
- return zh?"對外送訊息、修改商務資料、核准報價與付款。":"External sending, business-record edits, quote approval and payments.";
-};
+const runFor=(team,agentId)=>team.runs.find(r=>r.agentId===agentId)||null;
+const counts=run=>({waiting:run?.items?.filter(x=>x.state!=="completed").length||0,done:run?.items?.filter(x=>x.state==="completed").length||0,total:run?.items?.length||0});
+const compactStatus=(run,zh)=>{if(!run)return zh?"尚未執行":"Not run yet";const c=counts(run);if(c.waiting)return zh?c.waiting+" 項待確認":c.waiting+" awaiting review";if(c.done)return zh?"已完成 "+c.done+" 項":c.done+" completed";return zh?"已完成巡檢":"Review complete";};
+const permissions=zh=>[
+ {title:zh?"可自動完成":"Automatic",text:zh?"閱讀資料、比對記錄、整理摘要與準備草稿。":"Read records, compare evidence, summarize and prepare drafts."},
+ {title:zh?"需要你批准":"Needs approval",text:zh?"建立內部追蹤待辦。":"Create an internal follow-up task."},
+ {title:zh?"目前不會做":"Not allowed",text:zh?"對外發訊、修改商務資料、核准報價或付款。":"Send externally, edit business records, approve quotes or make payments."}
+];
+const humanStep=(step,zh)=>{const map={list_priorities:zh?"查看今日優先紀錄":"Review today's priorities",get_project:zh?"檢查專案工作脈絡":"Inspect project context",get_source:zh?"讀取相關依據":"Read supporting evidence",propose_followup:zh?"準備待批准的追蹤工作":"Prepare approval-required follow-up"};return step?.label||map[step?.tool]||(zh?"查閱工作資料":"Review workspace data");};
+
 export function aiTeamView(c){
  const {model:m,state:s}=c,zh=c.locale!=="en",team=normaliseAiTeamState(s.aiTeam),agents=listAgents();
  s.aiTeam=team;
  const selected=agents.find(a=>a.id===team.activeAgentId)||agents[0],run=activeAgentRun(s,selected.id),t=x=>displayRecordText(x,c.locale);
- const prepared=run?.items.filter(x=>x.state!=="completed").length||0,completed=run?.items.filter(x=>x.state==="completed").length||0;
- let out='<section class="brief-header"><div class="suite-eyebrow">'+(zh?'STRIDEBRAIN · AI 營運團隊':'STRIDEBRAIN · AI OPERATING TEAM')+'</div>'+
-  '<h1>'+(zh?'不只回答。<br>開始把事情做完。':'Not just answers.<br>Move work forward.')+'</h1>'+
-  '<p>'+(zh?'三位 AI 同事共用同一套權限、證據與稽核規則。它們先查資料與準備工作，需要你決定的部分才交回來。':'Three AI teammates share one permission, evidence and audit runtime. They investigate and prepare first, then return only the decisions that need you.')+'</p></section>';
-
- out+='<section class="section sb-agent-roster"><div class="section-head"><div><h2>'+(zh?'我的 AI 團隊':'My AI team')+'</h2><p>'+(zh?'選一位 AI 同事開始工作；每位都使用同一套受控執行規則。':'Choose a teammate to work; every agent uses the same controlled execution rules.')+'</p></div></div><div class="sb-agent-grid">'+
-  agents.map(agent=>'<button type="button" class="sb-agent-card '+(selected.id===agent.id?'active':'')+'" data-action="agentSelect" data-value="'+e(agent.id)+'" aria-pressed="'+String(selected.id===agent.id)+'"><div class="suite-eyebrow">'+(zh?'已啟用 · ':'ACTIVE · ')+e(agent.version)+'</div><h3>'+e(name(agent,zh))+'</h3><p>'+e(desc(agent,zh))+'</p><span class="tag">'+(zh?'共用 Agent Runtime':'Shared Agent Runtime')+'</span></button>').join('')+
-  '</div></section>';
-
- out+='<section class="section sb-agent-control"><div><div class="suite-eyebrow">'+e(name(selected,zh))+' · '+(zh?'今日工作':'TODAY')+'</div><h2>'+(run?(zh?'已準備 '+run.items.length+' 項工作':'Prepared '+run.items.length+' actions'):(zh?'讓這位 AI 同事先替你跑一輪':'Let this teammate do the first pass'))+'</h2>'+
-  '<p>'+e(run?.basis||(zh?'只使用目前示範工作區的結構化紀錄與可追溯來源。':'Uses only current demo workspace records and traceable evidence.'))+'</p></div>'+
-  button(run?(zh?'重新整理工作 ↻':'Refresh work ↻'):(zh?'開始工作 ↗':'Start work ↗'),'agentRun',selected.id,'button-primary')+'</section>';
-
- if(run){
-  if(run.modelDriven&&run.timeline?.length)out+='<section class="section sb-agent-timeline"><div class="suite-eyebrow">'+(zh?'AI 執行軌跡 · '+e(run.modelLabel||''):'AI WORK TRACE · '+e(run.modelLabel||''))+'</div><h2>'+(zh?'這位 AI 同事剛才做了什麼':'What the AI teammate just did')+'</h2><div class="sb-agent-timeline-list">'+run.timeline.map((step,index)=>'<div><span>0'+(index+1)+'</span><strong>'+e(step.label)+'</strong><small>'+e(step.tool)+'</small></div>').join('')+'</div><p class="secondary-note">'+(zh?'這些步驟只讀取資料與準備提案；尚未執行任何外部動作。':'These steps only read data and prepared proposals; no external action was executed.')+'</p></section>';
-  out+='<div class="operational-cards"><div class="metric-card"><small>'+(zh?'待確認':'Waiting')+'</small><strong>'+prepared+'</strong><span>'+(zh?'需要你的決定':'need your decision')+'</span></div><div class="metric-card"><small>'+(zh?'已完成':'Completed')+'</small><strong>'+completed+'</strong><span>'+(zh?'內部示範待辦':'internal demo tasks')+'</span></div><div class="metric-card"><small>'+(zh?'上次執行':'Last run')+'</small><strong>'+e(formatTime(run.createdAt,zh))+'</strong><span>'+e(run.asOf||'')+'</span></div></div>';
-
-  out+='<section class="section"><h2>'+(zh?'等你確認的工作':'Work waiting for you')+'</h2><div class="sb-agent-action-list">'+run.items.map((item,index)=>{
-   const pr=m.project(item.projectId),done=item.state==="completed",draft=zh?item.draftZh:item.draftEn;
-   const draftLabel=item.draftKind==="review"?(zh?'內部複核摘要':'INTERNAL REVIEW NOTE'):(zh?'訊息草稿 · 尚未送出':'MESSAGE DRAFT · NOT SENT');
-   return '<article class="sb-agent-action '+(done?'done':'')+'"><div class="sb-agent-action-head"><span>0'+(index+1)+'</span><div><strong>'+e(t(pr?.name||item.projectName))+' · '+e(t(item.title))+'</strong><small>'+e(item.recordId)+' · '+e(item.contact)+' · '+e(item.dueDate||'—')+'</small></div><b>'+(done?(zh?'已完成 ✓':'Completed ✓'):(zh?'待你批准':'Approval needed'))+'</b></div>'+
-    '<p>'+(zh?'AI 同事已完成：查核紀錄、整理依據、準備下一步。':'AI teammate completed: record review, evidence preparation and next-step preparation.')+'</p>'+
-    '<div class="sb-agent-draft"><small>'+draftLabel+'</small><p>'+e(draft)+'</p></div>'+
-    '<div class="sb-agent-sources">'+item.sourceIds.slice(0,8).map(source).join(' ')+'</div>'+
-    '<div class="action-stack">'+(done?'<span class="notice green">'+e((zh?'已建立追蹤待辦 ':'Created follow-up task ')+item.generatedTaskId)+'</span>':button(zh?'批准並建立追蹤待辦 ↗':'Approve & create follow-up task ↗','agentExecute',item.id,'button-primary'))+'</div></article>';
-  }).join('')+'</div></section>';
-
-  out+='<section class="section panel"><div class="suite-eyebrow">'+(zh?'共用權限與稽核層':'SHARED PERMISSION & AUDIT LAYER')+'</div><h3>'+e(name(selected,zh))+(zh?'目前能做什麼？':' permissions')+'</h3><div class="sb-permission-grid"><div><strong>'+(zh?'自動允許':'Automatic')+'</strong><p>'+e(permissionText(selected,"automatic",zh))+'</p></div><div><strong>'+(zh?'需要批准':'Human approval')+'</strong><p>'+e(permissionText(selected,"approval",zh))+'</p></div><div><strong>'+(zh?'目前禁止':'Blocked')+'</strong><p>'+e(permissionText(selected,"blocked",zh))+'</p></div></div></section>';
+ const cts=counts(run);
+ let out='<section class="sb-team-hero"><div><div class="suite-eyebrow">'+(zh?'STRIDEBRAIN · AI 營運團隊':'STRIDEBRAIN · AI OPERATING TEAM')+'</div><h1>'+(zh?'把需要你決定的事<br>準備好再交給你':'Bring you decisions,<br>not busywork')+'</h1><p>'+(zh?'AI 同事先查資料、比對依據、準備下一步。需要判斷或執行的地方，才交回給你。':'AI teammates inspect records, verify evidence and prepare the next step. You only step in where judgment or approval is required.')+'</p></div><div class="sb-team-hero-badge"><span>3</span><small>'+(zh?'位 AI 同事<br>受控執行':'AI teammates<br>controlled execution')+'</small></div></section>';
+ out+='<section class="section sb-agent-roster"><div class="section-head"><div><h2>'+(zh?'我的 AI 團隊':'My AI team')+'</h2><p>'+(zh?'選一位同事開始工作。':'Choose a teammate to delegate work to.')+'</p></div></div><div class="sb-agent-grid">'+agents.map(agent=>{const ar=runFor(team,agent.id),active=selected.id===agent.id;return '<button type="button" class="sb-agent-card '+(active?'active':'')+'" data-action="agentSelect" data-value="'+e(agent.id)+'" aria-pressed="'+String(active)+'"><div class="sb-agent-card-top"><span class="sb-agent-dot '+(ar?'ready':'idle')+'"></span><span>'+e(name(agent,zh))+'</span><small>'+e(agent.version)+'</small></div><p>'+e(desc(agent,zh))+'</p><div class="sb-agent-card-status"><strong>'+e(compactStatus(ar,zh))+'</strong>'+(ar?'<span>'+e(formatTime(ar.createdAt,zh))+'</span>':'')+'</div></button>';}).join('')+'</div></section>';
+ if(!run){
+  out+='<section class="sb-delegate-card"><div><div class="suite-eyebrow">'+e(name(selected,zh))+'</div><h2>'+(zh?'把今天的巡檢交給它':'Delegate today’s review')+'</h2><p>'+e(desc(selected,zh))+'</p><div class="sb-safe-inline"><span>✓</span>'+(zh?'先查資料與準備工作，不會自動對外發訊或核准商務動作。':'Reviews and prepares first. It will not send externally or approve business actions on its own.')+'</div></div>'+button(zh?'開始今日巡檢 ↗':'Start today’s review ↗','agentRun',selected.id,'button-primary')+'</section>';
+  out+='<section class="sb-permission-compact">'+permissions(zh).map((x,i)=>'<div><span>0'+(i+1)+'</span><strong>'+x.title+'</strong><p>'+x.text+'</p></div>').join('')+'</section>';
+  return out;
  }
+ out+='<section class="sb-run-summary"><div><div class="suite-eyebrow">'+(run.modelDriven?(zh?'AI 巡檢完成':'AI REVIEW COMPLETE'):(zh?'工作整理完成':'WORK REVIEW COMPLETE'))+'</div><h2>'+(zh?cts.waiting+' 項需要你確認':cts.waiting+' item'+(cts.waiting===1?'':'s')+' need your review')+'</h2><p>'+e(run.basis||'')+'</p></div><div class="sb-run-summary-metrics"><div><strong>'+cts.waiting+'</strong><span>'+(zh?'待你確認':'awaiting you')+'</span></div><div><strong>'+cts.done+'</strong><span>'+(zh?'已完成':'completed')+'</span></div><div><strong>0</strong><span>'+(zh?'對外動作':'external actions')+'</span></div></div></section>';
+ out+='<section class="section sb-decision-section"><div class="section-head"><div><div class="suite-eyebrow">'+(zh?'下一步由你決定':'YOUR DECISIONS')+'</div><h2>'+(zh?'待你確認的工作':'Work waiting for you')+'</h2><p>'+(zh?'AI 已經把背景、依據與建議下一步整理好。':'The AI has already organized the context, evidence and proposed next step.')+'</p></div></div><div class="sb-decision-list">'+run.items.map((item,index)=>{const pr=m.project(item.projectId),done=item.state==="completed",draft=zh?item.draftZh:item.draftEn;const rationale=item.rationale||(zh?'根據目前記錄，這項工作值得先確認狀態與下一步。':'Based on the current records, this item is worth confirming before work moves on.');return '<article class="sb-decision-card '+(done?'done':'')+'"><div class="sb-decision-head"><div class="sb-decision-index">0'+(index+1)+'</div><div class="sb-decision-title"><span>'+e(t(pr?.name||item.projectName))+'</span><h3>'+e(t(item.title))+'</h3><small>'+e(item.recordId)+' · '+e(item.contact)+'</small></div><div class="sb-decision-state">'+(done?(zh?'已完成 ✓':'Completed ✓'):(zh?'待你確認':'Needs review'))+'</div></div><div class="sb-decision-body"><div><small class="sb-label">'+(zh?'為什麼現在要看':'WHY THIS MATTERS')+'</small><p>'+e(rationale)+'</p></div><div><small class="sb-label">'+(zh?'查核依據':'EVIDENCE')+'</small><div class="sb-agent-sources">'+item.sourceIds.slice(0,8).map(source).join(' ')+'</div></div></div><details class="sb-draft-details"><summary>'+(zh?'查看 AI 準備的草稿':'Review prepared draft')+' <span>＋</span></summary><div><small class="sb-label">'+(item.draftKind==="review"?(zh?'內部複核摘要':'INTERNAL REVIEW NOTE'):(zh?'訊息草稿 · 尚未送出':'MESSAGE DRAFT · NOT SENT'))+'</small><p>'+e(draft)+'</p></div></details><div class="sb-decision-actions">'+(done?'<span class="notice green">'+e((zh?'已建立追蹤待辦 ':'Created follow-up task ')+item.generatedTaskId)+'</span>':button(zh?'批准並建立待辦 ↗':'Approve & create task ↗','agentExecute',item.id,'button-primary'))+'</div></article>';}).join('')+'</div></section>';
+ if(run.modelDriven&&run.timeline?.length){
+  out+='<details class="section sb-agent-timeline"><summary><div><div class="suite-eyebrow">'+(zh?'AI 巡檢過程':'AI REVIEW TRACE')+'</div><h2>'+(zh?'查看 AI 剛才做了什麼':'See what the AI just checked')+'</h2><p>'+(zh?'預設收起，避免技術細節干擾你的決策。':'Collapsed by default so technical detail does not get in the way of decisions.')+'</p></div><span class="sb-trace-toggle">＋</span></summary><div class="sb-agent-timeline-list">'+run.timeline.map((step,index)=>'<div><span>0'+(index+1)+'</span><strong>'+e(humanStep(step,zh))+'</strong><small>'+e(step.tool)+'</small></div>').join('')+'</div><p class="secondary-note">'+(zh?'這些步驟只讀取資料與準備提案；尚未執行任何外部動作。':'These steps only read data and prepared proposals; no external action was executed.')+'</p></details>';
+ }
+ out+='<section class="sb-permission-compact">'+permissions(zh).map((x,i)=>'<div><span>0'+(i+1)+'</span><strong>'+x.title+'</strong><p>'+x.text+'</p></div>').join('')+'</section>';
  return out;
 }
