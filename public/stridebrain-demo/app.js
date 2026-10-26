@@ -83,12 +83,13 @@ let copilotMode="checking",copilotOperatorToken="",copilotConnected=false,copilo
 let copilotAccess={state:"checking",allowedModelIds:[]},sessionRefreshRun=0,sessionRefreshPromise=null;
 let selectedModelId=DEFAULT_MODEL_ID,copilotModelMenuOpen=false,copilotDraft="";
 let emailConnector={state:"unknown",configured:false,roleAllowed:false,sender:null,provider:null};
+let messageConnections={state:"unknown",organizationId:"demo-workspace",storage:"pilot-env",connections:[]};
 let view={page:"overview",projectId:null,projectDetail:false,docId:null,quoteId:null,chat:[],search:"",filter:"all",pageIndex:0,flowStep:null,agentDecisionId:null,emailDecisionId:null};
 function toast(message){
  const el=$("toast");el.textContent=message;el.classList.add("visible");
  if(toastHandle)clearTimeout(toastHandle);toastHandle=setTimeout(()=>el.classList.remove("visible"),3500);
 }
-function context(){return {model,pack,state,view,history:historyData,industryEvidence,documentSession,locale:interfaceLocale,emailConnector,staffAccess:new URLSearchParams(location.search).has("staff"),copilotSession:{access:copilotAccess.state,allowedModelIds:copilotAccess.allowedModelIds,mode:copilotMode,guest:copilotGuest,connected:copilotConnected,busy:copilotBusy,selectedModelId,modelMenuOpen:copilotModelMenuOpen,draft:copilotDraft}};}
+function context(){return {model,pack,state,view,history:historyData,industryEvidence,documentSession,locale:interfaceLocale,emailConnector,messageConnections,staffAccess:new URLSearchParams(location.search).has("staff"),copilotSession:{access:copilotAccess.state,allowedModelIds:copilotAccess.allowedModelIds,mode:copilotMode,guest:copilotGuest,connected:copilotConnected,busy:copilotBusy,selectedModelId,modelMenuOpen:copilotModelMenuOpen,draft:copilotDraft}};}
 const GUEST_CHAT_PREFIX="stridebrain-guest-chat-v1:";
 function guestChatKey(industry){return GUEST_CHAT_PREFIX+(copilotGuest?"guest:":"staff:")+guestChatScope+":"+industry;}
 function saveGuestChat(){
@@ -385,13 +386,18 @@ async function runModelDrivenAgentPlan(agentId){
   return recordModelAgentPlan(state,model,payload);
  }catch{return {ok:false,reason:interfaceLocale==="en"?"The AI teammate planning request could not be completed.":"AI 同事目前無法完成規劃請求。"};}
 }
-async function refreshEmailConnector(){
- emailConnector={...emailConnector,state:"checking"};render();
+async function refreshMessageConnections(){
+ messageConnections={...messageConnections,state:"checking"};render();
  try{
-  const response=await fetch("/api/stridebrain-demo/email/status",{method:"GET",cache:"no-store",credentials:"same-origin",headers:{Accept:"application/json"}});
+  const response=await fetch("/api/stridebrain-demo/connections/status",{method:"GET",cache:"no-store",credentials:"same-origin",headers:{Accept:"application/json"}});
   const payload=await response.json().catch(()=>null);
-  emailConnector={state:response.ok?"ready":"error",configured:payload?.configured===true,roleAllowed:payload?.roleAllowed===true,sender:payload?.sender||null,provider:payload?.provider||null,limits:payload?.limits||null};
- }catch{emailConnector={state:"error",configured:false,roleAllowed:false,sender:null,provider:null};}
+  messageConnections={state:response.ok?"ready":"error",organizationId:payload?.organizationId||"demo-workspace",storage:payload?.storage||"pilot-env",connections:Array.isArray(payload?.connections)?payload.connections:[]};
+  const microsoft=messageConnections.connections.find(x=>x.id==="microsoft365")||null;
+  emailConnector={state:messageConnections.state,configured:microsoft?.configured===true,roleAllowed:microsoft?.roleAllowed===true,sender:microsoft?.sender||null,provider:microsoft?.id||null,limits:microsoft?.limits||null};
+ }catch{
+  messageConnections={state:"error",organizationId:"demo-workspace",storage:"pilot-env",connections:[]};
+  emailConnector={state:"error",configured:false,roleAllowed:false,sender:null,provider:null};
+ }
  render();
 }
 async function perform(el){
@@ -416,8 +422,9 @@ async function perform(el){
   if(result.ok){save();render();toast(interfaceLocale==="en"?"Approved action completed and follow-up task created.":"已批准並完成動作，追蹤待辦已建立。");}
   else toast(result.reason);return;
  }
+ if(action==="connectionsRefresh"){await refreshMessageConnections();return;}
  if(action==="agentEmailPrepare"){
-  view.emailDecisionId=value||id;view.agentDecisionId=value||id;await refreshEmailConnector();return;
+  view.emailDecisionId=value||id;view.agentDecisionId=value||id;await refreshMessageConnections();return;
  }
  if(action==="agentEmailCancel"){view.emailDecisionId=null;render();return;}
  if(action==="agentEmailSend"){
@@ -427,8 +434,8 @@ async function perform(el){
   const to=box.querySelector('[name="email-to"]')?.value||"",subject=box.querySelector('[name="email-subject"]')?.value||"",body=box.querySelector('[name="email-body"]')?.value||"";
   const buttonEl=box.querySelector('[data-action="agentEmailSend"]');if(buttonEl)buttonEl.disabled=true;
   try{
-   const response=await fetch("/api/stridebrain-demo/email/send",{method:"POST",cache:"no-store",credentials:"same-origin",headers:{"Content-Type":"application/json","Accept":"application/json"},
-    body:JSON.stringify({to,subject,body,actionId:item.id,projectId:item.projectId,recordId:item.recordId})});
+   const response=await fetch("/api/stridebrain-demo/messages/send",{method:"POST",cache:"no-store",credentials:"same-origin",headers:{"Content-Type":"application/json","Accept":"application/json"},
+    body:JSON.stringify({providerId:"microsoft365",channel:"email",to,subject,body,actionId:item.id,projectId:item.projectId,recordId:item.recordId})});
    const payload=await response.json().catch(()=>null);
    if(!response.ok){toast(interfaceLocale==="en"?"Email was not sent ("+(payload?.code||response.status)+").":"郵件未寄出（"+(payload?.code||response.status)+"）。");render();return;}
    recordEmailReceipt(state,item.id,payload.receipt);view.emailDecisionId=null;save();render();
@@ -446,7 +453,7 @@ async function perform(el){
   await ask(el.dataset.prompt||project.id);return;
  }
  if(action==="language"){interfaceLocale=value==="en"?"en":"zh-TW";try{sessionStorage.setItem("stridebrain-interface-locale",interfaceLocale);}catch{}updateShell();render();return;}
- if(action==="nav"){copilotModelMenuOpen=false;view.projectDetail=false;setPage(value);}
+ if(action==="nav"){copilotModelMenuOpen=false;view.projectDetail=false;setPage(value);if(value==="team"&&messageConnections.state==="unknown")await refreshMessageConnections();}
  else if(action==="modelMenu"){
    if(copilotBusy)return;
    copilotModelMenuOpen=!copilotModelMenuOpen;render();

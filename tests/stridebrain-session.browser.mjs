@@ -20,11 +20,15 @@ const server=https.createServer({key:fs.readFileSync(tmp+'/key.pem'),cert:fs.rea
  requests.push({path:pathname,referer:req.headers.referer||''});
  const cookies=Object.fromEntries((req.headers.cookie||'').split(';').filter(Boolean).map(x=>{const [k,...v]=x.trim().split('=');return [k,v.join('=')];}));
  const json=(data,status=200)=>{res.writeHead(status,{'Content-Type':'application/json','Cache-Control':'no-store'});res.end(JSON.stringify(data));};
- if(pathname==='/api/stridebrain-demo/email/status'){
-  return json({enabled:true,configured:true,provider:'microsoft-graph',sender:'ops@example.com',roleAllowed:false,limits:{singleRecipient:true,attachments:false,bcc:false,bulk:false,requiresApproval:true}});
+ if(pathname==='/api/stridebrain-demo/connections/status'){
+  return json({organizationId:'demo-workspace',storage:'pilot-env',activeSession:true,connections:[
+   {id:'microsoft365',label:'Microsoft 365',channel:'email',implemented:true,configured:true,enabled:true,roleAllowed:false,sender:'ops@example.com',limits:{singleRecipient:true,attachments:false,bcc:false,bulk:false,requiresApproval:true}},
+   {id:'line',label:'LINE Official Account',channel:'line',implemented:false,configured:false,enabled:false,roleAllowed:false,sender:null},
+   {id:'google-workspace',label:'Google Workspace',channel:'email',implemented:false,configured:false,enabled:false,roleAllowed:false,sender:null}
+  ]});
  }
- if(pathname==='/api/stridebrain-demo/email/send'){
-  emailSendRequests++;return json({code:'EMAIL_STAFF_ONLY'},403);
+ if(pathname==='/api/stridebrain-demo/messages/send'){
+  emailSendRequests++;return json({code:'MESSAGE_STAFF_ONLY'},403);
  }
  if(pathname==='/api/stridebrain-demo/copilot/status'){
   if(slow)await new Promise(r=>setTimeout(r,800));
@@ -101,6 +105,10 @@ try{
  assert.equal(await page.locator('#nav-main > button').count(),7);
  await page.click('#nav-main [data-value="team"]');await page.waitForSelector('.sb-delegate-card');
  assert.match(await page.locator('#main').innerText(),/AI 團隊|AI 營運團隊/);
+ await page.locator('.sb-connections-panel summary').click();
+ assert.equal(await page.locator('.sb-connection-card').count(),3);
+ assert.match(await page.locator('.sb-connections-panel').innerText(),/LINE Official Account/);
+ assert.match(await page.locator('.sb-connections-panel').innerText(),/聯絡人身分/);
  assert.equal(await page.locator('.sb-decision-card').count(),0);
  await page.click('[data-action="agentRun"]');await page.waitForSelector('.sb-decision-card');
  assert.equal(agentPlans.length,1);

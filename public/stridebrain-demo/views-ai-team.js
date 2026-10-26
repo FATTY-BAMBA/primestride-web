@@ -2,6 +2,7 @@ import {escapeHtml as e} from "./core-model.js";
 import {button,source} from "./ui-shared.js";
 import {displayRecordText} from "./record-locale.js";
 import {listAgents,activeAgentRun,normaliseAiTeamState} from "./ai-team.js";
+import {buildContactChannelRegistry} from "./contact-channels.js";
 
 const formatTime=(value,zh)=>{if(!value)return "—";try{return new Date(value).toLocaleString(zh?"zh-TW":"en-TW",{hour12:false,month:"numeric",day:"numeric",hour:"2-digit",minute:"2-digit"});}catch{return value;}};
 const name=(agent,zh)=>zh?agent.nameZh:agent.nameEn;
@@ -34,6 +35,23 @@ function emailComposer(c,item,project,draft,receipt,zh){
   '<div class="sb-email-actions">'+button(zh?'取消':'Cancel','agentEmailCancel',item.id,'button-outline')+button(zh?'批准並寄出 ↗':'Approve & send ↗','agentEmailSend',item.id,'button-primary')+'</div></div>';
 }
 
+function connectionsPanel(c,zh){
+ const fallback=[
+  {id:"microsoft365",label:"Microsoft 365",channel:"email",implemented:true,configured:false,roleAllowed:false,sender:null},
+  {id:"line",label:"LINE Official Account",channel:"line",implemented:false,configured:false,roleAllowed:false,sender:null},
+  {id:"google-workspace",label:"Google Workspace",channel:"email",implemented:false,configured:false,roleAllowed:false,sender:null}
+ ];
+ const data=c.messageConnections?.connections?.length?c.messageConnections.connections:fallback;
+ const registry=buildContactChannelRegistry(c.model.seed),linked=registry.reduce((n,x)=>n+x.channels.filter(y=>y.status==="linked").length,0);
+ const cards=data.map(conn=>{
+  const connected=conn.configured===true,planned=conn.implemented!==true;
+  const status=connected?(zh?"已連線":"Connected"):planned?(zh?"下一階段":"Planned next"):(zh?"尚未設定":"Not configured");
+  const detail=connected?(conn.sender||conn.channel):(conn.id==="line"?(zh?"LINE 官方帳號 + Messaging API":"LINE Official Account + Messaging API"):(conn.id==="google-workspace"?(zh?"Gmail / 公司網域信箱":"Gmail / company domain"):(zh?"專用 Microsoft 365 寄件信箱":"Dedicated Microsoft 365 sender")));
+  return '<article class="sb-connection-card '+(connected?'connected ':'')+(conn.id==="line"?'priority':'')+'"><div><span class="sb-connection-dot"></span><strong>'+e(conn.label)+'</strong></div><small>'+e(status)+'</small><p>'+e(detail)+'</p></article>';
+ }).join('');
+ return '<details class="sb-connections-panel"><summary><div><div class="suite-eyebrow">'+(zh?'連線服務':'CONNECTED CHANNELS')+'</div><h2>'+(zh?'讓 AI 同事接進企業原本使用的工具':'Use the channels your business already works in')+'</h2><p>'+(zh?'Microsoft 365、LINE、Google Workspace 共用同一套批准與稽核規則。':'Microsoft 365, LINE and Google Workspace share the same approval and audit contract.')+'</p></div><span>＋</span></summary><div class="sb-connections-grid">'+cards+'</div><div class="sb-identity-note"><strong>'+(zh?'聯絡人身分':'Contact identities')+'</strong><span>'+registry.length+' '+(zh?'位聯絡人 · ':'contacts · ')+linked+' '+(zh?'個已驗證外部身分':'verified external identities')+'</span><p>'+(zh?'目前未連結的 email / LINE 身分會保持空白，不會從姓名推測或自動產生。':'Unlinked email / LINE identities stay empty; StrideBrain does not infer or invent them from names.')+'</p></div><div class="sb-connections-foot"><small>'+(zh?'示範階段的連線設定目前由伺服器環境管理；正式多租戶版本會改成每家公司獨立連線與加密憑證。':'Pilot connections are currently server-environment backed. Production multi-tenant connections will be organization-scoped with encrypted credentials.')+'</small>'+button(zh?'重新檢查連線 ↻':'Refresh connections ↻','connectionsRefresh','','button-outline')+'</div></details>';
+}
+
 export function aiTeamView(c){
  const {model:m,state:s}=c,zh=c.locale!=="en",team=normaliseAiTeamState(s.aiTeam),agents=listAgents();
  s.aiTeam=team;
@@ -44,6 +62,7 @@ export function aiTeamView(c){
  if(!run){
   out+='<section class="sb-delegate-card"><div><div class="suite-eyebrow">'+e(name(selected,zh))+'</div><h2>'+(zh?'把今天的巡檢交給它':'Delegate today’s review')+'</h2><p>'+e(desc(selected,zh))+'</p><div class="sb-safe-inline"><span>✓</span>'+(zh?'先查資料與準備工作，不會自動對外發訊或核准商務動作。':'Reviews and prepares first. It will not send externally or approve business actions on its own.')+'</div></div>'+button(zh?'開始今日巡檢 ↗':'Start today’s review ↗','agentRun',selected.id,'button-primary')+'</section>';
   out+='<section class="sb-permission-compact">'+permissions(zh).map((x,i)=>'<div><span>0'+(i+1)+'</span><strong>'+x.title+'</strong><p>'+x.text+'</p></div>').join('')+'</section>';
+  out+=connectionsPanel(c,zh);
   return out;
  }
  const pendingPreview=run.items.filter(x=>x.state!=="completed").slice(0,3);
@@ -53,5 +72,6 @@ export function aiTeamView(c){
   out+='<details class="section sb-agent-timeline"><summary><div><div class="suite-eyebrow">'+(zh?'AI 巡檢過程':'AI REVIEW TRACE')+'</div><h2>'+(zh?'查看 AI 剛才做了什麼':'See what the AI just checked')+'</h2><p>'+(zh?'預設收起，避免技術細節干擾你的決策。':'Collapsed by default so technical detail does not get in the way of decisions.')+'</p></div><span class="sb-trace-toggle">＋</span></summary><div class="sb-agent-timeline-list">'+run.timeline.map((step,index)=>'<div><span>0'+(index+1)+'</span><strong>'+e(humanStep(step,zh))+'</strong><small>'+e(step.tool)+'</small></div>').join('')+'</div><p class="secondary-note">'+(zh?'這些步驟只讀取資料與準備提案；尚未執行任何外部動作。':'These steps only read data and prepared proposals; no external action was executed.')+'</p></details>';
  }
  out+='<section class="sb-permission-compact">'+permissions(zh).map((x,i)=>'<div><span>0'+(i+1)+'</span><strong>'+x.title+'</strong><p>'+x.text+'</p></div>').join('')+'</section>';
+ out+=connectionsPanel(c,zh);
  return out;
 }
