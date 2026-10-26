@@ -109,6 +109,7 @@ try{
  assert.equal(await page.locator('.sb-connection-card').count(),3);
  assert.match(await page.locator('.sb-connections-panel').innerText(),/LINE Official Account/);
  assert.match(await page.locator('.sb-connections-panel').innerText(),/聯絡人身分/);
+ assert.equal(await page.locator('[data-action="connectionHealth"]').count(),0);
  assert.equal(await page.locator('.sb-decision-card').count(),0);
  await page.click('[data-action="agentRun"]');await page.waitForSelector('.sb-decision-card');
  assert.equal(agentPlans.length,1);

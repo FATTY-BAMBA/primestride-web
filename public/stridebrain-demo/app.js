@@ -83,7 +83,7 @@ let copilotMode="checking",copilotOperatorToken="",copilotConnected=false,copilo
 let copilotAccess={state:"checking",allowedModelIds:[]},sessionRefreshRun=0,sessionRefreshPromise=null;
 let selectedModelId=DEFAULT_MODEL_ID,copilotModelMenuOpen=false,copilotDraft="";
 let emailConnector={state:"unknown",configured:false,roleAllowed:false,sender:null,provider:null};
-let messageConnections={state:"unknown",organizationId:"demo-workspace",storage:"pilot-env",connections:[]};
+let messageConnections={state:"unknown",organizationId:"demo-workspace",storage:"pilot-env",connections:[],healthByProvider:{}};
 let view={page:"overview",projectId:null,projectDetail:false,docId:null,quoteId:null,chat:[],search:"",filter:"all",pageIndex:0,flowStep:null,agentDecisionId:null,emailDecisionId:null};
 function toast(message){
  const el=$("toast");el.textContent=message;el.classList.add("visible");
@@ -391,11 +391,11 @@ async function refreshMessageConnections(){
  try{
   const response=await fetch("/api/stridebrain-demo/connections/status",{method:"GET",cache:"no-store",credentials:"same-origin",headers:{Accept:"application/json"}});
   const payload=await response.json().catch(()=>null);
-  messageConnections={state:response.ok?"ready":"error",organizationId:payload?.organizationId||"demo-workspace",storage:payload?.storage||"pilot-env",connections:Array.isArray(payload?.connections)?payload.connections:[]};
+  messageConnections={state:response.ok?"ready":"error",organizationId:payload?.organizationId||"demo-workspace",storage:payload?.storage||"pilot-env",connections:Array.isArray(payload?.connections)?payload.connections:[],healthByProvider:messageConnections.healthByProvider||{}};
   const microsoft=messageConnections.connections.find(x=>x.id==="microsoft365")||null;
   emailConnector={state:messageConnections.state,configured:microsoft?.configured===true,roleAllowed:microsoft?.roleAllowed===true,sender:microsoft?.sender||null,provider:microsoft?.id||null,limits:microsoft?.limits||null};
  }catch{
-  messageConnections={state:"error",organizationId:"demo-workspace",storage:"pilot-env",connections:[]};
+  messageConnections={state:"error",organizationId:"demo-workspace",storage:"pilot-env",connections:[],healthByProvider:messageConnections.healthByProvider||{}};
   emailConnector={state:"error",configured:false,roleAllowed:false,sender:null,provider:null};
  }
  render();
@@ -423,6 +423,16 @@ async function perform(el){
   else toast(result.reason);return;
  }
  if(action==="connectionsRefresh"){await refreshMessageConnections();return;}
+ if(action==="connectionHealth"){
+  const providerId=value||id;
+  messageConnections.healthByProvider={...(messageConnections.healthByProvider||{}),[providerId]:{state:"checking"}};render();
+  try{
+   const response=await fetch("/api/stridebrain-demo/connections/health",{method:"POST",cache:"no-store",credentials:"same-origin",headers:{"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify({providerId})});
+   const payload=await response.json().catch(()=>null);
+   messageConnections.healthByProvider={...(messageConnections.healthByProvider||{}),[providerId]:response.ok?{state:"ready",...payload.health}:{state:"error",code:payload?.code||response.status}};
+  }catch{messageConnections.healthByProvider={...(messageConnections.healthByProvider||{}),[providerId]:{state:"error",code:"CONNECTION_HEALTH_FAILED"}};}
+  render();return;
+ }
  if(action==="agentEmailPrepare"){
   view.emailDecisionId=value||id;view.agentDecisionId=value||id;await refreshMessageConnections();return;
  }

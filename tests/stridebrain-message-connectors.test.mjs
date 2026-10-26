@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import {register} from "node:module";
 import {readFileSync} from "node:fs";
 register("./helpers/stridebrain-json-loader.mjs",import.meta.url);
-const {communicationConnectionsSnapshot,messageConnectorStatus,sendApprovedMessage}=await import("../src/lib/stridebrain-demo/message-connectors.js");
+const {communicationConnectionsSnapshot,messageConnectorStatus,checkMessageConnectorHealth,sendApprovedMessage}=await import("../src/lib/stridebrain-demo/message-connectors.js");
 const {buildContactChannelRegistry,linkedChannelFor}=await import("../public/stridebrain-demo/contact-channels.js");
 
 const env={
@@ -54,4 +54,13 @@ test("contact-channel registry never invents email or LINE identities",()=>{
  assert.ok(registry.length>0);
  assert.ok(registry.every(c=>c.channels.every(ch=>ch.status==="unlinked"&&ch.externalIdentity===null&&ch.verifiedAt===null)));
  assert.equal(linkedChannelFor(registry,{contactId:registry[0].contactId,channel:"line"}),null);
+});
+
+test("unimplemented connector health fails closed without provider calls",async()=>{
+ let calls=0;
+ const health=await checkMessageConnectorHealth({providerId:"line",role:"staff",env,requestFn:async()=>{calls++;throw Error("must not call");}});
+ assert.equal(health.known,true);
+ assert.equal(health.implemented,false);
+ assert.equal(health.ready,false);
+ assert.equal(calls,0);
 });

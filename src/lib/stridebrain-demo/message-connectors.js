@@ -1,4 +1,4 @@
-import {emailConnectorStatus,sendControlledEmail} from "./email-connector.js";
+import {emailConnectorStatus,emailConnectorHealth,sendControlledEmail} from "./email-connector.js";
 
 const PROVIDERS=Object.freeze({
  "microsoft365":Object.freeze({id:"microsoft365",label:"Microsoft 365",channel:"email",implemented:true}),
@@ -17,6 +17,15 @@ export function messageConnectorStatus({providerId,role,env=process.env}={}){
 }
 export function communicationConnectionsSnapshot({role,env=process.env,organizationId="demo-workspace"}={}){
  return {organizationId,storage:"pilot-env",connections:listMessageConnectors().map(p=>messageConnectorStatus({providerId:p.id,role,env}))};
+}
+export async function checkMessageConnectorHealth({providerId,role,env=process.env,requestFn=fetch,now=Date.now()}={}){
+ const provider=PROVIDERS[providerId];if(!provider)return {providerId,known:false,implemented:false,ready:false};
+ if(!provider.implemented)return {...provider,known:true,configured:false,ready:false,checks:{implementation:{ok:false}}};
+ if(providerId==="microsoft365"){
+  const health=await emailConnectorHealth({env,role,requestFn,now});
+  return {...provider,known:true,...health};
+ }
+ return {...provider,known:true,configured:false,ready:false};
 }
 export async function sendApprovedMessage({providerId,channel,sessionScope,input,env=process.env,requestFn=fetch,now=Date.now()}={}){
  const provider=PROVIDERS[providerId];if(!provider)throw Error("MESSAGE_PROVIDER_UNKNOWN");

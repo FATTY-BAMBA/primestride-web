@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-const {emailConnectorStatus,validateEmailRequest,sendControlledEmail}=await import("../src/lib/stridebrain-demo/email-connector.js");
+const {emailConnectorStatus,emailConnectorHealth,validateEmailRequest,sendControlledEmail}=await import("../src/lib/stridebrain-demo/email-connector.js");
 
 const env={
  STRIDEBRAIN_EMAIL_ENABLED:"true",
@@ -66,4 +66,41 @@ test("provider failure clears pending idempotency reservation for a later retry"
  await assert.rejects(()=>sendControlledEmail({sessionScope:"scope2",input:{...input,actionId:"decision_retry1"},env,requestFn}),/EMAIL_PROVIDER_REJECTED/);
  assert.equal(graphCalls,1);
  assert.equal([...store.values()].includes("pending"),false);
+});
+
+test("health check separates credential readiness from proven send scope",async()=>{
+ const store=new Map();
+ const requestFn=async(url,options={})=>{
+  if(url==="https://redis.example.com/pipeline"){
+   const commands=JSON.parse(options.body),results=commands.map(cmd=>{const [op,key,...args]=cmd;
+    if(op==="GET")return {result:store.get(key)??null};
+    if(op==="SET"){store.set(key,args[0]);return {result:"OK"};}
+    if(op==="DEL"){store.delete(key);return {result:1};}
+    return {result:null};
+   });
+   return {ok:true,json:async()=>results};
+  }
+  if(url.includes("login.microsoftonline.com"))return {ok:true,json:async()=>({access_token:"token"})};
+  if(url.includes("graph.microsoft.com"))return {ok:true,status:202};
+  throw Error("unexpected "+url);
+ };
+ const before=await emailConnectorHealth({env,role:"staff",requestFn,now:1761386400000});
+ assert.equal(before.ready,true);
+ assert.equal(before.checks.configuration.ok,true);
+ assert.equal(before.checks.idempotency.ok,true);
+ assert.equal(before.checks.authentication.ok,true);
+ assert.equal(before.checks.send.proven,false);
+ const receipt=await sendControlledEmail({sessionScope:"health-scope",input:{...input,actionId:"decision_health1"},env,requestFn,now:1761386460000});
+ assert.equal(receipt.status,"accepted");
+ const after=await emailConnectorHealth({env,role:"staff",requestFn,now:1761386520000});
+ assert.equal(after.ready,true);
+ assert.equal(after.checks.send.proven,true);
+ assert.equal(after.checks.send.lastAcceptedAt,receipt.acceptedAt);
+});
+test("guest health check does not probe Redis or Entra",async()=>{
+ let calls=0;
+ const health=await emailConnectorHealth({env,role:"guest",requestFn:async()=>{calls++;throw Error("must not call");}});
+ assert.equal(health.roleAllowed,false);
+ assert.equal(health.ready,false);
+ assert.equal(calls,0);
 });

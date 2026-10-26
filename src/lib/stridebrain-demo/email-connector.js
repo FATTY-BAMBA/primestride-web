@@ -3,6 +3,7 @@ import {createHash} from "node:crypto";
 const EMAIL_RE=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const clean=(v,max)=>String(v??"").trim().slice(0,max);
 const list=v=>String(v||"").split(",").map(x=>x.trim().toLowerCase()).filter(Boolean);
+const HEALTH_KEY="stridebrain:email:v1:last-accepted";
 const redisConfig=env=>{
  const url=env.STRIDEBRAIN_DEMO_REDIS_REST_URL||"";
  const token=env.STRIDEBRAIN_DEMO_REDIS_REST_TOKEN||"";
@@ -31,6 +32,26 @@ async function accessToken({env,requestFn}){
  if(!r.ok)throw Error("EMAIL_PROVIDER_AUTH_FAILED");
  const data=await r.json();if(!data?.access_token)throw Error("EMAIL_PROVIDER_AUTH_FAILED");return data.access_token;
 }
+export async function emailConnectorHealth({env=process.env,role=null,requestFn=fetch,now=Date.now()}={}){
+ const status=emailConnectorStatus({env,role});
+ const result={configured:status.configured,roleAllowed:status.roleAllowed,provider:status.provider,sender:status.sender,
+  checks:{configuration:{ok:status.configured},idempotency:{ok:false},authentication:{ok:false},send:{proven:false,lastAcceptedAt:null}},ready:false};
+ if(role!=="staff"||!status.configured)return result;
+ const probeKey="stridebrain:email:v1:health-probe:"+String(now);
+ try{
+  const values=await redisPipeline([["SET",probeKey,"1","EX","30"],["GET",probeKey],["GET",HEALTH_KEY],["DEL",probeKey]],{env,requestFn});
+  result.checks.idempotency.ok=values[0]==="OK"&&values[1]==="1";
+  result.checks.send.lastAcceptedAt=values[2]||null;
+  result.checks.send.proven=Boolean(values[2]);
+ }catch{}
+ try{
+  await accessToken({env,requestFn});
+  result.checks.authentication.ok=true;
+ }catch{}
+ result.ready=result.checks.configuration.ok&&result.checks.idempotency.ok&&result.checks.authentication.ok;
+ return result;
+}
+
 export function validateEmailRequest(input,{env=process.env}={}){
  const to=clean(input?.to,180).toLowerCase(),subject=clean(input?.subject,160),body=clean(input?.body,5000),actionId=clean(input?.actionId,140);
  const projectId=clean(input?.projectId,40),recordId=clean(input?.recordId,90);
@@ -59,7 +80,7 @@ export async function sendControlledEmail({sessionScope,input,env=process.env,re
   if(graph.status!==202)throw Error("EMAIL_PROVIDER_REJECTED");
   const receipt={receiptId:"email_"+createHash("sha256").update(v.actionId+":"+now).digest("hex").slice(0,20),provider:"microsoft-graph",
    status:"accepted",acceptedAt:new Date(now).toISOString(),sender,to:v.to,subject:v.subject,projectId:v.projectId,recordId:v.recordId,actionId:v.actionId};
-  await redisPipeline([["SET",key,JSON.stringify(receipt),"EX","604800"]],{env,requestFn});
+  await redisPipeline([["SET",key,JSON.stringify(receipt),"EX","604800"],["SET",HEALTH_KEY,receipt.acceptedAt,"EX","2592000"]],{env,requestFn});
   return receipt;
  }catch(error){
   await redisPipeline([["DEL",key]],{env,requestFn}).catch(()=>{});

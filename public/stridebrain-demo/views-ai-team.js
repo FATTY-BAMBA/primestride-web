@@ -42,12 +42,29 @@ function connectionsPanel(c,zh){
   {id:"google-workspace",label:"Google Workspace",channel:"email",implemented:false,configured:false,roleAllowed:false,sender:null}
  ];
  const data=c.messageConnections?.connections?.length?c.messageConnections.connections:fallback;
+ const healthByProvider=c.messageConnections?.healthByProvider||{};
  const registry=buildContactChannelRegistry(c.model.seed),linked=registry.reduce((n,x)=>n+x.channels.filter(y=>y.status==="linked").length,0);
  const cards=data.map(conn=>{
-  const connected=conn.configured===true,planned=conn.implemented!==true;
-  const status=connected?(zh?"已連線":"Connected"):planned?(zh?"下一階段":"Planned next"):(zh?"尚未設定":"Not configured");
+  const connected=conn.configured===true,planned=conn.implemented!==true,health=healthByProvider[conn.id]||null;
+  let status=connected?(zh?"已設定 · 尚未驗證":"Configured · not verified"):planned?(zh?"下一階段":"Planned next"):(zh?"尚未設定":"Not configured");
+  if(health?.state==="checking")status=zh?"正在檢查…":"Checking…";
+  else if(health?.state==="error")status=zh?"連線檢查失敗":"Connection check failed";
+  else if(health?.ready&&health?.checks?.send?.proven)status=zh?"已完成測試寄送":"Test send proven";
+  else if(health?.ready)status=zh?"憑證與冪等就緒":"Credentials & idempotency ready";
   const detail=connected?(conn.sender||conn.channel):(conn.id==="line"?(zh?"LINE 官方帳號 + Messaging API":"LINE Official Account + Messaging API"):(conn.id==="google-workspace"?(zh?"Gmail / 公司網域信箱":"Gmail / company domain"):(zh?"專用 Microsoft 365 寄件信箱":"Dedicated Microsoft 365 sender")));
-  return '<article class="sb-connection-card '+(connected?'connected ':'')+(conn.id==="line"?'priority':'')+'"><div><span class="sb-connection-dot"></span><strong>'+e(conn.label)+'</strong></div><small>'+e(status)+'</small><p>'+e(detail)+'</p></article>';
+  let checks="";
+  if(conn.id==="microsoft365"&&health?.state==="ready"){
+   const rows=[
+    [zh?"設定完整":"Configuration",health.checks?.configuration?.ok],
+    [zh?"Redis 冪等":"Redis idempotency",health.checks?.idempotency?.ok],
+    [zh?"Entra 認證":"Entra authentication",health.checks?.authentication?.ok],
+    [zh?"實際測試寄送":"Controlled test send",health.checks?.send?.proven]
+   ];
+   checks='<div class="sb-connection-checks">'+rows.map(([label,ok])=>'<span class="'+(ok?'ok':'pending')+'"><b>'+(ok?'✓':'○')+'</b>'+e(label)+'</span>').join('')+'</div>'+
+    (health.checks?.send?.lastAcceptedAt?'<small class="sb-last-send">'+(zh?'上次接受寄送：':'Last accepted send: ')+e(health.checks.send.lastAcceptedAt)+'</small>':'');
+  }
+  const testButton=conn.id==="microsoft365"&&connected&&conn.roleAllowed===true?button(zh?'檢查連線':'Check connection','connectionHealth',conn.id,'button-outline'):'';
+  return '<article class="sb-connection-card '+(connected?'connected ':'')+(conn.id==="line"?'priority':'')+'"><div><span class="sb-connection-dot"></span><strong>'+e(conn.label)+'</strong></div><small>'+e(status)+'</small><p>'+e(detail)+'</p>'+checks+testButton+'</article>';
  }).join('');
  return '<details class="sb-connections-panel"><summary><div><div class="suite-eyebrow">'+(zh?'連線服務':'CONNECTED CHANNELS')+'</div><h2>'+(zh?'讓 AI 同事接進企業原本使用的工具':'Use the channels your business already works in')+'</h2><p>'+(zh?'Microsoft 365、LINE、Google Workspace 共用同一套批准與稽核規則。':'Microsoft 365, LINE and Google Workspace share the same approval and audit contract.')+'</p></div><span>＋</span></summary><div class="sb-connections-grid">'+cards+'</div><div class="sb-identity-note"><strong>'+(zh?'聯絡人身分':'Contact identities')+'</strong><span>'+registry.length+' '+(zh?'位聯絡人 · ':'contacts · ')+linked+' '+(zh?'個已驗證外部身分':'verified external identities')+'</span><p>'+(zh?'目前未連結的 email / LINE 身分會保持空白，不會從姓名推測或自動產生。':'Unlinked email / LINE identities stay empty; StrideBrain does not infer or invent them from names.')+'</p></div><div class="sb-connections-foot"><small>'+(zh?'示範階段的連線設定目前由伺服器環境管理；正式多租戶版本會改成每家公司獨立連線與加密憑證。':'Pilot connections are currently server-environment backed. Production multi-tenant connections will be organization-scoped with encrypted credentials.')+'</small>'+button(zh?'重新檢查連線 ↻':'Refresh connections ↻','connectionsRefresh','','button-outline')+'</div></details>';
 }
