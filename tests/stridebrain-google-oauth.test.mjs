@@ -74,3 +74,32 @@ test("callback fails closed when Google does not return a refresh token",async()
  const store=new Map(),now=1761386400000,state=createGoogleOAuthState({sessionScope:scope,env,now,nonce:"nonce-123456789"});
  await assert.rejects(()=>completeGoogleOAuth({code:"auth-code",state,sessionScope:scope,redirectUri:DEFAULT_GOOGLE_REDIRECT_URI,env,requestFn:requestMock(store,{refreshToken:null}),now}),/GOOGLE_OAUTH_REFRESH_TOKEN_MISSING/);
 });
+
+test("existing Google env names work with the demo Supabase backend",async()=>{
+ const supabaseEnv={
+  GOOGLE_OAUTH_CLIENT_ID:"client-id.apps.googleusercontent.com",
+  GOOGLE_OAUTH_CLIENT_SECRET:"client-secret",
+  STRIDEBRAIN_GOOGLE_SENDER:"hello@primestrideai.com",
+  STRIDEBRAIN_DEMO_OPERATOR_SECRET:"operator-secret-at-least-twenty-characters",
+  STRIDEBRAIN_DEMO_SUPABASE_URL:"https://demo-project.supabase.co",
+  STRIDEBRAIN_DEMO_SUPABASE_SECRET_KEY:"server-secret",
+  STRIDEBRAIN_DEMO_ORGANIZATION_ID:"demo-org"
+ };
+ assert.equal(googleOAuthStatus({env:supabaseEnv,role:"staff"}).configured,true);
+ assert.equal(googleOAuthStatus({env:supabaseEnv,role:"staff"}).storage,"supabase");
+ const row={value:null},now=1761386400000,state=createGoogleOAuthState({sessionScope:scope,env:supabaseEnv,now,nonce:"nonce-123456789"});
+ const requestFn=async(url,options={})=>{
+  if(url==="https://oauth2.googleapis.com/token")return {ok:true,json:async()=>({access_token:"access",expires_in:3600,refresh_token:"refresh-secret",scope:GOOGLE_GMAIL_SEND_SCOPE,token_type:"Bearer"})};
+  if(String(url).startsWith("https://demo-project.supabase.co/rest/v1/stridebrain_google_connections")){
+   if(options.method==="POST"){row.value=JSON.parse(options.body);return {ok:true,json:async()=>null};}
+   return {ok:true,json:async()=>row.value?[{provider:row.value.provider,sender:row.value.sender,scope:row.value.scope,connected_at:row.value.connected_at,encrypted_refresh_token:row.value.encrypted_refresh_token}]:[]};
+  }
+  throw Error("unexpected "+url);
+ };
+ await completeGoogleOAuth({code:"auth-code",state,sessionScope:scope,redirectUri:DEFAULT_GOOGLE_REDIRECT_URI,env:supabaseEnv,requestFn,now});
+ assert.ok(row.value);
+ assert.doesNotMatch(row.value.encrypted_refresh_token,/refresh-secret/);
+ const record=await readGoogleConnection({env:supabaseEnv,requestFn});
+ assert.equal(record.sender,"hello@primestrideai.com");
+ assert.equal(decryptGoogleRefreshToken(record,{env:supabaseEnv}),"refresh-secret");
+});
