@@ -392,6 +392,13 @@ async function refreshMessageConnections(){
   const response=await fetch("/api/stridebrain-demo/connections/status",{method:"GET",cache:"no-store",credentials:"same-origin",headers:{Accept:"application/json"}});
   const payload=await response.json().catch(()=>null);
   messageConnections={state:response.ok?"ready":"error",organizationId:payload?.organizationId||"demo-workspace",storage:payload?.storage||"pilot-env",connections:Array.isArray(payload?.connections)?payload.connections:[],healthByProvider:messageConnections.healthByProvider||{}};
+  try{
+   const googleResponse=await fetch("/api/stridebrain-demo/google/status",{method:"GET",cache:"no-store",credentials:"same-origin",headers:{Accept:"application/json"}});
+   const google=await googleResponse.json().catch(()=>null);
+   if(googleResponse.ok&&google?.provider==="google-workspace"){
+    messageConnections.connections=messageConnections.connections.map(conn=>conn.id==="google-workspace"?{...conn,implemented:true,configured:google.configured===true,connected:google.connected===true,roleAllowed:google.roleAllowed===true,sender:google.sender||null,scope:google.scope||null,storage:google.storage||null,connectedAt:google.connectedAt||null}:conn);
+   }
+  }catch{}
   const microsoft=messageConnections.connections.find(x=>x.id==="microsoft365")||null;
   emailConnector={state:messageConnections.state,configured:microsoft?.configured===true,roleAllowed:microsoft?.roleAllowed===true,sender:microsoft?.sender||null,provider:microsoft?.id||null,limits:microsoft?.limits||null};
  }catch{
