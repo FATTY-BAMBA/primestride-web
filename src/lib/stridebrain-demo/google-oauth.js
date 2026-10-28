@@ -4,25 +4,57 @@ export const GOOGLE_GMAIL_SEND_SCOPE="https://www.googleapis.com/auth/gmail.send
 export const GOOGLE_CONNECTION_KEY="stridebrain:google:v1:connection";
 export const DEFAULT_GOOGLE_REDIRECT_URI="https://demo.primestrideai.com/api/stridebrain-demo/google/callback";
 const STATE_TTL_SECONDS=600;
+const SUPABASE_TABLE="stridebrain_google_connections";
 
 const clean=(v,max)=>String(v??"").trim().slice(0,max);
 const redisConfig=env=>{
  const url=env.STRIDEBRAIN_DEMO_REDIS_REST_URL||"",token=env.STRIDEBRAIN_DEMO_REDIS_REST_TOKEN||"";
- return url.startsWith("https://")&&token?{url:url.replace(/\/$/,""),token}:null;
+ return url.startsWith("https://")&&token?{kind:"redis",url:url.replace(/\/$/,""),token}:null;
 };
+const supabaseConfig=env=>{
+ const url=clean(env.STRIDEBRAIN_DEMO_SUPABASE_URL,500),key=String(env.STRIDEBRAIN_DEMO_SUPABASE_SECRET_KEY||"").trim();
+ const organizationId=clean(env.STRIDEBRAIN_DEMO_ORGANIZATION_ID,120);
+ return /^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(url)&&key&&organizationId?{kind:"supabase",url,key,organizationId}:null;
+};
+const storageConfig=env=>redisConfig(env)||supabaseConfig(env);
 const oauthConfig=env=>{
- const clientId=clean(env.STRIDEBRAIN_GOOGLE_CLIENT_ID,300),clientSecret=clean(env.STRIDEBRAIN_GOOGLE_CLIENT_SECRET,500);
+ const clientId=clean(env.STRIDEBRAIN_GOOGLE_CLIENT_ID||env.GOOGLE_OAUTH_CLIENT_ID,300);
+ const clientSecret=clean(env.STRIDEBRAIN_GOOGLE_CLIENT_SECRET||env.GOOGLE_OAUTH_CLIENT_SECRET,500);
  const sender=clean(env.STRIDEBRAIN_GOOGLE_SENDER||"hello@primestrideai.com",180).toLowerCase();
  const operatorSecret=env.STRIDEBRAIN_DEMO_OPERATOR_SECRET||"";
- const redis=redisConfig(env);
- if(!clientId||!clientSecret||!sender.includes("@")||operatorSecret.length<20||!redis)return null;
- return {clientId,clientSecret,sender,operatorSecret,redis};
+ const storage=storageConfig(env);
+ if(!clientId||!clientSecret||!sender.includes("@")||operatorSecret.length<20||!storage)return null;
+ return {clientId,clientSecret,sender,operatorSecret,storage};
 };
 async function redisPipeline(commands,{env,requestFn}){
  const cfg=redisConfig(env);if(!cfg)throw Error("GOOGLE_CONNECTION_STORAGE_UNAVAILABLE");
  const r=await requestFn(cfg.url+"/pipeline",{method:"POST",headers:{Authorization:"Bearer "+cfg.token,"Content-Type":"application/json"},body:JSON.stringify(commands)});
  if(!r.ok)throw Error("GOOGLE_CONNECTION_STORAGE_UNAVAILABLE");
  const data=await r.json();return Array.isArray(data)?data.map(x=>x?.result):[];
+}
+async function supabaseRead({env,requestFn}){
+ const cfg=supabaseConfig(env);if(!cfg)throw Error("GOOGLE_CONNECTION_STORAGE_UNAVAILABLE");
+ const q=new URL(cfg.url+"/rest/v1/"+SUPABASE_TABLE);
+ q.searchParams.set("organization_id","eq."+cfg.organizationId);
+ q.searchParams.set("select","provider,sender,scope,connected_at,encrypted_refresh_token");
+ q.searchParams.set("limit","1");
+ const r=await requestFn(q.toString(),{headers:{apikey:cfg.key,Authorization:"Bearer "+cfg.key,Accept:"application/json"},signal:AbortSignal.timeout(3000)});
+ if(!r.ok)throw Error("GOOGLE_CONNECTION_STORAGE_UNAVAILABLE");
+ const data=await r.json();const row=Array.isArray(data)?data[0]:null;
+ return row?{provider:row.provider,sender:row.sender,scope:row.scope,connectedAt:row.connected_at,encryptedRefreshToken:row.encrypted_refresh_token}:null;
+}
+async function supabaseWrite(record,{env,requestFn}){
+ const cfg=supabaseConfig(env);if(!cfg)throw Error("GOOGLE_CONNECTION_STORAGE_UNAVAILABLE");
+ const q=new URL(cfg.url+"/rest/v1/"+SUPABASE_TABLE);
+ q.searchParams.set("on_conflict","organization_id");
+ const body={organization_id:cfg.organizationId,provider:record.provider,sender:record.sender,scope:record.scope,connected_at:record.connectedAt,encrypted_refresh_token:record.encryptedRefreshToken,updated_at:new Date().toISOString()};
+ const r=await requestFn(q.toString(),{method:"POST",headers:{apikey:cfg.key,Authorization:"Bearer "+cfg.key,"Content-Type":"application/json",Prefer:"resolution=merge-duplicates,return=minimal"},body:JSON.stringify(body),signal:AbortSignal.timeout(3000)});
+ if(!r.ok)throw Error("GOOGLE_CONNECTION_STORAGE_UNAVAILABLE");
+}
+async function writeConnection(record,{env,requestFn}){
+ const cfg=storageConfig(env);if(!cfg)throw Error("GOOGLE_CONNECTION_STORAGE_UNAVAILABLE");
+ if(cfg.kind==="redis"){await redisPipeline([["SET",GOOGLE_CONNECTION_KEY,JSON.stringify(record)]],{env,requestFn});return;}
+ await supabaseWrite(record,{env,requestFn});
 }
 const b64url=value=>Buffer.from(value).toString("base64url");
 const unb64url=value=>Buffer.from(value,"base64url").toString("utf8");
@@ -47,7 +79,7 @@ export function googleRedirectUri(env=process.env){
  return DEFAULT_GOOGLE_REDIRECT_URI;
 }
 export function googleOAuthStatus({env=process.env,role=null}={}){
- const cfg=oauthConfig(env);return {provider:"google-workspace",configured:Boolean(cfg),roleAllowed:role==="staff",sender:cfg?.sender||null,scope:GOOGLE_GMAIL_SEND_SCOPE};
+ const cfg=oauthConfig(env);return {provider:"google-workspace",configured:Boolean(cfg),roleAllowed:role==="staff",sender:cfg?.sender||null,scope:GOOGLE_GMAIL_SEND_SCOPE,storage:cfg?.storage?.kind||null};
 }
 export function buildGoogleAuthorizationUrl({state,redirectUri,env=process.env}={}){
  const cfg=oauthConfig(env);if(!cfg||!state||!redirectUri)throw Error("GOOGLE_OAUTH_UNAVAILABLE");
@@ -82,10 +114,21 @@ export async function completeGoogleOAuth({code,state,sessionScope,redirectUri,e
  if(!verifyGoogleOAuthState({state,sessionScope,env,now}))throw Error("GOOGLE_OAUTH_STATE_INVALID");
  const tokens=await exchangeCode({code:String(code||""),redirectUri,env,requestFn});
  const record={provider:"google-workspace",sender:cfg.sender,scope:GOOGLE_GMAIL_SEND_SCOPE,connectedAt:new Date(now).toISOString(),encryptedRefreshToken:encryptToken(tokens.refresh_token,cfg.operatorSecret)};
- await redisPipeline([["SET",GOOGLE_CONNECTION_KEY,JSON.stringify(record)]],{env,requestFn});
+ await writeConnection(record,{env,requestFn});
  return {provider:record.provider,sender:record.sender,scope:record.scope,connectedAt:record.connectedAt};
 }
 export async function readGoogleConnection({env=process.env,requestFn=fetch}={}){
  const cfg=oauthConfig(env);if(!cfg)return null;
- try{const raw=(await redisPipeline([["GET",GOOGLE_CONNECTION_KEY]],{env,requestFn}))[0];if(!raw)return null;const record=JSON.parse(raw);return record?.provider==="google-workspace"&&record?.sender===cfg.sender?record:null;}catch{return null;}
+ try{
+  let record=null;
+  if(cfg.storage.kind==="redis"){const raw=(await redisPipeline([["GET",GOOGLE_CONNECTION_KEY]],{env,requestFn}))[0];if(raw)record=JSON.parse(raw);}
+  else record=await supabaseRead({env,requestFn});
+  return record?.provider==="google-workspace"&&record?.sender===cfg.sender?record:null;
+ }catch{return null;}
+}
+export async function googleConnectionStatus({env=process.env,role=null,requestFn=fetch}={}){
+ const base=googleOAuthStatus({env,role});
+ if(!base.configured||role!=="staff")return {...base,connected:false,connectedAt:null};
+ const record=await readGoogleConnection({env,requestFn});
+ return {...base,connected:Boolean(record),connectedAt:record?.connectedAt||null};
 }
