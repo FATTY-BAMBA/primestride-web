@@ -64,3 +64,14 @@ test("unimplemented connector health fails closed without provider calls",async(
  assert.equal(health.ready,false);
  assert.equal(calls,0);
 });
+
+test("staff connections endpoint upgrades Google from planned fallback to live OAuth status",()=>{
+ const route=readFileSync("src/app/api/stridebrain-demo/connections/status/route.js","utf8");
+ assert.match(route,/googleConnectionStatus/);
+ assert.match(route,/conn\.id==="google-workspace"/);
+ assert.match(route,/implemented:true/);
+ assert.match(route,/configured:google\.configured===true/);
+ assert.match(route,/connected:google\.connected===true/);
+ const browser=readFileSync("public/stridebrain-demo/app.js","utf8");
+ assert.equal(browser.includes('/api/stridebrain-demo/google/status'),false);
+});
