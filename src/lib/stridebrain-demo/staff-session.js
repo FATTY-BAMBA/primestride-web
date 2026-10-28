@@ -21,4 +21,5 @@ export function isStaffSessionValid(value){
  if(end<now||end>now+TTL_SECONDS)return false;
  return timingSafeEqual(Buffer.from(mac,"hex"),Buffer.from(signature(expiry),"hex"));
 }
-export const cookieSettings={httpOnly:true,secure:true,sameSite:"strict",path:"/api/stridebrain-demo",maxAge:TTL_SECONDS};
+// Lax is required so the signed HttpOnly staff cookie is sent on Google's top-level OAuth redirect back.
+export const cookieSettings={httpOnly:true,secure:true,sameSite:"lax",path:"/api/stridebrain-demo",maxAge:TTL_SECONDS};
