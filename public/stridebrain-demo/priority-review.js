@@ -98,3 +98,86 @@ export function reviewPriorities(seed,{limit=3,projectId=null}={}){
   evidenceBasis:'REG- sources prove structured register fields. DOC- sources prove only their displayed document contents, not linked register values.',
   limitations:['Dates are compared with the dataset snapshot, not the current calendar.','Business impact, customer commitments and a complete critical path are not recorded.','Same project, title or source does not prove a dependency. Verify status before recommending approval.']};
 }
+
+
+const coordinationTerms=/handover|handoff|coordination|approval|procurement|supplier|material|drawing|交接|協調|核准|審核|採購|供應商|材料|圖面/i;
+const coordinationSort=(asOf,preferHandoff=false)=>(a,b)=>{
+ const ah=preferHandoff&&!coordinationTerms.test(text(a.title))?1:0,bh=preferHandoff&&!coordinationTerms.test(text(b.title))?1:0;
+ if(ah!==bh)return ah-bh;
+ const ad=delta(a.dueDate,asOf),bd=delta(b.dueDate,asOf);
+ if((ad??1000000)!==(bd??1000000))return (ad??1000000)-(bd??1000000);
+ return text(a.id).localeCompare(text(b.id));
+};
+const coordinationSources=(record,project,extras=[])=>unique([
+ registerSourceId(record.id),registerSourceId(project?.id),record.sourceDocId,...extras
+]);
+const coordinationNextStep=signal=>signal==='recorded_blocker'?'confirm_blocker_and_owner':
+ signal==='status_verification'?'verify_approval_status_and_owner':'confirm_status_and_next_handoff';
+
+/**
+ * Project Coordinator review.
+ * Deliberately selects different coordination signal types instead of reusing the
+ * generic priority ranking: one recorded blocker, one near-term handoff/deadline,
+ * and one pending approval/status check when those records exist.
+ */
+export function reviewCoordination(seed,{limit=3}={}){
+ const projects=list(seed.projects),tasks=list(seed.workOrders),approvals=list(seed.approvals),docs=new Map(list(seed.documents).map(d=>[d.id,d]));
+ const byProject=new Map(projects.map(p=>[p.id,p])),asOf=day(seed.meta?.date)!==null?seed.meta.date:null;
+ const max=Math.max(1,Math.min(3,Math.floor(Number(limit)||3)));
+ const blockedRows=tasks.filter(w=>!complete(w)&&blocked(w)).slice().sort(coordinationSort(asOf,true)).map(w=>{
+  const p=byProject.get(w.projectId),refs=dependencies(w,approvals);
+  return {projectId:w.projectId,projectName:p?.name||w.projectId,stage:p?.stage||null,manager:p?.manager||null,
+   recordId:w.id,title:w.title,status:w.status,dueDate:day(w.dueDate)!==null?w.dueDate:null,
+   recordedOwner:w.owner||p?.manager||null,recordedOwnerBasis:w.owner?'task_owner':p?.manager?'project_manager':'not_recorded',
+   blocked:true,recordedBlocker:text(w.blockedBy)||null,needsStatusVerification:false,
+   coordinationSignal:'recorded_blocker',nextStep:coordinationNextStep('recorded_blocker'),
+   sourceIds:coordinationSources(w,p,refs.flatMap(a=>[registerSourceId(a.id),a.sourceDocId])),
+   limitation:'The blocker is recorded; its business impact and critical-path effect are not inferred.'};
+ });
+ const dueRows=tasks.filter(w=>{
+  if(complete(w)||blocked(w))return false;
+  const d=delta(w.dueDate,asOf);return d!==null&&d>=0&&d<=7;
+ }).slice().sort(coordinationSort(asOf,true)).map(w=>{
+  const p=byProject.get(w.projectId),signal=coordinationTerms.test(text(w.title))?'near_term_handoff':'near_term_due';
+  return {projectId:w.projectId,projectName:p?.name||w.projectId,stage:p?.stage||null,manager:p?.manager||null,
+   recordId:w.id,title:w.title,status:w.status,dueDate:w.dueDate,
+   recordedOwner:w.owner||p?.manager||null,recordedOwnerBasis:w.owner?'task_owner':p?.manager?'project_manager':'not_recorded',
+   blocked:false,recordedBlocker:null,needsStatusVerification:false,
+   coordinationSignal:signal,nextStep:coordinationNextStep(signal),
+   sourceIds:coordinationSources(w,p),
+   limitation:'The recorded due date is near the workspace snapshot; no customer commitment or undocumented dependency is inferred.'};
+ });
+ const approvalRows=approvals.filter(pending).map(a=>{
+  const p=byProject.get(a.projectId),check=approvalCheck(a,p,tasks,docs);
+  return {row:a,check,sortKey:[check.needsReconciliation?0:1,norm(check.document?.status)==='approved'?0:1,text(a.id)]};
+ }).sort((a,b)=>a.sortKey[0]-b.sortKey[0]||a.sortKey[1]-b.sortKey[1]||a.sortKey[2].localeCompare(b.sortKey[2])).map(({row:a,check})=>{
+  const p=byProject.get(a.projectId);
+  return {projectId:a.projectId,projectName:p?.name||a.projectId,stage:p?.stage||null,manager:p?.manager||null,
+   recordId:a.id,title:a.title,status:a.status,dueDate:day(a.dueDate)!==null?a.dueDate:null,
+   recordedOwner:check.suggestedContact,recordedOwnerBasis:check.contactBasis,
+   blocked:false,recordedBlocker:null,needsStatusVerification:check.needsReconciliation,
+   coordinationSignal:'status_verification',nextStep:coordinationNextStep('status_verification'),
+   sourceIds:unique([registerSourceId(p?.id),...check.sourceIds]),
+   limitation:'A pending approval alongside another recorded status is a verification signal, not proof of contradiction or approval authority.'};
+ });
+ const selected=[],usedProjects=new Set();
+ const choose=rows=>{
+  if(!rows.length||selected.length>=max)return;
+  const candidate=rows.find(x=>!usedProjects.has(x.projectId))||rows[0];
+  if(!candidate||selected.some(x=>x.recordId===candidate.recordId))return;
+  selected.push(candidate);usedProjects.add(candidate.projectId);
+ };
+ choose(blockedRows);
+ choose(dueRows);
+ choose(approvalRows);
+ for(const rows of [blockedRows,dueRows,approvalRows]){
+  for(const row of rows){
+   if(selected.length>=max)break;
+   if(!selected.some(x=>x.recordId===row.recordId)){selected.push(row);usedProjects.add(row.projectId);}
+  }
+ }
+ return {isSynthetic:true,asOf,kind:'coordination_review',items:selected.slice(0,max),
+  coverage:{projectsChecked:projects.length,blockedRecords:blockedRows.length,nearTermRecords:dueRows.length,pendingApprovals:approvalRows.length,itemsShown:selected.slice(0,max).length},
+  sourceIds:unique(selected.slice(0,max).flatMap(x=>x.sourceIds)),
+  limitations:['Recorded coordination signals only.','No inferred critical path, customer commitment or undocumented dependency.','Recorded owner does not imply approval authority.']};
+}
