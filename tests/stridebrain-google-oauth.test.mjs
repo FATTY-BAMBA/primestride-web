@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
 const {
  GOOGLE_GMAIL_SEND_SCOPE,DEFAULT_GOOGLE_REDIRECT_URI,googleRedirectUri,googleOAuthStatus,
- buildGoogleAuthorizationUrl,completeGoogleOAuth,readGoogleConnection,decryptGoogleRefreshToken
+ buildGoogleAuthorizationUrl,completeGoogleOAuth,readGoogleConnection,decryptGoogleRefreshToken,googleConnectionStatus
 }=await import("../src/lib/stridebrain-demo/google-oauth.js");
 const {
  createGoogleOAuthTransaction,verifyGoogleOAuthTransaction
