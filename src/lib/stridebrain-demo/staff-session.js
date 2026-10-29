@@ -1,9 +1,9 @@
 import {createHmac,createHash,timingSafeEqual} from "node:crypto";
 export const SESSION_COOKIE="stridebrain_demo_staff";
 const TTL_SECONDS=7*24*60*60;
-function key(){return process.env.STRIDEBRAIN_DEMO_OPERATOR_SECRET||"";}
-export function tokenMatches(given){
- const expected=key();
+function key(env=process.env){return env.STRIDEBRAIN_DEMO_OPERATOR_SECRET||"";}
+export function tokenMatches(given,env=process.env){
+ const expected=key(env);
  if(typeof given!=="string"||given.length<20||expected.length<20)return false;
  return timingSafeEqual(createHash("sha256").update(given).digest(),createHash("sha256").update(expected).digest());
 }
