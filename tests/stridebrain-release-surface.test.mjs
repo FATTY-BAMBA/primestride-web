@@ -39,3 +39,17 @@ test("live demo release workflow continues to gate the canonical branch",()=>{
  assert.match(workflow,/feature\/stridebrain-interiors-flagship-demo/);
  assert.match(workflow,/node --test tests\/stridebrain-\*\.test\.mjs/);
 });
+
+test("Vercel live-branch guard blocks incomplete or historical demo releases",()=>{
+ const guard=read("scripts/sb-release-guard.sh");
+ assert.match(guard,/LIVE_DEMO_RELEASE_POLICY\.md/);
+ assert.match(guard,/data-value="team"/);
+ assert.match(guard,/views-ai-team\.js/);
+ assert.match(guard,/google\/connect\/route\.js/);
+ assert.match(guard,/google\/callback\/route\.js/);
+ assert.match(guard,/google\/status\/route\.js/);
+ assert.match(guard,/googleConnectionStatus/);
+ assert.match(guard,/sameSite:"lax"/);
+ assert.match(guard,/exit 0/,"invalid release must tell Vercel to skip");
+ assert.match(guard,/exit 1/,"valid release must tell Vercel to build");
+});
