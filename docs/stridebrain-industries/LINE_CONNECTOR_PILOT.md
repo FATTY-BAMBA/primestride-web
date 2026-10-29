@@ -21,7 +21,7 @@ The business keeps using its LINE Official Account. StrideBrain sits behind the 
 
 ## Pilot webhook
 
-`https://demo.primestrideai.com/api/stridebrain-demo/line/webhook`
+`https://line-webhook.primestrideai.com/api/stridebrain-demo/line/webhook`
 
 The webhook:
 - reads the original raw request body;
@@ -95,3 +95,17 @@ Demo credentials are environment-backed for speed. Real client accounts should m
 - connector credential rotation and revocation;
 - message-retention controls;
 - monitoring and support runbook.
+
+
+## Public ingress protection
+
+The LINE webhook uses the dedicated custom hostname `line-webhook.primestrideai.com`.
+
+Vercel Authentication remains enabled for the normal demo. The webhook hostname has a Vercel alias protection override because LINE cannot authenticate to Vercel. Application middleware then fails closed:
+
+- only `POST /api/stridebrain-demo/line/webhook` is permitted on that hostname;
+- every other path returns 404;
+- non-POST methods on the webhook path return 405;
+- the webhook still requires a valid LINE `x-line-signature`.
+
+This keeps the external webhook reachable without creating an alternate public copy of the demo.
