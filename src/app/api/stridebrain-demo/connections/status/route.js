@@ -13,7 +13,7 @@ export async function GET(request){
  }
  const snapshot=communicationConnectionsSnapshot({role:session.role,organizationId:context.organizationId});
  if(session.active===true&&session.role==="staff"){
-  const google=await googleConnectionStatus({role:"staff"});
+  const google=await googleConnectionStatus({role:"staff",organizationId:context.organizationId});
   snapshot.connections=snapshot.connections.map(conn=>conn.id==="google-workspace"?{
    ...conn,
    implemented:true,
