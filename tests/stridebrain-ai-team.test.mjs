@@ -27,7 +27,7 @@ test("accepted external email receipt is stored separately from internal task co
 
 test("Project Coordinator is presentation-distinct and coordination-focused",()=>{
  const coordinator=listAgents().find(x=>x.id==="project-coordinator");
- assert.equal(coordinator.version,"v0.5");
+ assert.equal(coordinator.version,"v0.6");
  assert.match(coordinator.descriptionEn,/blockers|deadlines|handoffs/i);
  const view=readFileSync("public/stridebrain-demo/views-ai-team.js","utf8");
  assert.match(view,/See what could slip this week/);
