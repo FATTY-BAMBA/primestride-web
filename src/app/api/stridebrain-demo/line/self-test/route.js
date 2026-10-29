@@ -22,13 +22,17 @@ export async function GET(){
   if(contentType.includes("application/json")){
    try{const body=await response.json();code=body?.code||null;}catch{}
   }
+  const uiResponse=await fetch("https://line-webhook.primestrideai.com/stridebrain-demo/index.html",{
+   method:"GET",cache:"no-store",redirect:"manual",signal:AbortSignal.timeout(10000)
+  });
   return NextResponse.json({
-   ok:response.status===200,
+   ok:response.status===200&&[404,405].includes(uiResponse.status),
    stage:"public-webhook",
    status:response.status,
    contentType:contentType.split(";")[0]||null,
    code,
-   deploymentHeader:Boolean(response.headers.get("x-vercel-id"))
+   deploymentHeader:Boolean(response.headers.get("x-vercel-id")),
+   nonWebhookStatus:uiResponse.status
   },{status:200});
  }catch(error){
   return NextResponse.json({ok:false,stage:"network",code:String(error?.name||"FETCH_FAILED")},{status:200});
