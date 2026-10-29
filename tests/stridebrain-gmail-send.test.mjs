@@ -36,6 +36,14 @@ function createBackend(){
     encrypted_refresh_token:connection.encrypted_refresh_token
    }]:[]};
   }
+  if(u.startsWith("https://demo-project.supabase.co/rest/v1/stridebrain_contact_identities")){
+   const parsed=new URL(u);
+   const identity=(parsed.searchParams.get("normalized_identity")||"").replace(/^eq\./,"");
+   const verified=new Map([
+    ["test@example.com",{contact_ref:"contact-test",display_name:"Test Recipient",channel:"email",provider:"google-workspace",external_identity:"test@example.com",verified_at:"2026-10-29T08:00:00Z",verification_method:"pilot-admin-approved"}]
+   ]);
+   return {ok:true,status:200,json:async()=>verified.has(identity)?[verified.get(identity)]:[]};
+  }
   if(u.startsWith("https://demo-project.supabase.co/rest/v1/stridebrain_message_actions")){
    const parsed=new URL(u),org=(parsed.searchParams.get("organization_id")||"").replace(/^eq\./,"");
    const action=(parsed.searchParams.get("action_id")||"").replace(/^eq\./,"");
