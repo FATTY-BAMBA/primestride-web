@@ -69,7 +69,7 @@ test("Vercel live-branch guard blocks incomplete or historical demo releases",()
 });
 
 test("dedicated LINE webhook host exposes only the signed POST ingress",()=>{
- const middleware=read("middleware.js");
+ const middleware=read("src/middleware.js");
  assert.match(middleware,/line-webhook\.primestrideai\.com/);
  assert.match(middleware,/\/api\/stridebrain-demo\/line\/webhook/);
  assert.match(middleware,/request\.method!==["']POST["']/);
