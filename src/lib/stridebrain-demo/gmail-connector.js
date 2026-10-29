@@ -1,5 +1,6 @@
 import {createHash} from "node:crypto";
 import {decryptGoogleRefreshToken,googleConnectionStatus,readGoogleConnection} from "./google-oauth.js";
+import {findVerifiedContactIdentity} from "./contact-identity-registry.js";
 
 const EMAIL_RE=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const clean=(value,max)=>String(value??"").trim().slice(0,max);
@@ -21,7 +22,7 @@ function allowedRecipients(env,sender){
  const configured=list(env.STRIDEBRAIN_GOOGLE_ALLOWED_RECIPIENTS);
  return configured.length?configured:[sender];
 }
-function validate(input,{env,sender}){
+function validateShape(input){
  const to=clean(input?.to,180).toLowerCase();
  const subject=clean(input?.subject,160);
  const body=clean(input?.body,5000);
@@ -29,11 +30,20 @@ function validate(input,{env,sender}){
  const projectId=clean(input?.projectId,40);
  const recordId=clean(input?.recordId,90);
  if(!EMAIL_RE.test(to))return {ok:false,code:"EMAIL_RECIPIENT_INVALID"};
- if(!allowedRecipients(env,sender).includes(to))return {ok:false,code:"EMAIL_RECIPIENT_NOT_ALLOWED"};
  if(subject.length<2||body.length<5)return {ok:false,code:"EMAIL_CONTENT_INVALID"};
  if(!/^[A-Za-z0-9_-]{6,140}$/.test(actionId))return {ok:false,code:"EMAIL_ACTION_INVALID"};
  if(!/^(PRJ|JOB)-\d{1,8}$/.test(projectId)||recordId.length<3)return {ok:false,code:"EMAIL_CONTEXT_INVALID"};
  return {ok:true,value:{to,subject,body,actionId,projectId,recordId}};
+}
+async function authorizeRecipient({organizationId,to,sender,env,requestFn}){
+ try{
+  const identity=await findVerifiedContactIdentity({organizationId,channel:"email",externalIdentity:to,provider:"google-workspace",env,requestFn});
+  if(identity)return {ok:true,identity,source:"verified-contact"};
+ }catch(error){
+  if(!allowedRecipients(env,sender).includes(to))throw error;
+ }
+ if(allowedRecipients(env,sender).includes(to))return {ok:true,identity:null,source:"pilot-allowlist"};
+ return {ok:false,code:"EMAIL_RECIPIENT_NOT_ALLOWED"};
 }
 function encodeHeader(value){
  return "=?UTF-8?B?"+Buffer.from(value,"utf8").toString("base64")+"?=";
@@ -125,8 +135,10 @@ export async function gmailConnectorStatus({env=process.env,role=null,organizati
 export async function sendControlledGmail({organizationId,input,env=process.env,requestFn=fetch,now=Date.now()}={}){
  const status=await gmailConnectorStatus({env,role:"staff",organizationId,requestFn});
  if(!status.configured||!status.connected)throw Error(status.connectionCode||"GOOGLE_CONNECTION_UNAVAILABLE");
- const checked=validate(input,{env,sender:status.sender});if(!checked.ok)throw Error(checked.code);
+ const checked=validateShape(input);if(!checked.ok)throw Error(checked.code);
  const value=checked.value;
+ const recipientAuth=await authorizeRecipient({organizationId,to:value.to,sender:status.sender,env,requestFn});
+ if(!recipientAuth.ok)throw Error(recipientAuth.code);
  const reservation=await reserveAction({env,organizationId,value,requestFn,now});
  if(!reservation.reserved){
   const duplicate=receiptFromExisting(reservation.existing);if(duplicate)return duplicate;
