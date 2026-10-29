@@ -24,6 +24,17 @@ test("live StrideBrain release must retain Google Workspace OAuth endpoints",()=
  assert.match(connections,/google-workspace/,"Google Workspace must be merged into the connection snapshot");
 });
 
+test("live StrideBrain release must retain LINE Messaging API foundation",()=>{
+ assert.equal(existsSync("src/app/api/stridebrain-demo/line/webhook/route.js"),true);
+ assert.equal(existsSync("src/lib/stridebrain-demo/line-connector.js"),true);
+ const connectors=read("src/lib/stridebrain-demo/message-connectors.js");
+ assert.match(connectors,/lineConnectorStatus/);
+ assert.match(connectors,/sendControlledLinePush/);
+ const webhook=read("src/app/api/stridebrain-demo/line/webhook/route.js");
+ assert.match(webhook,/x-line-signature/);
+ assert.match(webhook,/processLineWebhook/);
+});
+
 test("staff OAuth release contract remains callback-safe",()=>{
  const staff=read("src/lib/stridebrain-demo/staff-session.js");
  assert.match(staff,/sameSite:"lax"/,"staff cookie must survive top-level OAuth callback redirects");
@@ -49,6 +60,9 @@ test("Vercel live-branch guard blocks incomplete or historical demo releases",()
  assert.match(guard,/google\/callback\/route\.js/);
  assert.match(guard,/google\/status\/route\.js/);
  assert.match(guard,/googleConnectionStatus/);
+ assert.match(guard,/line\/webhook\/route\.js/);
+ assert.match(guard,/line-connector\.js/);
+ assert.match(guard,/lineConnectorStatus/);
  assert.match(guard,/sameSite:"lax"/);
  assert.match(guard,/exit 0/,"invalid release must tell Vercel to skip");
  assert.match(guard,/exit 1/,"valid release must tell Vercel to build");
