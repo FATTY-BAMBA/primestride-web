@@ -26,12 +26,12 @@ test("connection snapshot exposes provider capabilities without secrets",()=>{
  const ms=snap.connections.find(x=>x.id==="microsoft365");
  assert.equal(ms.configured,true);assert.equal(ms.sender,"ops@example.com");assert.equal(ms.roleAllowed,true);
  assert.equal("apiKey" in ms,false);assert.equal("secret" in ms,false);
- const line=snap.connections.find(x=>x.id==="line");assert.equal(line.implemented,false);assert.equal(line.configured,false);
+ const line=snap.connections.find(x=>x.id==="line");assert.equal(line.implemented,true);assert.equal(line.configured,false);
 });
 test("connector registry rejects unknown, channel mismatch and unimplemented providers",async()=>{
  await assert.rejects(()=>sendApprovedMessage({providerId:"unknown",channel:"email"}),/MESSAGE_PROVIDER_UNKNOWN/);
  await assert.rejects(()=>sendApprovedMessage({providerId:"microsoft365",channel:"line"}),/MESSAGE_CHANNEL_MISMATCH/);
- await assert.rejects(()=>sendApprovedMessage({providerId:"line",channel:"line"}),/MESSAGE_PROVIDER_NOT_IMPLEMENTED/);
+ await assert.rejects(()=>sendApprovedMessage({providerId:"line",channel:"line"}),/LINE_CONNECTOR_UNAVAILABLE/);
  assert.equal(messageConnectorStatus({providerId:"google-workspace",role:"staff",env,organizationId:"org-demo"}).implemented,true);
 });
 test("generic Microsoft adapter preserves controlled send receipt",async()=>{
@@ -56,11 +56,12 @@ test("contact-channel registry never invents email or LINE identities",()=>{
  assert.equal(linkedChannelFor(registry,{contactId:registry[0].contactId,channel:"line"}),null);
 });
 
-test("unimplemented connector health fails closed without provider calls",async()=>{
+test("unconfigured LINE health fails closed without provider calls",async()=>{
  let calls=0;
- const health=await checkMessageConnectorHealth({providerId:"line",role:"staff",env,requestFn:async()=>{calls++;throw Error("must not call");}});
+ const health=await checkMessageConnectorHealth({providerId:"line",role:"staff",organizationId:"org-demo",env,requestFn:async()=>{calls++;throw Error("must not call");}});
  assert.equal(health.known,true);
- assert.equal(health.implemented,false);
+ assert.equal(health.implemented,true);
+ assert.equal(health.configured,false);
  assert.equal(health.ready,false);
  assert.equal(calls,0);
 });
