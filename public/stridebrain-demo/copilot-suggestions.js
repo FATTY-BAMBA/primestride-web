@@ -5,9 +5,9 @@
  * answered with tools once the optional AI model connection is configured.
  */
 export const QUICK_ACTIONS=Object.freeze([
- Object.freeze({id:"numbers",label:"Today's numbers",glyph:"◷",description:"Snapshot of quotations and operational priorities",prompts:{
-  interior:"What needs my attention in our sample operations snapshot? Include pending approvals, blocked work and quote activity.",
-  printing:"Give me today's numbers from the sample print-shop snapshot: jobs, blocked production work, approvals and quote activity."
+ Object.freeze({id:"numbers",label:"This week's risks",glyph:"◷",description:"Blockers, near-term handoffs and approvals with evidence",prompts:{
+  interior:"What should I worry about this week in the sample workspace? Prioritize recorded blockers, near-term due work or handoffs, and pending approvals. Cite the evidence for each.",
+  printing:"What should I worry about this week in the sample print-shop workspace? Prioritize blocked production work, near-term deadlines or handoffs, and pending approvals. Cite the evidence for each."
  }}),
  Object.freeze({id:"quotes",label:"Quotes",glyph:"▧",description:"Dated quotation activity and review status",prompts:{
   interior:"How many quotations were marked sent on the sample snapshot date? Which current quotations need review?",
@@ -39,7 +39,7 @@ const INDUSTRY_IDEAS={
  ]
 };
 const ZH_SHORTCUTS={
- numbers:["今日營運數據","查看報價、待審核與受阻工作"],
+ numbers:["本週風險","查看受阻、近期交接與待確認核准"],
  quotes:["報價狀況","查看報價與待確認事項"],
  followups:["追蹤待辦","優先處理卡關工作與審核"],
  suppliers:["材料與供應商","查詢材料與供應商風險"],
@@ -59,14 +59,14 @@ const ZH_IDEAS={
 };
 const ZH_QUICK_PROMPTS={
  interior:{
- numbers:"請用繁體中文整理示範工作區的待審核事項、受阻工作及近期報價重點。",
+ numbers:"請用繁體中文整理這週最值得我擔心的三件事：受阻工作、近期到期或交接、待確認核准，並附上每項來源依據。",
  quotes:"請用繁體中文整理目前的報價數量、待確認版本及來源。",
  followups:"請用繁體中文整理裝修專案最值得優先追蹤的待辦與原因。",
  suppliers:"請用繁體中文指出材料供應商有哪些資訊尚待確認，切勿假設即時庫存。",
  financials:"請用繁體中文分析示範報價的預估毛利率與成本限制。"
  },
  printing:{
- numbers:"請用繁體中文整理示範印刷工作區的訂單、待審核、受阻工作及報價概況。",
+ numbers:"請用繁體中文整理這週最值得我擔心的三件印刷營運事項：受阻工作、近期交期或交接、待確認核准，並附上每項來源依據。",
  quotes:"請用繁體中文整理印刷訂單報價與待確認事項。",
  followups:"請用繁體中文說明應優先追蹤的印刷工單及原因。",
  suppliers:"請用繁體中文指出紙材、交期與供應商有哪些事項需要查證。",
