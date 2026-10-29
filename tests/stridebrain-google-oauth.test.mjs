@@ -134,3 +134,12 @@ test("callback does not require the staff session cookie after a signed staff-au
  assert.match(connect,/createGoogleOAuthTransaction/);
  assert.match(connect,/organizationId:context\.organizationId/);
 });
+
+test("AI Team boot refreshes Google status after successful OAuth return",()=>{
+ const app=readFileSync("public/stridebrain-demo/app.js","utf8");
+ assert.match(app,/allowedInitialViews=new Set\(\["overview","copilot","team"\]\)/);
+ assert.match(app,/googleReturned=params\.get\("google"\)==="connected"/);
+ assert.match(app,/await refreshMessageConnections\(\)/);
+ assert.match(app,/google\?\.connected===true/);
+ assert.match(app,/cleanUrl\.searchParams\.delete\("google"\)/);
+});
