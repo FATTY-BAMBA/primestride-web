@@ -24,7 +24,7 @@ export async function POST(request){
   return json(200,{ok:true,receipt});
  }catch(error){
   const code=String(error?.message||"MESSAGE_SEND_FAILED");
-  const status=code.includes("NOT_ALLOWED")||code.includes("INVALID")||code.includes("CONTEXT")||code.includes("MISMATCH")?400:
+  const status=code.includes("NOT_ALLOWED")||code.includes("NOT_VERIFIED")||code.includes("INVALID")||code.includes("CONTEXT")||code.includes("MISMATCH")?400:
    code.includes("IN_PROGRESS")?409:code.includes("UNAVAILABLE")||code.includes("REFRESH")?503:502;
   return json(status,{code});
  }

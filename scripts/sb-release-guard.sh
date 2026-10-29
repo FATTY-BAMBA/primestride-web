@@ -11,6 +11,8 @@ bad=0
 [ -f src/app/api/stridebrain-demo/google/callback/route.js ] || bad=1
 [ -f src/app/api/stridebrain-demo/google/status/route.js ] || bad=1
 [ -f src/app/api/stridebrain-demo/line/webhook/route.js ] || bad=1
+[ -f src/app/api/stridebrain-demo/line/inbox/route.js ] || bad=1
+[ -f src/app/api/stridebrain-demo/line/identities/verify/route.js ] || bad=1
 [ -f src/lib/stridebrain-demo/line-connector.js ] || bad=1
 
 grep -q 'data-value="team"' public/stridebrain-demo/index.html || bad=1

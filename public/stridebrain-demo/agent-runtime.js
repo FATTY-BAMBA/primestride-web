@@ -23,11 +23,15 @@ const registry={
 };
 export const AGENT_DEFINITIONS=Object.freeze(Object.fromEntries(Object.entries(registry).map(([k,v])=>[k,Object.freeze({...v,permissions:Object.freeze({...v.permissions})})])));
 export function listAgents(){return Object.values(AGENT_DEFINITIONS);}
-export function defaultAiTeamState(){return {activeAgentId:"operations-assistant",activeRunId:null,runs:[],generatedTasks:[],emailReceipts:[]};}
+export function defaultAiTeamState(){return {activeAgentId:"operations-assistant",activeRunId:null,runs:[],generatedTasks:[],emailReceipts:[],externalReceipts:[]};}
 export function normaliseAiTeamState(value){
  const fresh=defaultAiTeamState(),v=value&&typeof value==="object"?value:{},agent=AGENT_DEFINITIONS[v.activeAgentId]?v.activeAgentId:fresh.activeAgentId;
+ const emailReceipts=Array.isArray(v.emailReceipts)?v.emailReceipts.slice(0,40):[];
+ const externalReceipts=Array.isArray(v.externalReceipts)?v.externalReceipts.slice(0,80):
+  emailReceipts.map(x=>({...x,channel:"email",recipientLabel:x.to||""}));
  return {activeAgentId:agent,activeRunId:typeof v.activeRunId==="string"?v.activeRunId:null,
-  runs:Array.isArray(v.runs)?v.runs.slice(0,24):[],generatedTasks:Array.isArray(v.generatedTasks)?v.generatedTasks.slice(0,80):[],emailReceipts:Array.isArray(v.emailReceipts)?v.emailReceipts.slice(0,40):[]};
+  runs:Array.isArray(v.runs)?v.runs.slice(0,24):[],generatedTasks:Array.isArray(v.generatedTasks)?v.generatedTasks.slice(0,80):[],
+  emailReceipts,externalReceipts};
 }
 export function selectAgent(state,agentId){
  state.aiTeam=normaliseAiTeamState(state.aiTeam);
@@ -86,17 +90,28 @@ export function recordModelAgentPlan(state,model,plan){
  state.audit=state.audit.slice(0,60);
  return {ok:true,run};
 }
-export function recordEmailReceipt(state,itemId,receipt){
+function recordExternalReceipt(state,itemId,channel,receipt){
  state.aiTeam=normaliseAiTeamState(state.aiTeam);
- if(!itemId||!receipt?.receiptId||receipt.status!=="accepted")return {ok:false};
- const entry={itemId,receiptId:String(receipt.receiptId),provider:String(receipt.provider||""),status:"accepted",acceptedAt:String(receipt.acceptedAt||""),to:String(receipt.to||""),subject:String(receipt.subject||"")};
- state.aiTeam.emailReceipts=state.aiTeam.emailReceipts.filter(x=>x.itemId!==itemId);
- state.aiTeam.emailReceipts.unshift(entry);state.aiTeam.emailReceipts=state.aiTeam.emailReceipts.slice(0,40);
+ if(!itemId||!["email","line"].includes(channel)||!receipt?.receiptId||receipt.status!=="accepted")return {ok:false};
+ const entry={
+  itemId,channel,receiptId:String(receipt.receiptId),provider:String(receipt.provider||""),status:"accepted",
+  acceptedAt:String(receipt.acceptedAt||""),recipientLabel:String(receipt.recipientLabel||receipt.to||""),
+  contactRef:String(receipt.contactRef||""),subject:String(receipt.subject||"")
+ };
+ state.aiTeam.externalReceipts=state.aiTeam.externalReceipts.filter(x=>!(x.itemId===itemId&&x.channel===channel));
+ state.aiTeam.externalReceipts.unshift(entry);state.aiTeam.externalReceipts=state.aiTeam.externalReceipts.slice(0,80);
+ if(channel==="email"){
+  const legacy={itemId,receiptId:entry.receiptId,provider:entry.provider,status:"accepted",acceptedAt:entry.acceptedAt,to:entry.recipientLabel,subject:entry.subject};
+  state.aiTeam.emailReceipts=state.aiTeam.emailReceipts.filter(x=>x.itemId!==itemId);
+  state.aiTeam.emailReceipts.unshift(legacy);state.aiTeam.emailReceipts=state.aiTeam.emailReceipts.slice(0,40);
+ }
  state.audit=Array.isArray(state.audit)?state.audit:[];
- state.audit.unshift({at:new Date().toLocaleString("en-TW",{hour12:false}),text:"Human approved external email for "+itemId+"; provider accepted receipt "+entry.receiptId+"."});
+ state.audit.unshift({at:new Date().toLocaleString("en-TW",{hour12:false}),text:"Human approved external "+channel+" for "+itemId+"; provider accepted receipt "+entry.receiptId+"."});
  state.audit=state.audit.slice(0,60);
  return {ok:true,entry};
 }
+export function recordEmailReceipt(state,itemId,receipt){return recordExternalReceipt(state,itemId,"email",receipt);}
+export function recordLineReceipt(state,itemId,receipt){return recordExternalReceipt(state,itemId,"line",receipt);}
 export function approveAndExecuteAgentAction(state,itemId){
  state.aiTeam=normaliseAiTeamState(state.aiTeam);
  const run=state.aiTeam.runs.find(r=>r.id===state.aiTeam.activeRunId),agent=run&&AGENT_DEFINITIONS[run.agentId],item=run?.items.find(x=>x.id===itemId);

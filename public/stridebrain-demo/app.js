@@ -1,7 +1,7 @@
 import {evidenceList} from "./evidence-presentation.js";
 import {DEMO_ROLES} from "./experience-views.js";
 import {aiTeamView} from "./views-ai-team.js";
-import {runAgent,selectAgent,recordModelAgentPlan,recordEmailReceipt,approveAndExecuteAgentAction} from "./ai-team.js";
+import {runAgent,selectAgent,recordModelAgentPlan,recordEmailReceipt,recordLineReceipt,approveAndExecuteAgentAction} from "./ai-team.js";
 import {copilotErrorMessage} from "./copilot-errors.js";
 import {getPack,listPacks} from "./industry-packs.js";
 import {WorkspaceModel,money,calculateVariation,escapeHtml as e,loadDemoState,saveDemoState,resetDemoState,event,setVariationInput,approveVariationGate,commitVariation,buildCustomerReply,reviewCustomerDraft,recordFeedback,markFeedbackReviewed} from "./core-model.js";
@@ -84,12 +84,13 @@ let copilotAccess={state:"checking",allowedModelIds:[]},sessionRefreshRun=0,sess
 let selectedModelId=DEFAULT_MODEL_ID,copilotModelMenuOpen=false,copilotDraft="";
 let emailConnector={state:"unknown",configured:false,roleAllowed:false,sender:null,provider:null};
 let messageConnections={state:"unknown",organizationId:"demo-workspace",storage:"pilot-env",connections:[],healthByProvider:{}};
-let view={page:"overview",projectId:null,projectDetail:false,docId:null,quoteId:null,chat:[],search:"",filter:"all",pageIndex:0,flowStep:null,agentDecisionId:null,emailDecisionId:null};
+let lineInbox={state:"unknown",identities:[]};
+let view={page:"overview",projectId:null,projectDetail:false,docId:null,quoteId:null,chat:[],search:"",filter:"all",pageIndex:0,flowStep:null,agentDecisionId:null,emailDecisionId:null,lineDecisionId:null};
 function toast(message){
  const el=$("toast");el.textContent=message;el.classList.add("visible");
  if(toastHandle)clearTimeout(toastHandle);toastHandle=setTimeout(()=>el.classList.remove("visible"),3500);
 }
-function context(){return {model,pack,state,view,history:historyData,industryEvidence,documentSession,locale:interfaceLocale,emailConnector,messageConnections,staffAccess:new URLSearchParams(location.search).has("staff"),copilotSession:{access:copilotAccess.state,allowedModelIds:copilotAccess.allowedModelIds,mode:copilotMode,guest:copilotGuest,connected:copilotConnected,busy:copilotBusy,selectedModelId,modelMenuOpen:copilotModelMenuOpen,draft:copilotDraft}};}
+function context(){return {model,pack,state,view,history:historyData,industryEvidence,documentSession,locale:interfaceLocale,emailConnector,messageConnections,lineInbox,staffAccess:new URLSearchParams(location.search).has("staff"),copilotSession:{access:copilotAccess.state,allowedModelIds:copilotAccess.allowedModelIds,mode:copilotMode,guest:copilotGuest,connected:copilotConnected,busy:copilotBusy,selectedModelId,modelMenuOpen:copilotModelMenuOpen,draft:copilotDraft}};}
 const GUEST_CHAT_PREFIX="stridebrain-guest-chat-v1:";
 function guestChatKey(industry){return GUEST_CHAT_PREFIX+(copilotGuest?"guest:":"staff:")+guestChatScope+":"+industry;}
 function saveGuestChat(){
@@ -401,6 +402,15 @@ async function runModelDrivenAgentPlan(agentId){
   return recordModelAgentPlan(state,model,payload);
  }catch{return {ok:false,reason:interfaceLocale==="en"?"The AI teammate planning request could not be completed.":"AI 同事目前無法完成規劃請求。"};}
 }
+async function refreshLineInbox(){
+ lineInbox={...lineInbox,state:"checking"};render();
+ try{
+  const response=await fetch("/api/stridebrain-demo/line/inbox",{method:"GET",cache:"no-store",credentials:"same-origin",headers:{Accept:"application/json"}});
+  const payload=await response.json().catch(()=>null);
+  lineInbox={state:response.ok?"ready":"error",identities:Array.isArray(payload?.identities)?payload.identities:[],code:response.ok?null:(payload?.code||response.status)};
+ }catch{lineInbox={state:"error",identities:[],code:"LINE_INBOX_UNAVAILABLE"};}
+ render();
+}
 async function refreshMessageConnections(){
  messageConnections={...messageConnections,state:"checking"};render();
  try{
@@ -419,6 +429,14 @@ async function refreshMessageConnections(){
    providerLabel:activeEmail?.label||null,
    limits:activeEmail?.limits||null
   };
+  const line=messageConnections.connections.find(x=>x.id==="line");
+  if(response.ok&&line?.configured===true&&line?.roleAllowed===true){
+   try{
+    const inboxResponse=await fetch("/api/stridebrain-demo/line/inbox",{method:"GET",cache:"no-store",credentials:"same-origin",headers:{Accept:"application/json"}});
+    const inboxPayload=await inboxResponse.json().catch(()=>null);
+    lineInbox={state:inboxResponse.ok?"ready":"error",identities:Array.isArray(inboxPayload?.identities)?inboxPayload.identities:[],code:inboxResponse.ok?null:(inboxPayload?.code||inboxResponse.status)};
+   }catch{lineInbox={state:"error",identities:[],code:"LINE_INBOX_UNAVAILABLE"};}
+  }
  }catch{
   messageConnections={state:"error",organizationId:"demo-workspace",storage:"pilot-env",connections:[],healthByProvider:messageConnections.healthByProvider||{}};
   emailConnector={state:"error",configured:false,roleAllowed:false,sender:null,provider:null};
@@ -460,6 +478,44 @@ async function perform(el){
  }
  if(action==="agentEmailPrepare"){
   view.emailDecisionId=value||id;view.agentDecisionId=value||id;await refreshMessageConnections();return;
+ }
+ if(action==="lineIdentityVerify"){
+  const identityId=Number(value||id);
+  const row=document.querySelector('[data-line-identity-id="'+identityId+'"]');
+  const select=row?.querySelector('[name="line-contact-ref"]');
+  const option=select?.selectedOptions?.[0];
+  const contactRef=select?.value||"",displayName=option?.dataset?.name||option?.textContent||"";
+  if(!identityId||!contactRef||!displayName){toast(interfaceLocale==="en"?"Choose a contact before verifying.":"請先選擇要連結的聯絡人。");return;}
+  const buttonEl=row?.querySelector('[data-action="lineIdentityVerify"]');if(buttonEl)buttonEl.disabled=true;
+  try{
+   const response=await fetch("/api/stridebrain-demo/line/identities/verify",{method:"POST",cache:"no-store",credentials:"same-origin",headers:{"Content-Type":"application/json","Accept":"application/json"},
+    body:JSON.stringify({identityId,contactRef,displayName})});
+   const payload=await response.json().catch(()=>null);
+   if(!response.ok){toast(interfaceLocale==="en"?"LINE identity was not verified ("+(payload?.code||response.status)+").":"LINE 身分未完成驗證（"+(payload?.code||response.status)+"）。");await refreshLineInbox();return;}
+   await refreshLineInbox();
+   toast(interfaceLocale==="en"?"LINE identity linked to "+displayName+".":"LINE 身分已連結至 "+displayName+"。");
+  }catch{toast(interfaceLocale==="en"?"LINE identity verification failed.":"LINE 身分驗證請求失敗。");await refreshLineInbox();}
+  return;
+ }
+ if(action==="agentLinePrepare"){
+  view.lineDecisionId=value||id;view.agentDecisionId=value||id;await refreshMessageConnections();return;
+ }
+ if(action==="agentLineCancel"){view.lineDecisionId=null;render();return;}
+ if(action==="agentLineSend"){
+  const itemId=value||id,run=state.aiTeam?.runs?.find(r=>r.id===state.aiTeam?.activeRunId),item=run?.items?.find(x=>x.id===itemId);
+  const box=document.querySelector('.sb-line-composer[data-item-id="'+itemId+'"]');
+  if(!item||!box){toast(interfaceLocale==="en"?"LINE preview is no longer available.":"LINE 預覽已失效。");return;}
+  const contactRef=box.dataset.contactRef||"",body=box.querySelector('[name="line-body"]')?.value||"";
+  const buttonEl=box.querySelector('[data-action="agentLineSend"]');if(buttonEl)buttonEl.disabled=true;
+  try{
+   const response=await fetch("/api/stridebrain-demo/messages/send",{method:"POST",cache:"no-store",credentials:"same-origin",headers:{"Content-Type":"application/json","Accept":"application/json"},
+    body:JSON.stringify({providerId:"line",channel:"line",contactRef,body,actionId:item.id+"_line",projectId:item.projectId,recordId:item.recordId})});
+   const payload=await response.json().catch(()=>null);
+   if(!response.ok){toast(interfaceLocale==="en"?"LINE message was not sent ("+(payload?.code||response.status)+").":"LINE 訊息未送出（"+(payload?.code||response.status)+"）。");render();return;}
+   recordLineReceipt(state,item.id,payload.receipt);view.lineDecisionId=null;save();render();
+   toast(interfaceLocale==="en"?"LINE accepted the approved message.":"LINE 已接受核准的訊息。");
+  }catch{toast(interfaceLocale==="en"?"LINE send request failed.":"LINE 寄送請求失敗。");render();}
+  return;
  }
  if(action==="agentEmailCancel"){view.emailDecisionId=null;render();return;}
  if(action==="agentEmailSend"){

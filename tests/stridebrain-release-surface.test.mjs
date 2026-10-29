@@ -27,9 +27,15 @@ test("live StrideBrain release must retain Google Workspace OAuth endpoints",()=
 test("live StrideBrain release must retain LINE Messaging API foundation",()=>{
  assert.equal(existsSync("src/app/api/stridebrain-demo/line/webhook/route.js"),true);
  assert.equal(existsSync("src/lib/stridebrain-demo/line-connector.js"),true);
+ assert.equal(existsSync("src/app/api/stridebrain-demo/line/inbox/route.js"),true);
+ assert.equal(existsSync("src/app/api/stridebrain-demo/line/identities/verify/route.js"),true);
  const connectors=read("src/lib/stridebrain-demo/message-connectors.js");
  assert.match(connectors,/lineConnectorStatus/);
  assert.match(connectors,/sendControlledLinePush/);
+ const team=read("public/stridebrain-demo/views-ai-team.js");
+ assert.match(team,/LINE identity review|LINE 身分驗證/);
+ assert.match(team,/agentLinePrepare/);
+ assert.match(team,/agentLineSend/);
  const webhook=read("src/app/api/stridebrain-demo/line/webhook/route.js");
  assert.match(webhook,/x-line-signature/);
  assert.match(webhook,/processLineWebhook/);
