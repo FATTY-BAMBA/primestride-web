@@ -3,6 +3,10 @@ import {findVerifiedContactIdentity} from "./contact-identity-registry.js";
 
 const LINE_USER_ID=/^U[0-9a-f]{32}$/;
 const clean=(value,max)=>String(value??"").trim().slice(0,max);
+function deterministicRetryKey(organizationId,actionId){
+ const hex=createHash("sha256").update(organizationId+":"+actionId).digest("hex").slice(0,32);
+ return hex.slice(0,8)+"-"+hex.slice(8,12)+"-4"+hex.slice(13,16)+"-a"+hex.slice(17,20)+"-"+hex.slice(20,32);
+}
 
 function supabaseConfig(env=process.env,organizationId){
  const url=clean(env.STRIDEBRAIN_DEMO_SUPABASE_URL,500);
@@ -149,6 +153,16 @@ function validatePush(input){
  if(!/^(PRJ|JOB)-\d{1,8}$/.test(projectId)||recordId.length<3)return {ok:false,code:"LINE_CONTEXT_INVALID"};
  return {ok:true,value:{to,body,actionId,projectId,recordId}};
 }
+async function existingAction({organizationId,actionId,env,requestFn}){
+ const cfg=supabaseConfig(env,organizationId),url=new URL(cfg.url+"/rest/v1/stridebrain_message_actions");
+ url.searchParams.set("organization_id","eq."+cfg.organizationId);
+ url.searchParams.set("action_id","eq."+clean(actionId,140));
+ url.searchParams.set("select","status,receipt_id,provider_message_id,accepted_at,recipient,project_id,record_id");
+ url.searchParams.set("limit","1");
+ const response=await requestFn(url.toString(),{headers:apiHeaders(cfg),cache:"no-store",signal:AbortSignal.timeout(3000)});
+ if(!response.ok)throw Error("MESSAGE_AUDIT_STORAGE_UNAVAILABLE");
+ const rows=await response.json();return Array.isArray(rows)?rows[0]||null:null;
+}
 async function auditAction({organizationId,value,status,receiptId=null,providerMessageId=null,errorCode=null,env,requestFn,now}){
  const cfg=supabaseConfig(env,organizationId),url=new URL(cfg.url+"/rest/v1/stridebrain_message_actions");
  url.searchParams.set("on_conflict","organization_id,action_id");
@@ -171,10 +185,18 @@ export async function sendControlledLinePush({organizationId,input,env=process.e
  const value=checked.value;
  const identity=await findVerifiedContactIdentity({organizationId,channel:"line",externalIdentity:value.to,provider:"line",env,requestFn});
  if(!identity)throw Error("LINE_RECIPIENT_NOT_VERIFIED");
+ const existing=await existingAction({organizationId,actionId:value.actionId,env,requestFn});
+ if(existing?.status==="accepted"){
+  return {receiptId:existing.receipt_id,provider:"line",providerMessageId:existing.provider_message_id,status:"accepted",
+   acceptedAt:existing.accepted_at,to:existing.recipient,subject:"LINE message",projectId:existing.project_id,recordId:existing.record_id,
+   actionId:value.actionId,duplicate:true};
+ }
+ if(existing?.status==="pending")throw Error("LINE_SEND_IN_PROGRESS");
+ await auditAction({organizationId,value,status:"pending",env,requestFn,now});
  try{
   const response=await requestFn("https://api.line.me/v2/bot/message/push",{
    method:"POST",
-   headers:{Authorization:"Bearer "+cfg.accessToken,"Content-Type":"application/json","X-Line-Retry-Key":createHash("sha256").update(organizationId+":"+value.actionId).digest("hex").slice(0,36)},
+   headers:{Authorization:"Bearer "+cfg.accessToken,"Content-Type":"application/json","X-Line-Retry-Key":deterministicRetryKey(organizationId,value.actionId)},
    body:JSON.stringify({to:value.to,messages:[{type:"text",text:value.body}]}),cache:"no-store"
   });
   if(!response.ok)throw Error("LINE_PROVIDER_REJECTED");
