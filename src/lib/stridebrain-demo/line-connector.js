@@ -44,10 +44,24 @@ export function lineConnectorStatus({env=process.env,role=null,organizationId}={
   limits:{singleRecipient:true,attachments:false,bcc:false,bulk:false,requiresApproval:true}
  };
 }
+export function lineWebhookSignatureDiagnostic({rawBody,signature,env=process.env,organizationId}={}){
+ const cfg=lineConfig(env,organizationId);
+ let given=null;
+ try{given=typeof signature==="string"&&signature?Buffer.from(signature,"base64"):null;}catch{}
+ return {
+  configured:cfg.configured,
+  channelId:cfg.channelId,
+  bodyBytes:typeof rawBody==="string"?Buffer.byteLength(rawBody,"utf8"):null,
+  bodyHash:typeof rawBody==="string"?createHash("sha256").update(rawBody).digest("hex").slice(0,16):null,
+  signaturePresent:Boolean(signature),
+  signatureBytes:given?.length||0,
+  secretFingerprint:cfg.configured?createHash("sha256").update(cfg.channelSecret).digest("hex").slice(0,12):null
+ };
+}
 export function verifyLineWebhookSignature({rawBody,signature,env=process.env,organizationId}={}){
  const cfg=lineConfig(env,organizationId);
  if(!cfg.configured||typeof rawBody!=="string"||typeof signature!=="string"||!signature)return false;
- const expected=createHmac("sha256",cfg.channelSecret).update(rawBody).digest();
+ const expected=createHmac("sha256",cfg.channelSecret).update(rawBody,"utf8").digest();
  let given;
  try{given=Buffer.from(signature,"base64");}catch{return false;}
  return given.length===expected.length&&timingSafeEqual(given,expected);
