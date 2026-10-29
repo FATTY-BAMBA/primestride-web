@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {createHmac} from "node:crypto";
 const {
- verifyLineWebhookSignature,processLineWebhook,lineConnectorHealth,sendControlledLinePush,DEFAULT_LINE_WEBHOOK_URL
+ verifyLineWebhookSignature,lineWebhookSignatureDiagnostic,processLineWebhook,lineConnectorHealth,sendControlledLinePush,DEFAULT_LINE_WEBHOOK_URL
 }=await import("../src/lib/stridebrain-demo/line-connector.js");
 
 const organizationId="org-demo";
@@ -113,4 +113,18 @@ test("controlled LINE push rejects unverified LINE user IDs",async()=>{
  await assert.rejects(()=>sendControlledLinePush({organizationId,env,requestFn,input:{
   to:userId,body:"Should not send",actionId:"line_action_124",projectId:"PRJ-107",recordId:"APR-1026"
  }}),/LINE_RECIPIENT_NOT_VERIFIED/);
+});
+
+test("LINE signature diagnostics expose only safe fingerprints",()=>{
+ const raw=JSON.stringify({destination:"U0123456789abcdef0123456789abcdef",events:[]});
+ const diag=lineWebhookSignatureDiagnostic({rawBody:raw,signature:signature(raw),organizationId,env});
+ assert.equal(diag.configured,true);
+ assert.equal(diag.channelId,"2001234567");
+ assert.equal(diag.signaturePresent,true);
+ assert.equal(diag.signatureBytes,32);
+ assert.equal(typeof diag.bodyHash,"string");
+ assert.equal(typeof diag.secretFingerprint,"string");
+ assert.equal("channelSecret" in diag,false);
+ assert.equal("accessToken" in diag,false);
+ assert.doesNotMatch(JSON.stringify(diag),/line-secret-at-least-sixteen/);
 });
