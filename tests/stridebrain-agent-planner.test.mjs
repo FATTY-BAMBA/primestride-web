@@ -73,5 +73,5 @@ test("project coordinator owns a distinct coordination review instead of the gen
   done("協調風險已整理。")
  );
  const r=await runAgentPlanner({industry:"interior",goal:"這週什麼可能卡住",locale:"zh-TW",agentId:"project-coordinator",modelId:"test/mock",apiKey:"test",languageModel:model});
- assert.deepEqual(r.timeline.map(x=>x.tool),["review_coordination"]);
+ assert.deepEqual(r.timeline.map(x=>x.tool),["review_coordination","coordination_guard"]);
 });
