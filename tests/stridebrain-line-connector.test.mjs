@@ -97,21 +97,21 @@ test("controlled LINE push requires verified identity and is idempotent",async()
   }
   throw Error("unexpected "+u);
  };
- const input={to:userId,body:"Please confirm the site update.",actionId:"line_action_123",projectId:"PRJ-107",recordId:"APR-1026"};
+ const input={contactRef:"contact-line",body:"Please confirm the site update.",actionId:"line_action_123",projectId:"PRJ-107",recordId:"APR-1026"};
  const first=await sendControlledLinePush({organizationId,input,env,requestFn,now:1761386400000});
- assert.equal(first.provider,"line");assert.equal(first.status,"accepted");assert.equal(calls.push,1);
+ assert.equal(first.provider,"line");assert.equal(first.status,"accepted");assert.equal(first.contactRef,"contact-line");assert.equal(first.recipientLabel,"Pilot LINE user");assert.equal("to" in first,false);assert.equal(calls.push,1);
  const second=await sendControlledLinePush({organizationId,input,env,requestFn,now:1761386401000});
  assert.equal(second.duplicate,true);assert.equal(calls.push,1);
 });
 
-test("controlled LINE push rejects unverified LINE user IDs",async()=>{
+test("controlled LINE push rejects unverified contact references",async()=>{
  const requestFn=async(url,options={})=>{
   if(String(url).includes("stridebrain_contact_identities"))return {ok:true,json:async()=>[]};
   if(String(url).includes("stridebrain_message_actions"))return {ok:true,json:async()=>[]};
   throw Error("unexpected "+url);
  };
  await assert.rejects(()=>sendControlledLinePush({organizationId,env,requestFn,input:{
-  to:userId,body:"Should not send",actionId:"line_action_124",projectId:"PRJ-107",recordId:"APR-1026"
+  contactRef:"contact-line",body:"Should not send",actionId:"line_action_124",projectId:"PRJ-107",recordId:"APR-1026"
  }}),/LINE_RECIPIENT_NOT_VERIFIED/);
 });
 
