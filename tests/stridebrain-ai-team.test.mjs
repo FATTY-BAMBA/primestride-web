@@ -36,3 +36,17 @@ test("Project Coordinator is presentation-distinct and coordination-focused",()=
  assert.match(view,/Handoffs/);
  assert.match(view,/COORDINATION REVIEW COMPLETE/);
 });
+
+
+test("AI Team demo surface communicates readiness, control and coordination without empty-state language",()=>{
+ const view=readFileSync("public/stridebrain-demo/views-ai-team.js","utf8");
+ const primary=readFileSync("public/stridebrain-demo/views-primary.js","utf8");
+ assert.doesNotMatch(view,/Not run yet/);
+ assert.match(view,/CONTROLLED ACTION LAYER/);
+ assert.match(view,/AI prepares\. Your team approves\. Every action leaves a receipt\./);
+ assert.match(view,/RECORDED OWNER/);
+ assert.match(view,/NEXT HANDOFF/);
+ assert.doesNotMatch(primary,/No work selected/);
+ assert.match(primary,/READY TO REVIEW/);
+ assert.match(primary,/HUMAN APPROVAL BOUNDARY/);
+});
