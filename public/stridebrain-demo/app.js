@@ -407,8 +407,18 @@ async function refreshMessageConnections(){
   const response=await fetch("/api/stridebrain-demo/connections/status",{method:"GET",cache:"no-store",credentials:"same-origin",headers:{Accept:"application/json"}});
   const payload=await response.json().catch(()=>null);
   messageConnections={state:response.ok?"ready":"error",organizationId:payload?.organizationId||"demo-workspace",storage:payload?.storage||"pilot-env",connections:Array.isArray(payload?.connections)?payload.connections:[],healthByProvider:messageConnections.healthByProvider||{}};
+  const google=messageConnections.connections.find(x=>x.id==="google-workspace")||null;
   const microsoft=messageConnections.connections.find(x=>x.id==="microsoft365")||null;
-  emailConnector={state:messageConnections.state,configured:microsoft?.configured===true,roleAllowed:microsoft?.roleAllowed===true,sender:microsoft?.sender||null,provider:microsoft?.id||null,limits:microsoft?.limits||null};
+  const activeEmail=google?.connected===true?google:(microsoft?.configured===true?microsoft:null);
+  emailConnector={
+   state:messageConnections.state,
+   configured:Boolean(activeEmail),
+   roleAllowed:activeEmail?.roleAllowed===true,
+   sender:activeEmail?.sender||null,
+   provider:activeEmail?.id||null,
+   providerLabel:activeEmail?.label||null,
+   limits:activeEmail?.limits||null
+  };
  }catch{
   messageConnections={state:"error",organizationId:"demo-workspace",storage:"pilot-env",connections:[],healthByProvider:messageConnections.healthByProvider||{}};
   emailConnector={state:"error",configured:false,roleAllowed:false,sender:null,provider:null};
@@ -460,11 +470,12 @@ async function perform(el){
   const buttonEl=box.querySelector('[data-action="agentEmailSend"]');if(buttonEl)buttonEl.disabled=true;
   try{
    const response=await fetch("/api/stridebrain-demo/messages/send",{method:"POST",cache:"no-store",credentials:"same-origin",headers:{"Content-Type":"application/json","Accept":"application/json"},
-    body:JSON.stringify({providerId:"microsoft365",channel:"email",to,subject,body,actionId:item.id,projectId:item.projectId,recordId:item.recordId})});
+    body:JSON.stringify({providerId:emailConnector.provider,channel:"email",to,subject,body,actionId:item.id,projectId:item.projectId,recordId:item.recordId})});
    const payload=await response.json().catch(()=>null);
    if(!response.ok){toast(interfaceLocale==="en"?"Email was not sent ("+(payload?.code||response.status)+").":"郵件未寄出（"+(payload?.code||response.status)+"）。");render();return;}
    recordEmailReceipt(state,item.id,payload.receipt);view.emailDecisionId=null;save();render();
-   toast(interfaceLocale==="en"?"Microsoft 365 accepted the email for sending.":"Microsoft 365 已接受郵件寄送。");
+   const label=emailConnector.provider==="google-workspace"?"Google Workspace":"Microsoft 365";
+   toast(interfaceLocale==="en"?label+" accepted the email for sending.":label+" 已接受郵件寄送。");
   }catch{toast(interfaceLocale==="en"?"Email send request failed.":"郵件寄送請求失敗。");render();}
   return;
  }
