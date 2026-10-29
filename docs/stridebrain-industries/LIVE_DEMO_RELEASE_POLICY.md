@@ -55,3 +55,14 @@ Rollback only to a deployment whose Git SHA is known and documented as a complet
 
 ## Current principle
 There is **one live branch**. Feature branches are disposable. The custom domain must always resolve to the latest tested commit from the live branch.
+
+
+## Vercel historical-redeploy guard
+The Vercel project uses an **Ignored Build Step** on the canonical demo branch. It calls `scripts/sb-release-guard.sh`.
+
+For the live demo branch:
+- commits that predate this guard are skipped because the script is missing;
+- commits missing AI Team, Google Workspace routes/status integration, or the OAuth-safe staff cookie are skipped;
+- valid current releases return the Vercel-specific non-zero status that means "continue build."
+
+This guard applies only to `feature/stridebrain-interiors-flagship-demo`; it does not change build behavior for the PrimeStride marketing-site branches in the same Vercel project.
