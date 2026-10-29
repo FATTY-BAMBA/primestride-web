@@ -9,8 +9,8 @@ const registry={
   permissions:{automatic:["read_records","calculate","draft"],approval:["create_internal_task"],blocked:["send_external_message","modify_business_records","approve_quote","payment"]}
  },
  "project-coordinator":{
-  id:"project-coordinator",nameZh:"專案協調員",nameEn:"Project Coordinator",version:"v0.4",
-  descriptionZh:"盯期限、受阻工作、交接與責任人，準備協調動作。",descriptionEn:"Tracks deadlines, blockers, handoffs and owners, then prepares coordination actions.",
+  id:"project-coordinator",nameZh:"專案協調員",nameEn:"Project Coordinator",version:"v0.5",
+  descriptionZh:"找出可能卡住的交接、期限與待核准事項，準備協調下一步。",descriptionEn:"Surfaces coordination risks across blockers, deadlines, approvals and handoffs, then prepares the next move.",
   planner:planProjectCoordinator,
   permissions:{automatic:["read_records","calculate","draft"],approval:["create_internal_task"],blocked:["send_external_message","modify_business_records","approve_quote","payment"]}
  },
