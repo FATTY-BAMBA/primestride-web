@@ -75,3 +75,14 @@ test("staff connections endpoint upgrades Google from planned fallback to live O
  const browser=readFileSync("public/stridebrain-demo/app.js","utf8");
  assert.equal(browser.includes('/api/stridebrain-demo/google/status'),false);
 });
+
+test("connector snapshot refuses missing organization context",()=>{
+ assert.throws(()=>communicationConnectionsSnapshot({role:"staff",env}),/ORGANIZATION_CONTEXT_REQUIRED/);
+});
+
+test("connections endpoint derives organization context on the server",()=>{
+ const route=readFileSync("src/app/api/stridebrain-demo/connections/status/route.js","utf8");
+ assert.match(route,/resolveRuntimeContext/);
+ assert.match(route,/organizationId:context\.organizationId/);
+ assert.match(route,/dataClassification:context\.dataClassification/);
+});
