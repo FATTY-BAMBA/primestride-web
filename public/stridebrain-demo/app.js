@@ -184,13 +184,28 @@ async function loadIndustry(id){
   state.readiness=state.readiness||{};
   state.readiness.inputs=normalizeReadinessInput(pack.id,state.readiness.inputs||initialReadiness(pack.id));
   documentSession=null;
-  // A shareable ?view=copilot preview opens directly to the conversational
-  // landing without changing the Overview default for existing customers.
-  const preferCopilot=new URLSearchParams(location.search).get("view")==="copilot"||view.page==="copilot";
-  view={page:preferCopilot?"copilot":"overview",projectId:pack.scenario.projectId,projectDetail:false,docId:null,quoteId:null,chat:[],search:"",filter:"all",pageIndex:0,flowStep:null};
-  const url=new URL(location.href);url.searchParams.set("industry",pack.id);history.replaceState({industry:pack.id},"",url);
+  // Direct links may request a supported workspace view. Keep the requested view
+  // instead of resetting to Overview during industry-pack hydration.
+  const params=new URLSearchParams(location.search);
+  const requestedView=params.get("view");
+  const allowedInitialViews=new Set(["overview","copilot","team"]);
+  const initialView=allowedInitialViews.has(requestedView)?requestedView:(view.page==="copilot"||view.page==="team"?view.page:"overview");
+  view={page:initialView,projectId:pack.scenario.projectId,projectDetail:false,docId:null,quoteId:null,chat:[],search:"",filter:"all",pageIndex:0,flowStep:null};
+  const url=new URL(location.href);url.searchParams.set("industry",pack.id);url.searchParams.set("view",initialView);history.replaceState({industry:pack.id},"",url);
   if(copilotMode==="gpt")restoreGuestChat();
-  updateShell();render();toast(pack.name+" template loaded · "+model.seed.documents.length+" example source records.");
+  updateShell();render();
+
+  const googleReturned=params.get("google")==="connected";
+  if(initialView==="team"||googleReturned){
+    await refreshMessageConnections();
+    if(googleReturned){
+      const google=messageConnections.connections.find(x=>x.id==="google-workspace");
+      toast(google?.connected===true
+        ? (interfaceLocale==="en"?"Google Workspace connected.":"Google Workspace 已連線。")
+        : (interfaceLocale==="en"?"Google authorization completed, but the saved connection could not be verified yet.":"Google 授權已完成，但目前尚無法驗證已儲存的連線。"));
+      const cleanUrl=new URL(location.href);cleanUrl.searchParams.delete("google");history.replaceState({industry:pack.id},"",cleanUrl);
+    }else toast(pack.name+" template loaded · "+model.seed.documents.length+" example source records.");
+  }else toast(pack.name+" template loaded · "+model.seed.documents.length+" example source records.");
   window.dispatchEvent(new Event("stridebrain:ready"));
  }catch(error){
   pack=previous.pack;model=previous.model;state=previous.state;historyData=previous.historyData;industryEvidence=previous.industryEvidence;documentSession=previous.documentSession;view=previous.view;
