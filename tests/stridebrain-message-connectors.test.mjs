@@ -32,7 +32,7 @@ test("connector registry rejects unknown, channel mismatch and unimplemented pro
  await assert.rejects(()=>sendApprovedMessage({providerId:"unknown",channel:"email"}),/MESSAGE_PROVIDER_UNKNOWN/);
  await assert.rejects(()=>sendApprovedMessage({providerId:"microsoft365",channel:"line"}),/MESSAGE_CHANNEL_MISMATCH/);
  await assert.rejects(()=>sendApprovedMessage({providerId:"line",channel:"line"}),/MESSAGE_PROVIDER_NOT_IMPLEMENTED/);
- assert.equal(messageConnectorStatus({providerId:"google-workspace",role:"staff",env}).implemented,false);
+ assert.equal(messageConnectorStatus({providerId:"google-workspace",role:"staff",env,organizationId:"org-demo"}).implemented,true);
 });
 test("generic Microsoft adapter preserves controlled send receipt",async()=>{
  const store=new Map();
@@ -85,4 +85,13 @@ test("connections endpoint derives organization context on the server",()=>{
  assert.match(route,/resolveRuntimeContext/);
  assert.match(route,/organizationId:context\.organizationId/);
  assert.match(route,/dataClassification:context\.dataClassification/);
+});
+
+test("generic message route carries trusted organization context into Gmail sends",()=>{
+ const route=readFileSync("src/app/api/stridebrain-demo/messages/send/route.js","utf8");
+ assert.match(route,/resolveRuntimeContext/);
+ assert.match(route,/organizationId:context\.organizationId/);
+ const browser=readFileSync("public/stridebrain-demo/app.js","utf8");
+ assert.match(browser,/google\?\.connected===true\?google/);
+ assert.match(browser,/providerId:emailConnector\.provider/);
 });
