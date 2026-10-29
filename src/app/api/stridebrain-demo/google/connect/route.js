@@ -23,5 +23,5 @@ export async function GET(request){
   sessionScope:session.chatScope,
   organizationId:context.organizationId
  });
- return NextResponse.redirect(buildGoogleAuthorizationUrl({state,redirectUri}),303);
+ return NextResponse.redirect(buildGoogleAuthorizationUrl({state,redirectUri,organizationId:context.organizationId}),303);
 }
