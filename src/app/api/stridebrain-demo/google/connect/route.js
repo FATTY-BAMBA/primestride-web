@@ -15,7 +15,7 @@ export async function GET(request){
  const context=resolveRuntimeContext({session});
  if(!context.ok)return NextResponse.json({code:context.code},{status:503});
 
- const status=googleOAuthStatus({role:session.role});
+ const status=googleOAuthStatus({role:session.role,organizationId:context.organizationId});
  if(!status.configured)return NextResponse.json({code:"GOOGLE_OAUTH_UNAVAILABLE"},{status:503});
 
  const redirectUri=googleRedirectUri();
