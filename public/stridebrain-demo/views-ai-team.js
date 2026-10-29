@@ -9,7 +9,7 @@ const name=(agent,zh)=>zh?agent.nameZh:agent.nameEn;
 const desc=(agent,zh)=>zh?agent.descriptionZh:agent.descriptionEn;
 const runFor=(team,agentId)=>team.runs.find(r=>r.agentId===agentId)||null;
 const counts=run=>({waiting:run?.items?.filter(x=>x.state!=="completed").length||0,done:run?.items?.filter(x=>x.state==="completed").length||0,total:run?.items?.length||0});
-const compactStatus=(run,zh)=>{if(!run)return zh?"尚未執行":"Not run yet";const c=counts(run);if(c.waiting)return zh?c.waiting+" 項待確認":c.waiting+" awaiting review";if(c.done)return zh?"已完成 "+c.done+" 項":c.done+" completed";return zh?"已完成巡檢":"Review complete";};
+const compactStatus=(run,zh)=>{if(!run)return zh?"準備就緒":"Ready";const c=counts(run);if(c.waiting)return zh?c.waiting+" 項待確認":c.waiting+" awaiting review";if(c.done)return zh?"已完成 "+c.done+" 項":c.done+" completed";return zh?"已完成巡檢":"Review complete";};
 const permissions=zh=>[
  {title:zh?"可自動完成":"Automatic",text:zh?"閱讀資料、比對記錄、整理摘要與準備草稿。":"Read records, compare evidence, summarize and prepare drafts."},
  {title:zh?"需要你批准":"Needs approval",text:zh?"建立內部追蹤待辦；外部郵件或 LINE 訊息需在最終預覽後再次批准。":"Create an internal follow-up task; external email or LINE messages require a second approval after final preview."},
@@ -45,6 +45,12 @@ const agentDemoCopy=(agentId,zh)=>{
  };
  return map[agentId]||map["operations-assistant"];
 };
+const controlFlow=zh=>[
+ {n:"01",title:zh?"AI 先查核":"AI reviews",detail:zh?"讀取紀錄與來源依據":"Records & source evidence"},
+ {n:"02",title:zh?"AI 準備下一步":"AI prepares",detail:zh?"整理風險、草稿與待辦":"Risks, drafts & next steps"},
+ {n:"03",title:zh?"由你批准":"You approve",detail:zh?"任何對外動作都停在這裡":"Every external action stops here"},
+ {n:"04",title:zh?"留下可查收據":"Receipt logged",detail:zh?"Gmail / LINE 與稽核紀錄":"Gmail / LINE + audit trail"}
+];
 
 const receiptFor=(team,itemId,channel="email")=>{
  const current=team.externalReceipts?.find(x=>x.itemId===itemId&&x.channel===channel);
@@ -147,6 +153,7 @@ export function aiTeamView(c){
  const selected=agents.find(a=>a.id===team.activeAgentId)||agents[0],run=activeAgentRun(s,selected.id),t=x=>displayRecordText(x,c.locale);
  const cts=counts(run),externalCount=run?(team.externalReceipts||[]).filter(r=>run.items.some(item=>item.id===r.itemId)).length:0;
  let out='<section class="sb-team-hero"><div><div class="suite-eyebrow">'+(zh?'STRIDEBRAIN · AI 營運團隊':'STRIDEBRAIN · AI OPERATING TEAM')+'</div><h1>'+(zh?'把需要你決定的事<br>準備好再交給你':'Bring you decisions,<br>not busywork')+'</h1><p>'+(zh?'AI 同事先查資料、比對依據、準備下一步。需要判斷或執行的地方，才交回給你。':'AI teammates inspect records, verify evidence and prepare the next step. You only step in where judgment or approval is required.')+'</p></div><div class="sb-team-hero-badge"><span>3</span><small>'+(zh?'位 AI 同事<br>受控執行':'AI teammates<br>controlled execution')+'</small></div></section>';
+ out+='<section class="sb-control-flow" aria-label="'+(zh?'AI 到人工批准的工作流程':'AI-to-human approval flow')+'">'+controlFlow(zh).map((x,index)=>'<div><span>'+x.n+'</span><strong>'+e(x.title)+'</strong><small>'+e(x.detail)+'</small>'+(index<3?'<b aria-hidden="true">→</b>':'')+'</div>').join('')+'</section>';
  out+='<section class="section sb-agent-roster"><div class="section-head"><div><h2>'+(zh?'我的 AI 團隊':'My AI team')+'</h2><p>'+(zh?'選一位同事開始工作。':'Choose a teammate to delegate work to.')+'</p></div></div><div class="sb-agent-grid">'+agents.map(agent=>{const ar=runFor(team,agent.id),active=selected.id===agent.id;return '<button type="button" class="sb-agent-card '+(active?'active':'')+'" data-action="agentSelect" data-value="'+e(agent.id)+'" aria-pressed="'+String(active)+'"><div class="sb-agent-card-top"><span class="sb-agent-dot '+(ar?'ready':'idle')+'"></span><span>'+e(name(agent,zh))+'</span><small>'+e(agent.version)+'</small></div><p>'+e(desc(agent,zh))+'</p><div class="sb-agent-card-status"><strong>'+e(compactStatus(ar,zh))+'</strong>'+(ar?'<span>'+e(formatTime(ar.createdAt,zh))+'</span>':'')+'</div></button>';}).join('')+'</div></section>';
  if(!run){
   const demoCopy=agentDemoCopy(selected.id,zh);
