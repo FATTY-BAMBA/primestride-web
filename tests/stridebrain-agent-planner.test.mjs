@@ -25,7 +25,7 @@ test("operations assistant uses read tools before proposing work",async()=>{
 
 test("project coordinator inspects priority, project and evidence before proposing coordination",async()=>{
  const model=mock(
-  call("list_priorities",{limit:3},"p1"),
+  call("review_coordination",{limit:3},"p1"),
   call("get_project",{project_id:"PRJ-104"},"p2"),
   call("get_source",{source_id:"REG-WO-1040"},"p3"),
   call("propose_followup",{project_id:"PRJ-104",record_id:"WO-1040",contact:"Leo Huang",title:"確認交接準備進度",rationale:"交接工作接近記錄到期日，需要確認目前狀態與下一位負責人。",source_ids:["REG-WO-1040"],draft_zh:"請確認 WO-1040 目前進度與下一個交接人。此訊息尚未送出。",draft_en:"Please confirm WO-1040 status and next handoff owner. This message has not been sent."},"p4"),
@@ -34,7 +34,7 @@ test("project coordinator inspects priority, project and evidence before proposi
  const r=await runAgentPlanner({industry:"interior",goal:"檢查專案交接風險",locale:"zh-TW",agentId:"project-coordinator",modelId:"test/mock",apiKey:"test",languageModel:model});
  assert.equal(r.proposals.length,1);
  assert.equal(r.proposals[0].projectId,"PRJ-104");
- assert.deepEqual(r.timeline.map(x=>x.tool),["list_priorities","get_project","get_source","propose_followup"]);
+ assert.deepEqual(r.timeline.map(x=>x.tool),["review_coordination","get_project","get_source","propose_followup"]);
  assert.ok(r.executionPolicy.blocked.includes("send_external_message"));
 });
 
@@ -62,4 +62,13 @@ test("quote guardian rejects non-quotation proposal records",async()=>{
  const r=await runAgentPlanner({industry:"interior",goal:"檢查報價",locale:"zh-TW",agentId:"quote-margin-guardian",modelId:"test/mock",apiKey:"test",languageModel:model});
  assert.equal(r.proposals.length,0);
  assert.equal(r.timeline.some(x=>x.tool==="propose_followup"),false);
+});
+
+test("project coordinator owns a distinct coordination review instead of the generic priority scan",async()=>{
+ const model=mock(
+  call("review_coordination",{limit:3},"c1"),
+  done("協調風險已整理。")
+ );
+ const r=await runAgentPlanner({industry:"interior",goal:"這週什麼可能卡住",locale:"zh-TW",agentId:"project-coordinator",modelId:"test/mock",apiKey:"test",languageModel:model});
+ assert.deepEqual(r.timeline.map(x=>x.tool),["review_coordination"]);
 });
