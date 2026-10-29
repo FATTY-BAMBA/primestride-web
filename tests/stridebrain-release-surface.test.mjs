@@ -67,3 +67,14 @@ test("Vercel live-branch guard blocks incomplete or historical demo releases",()
  assert.match(guard,/exit 0/,"invalid release must tell Vercel to skip");
  assert.match(guard,/exit 1/,"valid release must tell Vercel to build");
 });
+
+test("dedicated LINE webhook host exposes only the signed POST ingress",()=>{
+ const middleware=read("middleware.js");
+ assert.match(middleware,/line-webhook\.primestrideai\.com/);
+ assert.match(middleware,/\/api\/stridebrain-demo\/line\/webhook/);
+ assert.match(middleware,/request\.method!==["']POST["']/);
+ assert.match(middleware,/status:404/);
+ assert.match(middleware,/status:405/);
+ const line=read("src/lib/stridebrain-demo/line-connector.js");
+ assert.match(line,/https:\/\/line-webhook\.primestrideai\.com/);
+});
