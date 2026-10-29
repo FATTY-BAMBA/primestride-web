@@ -1,5 +1,5 @@
 import {createHash,createHmac,timingSafeEqual} from "node:crypto";
-import {findVerifiedContactIdentity} from "./contact-identity-registry.js";
+import {findVerifiedContactIdentityByContactRef} from "./contact-identity-registry.js";
 
 const LINE_USER_ID=/^U[0-9a-f]{32}$/;
 const clean=(value,max)=>String(value??"").trim().slice(0,max);
@@ -159,13 +159,13 @@ export async function lineConnectorHealth({organizationId,role=null,env=process.
  return result;
 }
 function validatePush(input){
- const to=clean(input?.to,120),body=clean(input?.body,4000),actionId=clean(input?.actionId,140);
+ const contactRef=clean(input?.contactRef,120),body=clean(input?.body,4000),actionId=clean(input?.actionId,140);
  const projectId=clean(input?.projectId,40),recordId=clean(input?.recordId,90);
- if(!LINE_USER_ID.test(to))return {ok:false,code:"LINE_RECIPIENT_INVALID"};
+ if(!/^[A-Za-z0-9][A-Za-z0-9._:-]{2,119}$/.test(contactRef))return {ok:false,code:"LINE_CONTACT_REF_INVALID"};
  if(body.length<1)return {ok:false,code:"LINE_CONTENT_INVALID"};
  if(!/^[A-Za-z0-9_-]{6,140}$/.test(actionId))return {ok:false,code:"LINE_ACTION_INVALID"};
  if(!/^(PRJ|JOB)-\d{1,8}$/.test(projectId)||recordId.length<3)return {ok:false,code:"LINE_CONTEXT_INVALID"};
- return {ok:true,value:{to,body,actionId,projectId,recordId}};
+ return {ok:true,value:{contactRef,body,actionId,projectId,recordId}};
 }
 async function existingAction({organizationId,actionId,env,requestFn}){
  const cfg=supabaseConfig(env,organizationId),url=new URL(cfg.url+"/rest/v1/stridebrain_message_actions");
@@ -196,14 +196,15 @@ async function auditAction({organizationId,value,status,receiptId=null,providerM
 export async function sendControlledLinePush({organizationId,input,env=process.env,requestFn=fetch,now=Date.now()}={}){
  const cfg=lineConfig(env,organizationId);if(!cfg.configured)throw Error("LINE_CONNECTOR_UNAVAILABLE");
  const checked=validatePush(input);if(!checked.ok)throw Error(checked.code);
- const value=checked.value;
- const identity=await findVerifiedContactIdentity({organizationId,channel:"line",externalIdentity:value.to,provider:"line",env,requestFn});
- if(!identity)throw Error("LINE_RECIPIENT_NOT_VERIFIED");
+ const requested=checked.value;
+ const identity=await findVerifiedContactIdentityByContactRef({organizationId,channel:"line",contactRef:requested.contactRef,provider:"line",env,requestFn});
+ if(!identity||!LINE_USER_ID.test(String(identity.externalIdentity||"")))throw Error("LINE_RECIPIENT_NOT_VERIFIED");
+ const value={...requested,to:identity.externalIdentity,recipientLabel:identity.displayName};
  const existing=await existingAction({organizationId,actionId:value.actionId,env,requestFn});
  if(existing?.status==="accepted"){
   return {receiptId:existing.receipt_id,provider:"line",providerMessageId:existing.provider_message_id,status:"accepted",
-   acceptedAt:existing.accepted_at,to:existing.recipient,subject:"LINE message",projectId:existing.project_id,recordId:existing.record_id,
-   actionId:value.actionId,duplicate:true};
+   acceptedAt:existing.accepted_at,contactRef:value.contactRef,recipientLabel:value.recipientLabel,subject:"LINE message",
+   projectId:existing.project_id,recordId:existing.record_id,actionId:value.actionId,duplicate:true};
  }
  if(existing?.status==="pending")throw Error("LINE_SEND_IN_PROGRESS");
  await auditAction({organizationId,value,status:"pending",env,requestFn,now});
@@ -218,7 +219,7 @@ export async function sendControlledLinePush({organizationId,input,env=process.e
   const receiptId="line_"+createHash("sha256").update(organizationId+":"+value.actionId+":"+(requestId||now)).digest("hex").slice(0,20);
   await auditAction({organizationId,value,status:"accepted",receiptId,providerMessageId:requestId,env,requestFn,now});
   return {receiptId,provider:"line",providerMessageId:requestId,status:"accepted",acceptedAt:new Date(now).toISOString(),
-   to:value.to,subject:"LINE message",projectId:value.projectId,recordId:value.recordId,actionId:value.actionId};
+   contactRef:value.contactRef,recipientLabel:value.recipientLabel,subject:"LINE message",projectId:value.projectId,recordId:value.recordId,actionId:value.actionId};
  }catch(error){
   await auditAction({organizationId,value,status:"failed",errorCode:String(error?.message||"LINE_SEND_FAILED").slice(0,120),env,requestFn,now}).catch(()=>{});
   throw error;
