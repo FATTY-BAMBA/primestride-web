@@ -1,12 +1,12 @@
-import {reviewPriorities} from "./priority-review.js";
+import {reviewPriorities,reviewCoordination} from "./priority-review.js";
 import {commercialReview} from "./commercial-review.js";
 
 const clean=x=>String(x??"").trim();
 const unique=xs=>[...new Set(xs.filter(Boolean))];
 
-function taskAction({id,projectId,projectName,recordId,title,contact,dueDate,sourceIds,taskTitle,draftZh,draftEn,draftKind="message"}){
+function taskAction({id,projectId,projectName,recordId,title,contact,dueDate,sourceIds,taskTitle,draftZh,draftEn,draftKind="message",rationale="",coordination=null}){
  return {id,projectId,projectName,recordId,title,contact,dueDate:dueDate||null,sourceIds:unique(sourceIds),
-  taskTitle,draftZh,draftEn,draftKind,state:"prepared",preparedAt:new Date().toISOString(),approvedAt:null,executedAt:null,generatedTaskId:null,
+  taskTitle,draftZh,draftEn,draftKind,rationale,coordination,state:"prepared",preparedAt:new Date().toISOString(),approvedAt:null,executedAt:null,generatedTaskId:null,
   proposedAction:{kind:"create_internal_task"}};
 }
 const prioritySources=item=>unique(["REG-"+item.primaryAction.id,item.primaryAction.sourceDocId,...(item.sourceIds||[])]);
@@ -24,17 +24,21 @@ export function planOperationsAssistant(model,runId){
 }
 
 export function planProjectCoordinator(model,runId){
- const review=reviewPriorities(model.seed,{limit:8});
- const ranked=review.items.slice().sort((a,b)=>Number(Boolean(b.primaryAction.blocked))-Number(Boolean(a.primaryAction.blocked))||(a.daysFromSnapshot??999)-(b.daysFromSnapshot??999)).slice(0,3);
- const items=ranked.map((item,index)=>{
-  const a=item.primaryAction,contact=clean(a.owner||item.manager||model.pack.owner||"負責人");
-  const issue=a.blocked?"目前記錄為受阻":"接近記錄到期日";
-  return taskAction({id:runId+"-"+(index+1),projectId:item.projectId,projectName:item.projectName,recordId:a.id,title:a.title,contact,dueDate:a.dueDate,
-   sourceIds:prioritySources(item),taskTitle:"Project coordination · "+a.title,
-   draftZh:contact+" 您好，"+item.projectName+" 的 "+a.id+"「"+a.title+"」"+issue+"。請確認目前卡點、下一個交接人，以及是否需要專案經理介入。此訊息僅為草稿，尚未送出。",
-   draftEn:"Hi "+contact+", "+item.projectName+"'s "+a.id+" ("+a.title+") is "+(a.blocked?"recorded as blocked":"approaching its recorded due date")+". Please confirm the blocker, next handoff owner, and whether the project manager needs to step in. This is a draft only."});
+ const review=reviewCoordination(model.seed,{limit:3});
+ const items=review.items.map((item,index)=>{
+  const contact=clean(item.recordedOwner||item.manager||model.pack.owner||"負責人");
+  const signalZh=item.coordinationSignal==="recorded_blocker"?"目前記錄為受阻":item.coordinationSignal==="status_verification"?"有待確認的核准／狀態紀錄":"接近記錄到期日";
+  const signalEn=item.coordinationSignal==="recorded_blocker"?"is recorded as blocked":item.coordinationSignal==="status_verification"?"has an approval/status record that needs verification":"is approaching its recorded due date";
+  const nextZh=item.coordinationSignal==="recorded_blocker"?"請確認目前卡點、負責人與下一個交接。":item.coordinationSignal==="status_verification"?"請先確認目前核准狀態、負責人與是否需要下一步協調。":"請確認目前進度、下一個交接人與是否需要專案經理介入。";
+  const nextEn=item.coordinationSignal==="recorded_blocker"?"Please confirm the blocker, recorded owner and next handoff.":item.coordinationSignal==="status_verification"?"Please verify the current approval status, recorded owner and whether coordination is needed.":"Please confirm current status, the next handoff owner and whether the project manager needs to step in.";
+  return taskAction({id:runId+"-"+(index+1),projectId:item.projectId,projectName:item.projectName,recordId:item.recordId,title:item.title,contact,dueDate:item.dueDate,
+   sourceIds:item.sourceIds,taskTitle:"Project coordination · "+item.title,
+   rationale:item.coordinationSignal==="recorded_blocker"?"Recorded blocker: "+(item.recordedBlocker||"status requires confirmation")+".":item.coordinationSignal==="status_verification"?"Pending approval/status records should be reconciled before the next handoff.":"Recorded due date is near the workspace snapshot; confirm handoff readiness.",
+   coordination:{signal:item.coordinationSignal,dueDate:item.dueDate||null,recordedBlocker:item.recordedBlocker||null,recordedOwner:item.recordedOwner||contact,nextStep:item.nextStep||null},
+   draftZh:contact+" 您好，"+item.projectName+" 的 "+item.recordId+"「"+item.title+"」"+signalZh+"。"+nextZh+" 此訊息僅為草稿，尚未送出。",
+   draftEn:"Hi "+contact+", "+item.projectName+"'s "+item.recordId+" ("+item.title+") "+signalEn+". "+nextEn+" This is a draft only."});
  });
- return {asOf:review.asOf,items,basis:"Project coordination shortlist from recorded blockers and due dates; no inferred dependency is treated as proven."};
+ return {asOf:review.asOf,items,basis:"Coordination review intentionally covers recorded blockers, near-term handoffs/deadlines and pending approval/status checks when available; no undocumented dependency or critical path is inferred."};
 }
 
 export function planQuoteGuardian(model,runId){
