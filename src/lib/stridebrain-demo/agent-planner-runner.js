@@ -17,13 +17,14 @@ const AGENT_CONFIG={
   ]
  },
  "project-coordinator":{
-  opening:"list_priorities",
-  tools:["list_priorities","get_project","get_source","propose_followup"],
+  opening:"review_coordination",
+  tools:["review_coordination","get_project","get_source","propose_followup"],
   role:"StrideBrain Project Coordinator",
   rules:[
-   "Focus on recorded blockers, due dates, pending approvals and handoffs.",
+   "Focus on coordination risk: recorded blockers, near-term due dates, pending approvals, handoffs and recorded owners.",
    "Inspect project context before proposing coordination work.",
-   "Do not infer undocumented dependencies or approval authority."
+   "Prefer a small number of high-signal coordination follow-ups over generic reminders.",
+   "Do not infer undocumented dependencies, customer commitments, critical path, or approval authority."
   ]
  },
  "quote-margin-guardian":{
@@ -59,6 +60,7 @@ function timelineLabel(toolName,locale,detail=""){
  const zh=locale!=="en";
  const map={
   list_priorities:zh?"已查閱目前優先紀錄":"Reviewed current priority records",
+  review_coordination:zh?"已檢查受阻工作、交期、核准與交接":"Reviewed blockers, deadlines, approvals and handoffs",
   review_quotations:zh?"已檢查報價版本、成本與試算毛利":"Reviewed quote versions, costs and calculated margins",
   get_project:(zh?"已查閱專案 ":"Reviewed project ")+detail,
   get_quote:(zh?"已查閱報價 ":"Reviewed quotation for ")+detail,
@@ -82,6 +84,44 @@ export async function runAgentPlanner({
    execute:async({limit})=>{
     timeline.push({tool:"list_priorities",status:"completed",label:timelineLabel("list_priorities",locale)});
     return runCopilotTool(industry,"list_priorities",{limit});
+   }
+  }),
+  review_coordination:tool({
+   description:"Review recorded coordination risk across projects: blockers, due dates, pending approvals, responsible people and evidence. Read-only; not a critical-path or business-impact model.",
+   inputSchema:z.object({limit:z.number().int().min(1).max(5).default(3)}),
+   execute:async({limit})=>{
+    timeline.push({tool:"review_coordination",status:"completed",label:timelineLabel("review_coordination",locale)});
+    const review=runCopilotTool(industry,"list_priorities",{limit:Math.max(3,limit)});
+    const items=Array.isArray(review?.items)?review.items.slice(0,limit).map(item=>({
+     projectId:item.projectId,
+     projectName:item.projectName,
+     stage:item.projectStage,
+     manager:item.manager,
+     recordId:item.primaryAction?.id||item.id,
+     title:item.primaryAction?.title||"",
+     status:item.primaryAction?.status||null,
+     dueDate:item.primaryAction?.dueDate||null,
+     recordedOwner:item.primaryAction?.owner||item.manager||null,
+     recordedOwnerBasis:item.primaryAction?.ownerBasis||null,
+     blocked:item.primaryAction?.blocked===true,
+     recordedBlocker:item.primaryAction?.recordedBlocker||null,
+     openApprovalCount:item.openApprovalCount||0,
+     blockedTaskCount:item.blockedTaskCount||0,
+     needsStatusVerification:item.primaryAction?.needsReconciliation===true,
+     coordinationSignal:item.primaryAction?.blocked===true?"recorded_blocker":
+      item.primaryAction?.needsReconciliation===true?"status_verification":
+      item.daysFromSnapshot!=null&&item.daysFromSnapshot<=7?"near_term_due":"recorded_follow_up",
+     sourceIds:Array.isArray(item.sourceIds)?item.sourceIds.slice(0,8):[],
+     limitation:"Recorded signals only. Do not infer a critical path, customer commitment or undocumented dependency."
+    })):[];
+    return {
+     asOf:review?.asOf||null,
+     kind:"coordination_review",
+     items,
+     coverage:review?.coverage||null,
+     sourceIds:unique(items.flatMap(x=>x.sourceIds)),
+     limitations:Array.isArray(review?.limitations)?review.limitations.slice(0,4):[]
+    };
    }
   }),
   review_quotations:tool({

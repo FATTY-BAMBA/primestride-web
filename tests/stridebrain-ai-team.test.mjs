@@ -24,3 +24,15 @@ test("browser runtime rejects model proposals without a valid project or evidenc
 test("model-driven quote plan stays an internal review and approval-required task",()=>{const s=state();const x=recordModelAgentPlan(s,model,{agentId:"quote-margin-guardian",modelLabel:"Test model",asOf:"2026-10-18",summary:"Reviewed recorded quote.",timeline:[{tool:"review_quotations",status:"completed",label:"已檢查報價"}],proposals:[{projectId:"PRJ-101",recordId:"Q-1005",contact:"Mei Lin",title:"複核 Q-1005",rationale:"確認版本、成本與試算毛利。",sourceIds:["REG-Q-1005"],draftZh:"內部複核，不是實際獲利判定。",draftEn:"Internal review; not a realized-profit determination."}]});assert.equal(x.ok,true);assert.equal(x.run.agentId,"quote-margin-guardian");assert.equal(x.run.items[0].draftKind,"review");assert.equal(x.run.items[0].proposedAction.kind,"create_internal_task");assert.equal(s.aiTeam.generatedTasks.length,0);});
 
 test("accepted external email receipt is stored separately from internal task completion",()=>{const s=state(),r=runAgent(s,model,"project-coordinator").run;const item=r.items[0];const x=recordEmailReceipt(s,item.id,{receiptId:"email_test123",provider:"microsoft-graph",status:"accepted",acceptedAt:"2026-10-25T10:00:00.000Z",to:"leo@example.com",subject:"Follow-up"});assert.equal(x.ok,true);assert.equal(s.aiTeam.emailReceipts.length,1);assert.equal(s.aiTeam.emailReceipts[0].itemId,item.id);assert.equal(item.state,"prepared");assert.equal(s.aiTeam.generatedTasks.length,0);});
+
+test("Project Coordinator is presentation-distinct and coordination-focused",()=>{
+ const coordinator=listAgents().find(x=>x.id==="project-coordinator");
+ assert.equal(coordinator.version,"v0.5");
+ assert.match(coordinator.descriptionEn,/blockers|deadlines|handoffs/i);
+ const view=readFileSync("public/stridebrain-demo/views-ai-team.js","utf8");
+ assert.match(view,/See what could slip this week/);
+ assert.match(view,/Blockers/);
+ assert.match(view,/Deadlines/);
+ assert.match(view,/Handoffs/);
+ assert.match(view,/COORDINATION REVIEW COMPLETE/);
+});
