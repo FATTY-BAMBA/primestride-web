@@ -9,7 +9,7 @@ const registry={
   permissions:{automatic:["read_records","calculate","draft"],approval:["create_internal_task"],blocked:["send_external_message","modify_business_records","approve_quote","payment"]}
  },
  "project-coordinator":{
-  id:"project-coordinator",nameZh:"專案協調員",nameEn:"Project Coordinator",version:"v0.5",
+  id:"project-coordinator",nameZh:"專案協調員",nameEn:"Project Coordinator",version:"v0.6",
   descriptionZh:"找出可能卡住的交接、期限與待核准事項，準備協調下一步。",descriptionEn:"Surfaces coordination risks across blockers, deadlines, approvals and handoffs, then prepares the next move.",
   planner:planProjectCoordinator,
   permissions:{automatic:["read_records","calculate","draft"],approval:["create_internal_task"],blocked:["send_external_message","modify_business_records","approve_quote","payment"]}
@@ -70,9 +70,17 @@ export function recordModelAgentPlan(state,model,plan){
   const sourceIds=Array.isArray(p?.sourceIds)?[...new Set(p.sourceIds.filter(x=>typeof x==="string"&&x.length>=3&&x.length<=90))].slice(0,6):[];
   if(!project||!sourceIds.length||typeof p?.recordId!=="string"||typeof p?.contact!=="string"||typeof p?.title!=="string")return [];
   if(agent.id==="quote-margin-guardian"&&!/^Q-[A-Z0-9-]+$/.test(p.recordId))return [];
+  const signal=["recorded_blocker","near_term_handoff","near_term_due","status_verification","recorded_follow_up"].includes(p?.coordination?.signal)?p.coordination.signal:null;
+  const coordination=agent.id==="project-coordinator"&&signal?{
+   signal,
+   dueDate:typeof p.coordination?.dueDate==="string"?String(p.coordination.dueDate).slice(0,20):null,
+   recordedBlocker:typeof p.coordination?.recordedBlocker==="string"?String(p.coordination.recordedBlocker).slice(0,220):null,
+   recordedOwner:typeof p.coordination?.recordedOwner==="string"?String(p.coordination.recordedOwner).slice(0,80):String(p.contact).slice(0,80),
+   nextStep:["confirm_blocker_and_owner","verify_approval_status_and_owner","confirm_status_and_next_handoff"].includes(p.coordination?.nextStep)?p.coordination.nextStep:null
+  }:null;
   return [{
    id:runId+"-"+(index+1),projectId:project.id,projectName:project.name,recordId:String(p.recordId).slice(0,90),
-   title:String(p.title).slice(0,120),contact:String(p.contact).slice(0,80),dueDate:null,sourceIds,
+   title:String(p.title).slice(0,120),contact:String(p.contact).slice(0,80),dueDate:coordination?.dueDate||null,sourceIds,coordination,
    taskTitle:agent.nameEn+" · "+String(p.title).slice(0,100),draftZh:String(p.draftZh||"").slice(0,600),draftEn:String(p.draftEn||"").slice(0,600),
    draftKind:agent.id==="quote-margin-guardian"?"review":"message",rationale:String(p.rationale||"").slice(0,320),state:"prepared",preparedAt:now(),approvedAt:null,executedAt:null,generatedTaskId:null,
    proposedAction:{kind:"create_internal_task"}

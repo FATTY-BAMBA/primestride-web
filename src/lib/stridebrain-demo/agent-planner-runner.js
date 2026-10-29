@@ -2,6 +2,7 @@ import {ToolLoopAgent,isStepCount,tool} from "ai";
 import {createOpenAICompatible} from "@ai-sdk/openai-compatible";
 import {z} from "zod";
 import {runCopilotTool,workspaceEvidenceSeed,validIndustry} from "./copilot-tools.js";
+import {reviewCoordination} from "./priority-review.js";
 
 const sourcePattern=/^(?:REG-)?(?:PRJ|JOB|Q|WO|APR|DOC|STD|PRQ|PRWO|PRAPR|PRDOC|PRSTD)-[A-Z0-9-]+$/;
 const bounded=(value,max)=>String(value??"").trim().slice(0,max);
@@ -23,6 +24,7 @@ const AGENT_CONFIG={
   rules:[
    "Focus on coordination risk: recorded blockers, near-term due dates, pending approvals, handoffs and recorded owners.",
    "Inspect project context before proposing coordination work.",
+   "The coordination review returns a bounded evidence-selected set. Prepare one follow-up for each returned item; do not substitute unrelated records.",
    "Prefer a small number of high-signal coordination follow-ups over generic reminders.",
    "Do not infer undocumented dependencies, customer commitments, critical path, or approval authority."
   ]
@@ -56,6 +58,58 @@ function validSource(industry,id){
  const x=runCopilotTool(industry,"get_source",{source_id:id});
  return x?.found!==false&&Boolean(x?.id);
 }
+function coordinationMetadata(item){
+ return {
+  signal:item.coordinationSignal||"recorded_follow_up",
+  dueDate:item.dueDate||null,
+  recordedBlocker:item.recordedBlocker||null,
+  recordedOwner:item.recordedOwner||null,
+  nextStep:item.nextStep||null
+ };
+}
+function fallbackCoordinationProposal(item,locale){
+ const zh=locale!=="en",contact=bounded(item.recordedOwner||item.manager||"負責人",80);
+ const signal=item.coordinationSignal;
+ const rationale=signal==="recorded_blocker"
+  ?(zh?"這項工作已記錄為受阻；先確認卡點、目前負責人與下一個交接。":"This work is recorded as blocked; confirm the blocker, recorded owner and next handoff.")
+  :signal==="status_verification"
+   ?(zh?"目前有待確認的核准／狀態紀錄；交接前先確認實際狀態與負責人。":"A pending approval/status record needs verification before the next handoff.")
+   :(zh?"記錄到期日接近工作區快照日期；先確認目前進度與下一個交接。":"The recorded due date is near the workspace snapshot; confirm current status and the next handoff.");
+ const draftZh=signal==="recorded_blocker"
+  ?contact+" 您好，"+item.projectName+" 的 "+item.recordId+"「"+item.title+"」目前記錄為受阻"+(item.recordedBlocker?"（"+item.recordedBlocker+"）":"")+"。請確認目前卡點、負責人與下一個交接。此訊息僅為草稿，尚未送出。"
+  :signal==="status_verification"
+   ?contact+" 您好，"+item.projectName+" 的 "+item.recordId+"「"+item.title+"」目前有待確認的核准／狀態紀錄。請先確認目前狀態、負責人，以及是否需要下一步協調。此訊息僅為草稿，尚未送出。"
+   :contact+" 您好，"+item.projectName+" 的 "+item.recordId+"「"+item.title+"」記錄到期日為 "+(item.dueDate||"未記錄")+"。請確認目前進度與下一個交接人。此訊息僅為草稿，尚未送出。";
+ const draftEn=signal==="recorded_blocker"
+  ?"Hi "+contact+", "+item.projectName+"'s "+item.recordId+" ("+item.title+") is recorded as blocked"+(item.recordedBlocker?" ("+item.recordedBlocker+")":"")+". Please confirm the blocker, recorded owner and next handoff. This is a draft only."
+  :signal==="status_verification"
+   ?"Hi "+contact+", "+item.projectName+"'s "+item.recordId+" ("+item.title+") has an approval/status record that needs verification. Please confirm the current status, recorded owner and whether coordination is needed. This is a draft only."
+   :"Hi "+contact+", "+item.projectName+"'s "+item.recordId+" ("+item.title+") has a recorded due date of "+(item.dueDate||"not recorded")+". Please confirm current status and the next handoff owner. This is a draft only.";
+ return {
+  projectId:item.projectId,recordId:item.recordId,contact,title:item.title,rationale,
+  sourceIds:(item.sourceIds||[]).slice(0,6),draftZh,draftEn,coordination:coordinationMetadata(item)
+ };
+}
+function finalizeCoordinationProposals(modelProposals,review,locale){
+ const items=Array.isArray(review?.items)?review.items.slice(0,3):[];
+ if(!items.length)return {proposals:modelProposals.slice(0,3),fallbackCount:0};
+ const byRecord=new Map(modelProposals.map(p=>[p.recordId,p]));
+ let fallbackCount=0;
+ const proposals=items.map(item=>{
+  const model=byRecord.get(item.recordId),fallback=fallbackCoordinationProposal(item,locale);
+  if(!model){fallbackCount++;return fallback;}
+  return {
+   ...model,
+   projectId:item.projectId,
+   recordId:item.recordId,
+   title:item.title,
+   contact:fallback.contact,
+   sourceIds:unique([...(model.sourceIds||[]),...(item.sourceIds||[])]).slice(0,6),
+   coordination:coordinationMetadata(item)
+  };
+ });
+ return {proposals,fallbackCount};
+}
 function timelineLabel(toolName,locale,detail=""){
  const zh=locale!=="en";
  const map={
@@ -76,7 +130,7 @@ export async function runAgentPlanner({
  if(!validIndustry(industry))throw Error("INVALID_INDUSTRY");
  const config=AGENT_CONFIG[agentId];
  if(!config)throw Error("UNSUPPORTED_AGENT");
- const timeline=[],proposals=[];
+ const timeline=[],proposals=[];let coordinationReview=null;
  const allTools={
   list_priorities:tool({
    description:"Review the current workspace priority shortlist. Read-only; not an overall business-impact ranking.",
@@ -87,41 +141,12 @@ export async function runAgentPlanner({
    }
   }),
   review_coordination:tool({
-   description:"Review recorded coordination risk across projects: blockers, due dates, pending approvals, responsible people and evidence. Read-only; not a critical-path or business-impact model.",
-   inputSchema:z.object({limit:z.number().int().min(1).max(5).default(3)}),
+   description:"Review a bounded coordination set across recorded blockers, near-term handoffs/deadlines and pending approval/status checks. Read-only; not a critical-path or business-impact model.",
+   inputSchema:z.object({limit:z.number().int().min(1).max(3).default(3)}),
    execute:async({limit})=>{
     timeline.push({tool:"review_coordination",status:"completed",label:timelineLabel("review_coordination",locale)});
-    const review=runCopilotTool(industry,"list_priorities",{limit:Math.max(3,limit)});
-    const items=Array.isArray(review?.items)?review.items.slice(0,limit).map(item=>({
-     projectId:item.projectId,
-     projectName:item.projectName,
-     stage:item.projectStage,
-     manager:item.manager,
-     recordId:item.primaryAction?.id||item.id,
-     title:item.primaryAction?.title||"",
-     status:item.primaryAction?.status||null,
-     dueDate:item.primaryAction?.dueDate||null,
-     recordedOwner:item.primaryAction?.owner||item.manager||null,
-     recordedOwnerBasis:item.primaryAction?.ownerBasis||null,
-     blocked:item.primaryAction?.blocked===true,
-     recordedBlocker:item.primaryAction?.recordedBlocker||null,
-     openApprovalCount:item.openApprovalCount||0,
-     blockedTaskCount:item.blockedTaskCount||0,
-     needsStatusVerification:item.primaryAction?.needsReconciliation===true,
-     coordinationSignal:item.primaryAction?.blocked===true?"recorded_blocker":
-      item.primaryAction?.needsReconciliation===true?"status_verification":
-      item.daysFromSnapshot!=null&&item.daysFromSnapshot<=7?"near_term_due":"recorded_follow_up",
-     sourceIds:Array.isArray(item.sourceIds)?item.sourceIds.slice(0,8):[],
-     limitation:"Recorded signals only. Do not infer a critical path, customer commitment or undocumented dependency."
-    })):[];
-    return {
-     asOf:review?.asOf||null,
-     kind:"coordination_review",
-     items,
-     coverage:review?.coverage||null,
-     sourceIds:unique(items.flatMap(x=>x.sourceIds)),
-     limitations:Array.isArray(review?.limitations)?review.limitations.slice(0,4):[]
-    };
+    coordinationReview=reviewCoordination(workspaceEvidenceSeed(industry),{limit});
+    return coordinationReview;
    }
   }),
   review_quotations:tool({
@@ -203,8 +228,20 @@ export async function runAgentPlanner({
   stopWhen:isStepCount(8)
  });
  const result=await agent.generate({prompt:bounded(goal,800)||"Review the workspace and prepare the most useful approval-required work."});
+ let finalProposals=proposals,summary=bounded(result.text,1200);
+ if(agentId==="project-coordinator"){
+  if(!coordinationReview)coordinationReview=reviewCoordination(workspaceEvidenceSeed(industry),{limit:3});
+  const finalized=finalizeCoordinationProposals(proposals,coordinationReview,locale);
+  finalProposals=finalized.proposals;
+  if(finalized.fallbackCount){
+   timeline.push({tool:"coordination_guard",status:"prepared",label:locale==="en"?"Completed evidence-grounded coordination coverage":"已補齊依據明確的協調巡檢項目"});
+  }
+  summary=locale==="en"
+   ?"Reviewed the workspace coordination set and prepared "+finalProposals.length+" evidence-grounded follow-ups across the recorded signals."
+   :"已完成工作區協調巡檢，並依據記錄準備 "+finalProposals.length+" 項需要確認的協調追蹤工作。";
+ }
  return {
-  mode:"agent-plan",agentId,modelId,summary:bounded(result.text,1200),proposals,timeline,
+  mode:"agent-plan",agentId,modelId,summary,proposals:finalProposals,timeline,
   steps:result.steps?.length||0,asOf:workspaceEvidenceSeed(industry).meta.date,
   executionPolicy:{automatic:["read_records","draft"],approval:["create_internal_task"],blocked:["send_external_message","modify_business_records","approve_quote","payment"]}
  };

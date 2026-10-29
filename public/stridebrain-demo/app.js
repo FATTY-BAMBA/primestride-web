@@ -456,9 +456,19 @@ async function perform(el){
  }
  if(action==="agentRun"){
   const agentId=value||state.aiTeam?.activeAgentId;
-  const result=await runModelDrivenAgentPlan(agentId);
+  let result=await runModelDrivenAgentPlan(agentId),safeFallback=false;
+  if(!result.ok&&agentId==="project-coordinator"){
+   result=runAgent(state,model,agentId);safeFallback=result.ok;
+   if(result.ok)result.run.basis=interfaceLocale==="en"
+    ?"Safe coordination review prepared from verified workspace records. Live model planning was not required to continue the approval path."
+    :"已依據工作區可驗證紀錄完成安全協調巡檢；即使即時模型規劃暫時不可用，核准流程仍可繼續。";
+  }
   if(!result.ok){toast(result.reason);return;}
-  save();view.page="team";view.agentDecisionId=result.run.items.find(x=>x.state!=="completed")?.id||result.run.items[0]?.id||null;render();toast(interfaceLocale==="en"?result.run.items.length+" actions prepared for review.":"AI 同事已準備 "+result.run.items.length+" 項工作，等你確認。");return;
+  save();view.page="team";view.agentDecisionId=result.run.items.find(x=>x.state!=="completed")?.id||result.run.items[0]?.id||null;render();
+  toast(safeFallback
+   ?(interfaceLocale==="en"?"Coordination review is ready from verified workspace records.":"已依據可驗證的工作區紀錄完成協調巡檢。")
+   :(interfaceLocale==="en"?result.run.items.length+" actions prepared for review.":"AI 同事已準備 "+result.run.items.length+" 項工作，等你確認。"));
+  return;
  }
  if(action==="agentExecute"){
   const result=approveAndExecuteAgentAction(state,value||id);

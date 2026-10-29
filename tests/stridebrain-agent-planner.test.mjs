@@ -32,9 +32,12 @@ test("project coordinator inspects priority, project and evidence before proposi
   done("已準備一項專案協調工作。")
  );
  const r=await runAgentPlanner({industry:"interior",goal:"檢查專案交接風險",locale:"zh-TW",agentId:"project-coordinator",modelId:"test/mock",apiKey:"test",languageModel:model});
- assert.equal(r.proposals.length,1);
- assert.equal(r.proposals[0].projectId,"PRJ-104");
- assert.deepEqual(r.timeline.map(x=>x.tool),["review_coordination","get_project","get_source","propose_followup"]);
+ assert.equal(r.proposals.length,3);
+ assert.deepEqual(r.proposals.map(x=>x.coordination?.signal),["recorded_blocker","near_term_handoff","status_verification"]);
+ assert.equal(r.proposals[1].projectId,"PRJ-104");
+ assert.equal(r.proposals[1].recordId,"WO-1040");
+ assert.deepEqual(r.timeline.slice(0,4).map(x=>x.tool),["review_coordination","get_project","get_source","propose_followup"]);
+ assert.ok(r.timeline.some(x=>x.tool==="coordination_guard"));
  assert.ok(r.executionPolicy.blocked.includes("send_external_message"));
 });
 
@@ -70,5 +73,5 @@ test("project coordinator owns a distinct coordination review instead of the gen
   done("協調風險已整理。")
  );
  const r=await runAgentPlanner({industry:"interior",goal:"這週什麼可能卡住",locale:"zh-TW",agentId:"project-coordinator",modelId:"test/mock",apiKey:"test",languageModel:model});
- assert.deepEqual(r.timeline.map(x=>x.tool),["review_coordination"]);
+ assert.deepEqual(r.timeline.map(x=>x.tool),["review_coordination","coordination_guard"]);
 });

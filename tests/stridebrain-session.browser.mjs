@@ -141,7 +141,7 @@ try{
  assert.equal(agentPlans[1].agentId,'project-coordinator');
  assert.equal(await page.locator('.sb-decision-card').count(),1);
  assert.match(await page.locator('#inspector').innerText(),/PRJ-104/);
- await page.locator('.sb-draft-details summary').first().click();
+ assert.equal(await page.locator('.sb-draft-details').first().evaluate(el=>el.open),true);
  assert.match(await page.locator('.sb-draft-details').first().innerText(),/交接|尚未送出/);
  await page.click('[data-action="agentSelect"][data-value="quote-margin-guardian"]');
  assert.equal(await page.locator('.sb-decision-card').count(),0);

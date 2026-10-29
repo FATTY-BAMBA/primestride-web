@@ -1,1 +1,1 @@
-export {reviewPriorities} from "../../../public/stridebrain-demo/priority-review.js";
+export {reviewPriorities,reviewCoordination} from "../../../public/stridebrain-demo/priority-review.js";
