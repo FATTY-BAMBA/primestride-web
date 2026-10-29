@@ -102,7 +102,8 @@ function finalizeCoordinationProposals(modelProposals,review,locale){
    ...model,
    projectId:item.projectId,
    recordId:item.recordId,
-   contact:bounded(model.contact||fallback.contact,80),
+   title:item.title,
+   contact:fallback.contact,
    sourceIds:unique([...(model.sourceIds||[]),...(item.sourceIds||[])]).slice(0,6),
    coordination:coordinationMetadata(item)
   };
