@@ -10,9 +10,12 @@ bad=0
 [ -f src/app/api/stridebrain-demo/google/connect/route.js ] || bad=1
 [ -f src/app/api/stridebrain-demo/google/callback/route.js ] || bad=1
 [ -f src/app/api/stridebrain-demo/google/status/route.js ] || bad=1
+[ -f src/app/api/stridebrain-demo/line/webhook/route.js ] || bad=1
+[ -f src/lib/stridebrain-demo/line-connector.js ] || bad=1
 
 grep -q 'data-value="team"' public/stridebrain-demo/index.html || bad=1
 grep -q 'googleConnectionStatus' src/app/api/stridebrain-demo/connections/status/route.js || bad=1
+grep -q 'lineConnectorStatus' src/lib/stridebrain-demo/message-connectors.js || bad=1
 grep -q 'sameSite:"lax"' src/lib/stridebrain-demo/staff-session.js || bad=1
 
 if [ "$bad" -ne 0 ]; then
