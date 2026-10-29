@@ -1,10 +1,11 @@
 import {emailConnectorStatus,emailConnectorHealth,sendControlledEmail} from "./email-connector.js";
 import {googleOAuthStatus,googleConnectionStatus} from "./google-oauth.js";
 import {gmailConnectorStatus,sendControlledGmail} from "./gmail-connector.js";
+import {lineConnectorStatus,lineConnectorHealth,sendControlledLinePush} from "./line-connector.js";
 
 const PROVIDERS=Object.freeze({
  "microsoft365":Object.freeze({id:"microsoft365",label:"Microsoft 365",channel:"email",implemented:true}),
- "line":Object.freeze({id:"line",label:"LINE Official Account",channel:"line",implemented:false}),
+ "line":Object.freeze({id:"line",label:"LINE Official Account",channel:"line",implemented:true}),
  "google-workspace":Object.freeze({id:"google-workspace",label:"Google Workspace",channel:"email",implemented:true})
 });
 export function listMessageConnectors(){return Object.values(PROVIDERS);}
@@ -18,6 +19,11 @@ export function messageConnectorStatus({providerId,role,env=process.env,organiza
   const google=googleOAuthStatus({env,role,organizationId});
   return {...provider,known:true,configured:google.configured,enabled:google.configured,roleAllowed:google.roleAllowed,sender:google.sender,
    limits:{singleRecipient:true,attachments:false,bcc:false,bulk:false,requiresApproval:true}};
+ }
+ if(providerId==="line"){
+  const line=lineConnectorStatus({env,role,organizationId});
+  return {...provider,known:true,configured:line.configured,enabled:line.configured,roleAllowed:line.roleAllowed,sender:line.sender,
+   webhookUrl:line.webhookUrl,limits:line.limits};
  }
  return {...provider,known:true,configured:false,enabled:false,roleAllowed:role==="staff",sender:null,
   limits:{singleRecipient:true,attachments:false,bcc:false,bulk:false,requiresApproval:true}};
@@ -40,6 +46,10 @@ export async function checkMessageConnectorHealth({providerId,role,organizationI
    sender:health.sender,roleAllowed:health.roleAllowed,connectionState:health.connectionState,
    checks:{configuration:{ok:health.configured},connection:{ok:health.connected===true}}};
  }
+ if(providerId==="line"){
+  const health=await lineConnectorHealth({env,role,organizationId,requestFn});
+  return {...provider,known:true,...health};
+ }
  return {...provider,known:true,configured:false,ready:false};
 }
 export async function sendApprovedMessage({providerId,channel,organizationId,sessionScope,input,env=process.env,requestFn=fetch,now=Date.now()}={}){
@@ -48,5 +58,6 @@ export async function sendApprovedMessage({providerId,channel,organizationId,ses
  if(!provider.implemented)throw Error("MESSAGE_PROVIDER_NOT_IMPLEMENTED");
  if(providerId==="microsoft365"&&channel==="email")return sendControlledEmail({sessionScope,input,env,requestFn,now});
  if(providerId==="google-workspace"&&channel==="email")return sendControlledGmail({organizationId,input,env,requestFn,now});
+ if(providerId==="line"&&channel==="line")return sendControlledLinePush({organizationId,input,env,requestFn,now});
  throw Error("MESSAGE_PROVIDER_NOT_IMPLEMENTED");
 }
