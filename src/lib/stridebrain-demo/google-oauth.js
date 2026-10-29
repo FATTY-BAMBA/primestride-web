@@ -113,20 +113,36 @@ export async function completeGoogleOAuth({code,redirectUri,organizationId,env=p
  await writeConnection(record,{env,requestFn,organizationId:cfg.organizationId});
  return {provider:record.provider,sender:record.sender,scope:record.scope,connectedAt:record.connectedAt,organizationId:cfg.organizationId};
 }
-export async function readGoogleConnection({env=process.env,organizationId,requestFn=fetch}={}){
- const cfg=oauthConfig(env,organizationId);if(!cfg)return null;
+export async function readGoogleConnectionResult({env=process.env,organizationId,requestFn=fetch}={}){
+ const cfg=oauthConfig(env,organizationId);
+ if(!cfg)return {ok:false,code:"GOOGLE_OAUTH_UNAVAILABLE",record:null,storage:null};
  try{
   let record=null;
   if(cfg.storage.kind==="redis"){
    const raw=(await redisPipeline([["GET",connectionKey(cfg.organizationId)]],{env,requestFn}))[0];
    if(raw)record=JSON.parse(raw);
   }else record=await supabaseRead({env,requestFn,organizationId:cfg.organizationId});
-  return record?.provider==="google-workspace"&&record?.sender===cfg.sender?record:null;
- }catch{return null;}
+  const valid=record?.provider==="google-workspace"&&record?.sender===cfg.sender;
+  return {ok:true,code:null,record:valid?record:null,storage:cfg.storage.kind};
+ }catch(error){
+  console.warn("stridebrain_google_connection_read_failed",{
+   storage:cfg.storage.kind,
+   code:String(error?.message||"GOOGLE_CONNECTION_STORAGE_UNAVAILABLE").slice(0,90),
+   organizationHash:createHash("sha256").update(cfg.organizationId).digest("hex").slice(0,12)
+  });
+  return {ok:false,code:"GOOGLE_CONNECTION_STORAGE_UNAVAILABLE",record:null,storage:cfg.storage.kind};
+ }
+}
+export async function readGoogleConnection(options={}){
+ const result=await readGoogleConnectionResult(options);
+ return result.ok?result.record:null;
 }
 export async function googleConnectionStatus({env=process.env,role=null,organizationId,requestFn=fetch}={}){
  const base=googleOAuthStatus({env,role,organizationId});
- if(!base.configured||role!=="staff")return {...base,connected:false,connectedAt:null};
- const record=await readGoogleConnection({env,organizationId:base.organizationId,requestFn});
- return {...base,connected:Boolean(record),connectedAt:record?.connectedAt||null};
+ if(!base.configured)return {...base,connected:false,connectedAt:null,connectionState:"unavailable",connectionCode:"GOOGLE_OAUTH_UNAVAILABLE"};
+ if(role!=="staff")return {...base,connected:false,connectedAt:null,connectionState:"restricted",connectionCode:"GOOGLE_STAFF_ONLY"};
+ const result=await readGoogleConnectionResult({env,organizationId:base.organizationId,requestFn});
+ if(!result.ok)return {...base,connected:false,connectedAt:null,connectionState:"error",connectionCode:result.code};
+ return {...base,connected:Boolean(result.record),connectedAt:result.record?.connectedAt||null,
+  connectionState:result.record?"connected":"disconnected",connectionCode:null};
 }

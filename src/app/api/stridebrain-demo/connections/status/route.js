@@ -23,7 +23,9 @@ export async function GET(request){
    sender:google.sender||null,
    scope:google.scope||null,
    storage:google.storage||null,
-   connectedAt:google.connectedAt||null
+   connectedAt:google.connectedAt||null,
+   connectionState:google.connectionState||null,
+   connectionCode:google.connectionCode||null
   }:conn);
  }
  return NextResponse.json({...snapshot,activeSession:session.active===true,runtimeMode:context.mode,dataClassification:context.dataClassification},

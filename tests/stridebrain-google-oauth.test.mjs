@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
 const {
  GOOGLE_GMAIL_SEND_SCOPE,DEFAULT_GOOGLE_REDIRECT_URI,googleRedirectUri,googleOAuthStatus,
- buildGoogleAuthorizationUrl,completeGoogleOAuth,readGoogleConnection,decryptGoogleRefreshToken
+ buildGoogleAuthorizationUrl,completeGoogleOAuth,readGoogleConnection,decryptGoogleRefreshToken,googleConnectionStatus
 }=await import("../src/lib/stridebrain-demo/google-oauth.js");
 const {
  createGoogleOAuthTransaction,verifyGoogleOAuthTransaction
@@ -142,4 +142,30 @@ test("AI Team boot refreshes Google status after successful OAuth return",()=>{
  assert.match(app,/await refreshMessageConnections\(\)/);
  assert.match(app,/google\?\.connected===true/);
  assert.match(app,/cleanUrl\.searchParams\.delete\("google"\)/);
+});
+
+test("Google readback exposes storage errors instead of pretending disconnected",async()=>{
+ const failing=async()=>({ok:false,status:503,json:async()=>({})});
+ const status=await googleConnectionStatus({env,role:"staff",organizationId,requestFn:failing});
+ assert.equal(status.connected,false);
+ assert.equal(status.connectionState,"error");
+ assert.equal(status.connectionCode,"GOOGLE_CONNECTION_STORAGE_UNAVAILABLE");
+});
+
+test("Google readback distinguishes disconnected from storage error",async()=>{
+ const emptyStore=async(url,options={})=>{
+  if(url==="https://redis.example.com/pipeline")return {ok:true,json:async()=>[{result:null}]};
+  throw Error("unexpected "+url);
+ };
+ const status=await googleConnectionStatus({env,role:"staff",organizationId,requestFn:emptyStore});
+ assert.equal(status.connected,false);
+ assert.equal(status.connectionState,"disconnected");
+ assert.equal(status.connectionCode,null);
+});
+
+test("AI Team does not offer reconnect when Google status read fails",()=>{
+ const view=readFileSync("public/stridebrain-demo/views-ai-team.js","utf8");
+ assert.match(view,/googleReadError/);
+ assert.match(view,/connectionState==="error"/);
+ assert.match(view,/!googleReadError/);
 });
