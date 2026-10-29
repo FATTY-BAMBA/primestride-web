@@ -1,16 +1,16 @@
 import {NextResponse} from "next/server";
-import {getSessionStatus} from "@/lib/stridebrain-demo/session-status";
-import {resolveRuntimeContext} from "@/lib/stridebrain-demo/runtime-context";
+import {resolveStrideBrainRequestContext} from "@/lib/stridebrain-demo/request-context";
 import {messageConnectorStatus,sendApprovedMessage} from "@/lib/stridebrain-demo/message-connectors";
 export const runtime="nodejs";export const dynamic="force-dynamic";
 const json=(status,body)=>NextResponse.json(body,{status,headers:{"Cache-Control":"private, no-store, max-age=0",Vary:"Cookie","X-Content-Type-Options":"nosniff"}});
 export async function POST(request){
- const session=getSessionStatus(request.cookies);
+ const access=resolveStrideBrainRequestContext({cookies:request.cookies});
+ const session=access.session;
  if(!session.active)return json(401,{code:"MESSAGE_SESSION_REQUIRED"});
  if(session.role!=="staff")return json(403,{code:"MESSAGE_STAFF_ONLY"});
  const origin=request.headers.get("origin");if(origin&&origin!==new URL(request.url).origin)return json(403,{code:"MESSAGE_ORIGIN_DENIED"});
- const context=resolveRuntimeContext({session});
- if(!context.ok)return json(503,{code:context.code});
+ if(!access.ok)return json(503,{code:access.code});
+ const context=access.runtime;
  let body;try{body=await request.json();}catch{return json(400,{code:"MESSAGE_REQUEST_INVALID"});}
  const providerId=String(body?.providerId||""),channel=String(body?.channel||"");
  const connector=messageConnectorStatus({providerId,role:session.role,organizationId:context.organizationId});
