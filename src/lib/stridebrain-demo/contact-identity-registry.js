@@ -60,3 +60,30 @@ export async function listVerifiedContactIdentities({organizationId,channel=null
   verificationMethod:row.verification_method||null
  })):[];
 }
+
+export async function findVerifiedContactIdentityByContactRef({
+ organizationId,channel,contactRef,provider=null,env=process.env,requestFn=fetch
+}={}){
+ const org=clean(organizationId,120),ref=clean(contactRef,120);
+ if(!/^[A-Za-z0-9][A-Za-z0-9._:-]{2,119}$/.test(org)||!["email","line"].includes(channel)||!/^[A-Za-z0-9][A-Za-z0-9._:-]{2,119}$/.test(ref))return null;
+ const cfg=supabaseConfig(env),url=new URL(cfg.url+"/rest/v1/stridebrain_contact_identities");
+ url.searchParams.set("organization_id","eq."+org);
+ url.searchParams.set("channel","eq."+channel);
+ url.searchParams.set("contact_ref","eq."+ref);
+ url.searchParams.set("status","eq.verified");
+ if(provider)url.searchParams.set("provider","eq."+clean(provider,80));
+ url.searchParams.set("select","contact_ref,display_name,channel,provider,external_identity,verified_at,verification_method");
+ url.searchParams.set("limit","1");
+ const response=await requestFn(url.toString(),{headers:headers(cfg),cache:"no-store",signal:AbortSignal.timeout(3000)});
+ if(!response.ok)throw Error("CONTACT_IDENTITY_STORAGE_UNAVAILABLE");
+ const rows=await response.json(),row=Array.isArray(rows)?rows[0]:null;
+ return row?{
+  contactRef:row.contact_ref||null,
+  displayName:row.display_name,
+  channel:row.channel,
+  provider:row.provider,
+  externalIdentity:row.external_identity,
+  verifiedAt:row.verified_at||null,
+  verificationMethod:row.verification_method||null
+ }:null;
+}
