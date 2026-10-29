@@ -29,7 +29,7 @@ function lineConfig(env=process.env,organizationId){
  return {configured,channelId:configured?channelId:null,channelSecret:configured?channelSecret:null,accessToken:configured?accessToken:null,organizationId:configured?organization:null};
 }
 export const LINE_WEBHOOK_PATH="/api/stridebrain-demo/line/webhook";
-export const DEFAULT_LINE_WEBHOOK_URL="https://demo.primestrideai.com"+LINE_WEBHOOK_PATH;
+export const DEFAULT_LINE_WEBHOOK_URL="https://line-webhook.primestrideai.com"+LINE_WEBHOOK_PATH;
 
 export function lineConnectorStatus({env=process.env,role=null,organizationId}={}){
  const cfg=lineConfig(env,organizationId);
