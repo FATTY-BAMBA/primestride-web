@@ -19,19 +19,19 @@ const humanStep=(step,zh)=>{const map={list_priorities:zh?"查看今日優先紀
 
 const receiptFor=(team,itemId)=>team.emailReceipts?.find(x=>x.itemId===itemId)||null;
 function emailComposer(c,item,project,draft,receipt,zh){
- if(receipt)return '<div class="sb-email-receipt"><strong>'+(zh?'Microsoft 365 已接受寄送':'Microsoft 365 accepted for sending')+'</strong><span>'+e(receipt.to)+' · '+e(receipt.subject)+'</span><small>'+e(receipt.receiptId)+' · '+e(receipt.acceptedAt)+'</small></div>';
+ if(receipt){const providerLabel=receipt.provider==="gmail"?"Google Workspace":"Microsoft 365";return '<div class="sb-email-receipt"><strong>'+e(providerLabel)+' '+(zh?'已接受寄送':'accepted for sending')+'</strong><span>'+e(receipt.to)+' · '+e(receipt.subject)+'</span><small>'+e(receipt.receiptId)+' · '+e(receipt.acceptedAt)+'</small></div>';}
  if(c.view.emailDecisionId!==item.id)return '';
  const status=c.emailConnector||{state:"unknown"};
  if(status.state==="checking"||status.state==="unknown")return '<div class="sb-email-composer pending" data-item-id="'+e(item.id)+'"><strong>'+(zh?'正在檢查郵件連線…':'Checking email connection…')+'</strong></div>';
  if(!status.roleAllowed)return '<div class="sb-email-composer blocked" data-item-id="'+e(item.id)+'"><strong>'+(zh?'目前僅限工作人員寄信':'Email sending is staff-only')+'</strong><p>'+(zh?'示範訪客可以查看與準備草稿，但不能觸發外部郵件。':'Demo guests may review and prepare drafts but cannot trigger external email.')+'</p>'+button(zh?'關閉':'Close','agentEmailCancel',item.id,'button-outline')+'</div>';
- if(!status.configured)return '<div class="sb-email-composer blocked" data-item-id="'+e(item.id)+'"><strong>'+(zh?'郵件連線尚未設定':'Email connector is not configured')+'</strong><p>'+(zh?'需要 Microsoft Graph、固定寄件者、收件者白名單與 Redis 冪等設定；系統不會改用假寄送。':'Microsoft Graph, a fixed sender, recipient allowlist and Redis idempotency are required. StrideBrain will not fake a send.')+'</p>'+button(zh?'關閉':'Close','agentEmailCancel',item.id,'button-outline')+'</div>';
+ if(!status.configured)return '<div class="sb-email-composer blocked" data-item-id="'+e(item.id)+'"><strong>'+(zh?'郵件連線尚未設定':'Email connector is not configured')+'</strong><p>'+(zh?'請先連線 Google Workspace 或設定 Microsoft 365 寄件者；StrideBrain 不會假裝已寄送。':'Connect Google Workspace or configure Microsoft 365 first. StrideBrain will not fake a send.')+'</p>'+button(zh?'關閉':'Close','agentEmailCancel',item.id,'button-outline')+'</div>';
  const subject=(zh?'追蹤｜':'Follow-up | ')+(project?.name||item.projectName)+' · '+item.title;
  return '<div class="sb-email-composer" data-item-id="'+e(item.id)+'"><div class="sb-email-composer-head"><div><small class="sb-label">'+(zh?'外部郵件 · 需要再次批准':'EXTERNAL EMAIL · SECOND APPROVAL REQUIRED')+'</small><h4>'+(zh?'確認寄送內容':'Confirm email before sending')+'</h4></div><span>'+(zh?'不會自動寄出':'Will not auto-send')+'</span></div>'+
   '<label>'+(zh?'寄件者':'From')+'<input value="'+e(status.sender||'')+'" disabled></label>'+
   '<label>'+(zh?'收件者':'To')+'<input name="email-to" type="email" autocomplete="off" placeholder="'+(zh?'輸入已列入白名單的 email':'Enter an allowlisted email')+'"></label>'+
   '<label>'+(zh?'主旨':'Subject')+'<input name="email-subject" maxlength="160" value="'+e(subject)+'"></label>'+
   '<label>'+(zh?'內容':'Message')+'<textarea name="email-body" maxlength="5000" rows="6">'+e(draft)+'</textarea></label>'+
-  '<p class="sb-email-warning">'+(zh?'批准後會透過 Microsoft Graph 寄出 1 封郵件。無附件、無密件副本、無群發。':'Approval sends exactly one email through Microsoft Graph. No attachments, BCC or bulk send.')+'</p>'+
+  '<p class="sb-email-warning">'+(zh?'批准後會透過 '+e(status.providerLabel||'已連線郵件服務')+' 寄出 1 封郵件。無附件、無密件副本、無群發。':'Approval sends exactly one email through '+e(status.providerLabel||'the connected email provider')+'. No attachments, BCC or bulk send.')+'</p>'+
   '<div class="sb-email-actions">'+button(zh?'取消':'Cancel','agentEmailCancel',item.id,'button-outline')+button(zh?'批准並寄出 ↗':'Approve & send ↗','agentEmailSend',item.id,'button-primary')+'</div></div>';
 }
 
@@ -39,7 +39,7 @@ function connectionsPanel(c,zh){
  const fallback=[
   {id:"microsoft365",label:"Microsoft 365",channel:"email",implemented:true,configured:false,roleAllowed:false,sender:null},
   {id:"line",label:"LINE Official Account",channel:"line",implemented:false,configured:false,roleAllowed:false,sender:null},
-  {id:"google-workspace",label:"Google Workspace",channel:"email",implemented:false,configured:false,roleAllowed:false,sender:null}
+  {id:"google-workspace",label:"Google Workspace",channel:"email",implemented:true,configured:false,roleAllowed:false,sender:null}
  ];
  const data=c.messageConnections?.connections?.length?c.messageConnections.connections:fallback;
  const healthByProvider=c.messageConnections?.healthByProvider||{};
