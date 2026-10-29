@@ -1,16 +1,14 @@
 import { NextResponse } from "next/server";
-import {createHash} from "node:crypto";
 import {enforceDemoQuota} from "@/lib/stridebrain-demo/demo-quota";
 import {enforceSupabaseDemoQuota} from "@/lib/stridebrain-demo/supabase-quota";
 import {reserveDemoBudget} from "@/lib/stridebrain-demo/demo-budget";
 import {acquireDemoLease,releaseDemoLease} from "@/lib/stridebrain-demo/demo-concurrency";
-import {tokenMatches,isStaffSessionValid,SESSION_COOKIE} from "@/lib/stridebrain-demo/staff-session";
-import {guestSessionIdentity,GUEST_COOKIE} from "@/lib/stridebrain-demo/guest-session";
+import {resolveStrideBrainRequestContext} from "@/lib/stridebrain-demo/request-context";
 import { runGptCopilot } from "@/lib/stridebrain-demo/copilot-runner";
 import { runOpenRouterCopilot } from "@/lib/stridebrain-demo/openrouter-runner";
 import { runAgentPlanner } from "@/lib/stridebrain-demo/agent-planner-runner";
 import { validIndustry } from "@/lib/stridebrain-demo/copilot-tools";
-import { DEFAULT_MODEL_ID,findAllowedModel,isModelAllowed } from "../../../../../public/stridebrain-demo/model-catalog.js";
+import { DEFAULT_MODEL_ID,findAllowedModel } from "../../../../../public/stridebrain-demo/model-catalog.js";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -53,11 +51,17 @@ export async function POST(request){
  const origin=request.headers.get("origin");
  if(origin&&origin!==new URL(request.url).origin)
   return json(403,{error:"Cross-origin requests are not allowed.",code:"ORIGIN_DENIED"});
- const staffCookieValid=isStaffSessionValid(request.cookies.get(SESSION_COOKIE)?.value||"");
- const staffTokenValid=tokenMatches(request.headers.get("x-stridebrain-operator-token")||"");
- const guestIdentity=guestSessionIdentity(request.cookies.get(GUEST_COOKIE)?.value||"");
- if(!(staffCookieValid||staffTokenValid||guestIdentity))
-  return json(401,{error:"Internal demo access was not authorized.",code:"DEMO_ACCESS_DENIED"});
+ const access=resolveStrideBrainRequestContext({
+  cookies:request.cookies,
+  operatorToken:request.headers.get("x-stridebrain-operator-token")||""
+ });
+ if(!access.session.active)
+  return json(401,{error:"StrideBrain access was not authorized.",code:"ACCESS_DENIED"});
+ if(!access.ok)
+  return json(503,{error:"The workspace context is unavailable.",code:access.code||"WORKSPACE_CONTEXT_UNAVAILABLE"});
+ if(access.runtime.mode==="tenant")
+  return json(503,{error:"This tenant has not been connected to a production workspace repository yet.",code:"TENANT_WORKSPACE_REPOSITORY_REQUIRED"});
+ const session=access.session;
  if((Number(request.headers.get("content-length"))||0)>24000)
   return json(413,{error:"This chat request is too large.",code:"REQUEST_TOO_LARGE"});
  let body;
@@ -69,18 +73,16 @@ export async function POST(request){
  const parsed=parseChat(body);
  if(!parsed)return json(400,{error:"Expected an approved model, industry and bounded conversation.",code:"INVALID_CHAT"});
  const selected=findAllowedModel(parsed.modelId);
- if(guestIdentity&&!staffCookieValid&&!staffTokenValid){
-  const guestModels=(process.env.STRIDEBRAIN_DEMO_GUEST_ALLOWED_MODELS||"").split(",").map(s=>s.trim()).filter(Boolean);
-  if(!guestModels.includes(parsed.modelId))return json(403,{code:"GUEST_MODEL_NOT_ALLOWED",error:"This model is not enabled for the guest preview."});
- }
- if(!selected||!isModelAllowed(parsed.modelId,process.env.STRIDEBRAIN_DEMO_ALLOWED_MODELS||""))
-  return json(403,{error:"This model has not been enabled for the staff demo.",code:"MODEL_NOT_ALLOWED"});
+ if(session.role==="guest"&&!session.allowedModelIds.includes(parsed.modelId))
+  return json(403,{code:"GUEST_MODEL_NOT_ALLOWED",error:"This model is not enabled for this invited workspace."});
+ if(!selected||!session.allowedModelIds.includes(parsed.modelId))
+  return json(403,{error:"This model has not been enabled for this workspace session.",code:"MODEL_NOT_ALLOWED"});
  const providerKey=selected.provider==="openrouter"?process.env.OPENROUTER_API_KEY:process.env.OPENAI_API_KEY;
  if(!providerKey)return json(503,{error:"The selected provider is not configured by the administrator.",code:"MODEL_NOT_CONFIGURED"});
  // Staff-only by default. If distributed quotas are activated, quota exhaustion
  // or infrastructure failure blocks provider spend before starting any stream.
- const authorizedIdentity=staffCookieValid?request.cookies.get(SESSION_COOKIE)?.value:staffTokenValid?request.headers.get("x-stridebrain-operator-token"):guestIdentity;
- const sessionId=guestIdentity&&!staffCookieValid&&!staffTokenValid?guestIdentity:createHash("sha256").update(authorizedIdentity||"").digest("hex");
+ const sessionId=session.chatScope;
+ if(!sessionId)return json(503,{code:"REQUEST_CONTEXT_INVALID",error:"The authorized workspace session is missing its quota scope."});
  const quota=process.env.STRIDEBRAIN_DEMO_QUOTA_BACKEND==="supabase"?await enforceSupabaseDemoQuota({sessionId}):await enforceDemoQuota({sessionId});
  if(!quota.ok)return json(["DEMO_QUOTA_EXCEEDED","DEMO_GLOBAL_QUOTA_EXCEEDED"].includes(quota.code)?429:503,{
   code:quota.code,
