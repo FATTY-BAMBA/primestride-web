@@ -38,25 +38,26 @@ function emailComposer(c,item,project,draft,receipt,zh){
 function connectionsPanel(c,zh){
  const fallback=[
   {id:"microsoft365",label:"Microsoft 365",channel:"email",implemented:true,configured:false,roleAllowed:false,sender:null},
-  {id:"line",label:"LINE Official Account",channel:"line",implemented:false,configured:false,roleAllowed:false,sender:null},
+  {id:"line",label:"LINE Official Account",channel:"line",implemented:true,configured:false,roleAllowed:false,sender:null},
   {id:"google-workspace",label:"Google Workspace",channel:"email",implemented:true,configured:false,roleAllowed:false,sender:null}
  ];
  const data=c.messageConnections?.connections?.length?c.messageConnections.connections:fallback;
  const healthByProvider=c.messageConnections?.healthByProvider||{};
  const registry=buildContactChannelRegistry(c.model.seed),linked=registry.reduce((n,x)=>n+x.channels.filter(y=>y.status==="linked").length,0);
  const cards=data.map(conn=>{
-  const isGoogle=conn.id==="google-workspace";
+  const isGoogle=conn.id==="google-workspace",isLine=conn.id==="line";
   const connected=isGoogle?conn.connected===true:conn.configured===true;
   const googleReadError=isGoogle&&conn.connectionState==="error";
   const readyToConnect=isGoogle&&conn.implemented===true&&conn.configured===true&&!connected&&!googleReadError&&conn.roleAllowed===true;
   const planned=conn.implemented!==true,health=healthByProvider[conn.id]||null;
   let status=isGoogle?(connected?(zh?"已連線":"Connected"):googleReadError?(zh?"連線狀態讀取失敗":"Connection status unavailable"):readyToConnect?(zh?"可開始連線":"Ready to connect"):planned?(zh?"下一階段":"Planned next"):(zh?"尚未設定":"Not configured")):
+   isLine?(connected?(zh?"已設定 · 可檢查連線":"Configured · ready to verify"):(zh?"可開始安全設定":"Ready for secure setup")):
    connected?(zh?"已設定 · 尚未驗證":"Configured · not verified"):planned?(zh?"下一階段":"Planned next"):(zh?"尚未設定":"Not configured");
   if(health?.state==="checking")status=zh?"正在檢查…":"Checking…";
   else if(health?.state==="error")status=zh?"連線檢查失敗":"Connection check failed";
   else if(health?.ready&&health?.checks?.send?.proven)status=zh?"已完成測試寄送":"Test send proven";
-  else if(health?.ready)status=zh?"憑證與冪等就緒":"Credentials & idempotency ready";
-  const detail=(connected||(isGoogle&&conn.sender))?(conn.sender||conn.channel):(conn.id==="line"?(zh?"LINE 官方帳號 + Messaging API":"LINE Official Account + Messaging API"):(isGoogle?(zh?"Gmail / 公司網域信箱":"Gmail / company domain"):(zh?"專用 Microsoft 365 寄件信箱":"Dedicated Microsoft 365 sender")));
+  else if(health?.ready)status=isLine?(zh?"LINE 頻道已驗證":"LINE channel verified"):(zh?"憑證與冪等就緒":"Credentials & idempotency ready");
+  const detail=(connected||(isGoogle&&conn.sender))?(conn.sender||conn.channel):(isLine?(zh?"LINE 官方帳號 · 安全 webhook + 已驗證聯絡人":"LINE Official Account · secure webhook + verified contacts"):(isGoogle?(zh?"Gmail / 公司網域信箱":"Gmail / company domain"):(zh?"專用 Microsoft 365 寄件信箱":"Dedicated Microsoft 365 sender")));
   let checks="";
   if(conn.id==="microsoft365"&&health?.state==="ready"){
    const rows=[
@@ -68,7 +69,7 @@ function connectionsPanel(c,zh){
    checks='<div class="sb-connection-checks">'+rows.map(([label,ok])=>'<span class="'+(ok?'ok':'pending')+'"><b>'+(ok?'✓':'○')+'</b>'+e(label)+'</span>').join('')+'</div>'+
     (health.checks?.send?.lastAcceptedAt?'<small class="sb-last-send">'+(zh?'上次接受寄送：':'Last accepted send: ')+e(health.checks.send.lastAcceptedAt)+'</small>':'');
   }
-  const testButton=conn.id==="microsoft365"&&connected&&conn.roleAllowed===true?button(zh?'檢查連線':'Check connection','connectionHealth',conn.id,'button-outline'):'';
+  const testButton=["microsoft365","line"].includes(conn.id)&&connected&&conn.roleAllowed===true?button(zh?'檢查連線':'Check connection','connectionHealth',conn.id,'button-outline'):'';
   const googleButton=readyToConnect?'<a class="button-outline" href="/api/stridebrain-demo/google/connect">'+(zh?'連線 Google Workspace':'Connect Google Workspace')+'</a>':'';
   return '<article class="sb-connection-card '+(connected?'connected ':'')+(conn.id==="line"?'priority':'')+'"><div><span class="sb-connection-dot"></span><strong>'+e(conn.label)+'</strong></div><small>'+e(status)+'</small><p>'+e(detail)+'</p>'+checks+testButton+googleButton+'</article>';
  }).join('');
