@@ -15,8 +15,10 @@ export function messageConnectorStatus({providerId,role,env=process.env}={}){
  return {...provider,known:true,configured:false,enabled:false,roleAllowed:role==="staff",sender:null,
   limits:{singleRecipient:true,attachments:false,bcc:false,bulk:false,requiresApproval:true}};
 }
-export function communicationConnectionsSnapshot({role,env=process.env,organizationId="demo-workspace"}={}){
- return {organizationId,storage:"pilot-env",connections:listMessageConnectors().map(p=>messageConnectorStatus({providerId:p.id,role,env}))};
+export function communicationConnectionsSnapshot({role,env=process.env,organizationId}={}){
+ const org=String(organizationId??"").trim();
+ if(!/^[A-Za-z0-9][A-Za-z0-9._:-]{2,119}$/.test(org))throw Error("ORGANIZATION_CONTEXT_REQUIRED");
+ return {organizationId:org,storage:"pilot-env",connections:listMessageConnectors().map(p=>messageConnectorStatus({providerId:p.id,role,env}))};
 }
 export async function checkMessageConnectorHealth({providerId,role,env=process.env,requestFn=fetch,now=Date.now()}={}){
  const provider=PROVIDERS[providerId];if(!provider)return {providerId,known:false,implemented:false,ready:false};
