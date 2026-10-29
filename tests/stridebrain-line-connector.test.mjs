@@ -66,7 +66,7 @@ test("LINE health verifies the channel access token with bot info",async()=>{
  assert.equal(health.ready,true);
  assert.equal(health.sender,"StrideBrain Demo");
  assert.equal(health.basicId,"@stridebrain");
- assert.equal(DEFAULT_LINE_WEBHOOK_URL,"https://demo.primestrideai.com/api/stridebrain-demo/line/webhook");
+ assert.equal(DEFAULT_LINE_WEBHOOK_URL,"https://line-webhook.primestrideai.com/api/stridebrain-demo/line/webhook");
 });
 
 test("controlled LINE push requires verified identity and is idempotent",async()=>{
