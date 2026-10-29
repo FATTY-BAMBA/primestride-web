@@ -47,9 +47,10 @@ function connectionsPanel(c,zh){
  const cards=data.map(conn=>{
   const isGoogle=conn.id==="google-workspace";
   const connected=isGoogle?conn.connected===true:conn.configured===true;
-  const readyToConnect=isGoogle&&conn.implemented===true&&conn.configured===true&&!connected&&conn.roleAllowed===true;
+  const googleReadError=isGoogle&&conn.connectionState==="error";
+  const readyToConnect=isGoogle&&conn.implemented===true&&conn.configured===true&&!connected&&!googleReadError&&conn.roleAllowed===true;
   const planned=conn.implemented!==true,health=healthByProvider[conn.id]||null;
-  let status=isGoogle?(connected?(zh?"已連線":"Connected"):readyToConnect?(zh?"可開始連線":"Ready to connect"):planned?(zh?"下一階段":"Planned next"):(zh?"尚未設定":"Not configured")):
+  let status=isGoogle?(connected?(zh?"已連線":"Connected"):googleReadError?(zh?"連線狀態讀取失敗":"Connection status unavailable"):readyToConnect?(zh?"可開始連線":"Ready to connect"):planned?(zh?"下一階段":"Planned next"):(zh?"尚未設定":"Not configured")):
    connected?(zh?"已設定 · 尚未驗證":"Configured · not verified"):planned?(zh?"下一階段":"Planned next"):(zh?"尚未設定":"Not configured");
   if(health?.state==="checking")status=zh?"正在檢查…":"Checking…";
   else if(health?.state==="error")status=zh?"連線檢查失敗":"Connection check failed";
