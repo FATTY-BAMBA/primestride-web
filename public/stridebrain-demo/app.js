@@ -446,6 +446,14 @@ async function refreshMessageConnections(){
 async function perform(el){
  const action=el.dataset.action,id=el.dataset.id||"",value=el.dataset.value||"";
  if(action==="retrySession"){if(!copilotBusy)await restoreStaffPreview();return;}
+ if(action==="agentHandoff"){
+  const result=selectAgent(state,value||"project-coordinator");
+  if(!result.ok){toast(result.reason);return;}
+  save();view.page="team";view.agentDecisionId=null;render();
+  if(messageConnections.state==="unknown")await refreshMessageConnections();
+  requestAnimationFrame(()=>document.querySelector(".sb-delegate-card")?.scrollIntoView({behavior:"smooth",block:"center"}));
+  return;
+ }
  if(action==="agentSelect"){
   const result=selectAgent(state,value||id);if(result.ok){save();view.page="team";view.agentDecisionId=null;render();}else toast(result.reason);return;
  }
