@@ -115,3 +115,22 @@
 .sb-proposal-final{display:grid;gap:5px;padding:14px;border-radius:10px;background:#f4f8f6}
 .sb-proposal-final strong{font-size:.9rem}.sb-proposal-final span{font-size:.76rem;color:#687970}.sb-proposal-final p{margin:7px 0 0!important}.sb-proposal-final em{justify-self:start;margin-top:5px;padding:4px 7px;border-radius:99px;background:#e8f4ee;color:#39795e;font-size:.68rem;font-style:normal;font-weight:800}
 @media(max-width:700px){.sb-editor-grid{grid-template-columns:1fr}.sb-editor-head{display:grid}.sb-editor-actions .button-outline{width:100%}}
+
+
+/* Copilot demo hierarchy: question first, configuration second. */
+.sb-shortcut.primary{border-color:#9dcbb7;background:#eef8f3;color:#28694f;font-weight:800;box-shadow:0 4px 12px rgba(44,105,80,.06)}
+.sb-shortcut.primary:hover{border-color:#6eae91;background:#e7f4ed}
+.sb-copilot-session-meta{max-width:680px;margin:10px auto 0;border:1px solid #e2eae6;border-radius:10px;background:#fafcfb}
+.sb-copilot-session-meta>summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 12px;color:#607168;font-size:.72rem}
+.sb-copilot-session-meta>summary::-webkit-details-marker{display:none}
+.sb-copilot-session-meta>summary strong{color:#3d5f50}
+.sb-copilot-session-meta>summary small{font-size:.68rem;color:#7b8b83}
+.sb-copilot-session-meta>div{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 12px;border-top:1px solid #e7eeea;background:#fff;border-radius:0 0 10px 10px}
+.sb-copilot-session-meta p{margin:0;color:#687970;font-size:.75rem;line-height:1.45}
+.sb-role-entry-compact{max-width:680px;margin:12px auto 0;padding:0;background:#fff}
+.sb-role-entry-compact>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 13px;font-size:.78rem;font-weight:800;color:#52675d}
+.sb-role-entry-compact>summary::-webkit-details-marker{display:none}
+.sb-role-entry-compact>summary small{font-size:.67rem;font-weight:700;color:#819087;background:#f3f6f4;border-radius:99px;padding:4px 7px}
+.sb-role-entry-inner{padding:12px 13px;border-top:1px solid #e8eeeb}
+.sb-role-entry-compact .sb-role-question{margin-top:8px;padding:8px 0;color:#356f57;font-size:.78rem}
+@media(max-width:700px){.sb-copilot-session-meta>div{display:grid}.sb-role-entry-compact{margin-left:0;margin-right:0}}
