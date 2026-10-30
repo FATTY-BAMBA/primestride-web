@@ -33,3 +33,28 @@ test("risk answer can hand off directly from Copilot to Project Coordinator",()=
  assert.match(app,/if\(action===["']agentHandoff["']\)/);
  assert.match(app,/selectAgent\(state,value\|\|["']project-coordinator["']\)/);
 });
+
+
+test("Copilot keeps the business question primary while session and role controls stay secondary",()=>{
+ const view=readFileSync("public/stridebrain-demo/views-primary.js","utf8");
+ const roles=readFileSync("public/stridebrain-demo/experience-views.js","utf8");
+ assert.match(view,/sb-shortcut.*primary/);
+ assert.match(view,/AI connected/);
+ assert.match(view,/sb-copilot-session-meta/);
+ assert.doesNotMatch(view,/Internal staff AI mode/);
+ assert.match(view,/roleChooser\(c,\{compact:true\}\)/);
+ assert.match(roles,/sb-role-entry-compact/);
+ assert.match(roles,/Tailor suggestions by role/);
+});
+
+test("AI Team makes prepared actions human-editable before approval while evidence stays separate",()=>{
+ const view=readFileSync("public/stridebrain-demo/views-ai-team.js","utf8");
+ const runtime=readFileSync("public/stridebrain-demo/agent-runtime.js","utf8");
+ assert.match(view,/EDITABLE PROPOSAL/);
+ assert.match(view,/agent-task-title/);
+ assert.match(view,/agent-task-owner/);
+ assert.match(view,/agent-draft/);
+ assert.match(view,/The risk, recorded owner and source evidence above stay unchanged/);
+ assert.match(runtime,/updatePreparedAgentAction/);
+ assert.match(runtime,/evidence and recorded source fields were unchanged/);
+});

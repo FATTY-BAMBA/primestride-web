@@ -5,7 +5,7 @@ import {readFileSync} from "node:fs";
 register("./helpers/stridebrain-json-loader.mjs",import.meta.url);
 const {WorkspaceModel}=await import("../public/stridebrain-demo/core-model.js");
 const {getPack}=await import("../public/stridebrain-demo/industry-packs.js");
-const {listAgents,runAgent,selectAgent,recordModelAgentPlan,recordEmailReceipt,approveAndExecuteAgentAction,defaultAiTeamState}=await import("../public/stridebrain-demo/ai-team.js");
+const {listAgents,runAgent,selectAgent,recordModelAgentPlan,recordEmailReceipt,updatePreparedAgentAction,approveAndExecuteAgentAction,defaultAiTeamState}=await import("../public/stridebrain-demo/ai-team.js");
 const seed=JSON.parse(readFileSync("public/stridebrain-interiors/seed.json","utf8")),model=new WorkspaceModel(seed,getPack("interior"));
 const state=()=>({variation:{},tasks:{},approvals:{},readiness:{},aiTeam:defaultAiTeamState(),audit:[]});
 
@@ -78,4 +78,39 @@ test("completed AI Team review uses risks as navigation and expands only the sel
  assert.ok(html.indexOf("sb-decision-section")<html.indexOf("sb-action-proof"));
  assert.ok(html.indexOf("sb-action-proof")<html.indexOf("sb-agent-switcher"));
  assert.match(html,/sb-agent-switcher/);
+});
+
+
+test("human can edit the prepared action before approval without changing evidence",()=>{
+ const s=state(),r=runAgent(s,model,"project-coordinator").run,item=r.items[0];
+ const original={projectId:item.projectId,recordId:item.recordId,sourceIds:[...item.sourceIds],coordination:JSON.stringify(item.coordination)};
+ const edited=updatePreparedAgentAction(s,item.id,{
+  taskTitle:"Call supplier and confirm design approval blocker",
+  taskOwner:"Mei Lin",
+  draftEn:"Please confirm the approved specification and supplier response before tomorrow's coordination check.",
+  draftZh:"請在明日協調前確認核准規格與供應商回覆。"
+ });
+ assert.equal(edited.ok,true);
+ assert.equal(edited.changed,true);
+ assert.equal(item.editedByHuman,true);
+ assert.equal(item.taskOwner,"Mei Lin");
+ assert.equal(item.taskTitle,"Call supplier and confirm design approval blocker");
+ assert.equal(item.projectId,original.projectId);
+ assert.equal(item.recordId,original.recordId);
+ assert.deepEqual(item.sourceIds,original.sourceIds);
+ assert.equal(JSON.stringify(item.coordination),original.coordination);
+ const approved=approveAndExecuteAgentAction(s,item.id);
+ assert.equal(approved.ok,true);
+ assert.equal(s.aiTeam.generatedTasks[0].title,"Call supplier and confirm design approval blocker");
+ assert.equal(s.aiTeam.generatedTasks[0].owner,"Mei Lin");
+ assert.equal(s.aiTeam.generatedTasks[0].approvedDraftZh,"請在明日協調前確認核准規格與供應商回覆。");
+ assert.equal(s.aiTeam.generatedTasks[0].humanEdited,true);
+});
+
+test("completed prepared actions cannot be edited after approval",()=>{
+ const s=state(),r=runAgent(s,model,"operations-assistant").run,item=r.items[0];
+ approveAndExecuteAgentAction(s,item.id);
+ const edited=updatePreparedAgentAction(s,item.id,{taskTitle:"Changed later"});
+ assert.equal(edited.ok,false);
+ assert.match(edited.reason,/cannot be edited/i);
 });

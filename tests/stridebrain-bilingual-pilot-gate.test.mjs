@@ -22,6 +22,7 @@ test("source and quotation screens honor workspace locale",()=>{
  assert.match(operations,/zh\?"客戶回覆與來源依據"/);
 });
 test("Copilot localization preserves guest vs staff separation",()=>{
- assert.match(primary,/isGuest\?\(zh\?'訪客 AI 工作區'/);
+ assert.match(primary,/isGuest\?\(zh\?'這是受邀訪客 AI 工作階段。'/);
+ assert.match(primary,/zh\?'這是內部人員 AI 工作階段/);
  assert.match(primary,/isGuest\?\(zh\?"離開訪客體驗"/);
 });

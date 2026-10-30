@@ -83,7 +83,7 @@ export function copilot(c){
    '</div>'+
   '</div></form>';
  out+='<div class="sb-shortcut-row">'+quick.map(item=>
-   '<button type="button" class="sb-shortcut" data-action="ask" data-prompt="'+e(item.prompt)+'" title="'+e(item.description)+'"'+hideIfBusy+'><span aria-hidden="true">'+e(item.glyph)+'</span>'+e(item.label)+'</button>'
+   '<button type="button" class="sb-shortcut'+(item.id==="numbers"?" primary":"")+'" data-action="ask" data-prompt="'+e(item.prompt)+'" title="'+e(item.description)+'"'+hideIfBusy+'><span aria-hidden="true">'+e(item.glyph)+'</span>'+e(item.label)+'</button>'
  ).join("")+'</div>';
  if(empty){
   out+='<div class="sb-context-ideas"><span class="sb-context-label">'+(zh?"你可以這樣問 · ":"SUGGESTED FOR ")+''+e(zh?p.company:p.companyEn.toUpperCase())+'</span>'+
@@ -104,10 +104,9 @@ export function copilot(c){
     '<p class="disclosure">'+(zh?"所有示範資料僅供查詢，不會自動對外執行操作。":"Demo data is read-only and no external actions run automatically.")+'</p></div></details>';
   }
  }else{
-  out+='<div class="sb-copilot-connected-foot"><span><strong>'+(isGuest?(zh?'訪客 AI 工作區':'Guest AI workspace'):(zh?'內部人員 AI 模式':'Internal staff AI mode'))+'</strong>'+ (zh?' · 已選模型：':' · Selected model: ')+e(model.label)+(zh?' · 工作區資料僅供查詢。':' · Read-only workspace tools.')+'</span>'+
-   button(isGuest?(zh?"離開訪客體驗":"Leave guest session"):(zh?"登出內部 AI":"Sign out of staff AI"),"disableGpt","","button-outline")+'</div>';
+  out+='<details class="sb-copilot-session-meta"><summary><span><strong>'+(zh?'AI 已連線':'AI connected')+'</strong> · '+e(model.label)+'</span><small>'+(zh?'工作區工具唯讀':'Read-only workspace tools')+' ＋</small></summary><div><p>'+(isGuest?(zh?'這是受邀訪客 AI 工作階段。':'This is an invited guest AI session.'):(zh?'這是內部人員 AI 工作階段；工作區工具保持唯讀，對外動作仍需人工批准。':'This is a staff AI session. Workspace tools remain read-only and external actions still require human approval.'))+'</p>'+button(isGuest?(zh?"離開訪客體驗":"Leave guest session"):(zh?"登出 AI 工作階段":"Sign out of AI session"),"disableGpt","","button-outline")+'</div></details>';
  }
- if(empty)out+=roleChooser(c);
+ if(empty)out+=roleChooser(c,{compact:true});
  out+='</div>';
  return out;
 }
