@@ -22,3 +22,14 @@ test("canonical client demo explicitly avoids feature-tour and technical-interna
  assert.match(script,/Do not demo unless the prospect specifically asks/);
  assert.match(script,/demo is not a separate fake application/i);
 });
+
+
+test("risk answer can hand off directly from Copilot to Project Coordinator",()=>{
+ const view=readFileSync("public/stridebrain-demo/views-primary.js","utf8");
+ const app=readFileSync("public/stridebrain-demo/app.js","utf8");
+ assert.match(view,/FROM ANSWER TO ACTION/);
+ assert.match(view,/data-action=["']agentHandoff["']/);
+ assert.match(view,/project-coordinator/);
+ assert.match(app,/if\(action===["']agentHandoff["']\)/);
+ assert.match(app,/selectAgent\(state,value\|\|["']project-coordinator["']\)/);
+});
