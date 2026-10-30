@@ -168,12 +168,38 @@ export function renderInspector(c){
  if(c.view.page==="team")return renderAiTeamInspector(c);
  const zh=c.locale!=="en";
  const {model:m,pack:p,state:s,view:v}=c,pr=m.project(v.projectId)||m.project(p.scenario.projectId),d=m.document(v.docId);
- let out='<div class="inspector-eyebrow">'+(zh?"工作脈絡與資料來源":"CONTEXT & EVIDENCE")+'</div><h3>'+(zh?"目前工作內容":"Working context")+'</h3>';
- if(d){out+='<div class="inspector-section"><div class="suite-eyebrow">'+e(d.id)+' · '+e(d.version)+'</div><h3>'+e(localizedName(d.title,zh))+'</h3>'+badge(d.status)+'<p class="disclosure" style="margin:9px 0">Owner: '+e(d.owner)+'</p><div class="doc-body">'+e(d.body)+'</div>'+sourceProvenance(d,c.industryEvidence)+'<div class="action-stack">'+button(zh?"下載來源文件":"Download source","download",d.id,"button-primary")+button(zh?"關閉":"Close","closeSource","","button-outline")+'</div><div class="action-stack">'+button(zh?"標記待審":"Flag for review","sourceFeedback",d.id,"button-secondary")+'</div></div>';}
- else {out+='<div class="inspector-section"><div class="inspector-context"><div class="suite-eyebrow">'+(zh?"目前專案":"SELECTED "+p.entityLabel.toUpperCase())+'</div><strong>'+e(localizedName(pr.name,zh))+'</strong><small>'+e(localizedName(pr.stage,zh))+' · '+e(pr.manager)+'</small><div class="progress-line"><i style="width:'+pr.progress+'%"></i></div><small>'+pr.progress+'% '+(zh?'紀錄進度':'recorded progress')+'</small></div>'+button(zh?"查看專案 ↗":"Open work ↗","project",pr.id,"button-secondary")+'</div>';}
- const ids=v.page==="readiness"?(getReadinessPack(p.id)?.sourceIds||[]):v.page==="playbook"?(c.industryEvidence?.cards.filter(x=>x.industry===p.id).slice(0,5).map(x=>x.id)||[]):v.page==="history"?(c.history?.records.filter(x=>x.status==="COMPLETE").slice(0,4).map(x=>x.sourceDocId)||[]):["copilot","service","quotes"].includes(v.page)?p.scenario.sourceIds:m.documentsFor(pr.id).slice(0,4).map(d=>d.id);
- out+='<div class="inspector-section">'+section(zh?"相關來源資料":"Relevant source evidence",zh?"查看示範資料的原始內容":"Inspect the original sample content")+ids.map(id=>{let d=m.document(id);return d?'<button class="inspector-source" data-action="source" data-id="'+e(d.id)+'"><strong>'+e(localizedName(d.title,zh))+'</strong><small>'+e(d.id)+' · '+e(d.version)+' · '+e(localizedName(d.status,zh))+'</small></button>':"";}).join("")+'</div>';
- if(v.page==="quotes"){const x=s.variation;out+='<div class="inspector-section">'+section(zh?"審核關卡":"Approval gates",zh?"目前示範審核狀態":"Simulated local state")+'<div class="inspector-context"><strong>Supplier '+(x.supplier?"✓":"○")+' · Owner '+(x.owner?"✓":"○")+' · Customer '+(x.customer?"✓":"○")+'</strong></div></div>';}
- out+='<div class="inspector-section"><div class="suite-eyebrow">'+(zh?"示範資料說明":"DEMO DATA")+'</div><p class="disclosure">'+(zh?"本工作區使用示範公司資料與價格，不會向客戶或供應商送出實際交易。":"This workspace uses demo company records and prices. No customer or supplier transactions are sent.")+'</p></div>';return out;
+ const pageFocus={
+  overview:[zh?"營運概況":"Operations snapshot",zh?"把專案、工作、報價與待確認事項放在同一個可追溯脈絡。":"A portfolio view that connects projects, work, quotations and pending decisions."],
+  projects:[zh?"專案組合":"Project portfolio",zh?"查看專案身分、進度與連結的文件、報價、工作和核准。":"Project identities, progress and the records linked across documents, quotes, work and approvals."],
+  quotes:[zh?"報價檢視":"Quotation review",zh?"比較成本假設、毛利情境與已記錄的人工審核關卡。":"Review cost assumptions, margin scenarios and the recorded human approval gates."],
+  work:[zh?"工作單登錄":"Work register",zh?"查看來源可追溯的任務、負責人與目前工作區狀態。":"Source-linked assignments, owners and the current workspace status."],
+  service:[zh?"客戶回覆流程":"Customer reply workflow",zh?"依據來源準備可編輯回覆並記錄人工審閱；此頁不會直接發送訊息。":"Prepare an editable evidence-backed reply and record human review; this page does not send the message."],
+  approvals:[zh?"審核佇列":"Approval queue",zh?"待確認事項連結到來源文件；此頁的決策只記錄在目前工作區。":"Pending decisions linked to source evidence; decisions here are recorded only in the current workspace."],
+  suppliers:[zh?"供應商參考":"Supplier reference directory",zh?"用示範資料理解來源與參考交期；最新價格、庫存與交付條件仍需查證。":"Reference supplier and lead-time data; current price, stock and delivery terms still require verification."],
+  analytics:[zh?"來源資料分析":"Source-derived analytics",zh?"所有指標都來自相同示範紀錄，並不代表已開票收入或實現獲利。":"Metrics derived from the same sample records; they are not invoiced revenue or realized profit."],
+  history:[zh?"歷史案件估價":"Historical estimate review",zh?"比較已完成示範案件與來源成本，準備可供人工複核的估價。":"Compare completed sample jobs and source costs to prepare a human-reviewable estimate."],
+  readiness:[zh?"作業檢核":"Operational readiness",zh?"把可查證的檢核結果與來源依據放在一起，再交由人員決定是否放行。":"Bring recorded checks and evidence together before a human decides whether work can proceed."]
+ }[v.page]||[zh?"工作脈絡":"Working context",zh?"此側欄會隨目前頁面與所選資料更新。":"This rail follows the current page and selected evidence."];
+ const portfolioPages=new Set(["overview","projects","work","approvals","suppliers","analytics"]);
+ let out='<div class="inspector-eyebrow">'+(zh?"工作脈絡與資料來源":"CONTEXT & EVIDENCE")+'</div><h3>'+e(pageFocus[0])+'</h3><p class="sb-inspector-page-intro">'+e(pageFocus[1])+'</p>';
+ if(d){
+  out+='<div class="inspector-section"><div class="suite-eyebrow">'+e(d.id)+' · '+e(d.version)+'</div><h3>'+e(localizedName(d.title,zh))+'</h3>'+badge(d.status)+'<p class="disclosure" style="margin:9px 0">Owner: '+e(d.owner)+'</p><div class="doc-body">'+e(d.body)+'</div>'+sourceProvenance(d,c.industryEvidence)+'<div class="action-stack">'+button(zh?"下載來源文件":"Download source","download",d.id,"button-primary")+button(zh?"關閉":"Close","closeSource","","button-outline")+'</div><div class="action-stack">'+button(zh?"標記待審":"Flag for review","sourceFeedback",d.id,"button-secondary")+'</div></div>';
+ }else{
+  const contextLabel=portfolioPages.has(v.page)?(zh?"固定的專案脈絡":"PINNED PROJECT CONTEXT"):(zh?"目前專案":"SELECTED "+p.entityLabel.toUpperCase());
+  out+='<div class="inspector-section"><div class="inspector-context"><div class="suite-eyebrow">'+contextLabel+'</div><strong>'+e(localizedName(pr.name,zh))+'</strong><small>'+e(localizedName(pr.stage,zh))+' · '+e(pr.manager)+'</small><div class="progress-line"><i style="width:'+pr.progress+'%"></i></div><small>'+pr.progress+'% '+(zh?'紀錄進度':'recorded progress')+'</small></div>'+button(zh?"查看專案 ↗":"Open work ↗","project",pr.id,"button-secondary")+'</div>';
+ }
+ let rawIds;
+ if(v.page==="approvals")rawIds=m.approvals(s).filter(x=>x.status==="Pending").slice(0,4).map(x=>x.sourceDocId);
+ else if(v.page==="work")rawIds=m.tasksFor(pr.id,s).slice(0,4).map(x=>x.sourceDocId);
+ else if(v.page==="suppliers")rawIds=p.scenario.sourceIds;
+ else if(v.page==="readiness")rawIds=getReadinessPack(p.id)?.sourceIds||[];
+ else if(v.page==="playbook")rawIds=c.industryEvidence?.cards.filter(x=>x.industry===p.id).slice(0,5).map(x=>x.id)||[];
+ else if(v.page==="history")rawIds=c.history?.records.filter(x=>x.status==="COMPLETE").slice(0,4).map(x=>x.sourceDocId)||[];
+ else if(["service","quotes"].includes(v.page))rawIds=p.scenario.sourceIds;
+ else rawIds=m.documentsFor(pr.id).slice(0,4).map(d=>d.id);
+ const ids=[...new Set((rawIds||[]).filter(Boolean))];
+ out+='<div class="inspector-section">'+section(zh?"相關來源資料":"Relevant source evidence",zh?"此頁目前最相關、可直接檢查的來源":"Sources most relevant to the current view")+ids.map(id=>{let d=m.document(id);return d?'<button class="inspector-source" data-action="source" data-id="'+e(d.id)+'"><strong>'+e(localizedName(d.title,zh))+'</strong><small>'+e(d.id)+' · '+e(d.version)+' · '+e(localizedName(d.status,zh))+'</small></button>':"";}).join("")+'</div>';
+ if(v.page==="quotes"){const x=s.variation;out+='<div class="inspector-section">'+section(zh?"審核關卡":"Approval gates",zh?"目前工作區已記錄的狀態":"Current workspace state")+'<div class="inspector-context"><strong>Supplier '+(x.supplier?"✓":"○")+' · Owner '+(x.owner?"✓":"○")+' · Customer '+(x.customer?"✓":"○")+'</strong></div></div>';}
+ out+='<div class="inspector-section"><div class="suite-eyebrow">'+(zh?"示範資料說明":"DEMO DATA")+'</div><p class="disclosure">'+(zh?"本工作區使用示範公司資料與價格，不會向客戶或供應商送出實際交易。":"This workspace uses sample company records and prices. No customer or supplier transaction is sent from these reference pages.")+'</p></div>';return out;
 }
 export function renderSourceModal(d,registry){return '<div class="evidence-modal"><div class="panel-header"><div><div class="suite-eyebrow">'+e(d.id)+' · '+e(d.version)+'</div><h2>'+e(d.title)+'</h2></div>'+button("Close ×","closeSource","","button-outline")+'</div>'+badge(d.status)+'<div class="doc-body" style="margin-top:14px">'+e(d.body)+'</div>'+sourceProvenance(d,registry)+'<div class="action-stack">'+button("Download .md","download",d.id,"button-primary")+button("Flag for review","sourceFeedback",d.id,"button-secondary")+'</div></div>';}
