@@ -134,6 +134,7 @@ try{
  await page.locator('[data-action="agentEmailCancel"]').click();
  await page.locator('[data-action="agentExecute"]').first().click();
  assert.match(await page.locator('.sb-decision-card').first().innerText(),/已完成 ✓/);
+ await page.locator('.sb-agent-switcher summary').click();
  await page.click('[data-action="agentSelect"][data-value="project-coordinator"]');
  assert.equal(await page.locator('.sb-decision-card').count(),0);
  await page.click('[data-action="agentRun"][data-value="project-coordinator"]');await page.waitForSelector('.sb-decision-card');
@@ -143,6 +144,7 @@ try{
  assert.match(await page.locator('#inspector').innerText(),/PRJ-104/);
  assert.equal(await page.locator('.sb-draft-details').first().evaluate(el=>el.open),true);
  assert.match(await page.locator('.sb-draft-details').first().innerText(),/交接|尚未送出/);
+ await page.locator('.sb-agent-switcher summary').click();
  await page.click('[data-action="agentSelect"][data-value="quote-margin-guardian"]');
  assert.equal(await page.locator('.sb-decision-card').count(),0);
  await page.click('[data-action="agentRun"][data-value="quote-margin-guardian"]');await page.waitForSelector('.sb-decision-card');
