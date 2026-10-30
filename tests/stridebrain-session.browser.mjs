@@ -99,7 +99,7 @@ try{
  assert.ok(!(await page.evaluate(()=>document.cookie)).includes(GUEST_COOKIE));report('one invitation creates protected session; no second code in chat');
  assert.doesNotMatch(await page.locator('#inspector').innerText(),/松山|DOC-1006/);
  report('empty conversation does not default to an unrelated featured project');
- const beforeRole=chats.length;await page.click('[data-action="demoRole"][data-value="estimator"]');
+ const beforeRole=chats.length;await page.locator('.sb-role-entry-compact summary').click();await page.click('[data-action="demoRole"][data-value="estimator"]');
  assert.equal(chats.length,beforeRole);assert.match(await page.locator('.sb-role-question').innerText(),/毛利/);
  assert.equal(await page.locator('#copilot-access-token').count(),0);report('optional role selection changes suggestions without login or model request');
  assert.equal(await page.locator('#nav-main > button').count(),7);
@@ -125,7 +125,12 @@ try{
  await page.locator('.sb-agent-timeline summary').click();
  assert.match(await page.locator('.sb-agent-timeline').innerText(),/已查閱目前優先紀錄/);
  await page.locator('.sb-draft-details summary').first().click();
- assert.match(await page.locator('.sb-draft-details').first().innerText(),/尚未送出/);
+ assert.match(await page.locator('.sb-draft-details').first().innerText(),/可修改的提案|EDITABLE PROPOSAL/);
+ await page.fill('[name="agent-task-title"]','Human-edited follow-up task');
+ await page.fill('[name="agent-task-owner"]','Mei Lin');
+ await page.fill('[name="agent-draft"]','人工修改後的確認訊息。');
+ await page.click('[data-action="agentProposalSave"]');
+ assert.equal(await page.inputValue('[name="agent-task-title"]'),'Human-edited follow-up task');
  assert.equal(await page.locator('[data-action="agentEmailPrepare"]').count(),1);
  await page.locator('[data-action="agentEmailPrepare"]').click();
  await page.waitForSelector('.sb-email-composer');
@@ -157,6 +162,7 @@ try{
  assert.match(await page.locator('.sb-draft-details').first().innerText(),/毛利|複核/);
  await page.click('#nav-main [data-value="work"]');
  assert.match(await page.locator('#main').innerText(),/AI-WO-OA-/);
+ assert.match(await page.locator('#main').innerText(),/Human-edited follow-up task/);
  report('shared AI runtime runs operations, project and quote teammates; approval creates only an internal follow-up task');
  await page.click('#nav-main [data-value="overview"]');await page.waitForSelector('[data-priority-id]');
  assert.deepEqual(await page.locator('[data-priority-id]').evaluateAll(nodes=>nodes.map(n=>n.dataset.priorityId)),['WO-1001','WO-1040','WO-1049']);
