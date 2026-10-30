@@ -80,3 +80,21 @@
 .sb-copilot-handoff p{margin:0;max-width:720px;color:#607169;line-height:1.5;font-size:.84rem}
 .sb-copilot-handoff .button-primary{white-space:nowrap}
 @media(max-width:900px){.sb-copilot-handoff{grid-template-columns:1fr}.sb-copilot-handoff .button-primary{justify-self:start}.sb-agent-roster-secondary .sb-agent-grid{grid-template-columns:1fr}}
+
+
+/* Post-review demo focus: use the three risks as navigation and expand one decision at a time. */
+.sb-summary-preview button{grid-template-columns:28px 120px minmax(0,1fr) auto}
+.sb-summary-preview button em{font-style:normal;font-size:.66rem;font-weight:800;color:#3d765f;background:#edf7f2;border-radius:99px;padding:4px 7px;white-space:nowrap}
+.sb-summary-preview button.done{opacity:.72}
+.sb-selected-decision-head{display:flex;align-items:flex-end;justify-content:space-between;gap:18px}
+.sb-selection-count{font-size:.78rem;font-weight:850;color:#5c7569;background:#eef7f2;border-radius:99px;padding:7px 10px;white-space:nowrap}
+.sb-agent-switcher{margin:18px 0;border:1px solid #e1e9e5;border-radius:12px;background:#fbfcfb}
+.sb-agent-switcher>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:13px 15px;font-size:.82rem;font-weight:800;color:#4f675c}
+.sb-agent-switcher>summary::-webkit-details-marker{display:none}
+.sb-agent-switcher>summary b{font-size:1rem;color:#6f8178}
+.sb-agent-switcher[open]>summary{border-bottom:1px solid #e7eeea}
+.sb-agent-switcher .sb-agent-grid{padding:12px;background:#fff;border-radius:0 0 12px 12px}
+.sb-decision-section{margin-top:20px}
+.sb-decision-section .sb-decision-card{box-shadow:0 8px 24px rgba(34,74,59,.04)}
+@media(max-width:900px){.sb-summary-preview button{grid-template-columns:28px 100px minmax(0,1fr)}.sb-summary-preview button em{grid-column:2/4;justify-self:start}.sb-selected-decision-head{align-items:flex-start}}
+@media(max-width:620px){.sb-summary-preview button{grid-template-columns:24px 1fr}.sb-summary-preview button em{grid-column:2}.sb-selected-decision-head{display:grid}.sb-selection-count{justify-self:start}}
