@@ -1,7 +1,7 @@
 import {evidenceList} from "./evidence-presentation.js";
 import {DEMO_ROLES} from "./experience-views.js";
 import {aiTeamView} from "./views-ai-team.js";
-import {runAgent,selectAgent,recordModelAgentPlan,recordEmailReceipt,recordLineReceipt,approveAndExecuteAgentAction} from "./ai-team.js";
+import {runAgent,selectAgent,recordModelAgentPlan,recordEmailReceipt,recordLineReceipt,updatePreparedAgentAction,approveAndExecuteAgentAction} from "./ai-team.js";
 import {copilotErrorMessage} from "./copilot-errors.js";
 import {getPack,listPacks} from "./industry-packs.js";
 import {WorkspaceModel,money,calculateVariation,escapeHtml as e,loadDemoState,saveDemoState,resetDemoState,event,setVariationInput,approveVariationGate,commitVariation,buildCustomerReply,reviewCustomerDraft,recordFeedback,markFeedbackReviewed} from "./core-model.js";
@@ -443,6 +443,20 @@ async function refreshMessageConnections(){
  }
  render();
 }
+function preparedActionEdits(itemId){
+ const card=document.querySelector('.sb-decision-card[data-decision-id="'+itemId+'"]');
+ if(!card)return null;
+ const taskTitle=card.querySelector('[name="agent-task-title"]')?.value;
+ const taskOwner=card.querySelector('[name="agent-task-owner"]')?.value;
+ const draft=card.querySelector('[name="agent-draft"]')?.value;
+ return {taskTitle,taskOwner,...(interfaceLocale==="en"?{draftEn:draft}:{draftZh:draft})};
+}
+function persistPreparedActionEdits(itemId,{toastOnChange=false}={}){
+ const edits=preparedActionEdits(itemId);if(!edits)return {ok:true,changed:false};
+ const result=updatePreparedAgentAction(state,itemId,edits);
+ if(result.ok){save();if(result.changed&&toastOnChange)toast(interfaceLocale==="en"?"Your edits are saved for approval.":"你的修改已儲存，等待批准。");}
+ return result;
+}
 async function perform(el){
  const action=el.dataset.action,id=el.dataset.id||"",value=el.dataset.value||"";
  if(action==="retrySession"){if(!copilotBusy)await restoreStaffPreview();return;}
@@ -478,8 +492,15 @@ async function perform(el){
    :(interfaceLocale==="en"?result.run.items.length+" actions prepared for review.":"AI 同事已準備 "+result.run.items.length+" 項工作，等你確認。"));
   return;
  }
+ if(action==="agentProposalSave"){
+  const itemId=value||id,result=persistPreparedActionEdits(itemId,{toastOnChange:true});
+  if(!result.ok)toast(result.reason);
+  return;
+ }
  if(action==="agentExecute"){
-  const result=approveAndExecuteAgentAction(state,value||id);
+  const itemId=value||id,edited=persistPreparedActionEdits(itemId);
+  if(!edited.ok){toast(edited.reason);return;}
+  const result=approveAndExecuteAgentAction(state,itemId);
   if(result.ok){save();render();toast(interfaceLocale==="en"?"Approved action completed and follow-up task created.":"已批准並完成動作，追蹤待辦已建立。");}
   else toast(result.reason);return;
  }
@@ -495,7 +516,9 @@ async function perform(el){
   render();return;
  }
  if(action==="agentEmailPrepare"){
-  view.emailDecisionId=value||id;view.agentDecisionId=value||id;await refreshMessageConnections();return;
+  const itemId=value||id,edited=persistPreparedActionEdits(itemId);
+  if(!edited.ok){toast(edited.reason);return;}
+  view.emailDecisionId=itemId;view.agentDecisionId=itemId;await refreshMessageConnections();return;
  }
  if(action==="lineIdentityVerify"){
   const identityId=Number(value||id);
@@ -516,7 +539,9 @@ async function perform(el){
   return;
  }
  if(action==="agentLinePrepare"){
-  view.lineDecisionId=value||id;view.agentDecisionId=value||id;await refreshMessageConnections();return;
+  const itemId=value||id,edited=persistPreparedActionEdits(itemId);
+  if(!edited.ok){toast(edited.reason);return;}
+  view.lineDecisionId=itemId;view.agentDecisionId=itemId;await refreshMessageConnections();return;
  }
  if(action==="agentLineCancel"){view.lineDecisionId=null;render();return;}
  if(action==="agentLineSend"){
