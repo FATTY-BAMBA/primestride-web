@@ -204,6 +204,5 @@ export function aiTeamView(c){
  }
  out+=permissionDisclosure(zh);
  out+=rosterDisclosure;
- out+=connectionsPanel(c,zh,{showProof:true});
  return out;
 }
