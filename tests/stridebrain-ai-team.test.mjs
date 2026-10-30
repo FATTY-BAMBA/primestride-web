@@ -65,10 +65,17 @@ test("fresh AI Team view leads with the selected teammate mission before seconda
  assert.match(html,/CONNECTED CHANNELS/);
 });
 
-test("completed AI Team review focuses decisions before teammate switching and action proof",async()=>{
+test("completed AI Team review uses risks as navigation and expands only the selected decision",async()=>{
  const {aiTeamView}=await import("../public/stridebrain-demo/views-ai-team.js");
  const s=state();selectAgent(s,"project-coordinator");runAgent(s,model,"project-coordinator");
  const html=aiTeamView({model,pack:getPack("interior"),state:s,view:{agentDecisionId:s.aiTeam.runs[0].items[0].id,emailDecisionId:null,lineDecisionId:null},locale:"en",emailConnector:{state:"ready",configured:true,roleAllowed:true,sender:"demo@example.com",provider:"google-workspace"},messageConnections:{state:"ready",connections:[],healthByProvider:{}},lineInbox:{state:"ready",identities:[]}});
- assert.ok(html.indexOf("sb-decision-section")<html.indexOf("sb-agent-roster-secondary"));
- assert.match(html,/sb-action-proof/);
+ assert.equal((html.match(/class="sb-decision-card /g)||[]).length,1);
+ assert.equal((html.match(/data-action="agentDecision"/g)||[]).length,3);
+ assert.match(html,/Review the selected coordination risk/);
+ assert.match(html,/Recorded blocker/);
+ assert.match(html,/Near-term handoff/);
+ assert.match(html,/Approval \/ status check/);
+ assert.ok(html.indexOf("sb-decision-section")<html.indexOf("sb-action-proof"));
+ assert.ok(html.indexOf("sb-action-proof")<html.indexOf("sb-agent-switcher"));
+ assert.match(html,/sb-agent-switcher/);
 });
