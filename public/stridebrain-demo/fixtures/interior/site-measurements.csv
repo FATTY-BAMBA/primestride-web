@@ -1,0 +1,5 @@
+﻿project_id,source,room,measurement,planned_mm,recorded_mm,verification
+PRJ-101,DOC-1005,Kitchen,Countertop length,3000,,PENDING
+PRJ-101,DOC-1005,Kitchen,Countertop depth,600,,PENDING
+PRJ-101,DOC-1005,Kitchen,Sink cutout width,500,,PENDING
+PRJ-101,DOC-1005,Kitchen,Cabinet support review,,,PROFESSIONAL REVIEW NEEDED

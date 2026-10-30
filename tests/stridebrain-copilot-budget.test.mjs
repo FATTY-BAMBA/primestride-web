@@ -1,0 +1,7 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import {reserveDemoBudget} from "../src/lib/stridebrain-demo/demo-budget.js";
+function setup(){process.env.STRIDEBRAIN_DEMO_BUDGET_ENABLED="true";process.env.STRIDEBRAIN_DEMO_SUPABASE_URL="https://example.supabase.co";process.env.STRIDEBRAIN_DEMO_SUPABASE_SECRET_KEY="test-only";process.env.STRIDEBRAIN_DEMO_ORGANIZATION_ID="00000000-0000-4000-8000-000000000001";delete process.env.STRIDEBRAIN_DEMO_BUDGET_RESERVE_MICROUSD;delete process.env.STRIDEBRAIN_DEMO_DAILY_BUDGET_MICROUSD;}
+test("budget remains off unless deliberately enabled",async()=>{setup();process.env.STRIDEBRAIN_DEMO_BUDGET_ENABLED="false";assert.deepEqual(await reserveDemoBudget({requestFn:()=>{throw Error("called")}}),{ok:true,enabled:false});});
+test("budget reserves fixed conservative ceiling",async()=>{setup();let payload;const result=await reserveDemoBudget({requestFn:async(url,options)=>{payload=JSON.parse(options.body);return {ok:true,json:async()=>({ok:true})};}});assert.equal(result.ok,true);assert.equal(payload.p_request_microusd,500000);assert.equal(payload.p_daily_cap_microusd,10000000);});
+test("limit and outages fail closed",async()=>{setup();assert.equal((await reserveDemoBudget({requestFn:async()=>({ok:true,json:async()=>({ok:false,reason:"budget_exceeded"})})})).code,"DEMO_BUDGET_EXCEEDED");assert.equal((await reserveDemoBudget({requestFn:async()=>{throw Error("offline")}})).code,"DEMO_BUDGET_UNAVAILABLE");});

@@ -1,0 +1,8 @@
+﻿job_id,source,field,manually_entered,reference_example,assessment
+JOB-201,REF-P03,Trim size,297x420 mm,A3 297x420 mm,DECLARED
+JOB-201,REF-P03,File size including bleed,300x423 mm,303x426 mm,HOLD
+JOB-201,REF-P03,Bleed each edge,1.5mm,3mm,HOLD
+JOB-201,REF-P02,Raster resolution,200dpi,300dpi recommended,HOLD
+JOB-201,REF-P02,Font embedding,Unknown,Embed or outline,HOLD
+JOB-201,REF-P04,Color mode,RGB,CMYK preferred for example vendor,REVIEW
+JOB-201,REF-P07,Customer proof,Pending,Written approval of latest proof,HOLD

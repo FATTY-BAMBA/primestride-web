@@ -1,0 +1,14 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import vm from 'node:vm';
+import {readFileSync} from 'node:fs';
+import {register} from 'node:module';
+register('./helpers/stridebrain-json-loader.mjs',import.meta.url);
+const {runOpenRouterCopilot}=await import('../src/lib/stridebrain-demo/openrouter-runner.js');
+const {runGptCopilot}=await import('../src/lib/stridebrain-demo/copilot-runner.js');
+import {makeApp} from './helpers/stridebrain-app-harness.mjs';
+import {ready,response,modelId} from './helpers/stridebrain-session-fixtures.mjs';
+test('actual client request includes selected locale',async()=>{const {c,calls}=makeApp(url=>url.endsWith('/status')?response(ready):{...response({mode:'openrouter-readonly-demo',modelId,answer:'測試',sourceIds:[]}),headers:{get:()=> 'application/json'}});await c.restoreStaffPreview();await c.ask('為什麼？');const body=JSON.parse(calls.at(-1).body);assert.equal(body.locale,'zh-TW');});
+test('chat parser validates locale and remains compatible with old callers',()=>{const source=readFileSync('src/app/api/stridebrain-demo/copilot/route.js','utf8');const part=source.slice(source.indexOf('function parseChat(body)'),source.indexOf('export async function POST'));const c=vm.createContext({validIndustry:()=>true,DEFAULT_MODEL_ID:modelId});vm.runInContext(part,c);const base={industry:'interior',messages:[{role:'user',content:'why?'}]};assert.equal(c.parseChat({...base,locale:'zh-TW'}).locale,'zh-TW');assert.equal(c.parseChat({...base,locale:'malicious arbitrary locale'}),null);assert.ok(c.parseChat(base));});
+test('OpenRouter runner receives Traditional Chinese directive from UI locale',async()=>{let payload;await runOpenRouterCopilot({industry:'interior',messages:[{role:'user',content:'Why?'}],modelId,locale:'zh-TW',requestModel:async p=>{const first=!payload;payload=p;return {choices:[{message:first?{role:'assistant',content:null,tool_calls:[{id:'test-call-1',type:'function',function:{name:'operations_snapshot',arguments:'{}'}}]}:{role:'assistant',content:'示範資料中有待確認的作業。'}}]};}});assert.match(payload.messages[0].content,/MUST BE TRADITIONAL CHINESE/);});
+test('direct runner receives locale without changing model authorization',async()=>{let payload;await runGptCopilot({industry:'interior',messages:[{role:'user',content:'Why?'}],locale:'zh-TW',requestModel:async p=>{payload=p;return {output:[{type:'message',content:[{type:'output_text',text:'你好。'}]}]};}});assert.match(payload.instructions,/MUST BE TRADITIONAL CHINESE/);});

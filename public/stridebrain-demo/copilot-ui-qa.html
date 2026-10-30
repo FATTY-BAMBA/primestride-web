@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Internal browser smoke test for StrideBrain's model selector and business shortcuts.">
+<title>StrideBrain | Copilot UI & Model Picker QA</title>
+<style>
+:root{font-family:system-ui,-apple-system,sans-serif;color:#19372e;background:#f7f9f6}
+*{box-sizing:border-box}body{margin:0}
+header{background:#142e36;padding:31px clamp(18px,6vw,70px);color:#fff}
+header small{font-size:11px;font-weight:800;letter-spacing:.16em;color:#a0d6ba}
+header h1{font-size:clamp(25px,3.5vw,35px);margin:8px 0 11px;letter-spacing:-.04em}
+header p{color:#c1d4c7;line-height:1.6;max-width:800px;font-size:14px;margin:0}
+main{max-width:1050px;margin:auto;padding:28px 22px 70px}
+section{background:#fff;border:1px solid #dce7df;padding:24px;border-radius:15px;margin-bottom:15px}
+section h2{font-size:18px;margin:0 0 10px;letter-spacing:-.025em}
+section p,section li{font-size:13px;line-height:1.75;color:#5c7565}
+.notice{padding:13px;border:1px solid #e5ddbd;background:#fcf7eb;color:#745a30;border-radius:9px;font-size:12px;line-height:1.6;margin-bottom:15px}
+button{background:#118366;color:white;border:0;border-radius:9px;padding:11px 18px;font-size:13px;font-weight:800;cursor:pointer}
+button:hover{background:#0d6751}button:disabled{opacity:.5;cursor:wait}
+#status{font-size:12px;color:#547561;margin-top:13px}
+table{border-collapse:collapse;width:100%;font-size:12px;margin-top:18px}
+td,th{padding:13px 11px;border-bottom:1px solid #e3eae2;text-align:left;vertical-align:top}
+th{font-weight:800;color:#728779}
+td.good{font-weight:800;color:#138658}
+td.bad{font-weight:800;color:#b54d45}
+a{color:#16775b;font-weight:700}
+iframe{position:absolute;left:-99999px;top:0;width:1024px;height:800px;border:0;visibility:hidden}
+@media(max-width:600px){section{padding:16px}table{display:block;overflow-x:auto;white-space:nowrap}header{padding:25px 20px}}
+</style></head>
+<body>
+<header><small>PRIMESTRIDE AI · INTERNAL DEMO QA</small>
+<h1>Copilot Model Picker & Shortcuts</h1>
+<p>Check the actual StrideBrain conversation UI, its reference-inspired model dropdown and industry-aware business prompts—without enabling or charging OpenRouter, OpenAI or another model provider.</p></header>
+<main>
+<section><h2>What we are checking</h2>
+<div class="notice"><strong>Fictional sample mode only.</strong> This test runs the real interior and printing demo UI in a hidden same-origin frame, validates the model menu, preserves the user's draft, clicks Follow-ups and confirms no provider request occurs. It does not test paid model inference, company accounts or live business data.</div>
+<button id="run" type="button">Run 12 browser checks</button>
+<div id="status" role="status" aria-live="polite">Ready to run. No provider keys required.</div>
+<table><thead><tr><th>Check</th><th>Result</th><th>Observed behavior</th></tr></thead><tbody id="results"></tbody></table>
+</section>
+<section><h2>Still requires an authorized live-model test</h2>
+<p>We should separately verify real tool calls for Claude, GPT, Gemini and DeepSeek through an administrator-configured server provider key and staff token, then test prompts in Traditional Chinese, provider billing controls and organization data permissions. The browser checks above make none of those claims.</p>
+<p><a href="./index.html?industry=interior">Open interior-design Copilot ↗</a> · <a href="./index.html?industry=printing">Open printing Copilot ↗</a> · <a href="./bridge-qa.html">Previous document-to-quote QA ↗</a></p>
+</section>
+<iframe id="preview-frame" title="Isolated synthetic StrideBrain UI smoke test" aria-hidden="true" tabindex="-1"></iframe>
+</main>
+<script type="module" src="./copilot-ui-qa.js"></script>
+</body></html>

@@ -1,0 +1,17 @@
+# StrideBrain restricted guest demo (implementation staged)
+The backend supports opt-in invited guest sessions without sharing staff operator credentials. **Do not enable guest access for prospects yet**; this is infrastructure, not customer authentication.
+Guest sessions are signed HttpOnly SameSite=Strict 24-hour cookies. Invite codes are only compared to allowlisted SHA-256 hashes stored server-side. Invitations can be revoked by removing their hashes. Quotas share one daily session identity per invitation (not per browser), which avoids browser-cookie rotation bypassing limits. Guest models have an independent allowlist.
+Required Preview-only server settings before staged QA:
+- `STRIDEBRAIN_DEMO_GUEST_ENABLED=true` (currently **unset**, remains disabled)
+- `STRIDEBRAIN_DEMO_GUEST_SESSION_SECRET` (independent random secret, at least 32 characters)
+- `STRIDEBRAIN_DEMO_GUEST_INVITE_HASHES` (comma-separated SHA-256 digests of unique long invitation codes; never commit plaintext codes)\n- `STRIDEBRAIN_DEMO_GUEST_INVITE_EXPIRATIONS` (required: comma-separated `<sha256 hash>:<UTC Unix expiry seconds>` pairs; missing or expired entries fail closed). Removing a hash or letting its expiration elapse invalidates both new invitations and existing browser sessions.
+- `STRIDEBRAIN_DEMO_GUEST_ALLOWED_MODELS` (explicit comma-separated approved model catalog identifiers; empty means no guest models)
+- Existing Supabase quota enabled and OpenRouter provider ready.
+Guest invitation exchange: POST `/api/stridebrain-demo/copilot/guest-session` same-origin JSON body `{"inviteCode":"..."}`. GET verifies current guest cookie; DELETE clears the cookie. Copilot POST allows valid guest cookies, but denies models outside the guest allowlist. Invitations should be distributed out-of-band and never placed in URL query strings.
+Remaining production gates: model concurrency and monetary budget caps, user/organization roles, guest UX onboarding, rate-limit invitation attempts at the edge, invite expiration and admin lifecycle, tenant isolation, security review and end-to-end browser acceptance. No public sign-up or unrestricted paid AI access.
+
+## One-person internal pilot (2026-10-21)
+A single invitation was configured on the StrideBrain feature-branch **Preview only** with a 24-hour absolute expiration and guest model allowlist limited to `anthropic/claude-sonnet-5.5`. The invite value and signing key are deliberately absent from Git. This is a controlled internal functional test, **not** prospect onboarding approval. Rate limits, Supabase 100/500 request quotas, three-slot concurrency guard, and conservative budget reservations remain required. Validate deployed session exchange and sign-out before distributing any prospect invitation. Revoke this pilot after testing by disabling guest access and removing invite hashes/expirations.
+
+## Four-person controlled pilot — 2026-10-21
+Rotated the previous single internal invitation to four distinct, independently revocable invitation hashes in Vercel Preview on this feature branch only. All four expire on 2026-10-28 at 23:59 Taiwan time. Plaintext invitation codes are **not** committed, and provider model access remains restricted to Claude Sonnet 5.5. The 100-per-invitation request quota, shared 500 request global quota, three-request concurrency gate and conservative US$10/day reservation allowance remain configured. No external prospect rollout is approved by this change. A fresh deployment must pick up the environment changes; verify one real invitation before sharing the others.
