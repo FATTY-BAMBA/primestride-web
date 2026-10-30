@@ -37,7 +37,7 @@ test("Project Coordinator presentation exposes the three coordination concepts a
  assert.match(view,/Recorded blocker/);
  assert.match(view,/Near-term handoff/);
  assert.match(view,/Approval \/ status check/);
- assert.match(view,/selectedDecision&&selected\.id===["']project-coordinator["']/);
+ assert.match(view,/selected\.id===["']project-coordinator["']\?["'] open["']/);
  assert.match(view,/coordination_guard/);
 });
 
