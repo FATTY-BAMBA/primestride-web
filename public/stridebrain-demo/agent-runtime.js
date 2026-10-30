@@ -120,6 +120,28 @@ function recordExternalReceipt(state,itemId,channel,receipt){
 }
 export function recordEmailReceipt(state,itemId,receipt){return recordExternalReceipt(state,itemId,"email",receipt);}
 export function recordLineReceipt(state,itemId,receipt){return recordExternalReceipt(state,itemId,"line",receipt);}
+export function updatePreparedAgentAction(state,itemId,edits={}){
+ state.aiTeam=normaliseAiTeamState(state.aiTeam);
+ const run=state.aiTeam.runs.find(r=>r.id===state.aiTeam.activeRunId),item=run?.items.find(x=>x.id===itemId);
+ if(!run||!item)return {ok:false,reason:"Prepared action not found."};
+ if(item.state==="completed")return {ok:false,reason:"Completed actions cannot be edited."};
+ const taskTitle=String(edits.taskTitle??item.taskTitle??"").trim().slice(0,140);
+ const taskOwner=String(edits.taskOwner??item.taskOwner??item.contact??"").trim().slice(0,80);
+ const draftZh=String(edits.draftZh??item.draftZh??"").trim().slice(0,1200);
+ const draftEn=String(edits.draftEn??item.draftEn??"").trim().slice(0,1200);
+ if(taskTitle.length<2)return {ok:false,reason:"Task title is required."};
+ if(taskOwner.length<1)return {ok:false,reason:"Task assignee is required."};
+ if(draftZh.length<2||draftEn.length<2)return {ok:false,reason:"Prepared wording cannot be empty."};
+ const changed=taskTitle!==(item.taskTitle||"")||taskOwner!==(item.taskOwner||item.contact||"")||draftZh!==(item.draftZh||"")||draftEn!==(item.draftEn||"");
+ item.taskTitle=taskTitle;item.taskOwner=taskOwner;item.draftZh=draftZh;item.draftEn=draftEn;
+ if(changed){
+  item.editedByHuman=true;item.editedAt=now();
+  state.audit=Array.isArray(state.audit)?state.audit:[];
+  state.audit.unshift({at:new Date().toLocaleString("en-TW",{hour12:false}),text:"Human edited prepared action "+item.id+" before approval; evidence and recorded source fields were unchanged."});
+  state.audit=state.audit.slice(0,60);
+ }
+ return {ok:true,item,changed};
+}
 export function approveAndExecuteAgentAction(state,itemId){
  state.aiTeam=normaliseAiTeamState(state.aiTeam);
  const run=state.aiTeam.runs.find(r=>r.id===state.aiTeam.activeRunId),agent=run&&AGENT_DEFINITIONS[run.agentId],item=run?.items.find(x=>x.id===itemId);
@@ -132,8 +154,9 @@ export function approveAndExecuteAgentAction(state,itemId){
  const approvedAt=now(),taskId="AI-WO-"+run.agentId.split("-").map(x=>x[0]).join("").toUpperCase()+"-"+item.id.split("-").at(-1)+"-"+run.id.slice(-5).toUpperCase();
  item.approvedAt=approvedAt;item.executedAt=approvedAt;item.state="completed";item.generatedTaskId=taskId;
  if(!state.aiTeam.generatedTasks.some(t=>t.id===taskId))state.aiTeam.generatedTasks.unshift({
-  id:taskId,projectId:item.projectId,title:item.taskTitle,owner:item.contact,status:"Upcoming",dueDate:"Owner to schedule",
-  blockedBy:null,sourceDocId:item.sourceIds[0]||null,synthetic:true,createdBy:agent.nameZh,agentId:agent.id,createdAt:approvedAt
+  id:taskId,projectId:item.projectId,title:item.taskTitle,owner:item.taskOwner||item.contact,status:"Upcoming",dueDate:"Owner to schedule",
+  blockedBy:null,sourceDocId:item.sourceIds[0]||null,synthetic:true,createdBy:agent.nameZh,agentId:agent.id,createdAt:approvedAt,
+  humanEdited:item.editedByHuman===true,approvedDraftZh:item.draftZh||"",approvedDraftEn:item.draftEn||""
  });
  run.summary.completed=run.items.filter(x=>x.state==="completed").length;
  run.status=run.summary.completed===run.items.length?"completed":"waiting_for_approval";
