@@ -225,7 +225,7 @@ try{
  await page.screenshot({path:'/tmp/stridebrain-overview-mobile.png',fullPage:true});
  await page.click('#nav-main [data-value="copilot"]');await page.waitForSelector('#sb-composer-input');
  report('guided overview and commercial records remain usable at mobile width');
- await page.click('[data-action="disableGpt"]');await page.waitForURL('**/guest.html');
+ await page.locator('.sb-copilot-session-meta summary').click();await page.click('[data-action="disableGpt"]');await page.waitForURL('**/guest.html');
  await page.waitForFunction(()=>!document.getElementById('submit').disabled);
  assert.equal((await context.cookies(base+'/api/stridebrain-demo/copilot')).filter(c=>c.name===GUEST_COOKIE).length,0);report('sign-out actually removes the guest session');
  await page.goto(workspace+'#invite='+encodeURIComponent(invitation));await page.waitForSelector('#sb-composer-input');
