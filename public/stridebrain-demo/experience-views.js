@@ -14,7 +14,7 @@ export const DEMO_ROLES={
 export function roleChooser(c,{compact=false}={}){
  const zh=c.locale!=='en';
  const controls='<div class="btn-row">'+Object.entries(DEMO_ROLES).map(([id,r])=>'<button type="button" class="button-outline" data-action="demoRole" data-value="'+id+'" aria-pressed="'+String(c.view.demoRole===id)+'">'+e(zh?r.zh:r.en)+'</button>').join('')+button(zh?'直接進入對話':'Open conversation','nav','copilot','button-link')+'</div>'+(DEMO_ROLES[c.view.demoRole]?'<button type="button" class="sb-role-question" data-action="ask" data-prompt="'+e(zh?DEMO_ROLES[c.view.demoRole].promptZh:DEMO_ROLES[c.view.demoRole].promptEn)+'">'+e(zh?DEMO_ROLES[c.view.demoRole].promptZh:DEMO_ROLES[c.view.demoRole].promptEn)+' ↗</button>':'');
- if(compact)return '<details class="sb-role-entry sb-role-entry-compact" aria-label="'+(zh?'選擇檢視角度':'Choose a perspective')+'"><summary><span>'+(zh?'依角色調整建議':'Tailor suggestions by role')+'</span><small>'+(zh?'選填':'Optional')+'</small></summary><div class="sb-role-entry-inner">'+controls+'</div></details>';
+ if(compact)return '<details class="sb-role-entry sb-role-entry-compact"'+(c.view.demoRole?' open':'')+' aria-label="'+(zh?'選擇檢視角度':'Choose a perspective')+'"><summary><span>'+(zh?'依角色調整建議':'Tailor suggestions by role')+'</span><small>'+(zh?'選填':'Optional')+'</small></summary><div class="sb-role-entry-inner">'+controls+'</div></details>';
  return '<section class="sb-role-entry" aria-label="'+(zh?'選擇檢視角度':'Choose a perspective')+'"><p>'+(zh?'從你的工作開始（可略過）':'Start with your role (optional)')+'</p>'+controls+'</section>';
 }
 const focus=(id,prompt,label)=>'<button type="button" class="button-secondary" data-action="focusQuestion" data-id="'+e(id)+'" data-prompt="'+e(prompt)+'">'+e(label)+' ↗</button>';
