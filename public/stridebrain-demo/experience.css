@@ -54,3 +54,29 @@
 .sb-inspector-ready{padding:4px 0 8px}.sb-inspector-ready h3{margin:7px 0 7px}.sb-inspector-ready p{margin:0;color:#63736c;line-height:1.55}.sb-inspector-focus{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}.sb-inspector-focus span{padding:5px 8px;border-radius:99px;background:#eef7f2;color:#356d58;font-size:.69rem;font-weight:780}.sb-inspector-control{border-left:3px solid #76ab92;background:#f7faf8}.sb-inspector-control strong,.sb-inspector-control small{display:block}.sb-inspector-control small{margin-top:7px;line-height:1.5;color:#66766f}
 @media(max-width:900px){.sb-control-flow{grid-template-columns:1fr 1fr}.sb-control-flow>div:nth-child(3){border-top:1px solid #e8eeeb}.sb-control-flow>div:nth-child(4){border-top:1px solid #e8eeeb}.sb-action-proof{grid-template-columns:1fr}.sb-coordination-path{grid-template-columns:1fr}}
 @media(max-width:620px){.sb-control-flow{grid-template-columns:1fr}.sb-control-flow>div{border-left:0;border-top:1px solid #e8eeeb}.sb-control-flow>div:first-child{border-top:0}.sb-control-flow b{display:none}.sb-action-proof{padding:18px}.sb-action-proof-channels{grid-template-columns:1fr}}
+
+
+/* Demo-ready story hierarchy — same product, clearer primary task. */
+.sb-team-hero{margin-bottom:18px;padding:24px 28px}
+.sb-delegate-card-primary{margin:0 0 16px;border-color:#b9d8ca;background:linear-gradient(135deg,#f5fbf8,#fff);box-shadow:0 10px 28px rgba(31,76,60,.06)}
+.sb-delegate-card-primary h2{font-size:1.75rem;letter-spacing:-.025em}
+.sb-delegate-card-primary .button-primary{min-width:180px;padding:12px 18px;font-size:.9rem}
+.sb-agent-roster-secondary{margin-top:18px}
+.sb-agent-roster-secondary .section-head{margin-bottom:10px}
+.sb-agent-roster-secondary .section-head h2{font-size:1.05rem;margin-bottom:3px}
+.sb-agent-roster-secondary .section-head p{font-size:.8rem}
+.sb-agent-roster-secondary .sb-agent-card{padding:14px 15px}
+.sb-agent-roster-secondary .sb-agent-card>p{min-height:auto;margin:8px 0 12px;font-size:.82rem;line-height:1.45}
+.sb-agent-roster-secondary .sb-agent-card-status{padding-top:9px}
+.sb-control-flow{margin:12px 0 18px}
+.sb-permission-disclosure{margin:18px 0;border:1px solid #e1e9e5;border-radius:12px;background:#fbfcfb}
+.sb-permission-disclosure>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:13px 15px;font-size:.82rem;font-weight:800;color:#4f675c}
+.sb-permission-disclosure>summary::-webkit-details-marker{display:none}
+.sb-permission-disclosure>summary b{font-size:1rem;color:#6f8178}
+.sb-permission-disclosure[open]>summary{border-bottom:1px solid #e7eeea}
+.sb-permission-disclosure .sb-permission-compact{margin:0;padding:10px;background:#fff;border-radius:0 0 12px 12px}
+.sb-copilot-handoff{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;align-items:center;margin:14px 0 4px;padding:16px 18px;border:1px solid #cfe1d8;border-radius:14px;background:linear-gradient(135deg,#f2f9f5,#fff)}
+.sb-copilot-handoff h3{margin:4px 0 5px;font-size:1.05rem}
+.sb-copilot-handoff p{margin:0;max-width:720px;color:#607169;line-height:1.5;font-size:.84rem}
+.sb-copilot-handoff .button-primary{white-space:nowrap}
+@media(max-width:900px){.sb-copilot-handoff{grid-template-columns:1fr}.sb-copilot-handoff .button-primary{justify-self:start}.sb-agent-roster-secondary .sb-agent-grid{grid-template-columns:1fr}}

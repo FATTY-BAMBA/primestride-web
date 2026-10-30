@@ -50,3 +50,25 @@ test("AI Team demo surface communicates readiness, control and coordination with
  assert.match(primary,/READY TO REVIEW/);
  assert.match(primary,/HUMAN APPROVAL BOUNDARY/);
 });
+
+
+test("fresh AI Team view leads with the selected teammate mission before secondary controls",async()=>{
+ const {aiTeamView}=await import("../public/stridebrain-demo/views-ai-team.js");
+ const s=state();selectAgent(s,"project-coordinator");
+ const html=aiTeamView({model,pack:getPack("interior"),state:s,view:{agentDecisionId:null,emailDecisionId:null,lineDecisionId:null},locale:"en",emailConnector:{state:"ready",configured:true,roleAllowed:true,sender:"demo@example.com",provider:"google-workspace"},messageConnections:{state:"ready",connections:[],healthByProvider:{}},lineInbox:{state:"ready",identities:[]}});
+ assert.ok(html.indexOf("sb-delegate-card-primary")>0);
+ assert.ok(html.indexOf("sb-delegate-card-primary")<html.indexOf("sb-control-flow"));
+ assert.ok(html.indexOf("sb-control-flow")<html.indexOf("sb-agent-roster-secondary"));
+ assert.match(html,/Switch AI teammate/);
+ assert.match(html,/sb-permission-disclosure/);
+ assert.doesNotMatch(html,/sb-action-proof/);
+ assert.match(html,/CONNECTED CHANNELS/);
+});
+
+test("completed AI Team review focuses decisions before teammate switching and action proof",async()=>{
+ const {aiTeamView}=await import("../public/stridebrain-demo/views-ai-team.js");
+ const s=state();selectAgent(s,"project-coordinator");runAgent(s,model,"project-coordinator");
+ const html=aiTeamView({model,pack:getPack("interior"),state:s,view:{agentDecisionId:s.aiTeam.runs[0].items[0].id,emailDecisionId:null,lineDecisionId:null},locale:"en",emailConnector:{state:"ready",configured:true,roleAllowed:true,sender:"demo@example.com",provider:"google-workspace"},messageConnections:{state:"ready",connections:[],healthByProvider:{}},lineInbox:{state:"ready",identities:[]}});
+ assert.ok(html.indexOf("sb-decision-section")<html.indexOf("sb-agent-roster-secondary"));
+ assert.match(html,/sb-action-proof/);
+});

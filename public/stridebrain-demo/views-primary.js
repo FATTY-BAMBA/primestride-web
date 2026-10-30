@@ -56,9 +56,11 @@ export function copilot(c){
  const last=v.chat[v.chat.length-1];
  if(last?.role==="assistant"&&!last.pending&&last.mode==="gpt"){
   const next=followUpsFor(last.query,p.id,last.actions||[],last.text||"",c.locale);
+  const q=String(last.query||"").toLowerCase(),handoff=/worry|risk|block|deadline|handoff|approval|priority|受阻|交接|核准|風險|擔心|到期/.test(q)||(last.actions||[]).includes("approvals");
   out+='<div class="sb-context-ideas sb-followup-ideas"><span class="sb-context-label">'+(zh?"繼續深入了解":"CONTINUE INVESTIGATING")+'</span><div class="sb-context-idea-row">'+next.map(item=>
    '<button type="button" data-action="ask" data-prompt="'+e(item.prompt)+'" class="sb-context-idea"'+hideIfBusy+'>'+e(item.label)+' ↗</button>'
   ).join("")+'</div></div>';
+  if(handoff)out+='<section class="sb-copilot-handoff"><div><div class="suite-eyebrow">'+(zh?"從問答到主動協調":"FROM ANSWER TO ACTION")+'</div><h3>'+(zh?"不用每天記得問同一個問題":"Don’t rely on remembering the right question")+'</h3><p>'+(zh?"把這類風險交給專案協調員，讓它主動巡檢受阻、交期、核准與交接。":"Hand this class of risk to Project Coordinator so it can proactively review blockers, deadlines, approvals and handoffs.")+'</p></div><button type="button" class="button-primary" data-action="agentHandoff" data-value="project-coordinator">'+(zh?"交給專案協調員 ↗":"Hand off to Project Coordinator ↗")+'</button></section>';
  }
  out+='<div class="sb-copilot-compose">';
  out+='<form id="ask-form" class="sb-composer">'+
