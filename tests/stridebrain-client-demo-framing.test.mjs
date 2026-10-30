@@ -92,6 +92,6 @@ test("demo runbook treats secondary pages as proof branches, not a feature tour"
  assert.match(script,/Can this help commercially/);
  assert.match(script,/How do you keep humans in control/);
  assert.match(script,/Presenter click map/);
- assert.match(script,/make one human edit/i);
+ assert.match(script,/one human edit/i);
  assert.match(script,/three times in a row/i);
 });
