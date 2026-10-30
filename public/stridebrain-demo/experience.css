@@ -98,3 +98,20 @@
 .sb-decision-section .sb-decision-card{box-shadow:0 8px 24px rgba(34,74,59,.04)}
 @media(max-width:900px){.sb-summary-preview button{grid-template-columns:28px 100px minmax(0,1fr)}.sb-summary-preview button em{grid-column:2/4;justify-self:start}.sb-selected-decision-head{align-items:flex-start}}
 @media(max-width:620px){.sb-summary-preview button{grid-template-columns:24px 1fr}.sb-summary-preview button em{grid-column:2}.sb-selected-decision-head{display:grid}.sb-selection-count{justify-self:start}}
+
+
+/* Human-owned edits to AI-prepared actions. Evidence remains read-only. */
+.sb-proposal-editor{display:grid;gap:12px;padding:15px;border-radius:11px;background:#f7faf8;border:1px solid #e0ebe5}
+.sb-editor-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.sb-editor-head strong{display:block;margin-top:4px;font-size:.9rem;color:#30473d}
+.sb-editor-head>span{padding:5px 8px;border-radius:99px;background:#e9f5ef;color:#33765a;font-size:.68rem;font-weight:800}
+.sb-editor-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,.65fr);gap:10px}
+.sb-proposal-editor label{display:grid;gap:5px;font-size:.72rem;font-weight:800;color:#5d7067}
+.sb-proposal-editor input,.sb-proposal-editor textarea{width:100%;box-sizing:border-box;border:1px solid #cfded6;border-radius:9px;background:#fff;padding:10px 11px;color:#263b32;font:inherit;font-size:.84rem;line-height:1.45}
+.sb-proposal-editor input:focus,.sb-proposal-editor textarea:focus{outline:3px solid rgba(42,102,82,.10);border-color:#7fb59f}
+.sb-proposal-editor textarea{resize:vertical;min-height:96px}
+.sb-editor-boundary{margin:0!important;padding:9px 10px;border-left:3px solid #8fbaa7;background:#f1f7f4;color:#61736a!important;font-size:.75rem;line-height:1.45}
+.sb-editor-actions{display:flex;justify-content:flex-end}
+.sb-proposal-final{display:grid;gap:5px;padding:14px;border-radius:10px;background:#f4f8f6}
+.sb-proposal-final strong{font-size:.9rem}.sb-proposal-final span{font-size:.76rem;color:#687970}.sb-proposal-final p{margin:7px 0 0!important}.sb-proposal-final em{justify-self:start;margin-top:5px;padding:4px 7px;border-radius:99px;background:#e8f4ee;color:#39795e;font-size:.68rem;font-style:normal;font-weight:800}
+@media(max-width:700px){.sb-editor-grid{grid-template-columns:1fr}.sb-editor-head{display:grid}.sb-editor-actions .button-outline{width:100%}}
