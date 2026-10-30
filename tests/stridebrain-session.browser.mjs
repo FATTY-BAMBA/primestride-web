@@ -148,7 +148,7 @@ try{
  assert.equal(await page.locator('.sb-decision-card').count(),1);
  assert.match(await page.locator('#inspector').innerText(),/PRJ-104/);
  assert.equal(await page.locator('.sb-draft-details').first().evaluate(el=>el.open),true);
- assert.match(await page.locator('.sb-draft-details').first().innerText(),/交接|尚未送出/);
+ assert.match(await page.inputValue('[name="agent-draft"]'),/交接|尚未送出/);
  await page.locator('.sb-agent-switcher summary').click();
  await page.click('[data-action="agentSelect"][data-value="quote-margin-guardian"]');
  assert.equal(await page.locator('.sb-decision-card').count(),0);
