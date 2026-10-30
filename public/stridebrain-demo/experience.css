@@ -134,3 +134,8 @@
 .sb-role-entry-inner{padding:12px 13px;border-top:1px solid #e8eeeb}
 .sb-role-entry-compact .sb-role-question{margin-top:8px;padding:8px 0;color:#356f57;font-size:.78rem}
 @media(max-width:700px){.sb-copilot-session-meta>div{display:grid}.sb-role-entry-compact{margin-left:0;margin-right:0}}
+
+
+/* Page-aware evidence rail */
+.sb-inspector-page-intro{margin:6px 0 14px;color:#66786f;font-size:.78rem;line-height:1.5}
+.inspector .sb-inspector-page-intro+.inspector-section{margin-top:0}

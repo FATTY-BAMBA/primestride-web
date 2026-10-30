@@ -91,13 +91,24 @@ Suggested framing:
 
 Open one evidence source if needed, but do not inspect all three cards.
 
-### 3:10–4:25 — WOW 3: “It can actually move work forward — safely”
+### 3:10–4:25 — WOW 3: “It proposes. Your team still owns the decision.”
 
 Use the selected coordination item.
 
+The prepared action is editable. Deliberately make **one small human edit** in front of the client—for example:
+- change the task assignee;
+- tighten the task title; or
+- change one sentence in the prepared wording.
+
+Do **not** edit the risk signal, recorded owner or source evidence. Those remain the evidence-backed facts.
+
+Suggested line:
+
+> The AI prepares the work, but it does not become the authority. Your employee can change the proposed action before approving it, while the underlying evidence stays intact.
+
 Preferred deterministic path:
 
-**Prepare email → review → approve & send**
+**Edit proposal → Save edits → Prepare email → final preview → Approve & send**
 
 Enter the pre-approved demonstration recipient.
 
@@ -111,7 +122,7 @@ Show the provider-accepted receipt on the same work item.
 
 If the selected contact has a verified LINE identity and LINE has already been preflighted, LINE can be used instead:
 
-**Prepare LINE → review → approve & send → phone receives message → receipt**
+**Edit proposal → Prepare LINE → final preview → Approve & send → phone receives message → receipt**
 
 Do not change LINE identity mapping during the client meeting unless identity linking itself is the subject of the demo.
 
@@ -147,6 +158,35 @@ One AI operating layer across the information, decisions and communication tools
 Final line:
 
 > We would not start by replacing your systems. We start with one painful operating loop, connect the information and people already involved, prove the outcome, and expand from there.
+
+## Optional proof branches — only when the client asks
+
+These are **10–30 second proof screens**, not part of the default five-minute path.
+
+- **“Where is the AI getting this from?” → Projects or Work orders.** Show that project identity, owners, status and source records exist independently of Copilot. Then return to the main flow.
+- **“Can this help commercially?” → Quotations.** Show cost evidence, margin scenarios and human approval gates. Avoid walking through every calculator input.
+- **“Can it help customer-facing staff?” → Customer service.** Show the evidence-backed editable reply and local reviewer status. Be explicit that this page does not itself send the message.
+- **“How do you keep humans in control?” → Approvals.** Show the source-linked review queue and explain that this pilot records decisions locally; production approval authority would come from organization roles and permissions.
+- **“What about suppliers?” → Materials & suppliers.** Show reference suppliers, categories and lead-time ranges. State clearly that live stock, current pricing and real purchasing are not connected in this pilot.
+- **“Can I see the whole operating picture?” → Overview.** Use it only as a supporting map of the workspace, not as the opening screen.
+
+Return to **Copilot / Project Coordinator** immediately after answering the question. Do not continue touring adjacent modules.
+
+## Presenter click map
+
+For the default live demo, aim for this sequence:
+
+1. **StrideBrain Copilot**
+2. **This week’s risks**
+3. Open **one** evidence source
+4. **Hand off to Project Coordinator**
+5. **Start today’s review**
+6. Select the first risk and make **one human edit**
+7. **Prepare email** (or preflighted LINE)
+8. **Approve & send**
+9. Show the **receipt**
+
+If you find yourself opening a third sidebar module without the client asking, the demo is drifting.
 
 ## What not to show in the five-minute version
 
@@ -189,7 +229,9 @@ Before a client meeting, run the exact path end-to-end and confirm:
 - the real recipient/device receives the message;
 - accepted receipt is visible;
 - reset produces a clean repeatable starting state;
-- no technical/provider error copy appears in the normal path.
+- no technical/provider error copy appears in the normal path;
+- the human edit is reflected in the approved task/message;
+- the full default path can be completed three times in a row without navigation detours or stale state.
 
 ## Core rule
 
