@@ -84,3 +84,10 @@ test("dedicated LINE webhook host exposes only the signed POST ingress",()=>{
  const line=read("src/lib/stridebrain-demo/line-connector.js");
  assert.match(line,/https:\/\/line-webhook\.primestrideai\.com/);
 });
+
+test("demo.primestrideai.com must send website pages to the StrideBrain entry",()=>{
+ const middleware=read("src/middleware.js");
+ assert.match(middleware,/demo\.primestrideai\.com/);
+ assert.match(middleware,/\/stridebrain-demo\/guest\.html/);
+ assert.match(middleware,/"\/stridebrain-demo","\/stridebrain-interiors","\/api\/"/);
+});
