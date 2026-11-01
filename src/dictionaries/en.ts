@@ -9,11 +9,11 @@ const en = {
   },
   hero: {
     eyebrow: "PrimeStride AI · 首越人工智慧",
-    title: "One platform. Five pillars.",
-    titleAccent: "Six products, live today.",
-    lead: "PrimeStride is an AI-native platform for Taiwanese business. Each product runs on its own and shares one intelligence layer, so every interaction compounds your company's knowledge instead of scattering it.",
+    title: "AI for the way",
+    titleAccent: "your business works.",
+    lead: "PrimeStride builds AI products for the people and processes behind your business. From HR and learning to customer service, marketing and company knowledge—start where your team needs it most.",
     ctaPrimary: "Explore the products",
-    ctaSecondary: "See how the platform works",
+    ctaSecondary: "How it connects",
   },
   metrics: [
     { n: "6", label: "products live today" },
@@ -44,10 +44,10 @@ const en = {
     intro: "Every product below is in production with real users. Start with one, and the shared core does the rest over time.",
   },
   bundle: {
-    tag: "SME bundle",
-    title: "AI 營運大腦",
-    desc: "For smaller teams: AI 營運大腦 packages the customer & knowledge assistants into one SME operations platform: LINE support, quoting, work orders, and analytics on a knowledge hub you own. Government grants may cover most of the cost.",
-    cta: "Explore AI 營運大腦",
+    tag: "SME operations platform",
+    title: "StrideBrain",
+    desc: "One company knowledge hub supporting an AI knowledge assistant, customer service, quoting, work orders and analytics. Bring your existing files; PrimeStride handles the preparation and setup, starting with one workflow.",
+    cta: "Explore StrideBrain",
   },
   connections: {
     eyebrow: "How it compounds",

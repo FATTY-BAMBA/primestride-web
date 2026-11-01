@@ -25,7 +25,8 @@ const SLUG_TO_INTEREST: Record<string, string> = {
   "ai-customer-assistant": "AI Customer Assistant",
   pulse: "Pulse",
   "ai-knowledge-assistant": "AI Knowledge Assistant",
-  "ai-zhanggui": "AI 營運大腦",
+  stridebrain: "AI 營運大腦",
+  "ai-zhanggui": "AI 營運大腦", // Keep existing campaign links and submission values compatible.
 };
 
 export default function ContactForm({

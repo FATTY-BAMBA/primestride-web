@@ -1,10 +1,13 @@
 import Link from "next/link";
 import { getDictionary, isLocale, type Locale } from "@/i18n";
 import { notFound } from "next/navigation";
-import { products } from "@/content/products";
+import { products, copy } from "@/content/products";
 import { pillars, pillarCopy } from "@/content/pillars";
-import Image from "next/image";
 import ProductCard from "@/components/ProductCard";
+import CoreNetwork from "@/components/CoreNetwork";
+import ConnectionExplorer from "@/components/ConnectionExplorer";
+import OperationsSpotlight from "@/components/OperationsSpotlight";
+import "./home.css";
 
 export default function Home({ params }: { params: { locale: string } }) {
   if (!isLocale(params.locale)) notFound();
@@ -13,13 +16,13 @@ export default function Home({ params }: { params: { locale: string } }) {
   const base = `/${locale}`;
 
   return (
-    <main>
+    <main className="home-page" lang={locale === "zh" ? "zh-Hant" : "en"}>
       {/* HERO */}
-      <section className="hero">
+      <section className="hero" aria-labelledby="home-title">
         <div className="wrap hero-grid">
-          <div>
+          <div className="home-hero-copy">
             <span className="eyebrow">{dict.hero.eyebrow}</span>
-            <h1>
+            <h1 id="home-title">
               {dict.hero.title} <span className="accent">{dict.hero.titleAccent}</span>
             </h1>
             <p className="lead">{dict.hero.lead}</p>
@@ -31,17 +34,13 @@ export default function Home({ params }: { params: { locale: string } }) {
                 {dict.hero.ctaSecondary}
               </Link>
             </div>
+            <p className="home-hero-note"><span aria-hidden="true">↳</span>{locale === "zh" ? "從一個真正需要改善的工作流程開始。" : "Start with the workflow that needs it most."}</p>
           </div>
-          <div className="hero-visual">
-            <Image
-              src="/visuals/hero-core-network.png"
-              alt="PrimeStride Core — one intelligence layer connecting six live products"
-              width={991}
-              height={679}
-              priority
-              style={{ width: "100%", height: "auto" }}
-            />
-          </div>
+          <CoreNetwork locale={locale} nodes={products.map((product) => ({
+            slug: product.slug,
+            name: product.name === "AI Customer Assistant" ? (locale === "zh" ? "AI 客服" : "Customer AI") : product.name === "AI Knowledge Assistant" ? (locale === "zh" ? "AI 知識助理" : "Knowledge AI") : product.name,
+            description: copy(product, locale).tagline,
+          }))} />
         </div>
       </section>
 
@@ -58,21 +57,30 @@ export default function Home({ params }: { params: { locale: string } }) {
       </div>
 
       {/* PLATFORM */}
-      <section className="block arch" id="platform">
+      <section className="block arch home-platform" id="platform">
         <div className="wrap">
-          <span className="eyebrow">{dict.platform.eyebrow}</span>
-          <h2>{dict.platform.title}</h2>
-          <p>{dict.platform.intro}</p>
-          <div className="row">
-            {dict.platform.boxes.map((b, i) => (
-              <div className="box" key={i}>
-                <h3>{b.h}</h3>
-                <p>{b.p}</p>
+          <div className="home-platform-panel">
+            <div className="home-platform-intro">
+              <div>
+                <span className="eyebrow">{dict.platform.eyebrow}</span>
+                <h2>{dict.platform.title}</h2>
               </div>
-            ))}
+              <p>{dict.platform.intro}</p>
+            </div>
+            <div className="row">
+              {dict.platform.boxes.map((b, i) => (
+                <div className="box" key={i}>
+                  <span className="home-section-index" aria-hidden="true">0{i + 1}</span>
+                  <h3>{b.h}</h3>
+                  <p>{b.p}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
+
+      <OperationsSpotlight locale={locale} />
 
       {/* PILLARS */}
       <section className="block" id="pillars">
@@ -112,18 +120,6 @@ export default function Home({ params }: { params: { locale: string } }) {
               <ProductCard key={p.slug} product={p} locale={locale} dict={dict} />
             ))}
           </div>
-
-          <div className="bundle">
-            <div>
-              <h3>
-                {dict.bundle.title} <span className="pill-tag">{dict.bundle.tag}</span>
-              </h3>
-              <p>{dict.bundle.desc}</p>
-            </div>
-            <Link href={`${base}/ai-zhanggui`} className="btn btn-primary">
-              {dict.bundle.cta} <span className="chev">›</span>
-            </Link>
-          </div>
         </div>
       </section>
 
@@ -135,23 +131,7 @@ export default function Home({ params }: { params: { locale: string } }) {
             <h2>{dict.connections.title}</h2>
             <p>{dict.connections.intro}</p>
           </div>
-          <div className="conn-visual">
-            <Image
-              src="/visuals/section-compounds.png"
-              alt="Six product data streams converging into one shared intelligence layer"
-              width={2048}
-              height={1037}
-              style={{ width: "100%", height: "auto" }}
-            />
-          </div>
-          <div className="conn-merged">
-            {[...dict.connections.live, ...dict.connections.plan].map((c, i) => (
-              <div className="conn-item" key={i}>
-                <div className="pair">{c.pair}</div>
-                <p>{c.p}</p>
-              </div>
-            ))}
-          </div>
+          <ConnectionExplorer locale={locale} live={dict.connections.live} planned={dict.connections.plan} />
         </div>
       </section>
 

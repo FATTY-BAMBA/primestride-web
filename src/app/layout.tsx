@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "./interactive.css";
 
 export const metadata: Metadata = {
   title: "PrimeStride AI · 首越人工智慧",

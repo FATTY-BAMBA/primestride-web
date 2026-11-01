@@ -11,11 +11,11 @@ const zh: Dictionary = {
   },
   hero: {
     eyebrow: "PrimeStride AI · 首越人工智慧",
-    title: "一個平台 · 五大支柱",
-    titleAccent: "六項產品，已上線。",
-    lead: "PrimeStride 是為台灣企業打造的 AI 原生平台。每項產品都能獨立運作，也共用同一個智慧層，每一次互動，都讓公司的知識持續累積，而不是四散流失。",
+    title: "讓 AI，走進",
+    titleAccent: "企業每天的工作。",
+    lead: "首越為企業的人與流程，打造實用的 AI 產品。從人資、學習到客服、行銷與公司知識，從團隊最需要改善的地方開始。",
     ctaPrimary: "探索產品",
-    ctaSecondary: "看平台如何運作",
+    ctaSecondary: "看平台如何串聯",
   },
   metrics: [
     { n: "6", label: "項產品已上線" },
@@ -46,9 +46,9 @@ const zh: Dictionary = {
     intro: "以下每項產品都已在真實使用者手中運作。從一個開始，共用核心會隨時間接手其餘。",
   },
   bundle: {
-    tag: "中小企業方案",
+    tag: "中小企業營運平台",
     title: "AI 營運大腦",
-    desc: "為小型團隊而生：AI 營運大腦把客服與知識助理整合成一套中小企業營運平台，LINE 客服、報價、工單與分析，全部建在你自己擁有的知識中樞上。政府補助有機會支應大部分成本。",
+    desc: "一個企業知識中樞，支援 AI 知識助理、AI 客服、AI 報價、工單／生產管理與 AI 數據分析。現有資料原樣交給我們，由 PrimeStride 負責整理與建置，先從一個工作流程開始。",
     cta: "了解 AI 營運大腦",
   },
   connections: {

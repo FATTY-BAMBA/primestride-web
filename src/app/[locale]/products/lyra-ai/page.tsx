@@ -1,5 +1,7 @@
 import Link from "next/link";
-import Image from "next/image";
+import ProductHero from "@/components/ProductHero";
+import ProductJourney from "@/components/ProductJourney";
+import "../product-detail.css";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { isLocale, locales, type Locale } from "@/i18n";
@@ -132,59 +134,21 @@ export default function LyraAiPage({ params }: { params: { locale: string } }) {
   const base = `/${locale}`;
 
   return (
-    <main>
-      <section className="zg-hero">
-        <div className="wrap zg-hero-grid">
-          <div>
-            <Link href={`${base}/products`} className="pd-back">{t.back}</Link>
-            <div className="pd-tags" style={{ marginTop: 14 }}>
-              <span className="pill-tag">{t.pillar}</span>
-              <span className="badge-live">{t.live}</span>
-            </div>
-            <h1>{t.name}</h1>
-            <div className="zh" style={{ fontSize: "1.15rem", color: "var(--iris)", fontWeight: 600, marginTop: 6 }}>{t.zhName}</div>
-            <p className="lead" style={{ marginTop: 16 }}>{t.tagline}</p>
-            <div className="hero-cta">
-              <Link href={`${base}/contact?p=lyra-ai`} className="btn btn-primary">{t.cta} <span className="chev">›</span></Link>
-            </div>
-          </div>
-          <div className="zg-lantern">
-            <Image src="/visuals/product-lyraai.png" alt="LyraAI — real-time voice interview coach" width={1091} height={738} priority style={{ width: "100%", height: "auto" }} />
-          </div>
-        </div>
-      </section>
+    <main className="product-page" lang={locale === "zh" ? "zh-Hant" : "en"}>
+      <ProductHero slug="lyra-ai" locale={locale} name={t.name} tagline={t.tagline} category={locale === "zh" ? t.zhName.split(" · ")[0] : t.zhName.split(" · ")[1]} />
+      <nav className="product-subnav wrap" aria-label={locale === "zh" ? "產品頁導覽" : "On this page"}>
+        <a href="#demo">{locale === "zh" ? "實際情境" : "In practice"}</a>
+        <a href="#overview">{locale === "zh" ? "產品總覽" : "Overview"}</a>
+        <a href="#workflow">{locale === "zh" ? "運作方式" : "How it works"}</a>
+        <a href="#features">{locale === "zh" ? "核心功能" : "Capabilities"}</a>
+      </nav>
 
-      <section className="block">
-        <div className="wrap">
-          <div className="sec-head" style={{ textAlign: "left", marginBottom: 22 }}>
-            <span className="eyebrow" style={{ justifyContent: "flex-start" }}>{t.ovEyebrow}</span>
-          </div>
-          <div style={{ maxWidth: 780 }}>
-            <p style={{ fontSize: "1.12rem", color: "var(--ink)", marginBottom: 14 }}>{t.ov1}</p>
-            <p style={{ fontSize: "1.05rem", color: "var(--muted)" }}>{t.ov2}</p>
-            <div className="edu-chips">{t.chips.map((c, i) => (<span className="edu-chip" key={i}>{c}</span>))}</div>
-          </div>
-        </div>
-      </section>
-
-      <section className="block" style={{ paddingTop: 0 }}>
-        <div className="wrap">
-          <div className="who-band" style={{ background: "linear-gradient(160deg,#f3f1ff,#fff)", color: "var(--ink)", border: "1px solid #d9d3ff" }}>
-            <span className="eyebrow">{t.flowEyebrow}</span>
-            <h2 style={{ color: "var(--ink)", fontSize: "clamp(1.7rem,3.2vw,2.4rem)", margin: "14px 0 12px" }}>{t.flowTitle}</h2>
-            <p style={{ color: "var(--muted)", fontFamily: "var(--font-plex)", fontWeight: 400, fontSize: "1.06rem" }}>{t.flowBody}</p>
-            <div className="zg-hub-img">
-              <Image src="/visuals/lyra-flow-wide.png" alt="Voice waves flowing into the interview engine, emerging as an honest scorecard" width={2048} height={1037} style={{ width: "100%", height: "auto" }} />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="block" id="demo" style={{ paddingTop: 0 }}>
+      <section className="block product-demo" id="demo">
         <div className="wrap">
           <div className="sec-head">
             <span className="eyebrow">{t.demoEyebrow}</span>
             <h2>{t.demoTitle}</h2>
+            <p className="product-demo-note">{locale === "zh" ? "產品畫面示例 · 以下皆為示範資料" : "Illustrative product views · Sample data"}</p>
           </div>
           <div className="zg-demo-grid">
             <div>
@@ -233,22 +197,39 @@ export default function LyraAiPage({ params }: { params: { locale: string } }) {
         </div>
       </section>
 
-      <section className="block" style={{ paddingTop: 0 }}>
+      <section className="block product-overview" id="overview">
+        <div className="wrap product-overview-grid">
+          <div><span className="eyebrow">{t.ovEyebrow}</span><h2>{locale === "zh" ? "從日常工作，看見實際價值。" : "A practical place in your team’s day."}</h2></div>
+          <div><p>{t.ov1}</p><p>{t.ov2}</p><div className="edu-chips">{t.chips.map(chip => <span className="edu-chip" key={chip}>{chip}</span>)}</div></div>
+        </div>
+      </section>
+
+      <section className="block product-workflow" id="workflow">
+        <div className="wrap">
+          <div className="product-workflow-panel">
+            <div className="product-workflow-heading"><div><span className="eyebrow">{t.flowEyebrow}</span><h2>{t.flowTitle}</h2></div><p>{t.flowBody}</p></div>
+            <ProductJourney slug="lyra-ai" locale={locale} />
+          </div>
+        </div>
+      </section>
+
+      <section className="block product-features" id="features">
         <div className="wrap">
           <div className="sec-head">
             <span className="eyebrow">{t.featEyebrow}</span>
             <h2>{t.featTitle}</h2>
           </div>
           <div className="feat-grid">
-            {t.feats.map((f, i) => (<div className="feat" key={i}><h3>{f.t}</h3><p>{f.d}</p></div>))}
+            {t.feats.map((f, i) => (<div className="feat" key={i}><span className="feature-number" aria-hidden="true">0{i + 1}</span><h3>{f.t}</h3><p>{f.d}</p></div>))}
           </div>
         </div>
       </section>
 
-      <section className="block">
+      <section className="block product-fit" id="fit">
         <div className="wrap">
           <div className="who-band">
             <span className="eyebrow">{t.whoEyebrow}</span>
+            <h2>{locale === "zh" ? "讓 " + t.name + " 走進你的工作流程。" : "See where " + t.name + " fits."}</h2>
             <p>{t.whoBody}</p>
             <Link href={`${base}/contact?p=lyra-ai`} className="btn btn-light" style={{ marginTop: 24 }}>{t.cta} <span className="chev">›</span></Link>
           </div>

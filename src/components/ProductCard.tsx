@@ -22,7 +22,8 @@ export default function ProductCard({
           alt={`${product.name} — ${product.zhName}`}
           width={760}
           height={620}
-          style={{ width: "78%", height: "auto" }}
+          sizes="(max-width: 960px) 80vw, 340px"
+          style={{ width: "100%", height: "100%", objectFit: "contain" }}
         />
       </div>
       <div className="pcard-top">
