@@ -1,3 +1,4 @@
+import {guardFetch} from "./supabase-retry.js";
 /** Supabase REST RPC adapter. Secret stays server-only; quotas fail closed. */
 export async function enforceSupabaseDemoQuota({sessionId,requestFn=fetch}={}){
  if(process.env.STRIDEBRAIN_DEMO_QUOTA_ENABLED!=="true")return {ok:true,enabled:false};
@@ -10,10 +11,9 @@ export async function enforceSupabaseDemoQuota({sessionId,requestFn=fetch}={}){
  const globalLimit=Number(process.env.STRIDEBRAIN_DEMO_GLOBAL_DAILY_REQUESTS||500);
  if(!Number.isInteger(sessionLimit)||sessionLimit<1||sessionLimit>1000||!Number.isInteger(globalLimit)||globalLimit<1||globalLimit>10000)return {ok:false,code:"DEMO_QUOTA_UNAVAILABLE"};
  try{
-  const response=await requestFn(url+"/rest/v1/rpc/stridebrain_reserve_demo_quota",{
+  const response=await guardFetch(requestFn,url+"/rest/v1/rpc/stridebrain_reserve_demo_quota",{
    method:"POST",headers:{"apikey":key,"Authorization":"Bearer "+key,"Content-Type":"application/json"},
-   body:JSON.stringify({p_organization_id:organization,p_subject_hash:sessionId,p_session_limit:sessionLimit,p_global_limit:globalLimit}),
-   signal:AbortSignal.timeout(3000)
+   body:JSON.stringify({p_organization_id:organization,p_subject_hash:sessionId,p_session_limit:sessionLimit,p_global_limit:globalLimit})
   });
   if(!response.ok)return {ok:false,code:"DEMO_QUOTA_UNAVAILABLE"};
   const body=await response.json(),result=Array.isArray(body)?body[0]:body;

@@ -601,12 +601,12 @@ async function perform(el){
    if(!chosen||copilotAccess.state!=="ready"||!copilotAccess.allowedModelIds.includes(chosen.id)){return;}
    selectedModelId=chosen.id;copilotModelMenuOpen=false;copilotConnected=false;
    render();document.querySelector(".sb-model-trigger")?.focus();
-   toast(copilotMode==="gpt"?"Selected "+chosen.label+" for the next authorized model request.":"Selected "+chosen.label+". Staff AI access is required to use this model. The sample response mode remains available.");
+   toast(interfaceLocale==="en"?(copilotMode==="gpt"?"Selected "+chosen.label+" for the next authorized model request.":"Selected "+chosen.label+". Staff AI access is required to use this model. The sample response mode remains available."):(copilotMode==="gpt"?"下一次提問將使用 "+chosen.label+"。":"已選擇 "+chosen.label+"；需工作人員 AI 權限才能使用，示範回覆模式仍可使用。"));
  }
  else if(action==="newChat"){
-   if(copilotBusy){toast("Wait for the current answer or disconnect first.");return;}
+   if(copilotBusy){toast(interfaceLocale==="en"?"Wait for the current answer or disconnect first.":"請等目前的回覆完成後再開新對話。");return;}
    copilotRunId++;view.chat=[];view.copilotProjectId=null;view.docId=null;copilotDraft="";copilotModelMenuOpen=false;saveGuestChat();render();
-   toast("Started a new local conversation.");
+   toast(interfaceLocale==="en"?"Started a new local conversation.":"已開始新對話。");
  }
  else if(action==="project"){
   if(model.project(id))view.copilotProjectId=id;

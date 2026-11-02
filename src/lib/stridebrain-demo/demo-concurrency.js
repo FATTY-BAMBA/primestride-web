@@ -1,6 +1,7 @@
+import {guardFetch} from "./supabase-retry.js";
 /** Optional shared lease limiter; database-backed and fail-closed when enabled. */
 function config(){const url=process.env.STRIDEBRAIN_DEMO_SUPABASE_URL||"",key=process.env.STRIDEBRAIN_DEMO_SUPABASE_SECRET_KEY||"",org=process.env.STRIDEBRAIN_DEMO_ORGANIZATION_ID||"";return /^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(url)&&key&&/^[0-9a-f-]{36}$/.test(org)?{url,key,org}:null;}
-async function rpc(settings,name,body,requestFn){const r=await requestFn(settings.url+"/rest/v1/rpc/"+name,{method:"POST",headers:{"apikey":settings.key,Authorization:"Bearer "+settings.key,"Content-Type":"application/json"},body:JSON.stringify(body),cache:"no-store",signal:AbortSignal.timeout(3500)});if(!r.ok)throw Error("RPC_ERROR");return r.json();}
+async function rpc(settings,name,body,requestFn){const r=await guardFetch(requestFn,settings.url+"/rest/v1/rpc/"+name,{method:"POST",headers:{"apikey":settings.key,Authorization:"Bearer "+settings.key,"Content-Type":"application/json"},body:JSON.stringify(body),cache:"no-store"});if(!r.ok)throw Error("RPC_ERROR");return r.json();}
 export async function acquireDemoLease({requestFn=fetch}={}){
  if(process.env.STRIDEBRAIN_DEMO_CONCURRENCY_ENABLED!=="true")return {ok:true,enabled:false};
  const settings=config(),limit=Number(process.env.STRIDEBRAIN_DEMO_MAX_CONCURRENT_REQUESTS||3);
