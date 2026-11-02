@@ -3,7 +3,7 @@
  * first call and answers on the next, which otherwise refuses an otherwise valid request.
  * Guards stay fail-closed: if the retry also fails, the caller still refuses.
  */
-export async function guardFetch(requestFn,url,init,{timeoutMs=8000,attempts=2}={}){
+export async function guardFetch(requestFn,url,init,{timeoutMs=4500,attempts=2}={}){
  let lastError;
  for(let attempt=1;attempt<=attempts;attempt++){
   try{

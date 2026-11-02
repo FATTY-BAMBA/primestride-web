@@ -27,10 +27,16 @@ export const COPILOT_INSTRUCTIONS=[
 ].join("\n")+"\n"+ANSWER_QUALITY_POLICY+"\n"+CONVERSATION_EVIDENCE_POLICY;
 export function normaliseMessages(messages){
  if(!Array.isArray(messages))return [];
- return messages.slice(-12).map(m=>({
+ const cleaned=messages.slice(-12).map(m=>({
  role:m?.role==="assistant"?"assistant":"user",
  content:String(m?.content||"").slice(0,m?.role==="assistant"?1800:1200)
  })).filter(m=>m.content.trim().length>0);
+ // A failed or retried question leaves several user turns in a row. Providers reject
+ // consecutive same-role turns, so keep only the latest of each run.
+ const out=[];
+ for(const m of cleaned){if(out.length&&out.at(-1).role===m.role)out[out.length-1]=m;else out.push(m);}
+ while(out.length&&out[0].role!=="user")out.shift();
+ return out;
 }
 const cleanToolArgs=value=>{
  try{const parsed=JSON.parse(typeof value==="string"?value:"{}");return parsed&&typeof parsed==="object"&&!Array.isArray(parsed)?parsed:{};}catch{return {};}
