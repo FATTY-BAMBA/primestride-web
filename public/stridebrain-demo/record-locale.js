@@ -82,3 +82,32 @@ export function displayRationale(item,locale="en"){
  if(meta.signal==="near_term_handoff"||meta.signal==="near_term_due")return id+" 接近記錄到期日，負責人 "+owner+due+"。請先確認進度與下一個交接。";
  return "根據目前記錄，"+id+" 值得先確認狀態與下一步（負責人 "+owner+due+"）。";
 }
+
+/** Chinese display for audit-log lines stored in English; stored text is unchanged. */
+const AUDIT_ZH=[
+ [/^Human approved external (email|line) for (\S+); provider accepted receipt (\S+)\.$/i,(m,c,id,r)=>"人工批准對外"+(c.toLowerCase()==="line"?" LINE 訊息":"郵件")+"（"+id+"）；服務商已受理，收據 "+r+"。"],
+ [/^Human approved (.+?) action (\S+); created demo follow-up (\S+)\.$/,(m,a,id,t)=>"人工批准"+agentZh(a)+"的動作 "+id+"；已建立示範追蹤待辦 "+t+"。"],
+ [/^Human edited prepared action (\S+) before approval; evidence and recorded source fields were unchanged\.$/,(m,id)=>"批准前人工修改了準備內容 "+id+"；查核依據與原始紀錄未變更。"],
+ [/^Model-driven (.+?) prepared (\d+) validated proposals for human review\.$/,(m,a,n)=>agentZh(a)+"（AI 模型）準備了 "+n+" 項已驗證的提案，等待人工審核。"],
+ [/^(.+?) prepared (\d+) actions for human review\.$/,(m,a,n)=>agentZh(a)+"準備了 "+n+" 項動作，等待人工審核。"],
+ [/^Price input changed\. Prior simulated confirmations invalidated\.$/,()=>"價格輸入已變更；先前的模擬確認已失效。"],
+ [/^Simulated supplier estimate checked against (\S+)$/,(m,id)=>"已依 "+id+" 檢查模擬供應商估價"],
+ [/^Simulated owner approval for (.+) before tax$/,(m,v)=>"模擬負責人核准：未稅 "+v],
+ [/^Simulated customer written acceptance$/,()=>"模擬客戶書面同意"],
+ [/^Variation committed to demo work orders as (\S+)$/,(m,id)=>"變更已轉為示範工作單 "+id],
+ [/^Demo reviewer accepted the customer response draft \(not sent\)\.$/,()=>"示範審閱者已接受客戶回覆草稿（未送出）。"],
+ [/^Work status changed: (\S+) → (.+)$/,(m,id,s)=>"工作狀態變更："+id+" → "+displayRecordText(s,"zh-TW")],
+ [/^Sample approval (\S+) · (\S+)$/,(m,id,p)=>"示範核准 "+id+" · "+p],
+ [/^Historical draft prepared from (\d+) sample cost records\.$/,(m,n)=>"已依 "+n+" 筆示範成本紀錄準備歷史估價草稿。"],
+ [/^Sample estimate reviewed locally\.$/,()=>"示範估價已在本機審閱。"],
+ [/^Drafted (Traditional Chinese|English) sample response$/,(m,l)=>"已擬好"+(l==="English"?"英文":"繁體中文")+"示範回覆"],
+ [/^A sample cost example was added to this browser workspace after review\.$/,()=>"審閱後已將一筆示範成本範例加入此瀏覽器工作區。"],
+ [/^Manual screening reset; any prior assessment became stale\.$/,()=>"已重設人工檢核；先前的評估已失效。"]
+];
+const agentZh=name=>({"Project Coordinator":"專案協調員","Operations Assistant":"營運助理","Quote & Margin Guardian":"報價與毛利守門員"}[name]||name);
+export function displayAuditText(value,locale="en"){
+ const text=String(value??"");
+ if(locale!=="zh-TW")return text;
+ for(const [pattern,render] of AUDIT_ZH){const m=text.match(pattern);if(m)return render(...m);}
+ return text;
+}
