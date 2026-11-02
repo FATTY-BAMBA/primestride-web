@@ -205,8 +205,8 @@ async function loadIndustry(id){
         ? (interfaceLocale==="en"?"Google Workspace connected.":"Google Workspace 已連線。")
         : (interfaceLocale==="en"?"Google authorization completed, but the saved connection could not be verified yet.":"Google 授權已完成，但目前尚無法驗證已儲存的連線。"));
       const cleanUrl=new URL(location.href);cleanUrl.searchParams.delete("google");history.replaceState({industry:pack.id},"",cleanUrl);
-    }else toast(pack.name+" template loaded · "+model.seed.documents.length+" example source records.");
-  }else toast(pack.name+" template loaded · "+model.seed.documents.length+" example source records.");
+    }else toast(interfaceLocale==="en"?pack.name+" template loaded · "+model.seed.documents.length+" example source records.":"已載入 "+(pack.company||pack.name)+" 示範資料 · "+model.seed.documents.length+" 筆來源紀錄。");
+  }else toast(interfaceLocale==="en"?pack.name+" template loaded · "+model.seed.documents.length+" example source records.":"已載入 "+(pack.company||pack.name)+" 示範資料 · "+model.seed.documents.length+" 筆來源紀錄。");
   window.dispatchEvent(new Event("stridebrain:ready"));
  }catch(error){
   pack=previous.pack;model=previous.model;state=previous.state;historyData=previous.historyData;industryEvidence=previous.industryEvidence;documentSession=previous.documentSession;view=previous.view;
