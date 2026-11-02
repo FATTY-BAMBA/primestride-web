@@ -219,7 +219,7 @@ export async function runAgentPlanner({
   ...config.rules,
   "Prepare at most three useful proposals, each grounded in source_ids returned by tools.",
   "Do not propose payments, quotation approval, business-record edits or external message sending.",
-  locale==="en"?"Use concise English in drafts.":"Use natural Taiwan Traditional Chinese in draft_zh."
+  locale==="en"?"Use concise English in drafts.":"Use natural Taiwan Traditional Chinese in draft_zh and write rationale in Taiwan Traditional Chinese."
  ].join(" ");
  const agent=new ToolLoopAgent({
   model:languageModel||modelFor({apiKey,modelId,fetchImpl}),

@@ -52,7 +52,8 @@ const TERMS={
 "Annual Handbook":"年度手冊",
 "Label Refresh":"標籤改版",
 "Invitation Suite":"喜帖印製",
-"Retail Menus":"門市菜單"
+"Retail Menus":"門市菜單",
+"Awaiting approved specification / supplier response":"等待核准規格／供應商回覆"
 };
 const SORTED=Object.entries(TERMS).sort((a,b)=>b[0].length-a[0].length);
 export function displayRecordText(value,locale="en"){
