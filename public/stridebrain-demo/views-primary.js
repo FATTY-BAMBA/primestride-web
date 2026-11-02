@@ -7,7 +7,7 @@ import {MODEL_CATALOG,DEFAULT_MODEL_ID,findAllowedModel} from "./model-catalog.j
 import {activeAgentRun,listAgents} from "./ai-team.js";
 import {quickActionsFor,ideasFor,followUpsFor} from "./copilot-suggestions.js";
 import {operationalSignals,riskRadarSignals} from "./operational-signals.js";
-import {displayRecordText} from "./record-locale.js";
+import {displayRecordText,displayRationale} from "./record-locale.js";
 const localizedName=(value,zh)=>displayRecordText(value,zh?"zh-TW":"en");
 export function overview(c){return renderOverview(c);}
 export function copilot(c){
@@ -158,7 +158,7 @@ function renderAiTeamInspector(c){
  let out='<div class="inspector-eyebrow">'+(zh?'AI 工作脈絡':'AI WORK CONTEXT')+'</div>';
  if(!item)return out+'<div class="sb-inspector-ready"><div class="suite-eyebrow">'+(zh?'準備開始':'READY TO REVIEW')+'</div><h3>'+e(agentName)+'</h3><p>'+e(agentDesc)+'</p><div class="sb-inspector-focus">'+focus.map(x=>'<span>'+e(x)+'</span>').join('')+'</div></div><div class="inspector-section sb-inspector-control"><div class="suite-eyebrow">'+(zh?'人工控制邊界':'HUMAN APPROVAL BOUNDARY')+'</div><strong>'+(zh?'AI 可以先查資料與準備；真正執行仍由你決定。':'AI can investigate and prepare; execution stays with you.')+'</strong><small>'+(zh?'建立待辦、寄 Gmail 或傳 LINE 前，都會顯示最後確認；完成後留下可查收據。':'Before a task is created or Gmail / LINE is sent, you get a final approval step. Completed actions leave an auditable receipt.')+'</small></div>';
  const pr=c.model.project(item.projectId);
- out+='<div class="inspector-section"><div class="suite-eyebrow">'+e(agent?(zh?agent.nameZh:agent.nameEn):'AI')+' · '+e(item.recordId)+'</div><h3>'+e(t(item.title))+'</h3><p>'+e(item.projectId)+' · '+e(t(pr?.name||item.projectName))+' · '+e(item.contact)+'</p><div class="inspector-context"><strong>'+(item.state==="completed"?(zh?'已完成':'Completed'):(zh?'待你確認':'Needs your review'))+'</strong><small>'+e(item.rationale||(zh?'AI 已根據目前紀錄準備下一步。':'AI prepared a next step from the current records.'))+'</small></div></div>';
+ out+='<div class="inspector-section"><div class="suite-eyebrow">'+e(agent?(zh?agent.nameZh:agent.nameEn):'AI')+' · '+e(item.recordId)+'</div><h3>'+e(t(item.title))+'</h3><p>'+e(item.projectId)+' · '+e(t(pr?.name||item.projectName))+' · '+e(item.contact)+'</p><div class="inspector-context"><strong>'+(item.state==="completed"?(zh?'已完成':'Completed'):(zh?'待你確認':'Needs your review'))+'</strong><small>'+e(displayRationale(item,zh?'zh-TW':'en')||(zh?'AI 已根據目前紀錄準備下一步。':'AI prepared a next step from the current records.'))+'</small></div></div>';
  out+='<div class="inspector-section">'+section(zh?'本項查核依據':'Evidence for this item',zh?'只顯示這項 AI 建議實際引用的來源':'Only sources actually used by this AI recommendation')+item.sourceIds.map(id=>{const d=c.model.document(id);return d?'<button class="inspector-source" data-action="source" data-id="'+e(d.id)+'"><strong>'+e(localizedName(d.title,zh))+'</strong><small>'+e(d.id)+' · '+e(d.version)+' · '+e(localizedName(d.status,zh))+'</small></button>':'';}).join('')+'</div>';
  out+='<div class="inspector-section"><div class="suite-eyebrow">'+(zh?'下一步':'NEXT STEP')+'</div><p class="disclosure">'+(item.state==="completed"?(zh?'這項工作已建立內部追蹤待辦；沒有對外發送訊息。':'An internal follow-up task was created. No external message was sent.'):(zh?'你可以回到左側查看草稿與依據，再決定是否建立內部待辦。':'Review the draft and evidence on the left, then decide whether to create the internal task.'))+'</p>'+button(zh?'查看專案 ↗':'Open project ↗','project',item.projectId,'button-secondary')+'</div>';
  return out;

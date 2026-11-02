@@ -69,3 +69,16 @@ export function displayRecordText(value,locale="en"){
  }).join("");
  return translated.split(" · ").filter((part,i,all)=>i===0||part!==all[i-1]).join(" · ");
 }
+
+const hasCjk=value=>/[\u3400-\u9fff]/.test(String(value||""));
+/** Chinese display for an AI rationale written in English; the stored record is unchanged. */
+export function displayRationale(item,locale="en"){
+ const raw=String(item?.rationale||"");
+ if(locale!=="zh-TW"||!raw||hasCjk(raw))return raw;
+ const meta=item.coordination||{},owner=meta.recordedOwner||item.contact||"負責人",id=item.recordId||"這項工作";
+ const due=meta.dueDate?"，到期日 "+meta.dueDate:"";
+ if(meta.signal==="recorded_blocker")return id+" 目前記錄為受阻"+(meta.recordedBlocker?"（"+displayRecordText(meta.recordedBlocker,"zh-TW")+"）":"")+"，負責人 "+owner+due+"。紀錄中未載明對工期與關鍵路徑的影響。";
+ if(meta.signal==="status_verification")return id+" 有待確認的核准／狀態紀錄，負責人 "+owner+due+"。交接前請先確認實際狀態。";
+ if(meta.signal==="near_term_handoff"||meta.signal==="near_term_due")return id+" 接近記錄到期日，負責人 "+owner+due+"。請先確認進度與下一個交接。";
+ return "根據目前記錄，"+id+" 值得先確認狀態與下一步（負責人 "+owner+due+"）。";
+}
