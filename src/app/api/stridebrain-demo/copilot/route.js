@@ -126,7 +126,7 @@ export async function POST(request){
     }catch(error){
      const safeCode=typeof error?.copilotCode==="string"?error.copilotCode:"COPILOT_UNAVAILABLE";
      console.error("stridebrain_preview_copilot_stream_failure",{code:safeCode,provider:selected.provider,modelId:selected.id,reason:String(error?.message||"").slice(0,120),providerStatus:error?.providerStatus??null,providerReason:typeof error?.providerReason==="string"?error.providerReason.slice(0,160):null});
-     emit("error",{code:safeCode,error:safeCode==="PROVIDER_TIMEOUT"?"The model timed out. The answer was not completed.":"The AI response could not be completed. Please retry."});
+     emit("error",{code:safeCode,detail:String(error?.message||"").slice(0,120),providerStatus:error?.providerStatus??null,error:safeCode==="PROVIDER_TIMEOUT"?"The model timed out. The answer was not completed.":"The AI response could not be completed. Please retry."});
     }finally{await releaseDemoLease(lease);controller.close();}
    }
   });
