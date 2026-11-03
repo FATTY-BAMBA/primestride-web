@@ -118,14 +118,14 @@ export async function POST(request){
       // The provider occasionally rejects a first call within seconds. Retry once, but only
       // before any answer text was sent, and never after a timeout (the deadline is spent).
       if(chunks>0||error?.copilotCode==="PROVIDER_TIMEOUT"||Date.now()-started>20000)throw error;
-      console.warn("stridebrain_preview_copilot_retry",{code:typeof error?.copilotCode==="string"?error.copilotCode:"COPILOT_UNAVAILABLE",modelId:selected.id});
+      console.warn("stridebrain_preview_copilot_retry",{code:typeof error?.copilotCode==="string"?error.copilotCode:"COPILOT_UNAVAILABLE",modelId:selected.id,reason:String(error?.message||"").slice(0,120),providerStatus:error?.providerStatus??null});
       answer=await attempt();
      }
      emit("metrics",{chunks,firstDeltaMs,totalMs:Date.now()-started});
      emit("result",answer);
     }catch(error){
      const safeCode=typeof error?.copilotCode==="string"?error.copilotCode:"COPILOT_UNAVAILABLE";
-     console.error("stridebrain_preview_copilot_stream_failure",{code:safeCode,provider:selected.provider,modelId:selected.id});
+     console.error("stridebrain_preview_copilot_stream_failure",{code:safeCode,provider:selected.provider,modelId:selected.id,reason:String(error?.message||"").slice(0,120),providerStatus:error?.providerStatus??null,providerReason:typeof error?.providerReason==="string"?error.providerReason.slice(0,160):null});
      emit("error",{code:safeCode,error:safeCode==="PROVIDER_TIMEOUT"?"The model timed out. The answer was not completed.":"The AI response could not be completed. Please retry."});
     }finally{await releaseDemoLease(lease);controller.close();}
    }
