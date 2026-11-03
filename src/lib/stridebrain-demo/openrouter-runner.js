@@ -174,7 +174,12 @@ export async function runOpenRouterCopilot({industry,messages,modelId,apiKey,req
   if(round>0&&usedTools.length&&onDelta&&!requestModel){
    onStatus?.("Writing an evidence-grounded answer…");
    if(++providerCalls>4)throw Error("Provider call limit exceeded.");
-   answer=await streamOpenRouterFinal({model:selected.id,messages:[...chat,{role:"system",content:"Now provide the final answer using the tool evidence already supplied. Cite only provided source IDs and do not call more tools."}],max_tokens:1800},{apiKey,timeout:Math.max(500,Math.min(30000,deadline-Date.now()))}); // Buffer until identity and citation checks pass.
+   const finalMessages=[...chat,{role:"system",content:"Now provide the final answer using the tool evidence already supplied. Cite only provided source IDs and do not call more tools."}];
+   // Tools stay declared but disabled: without them some models answer a tool-heavy history with an
+   // empty stream (they try to call one more tool). An empty stream falls through to the non-streaming
+   // conclusion below instead of failing the whole answer.
+   try{answer=await streamOpenRouterFinal({model:selected.id,messages:finalMessages,tools:toolSchema,tool_choice:"none",max_tokens:1800},{apiKey,timeout:Math.max(500,Math.min(30000,deadline-Date.now()))});} // Buffer until identity and citation checks pass.
+   catch(error){if(error?.copilotCode||!/no streaming answer/i.test(String(error?.message||"")))throw error;answer="";}
    break;
   }
   onStatus?.("Finding relevant business records…");
