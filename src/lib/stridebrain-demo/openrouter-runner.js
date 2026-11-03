@@ -188,8 +188,10 @@ export async function runOpenRouterCopilot({industry,messages,modelId,apiKey,req
   });
   const assistant=result?.choices?.[0]?.message;
   if(!assistant||assistant.role!=="assistant")throw Error("Invalid model response.");
-  const calls=Array.isArray(assistant.tool_calls)?assistant.tool_calls:[];
-  if(calls.length>MAX_TOOL_CALLS_PER_ROUND)throw Error("Tool request limit exceeded.");
+  // A broad question can make the model ask for several lookups at once. Run only the first few
+  // instead of failing the whole answer; the transcript keeps only the calls that were executed.
+  const calls=(Array.isArray(assistant.tool_calls)?assistant.tool_calls:[]).slice(0,Math.max(0,Math.min(MAX_TOOL_CALLS_PER_ROUND,8-totalCalls)));
+  if(!calls.length&&Array.isArray(assistant.tool_calls)&&assistant.tool_calls.length)break;
   // Initial tool call is required. Models unable to obey are not accepted for this workflow.
   if(!calls.length){
    // Fresh server context already exists; a supported answer or clarification needs no redundant model tool call.
@@ -205,7 +207,6 @@ export async function runOpenRouterCopilot({industry,messages,modelId,apiKey,req
    safeCalls.push({id,type:"function",function:{name,arguments:String(raw.function.arguments||"{}").slice(0,1800)}});
   }
   totalCalls+=safeCalls.length;
-  if(totalCalls>8)throw Error("Too many tool requests.");
   // Some reasoning models include reasoning_details on a tool call.
   // Preserve it for the immediate next provider call when safe/bounded.
   const assistantForHistory={role:"assistant",content:assistant.content??null,tool_calls:safeCalls};
@@ -223,7 +224,7 @@ export async function runOpenRouterCopilot({industry,messages,modelId,apiKey,req
    chat.push({role:"tool",tool_call_id:call.id,content:JSON.stringify(fact).slice(0,MAX_TOOL_RESULT_CHARS)});
   }
  }
- if(!answer&&round>=MAX_TOOL_ROUNDS){
+ if(!answer){
   const final=await ask({
    model:selected.id,
    messages:[...chat,{role:"system",content:"Conclude now from previously supplied tool evidence. Do not invent any new records or sources."}],
