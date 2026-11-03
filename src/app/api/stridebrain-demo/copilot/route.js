@@ -110,8 +110,17 @@ export async function POST(request){
     try{
      emit("status",{message:"Reviewing workspace records…"});
      const started=Date.now();let chunks=0,firstDeltaMs=null;
-     const answer=await runOpenRouterCopilot({industry:parsed.industry,messages:parsed.messages,locale:parsed.locale,selectedProjectId:parsed.selectedProjectId,modelId:selected.id,apiKey:providerKey,
+     const attempt=()=>runOpenRouterCopilot({industry:parsed.industry,messages:parsed.messages,locale:parsed.locale,selectedProjectId:parsed.selectedProjectId,modelId:selected.id,apiKey:providerKey,
       onDelta:delta=>{if(firstDeltaMs===null)firstDeltaMs=Date.now()-started;chunks++;emit("delta",{text:delta});},onStatus:message=>emit("status",{message})});
+     let answer;
+     try{answer=await attempt();}
+     catch(error){
+      // The provider occasionally rejects a first call within seconds. Retry once, but only
+      // before any answer text was sent, and never after a timeout (the deadline is spent).
+      if(chunks>0||error?.copilotCode==="PROVIDER_TIMEOUT"||Date.now()-started>20000)throw error;
+      console.warn("stridebrain_preview_copilot_retry",{code:typeof error?.copilotCode==="string"?error.copilotCode:"COPILOT_UNAVAILABLE",modelId:selected.id});
+      answer=await attempt();
+     }
      emit("metrics",{chunks,firstDeltaMs,totalMs:Date.now()-started});
      emit("result",answer);
     }catch(error){

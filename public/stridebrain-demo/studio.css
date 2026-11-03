@@ -487,6 +487,7 @@ body{background:#f7f9f6;font-size:14px}
 /* Stream draft text stays escaped/untrusted until the validated final answer arrives. */
 .sb-copilot .copilot-stream-text{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.75;font-size:14px;color:#263d33;min-height:48px}
 .sb-copilot .copilot-stream-text:empty::after{content:"Preparing response…";color:#738778}
+html[lang^="zh"] .sb-copilot .copilot-stream-text:empty::after{content:"AI 正在撰寫…"}
 
 
 /* Source-grounded Copilot result tables */
