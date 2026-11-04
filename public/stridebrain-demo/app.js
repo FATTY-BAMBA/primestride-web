@@ -336,7 +336,14 @@ async function askOnce(question,autoRetried){
   }
   toast(message);
  }finally{
-  if(active===copilotRunId){copilotBusy=false;saveGuestChat();render();window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});}
+  if(active===copilotRunId){
+   copilotBusy=false;saveGuestChat();render();
+   // A finished answer is read from the top: bring the question and the start of the answer into view.
+   const questions=document.querySelectorAll?document.querySelectorAll(".sb-conversation .chat-message"):[];
+   const question=view.chat[index]?.mode==="gpt"?questions[questions.length-1]:null;
+   if(question?.getBoundingClientRect)window.scrollTo({top:Math.max(0,question.getBoundingClientRect().top+(window.scrollY||0)-96),behavior:"smooth"});
+   else window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});
+  }
  }
 }
 function openSource(id){
