@@ -245,6 +245,8 @@ export async function runOpenRouterCopilot({industry,messages,modelId,apiKey,req
  if(!answer)throw Error("The selected model produced no reliable answer.");
  const problems=ledger.issues(answer);
  if(problems.length){const fixed=await ask({model:selected.id,messages:[...chat,{role:"assistant",content:answer},{role:"system",content:ledger.repairInstruction(problems)}],tools:toolSchema,tool_choice:"none",max_tokens:1400,stream:false});answer=takeAnswer(fixed?.choices?.[0]?.message);if(!answer||ledger.issues(answer).length)throw Object.assign(Error("Answer evidence could not be verified."),{copilotCode:"EVIDENCE_MISSING"});}
+ // Never show a repair label ("更正版：", "Corrected version:") at the start of an answer.
+ answer=String(answer).replace(/^\s*(?:\*\*)?\s*(?:更正版|修正版|修正後(?:的)?(?:回答|版本)?|更新版|Corrected(?: version| answer)?|Revised(?: answer| version)?|Updated answer)\s*(?:\*\*)?\s*[:：]\s*/i,m=>/^\s*\*\*/.test(m)&&(m.match(/\*\*/g)||[]).length===1?"**":"");
  const cited=citationValidation(industry,ledger.sourceIds(),answer);
  requirePriorityCitations(conversation.clarificationRequired?null:review,cited.sourceIds);
  if(onDelta)onDelta(cited.answer);

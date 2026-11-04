@@ -54,5 +54,5 @@ export function createEvidenceLedger(industry){
   }
   return [...new Set(out)].slice(0,8);
  }
- return {add,issues,sourceIds:()=>[...sources],repairInstruction:problems=>'Correct this draft before returning it. Problems: '+problems.join(', ')+'. Use only supplied evidence; preserve exact ID types/projects. Cite REG- rows for register amounts; DOC- only for actual document content. Ask a short clarification if ambiguous. Do not add tools or new facts.'};
+ return {add,issues,sourceIds:()=>[...sources],repairInstruction:problems=>'Correct this draft before returning it. Problems: '+problems.join(', ')+'. Use only supplied evidence; preserve exact ID types/projects. Cite REG- rows for register amounts; DOC- only for actual document content. Ask a short clarification if ambiguous. Do not add tools or new facts. Return only the corrected answer itself, written as a normal first answer: never label it as corrected, revised or updated (no 更正版, 修正版 or similar).'};
 }

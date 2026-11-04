@@ -268,14 +268,14 @@ async function askOnce(question,autoRetried){
     if(!node)return;
     // Reveal text already received. Do not fabricate provider tokens.
     shown=reducedMotion?draft.length:Math.min(draft.length,shown+Math.max(6,Math.ceil((draft.length-shown)/9)));
-    node.textContent=draft.slice(0,shown);
+    node.textContent=draft.slice(0,shown).replace(/\*\*/g,""); // markdown markers appear only in the finished card
     if(shown<draft.length){painting=true;requestAnimationFrame(paintDraft);}
    };
    const updateDraft=()=>{if(!painting){painting=true;requestAnimationFrame(paintDraft);}};
    const finishDraft=()=>new Promise(resolve=>{
     if(reducedMotion){shown=draft.length;updateDraft();resolve();return;}
     const deadline=performance.now()+1400;
-    const check=()=>{if(active!==copilotRunId||shown>=draft.length||performance.now()>deadline){shown=draft.length;const node=document.querySelector('[data-streaming-answer="'+index+'"]');if(node)node.textContent=draft;resolve();}else requestAnimationFrame(check);};
+    const check=()=>{if(active!==copilotRunId||shown>=draft.length||performance.now()>deadline){shown=draft.length;const node=document.querySelector('[data-streaming-answer="'+index+'"]');if(node)node.textContent=draft.replace(/\*\*/g,"");resolve();}else requestAnimationFrame(check);};
     check();
    });
    view.chat[index].html='<div class="answer-card"><div class="suite-eyebrow">'+(activeLocale==='en'?'Preparing your answer':'正在整理回覆')+'</div><p class="disclosure">'+(activeLocale==='en'?'Sources will appear with the completed answer.':'回覆完成後將顯示資料來源。')+'</p><div class="copilot-stream-text" data-streaming-answer="'+index+'" aria-live="polite"></div></div>';
