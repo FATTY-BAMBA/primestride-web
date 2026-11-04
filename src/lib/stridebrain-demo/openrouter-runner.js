@@ -179,7 +179,7 @@ export async function runOpenRouterCopilot({industry,messages,modelId,apiKey,req
    // empty stream (they try to call one more tool). An empty stream falls through to the non-streaming
    // conclusion below instead of failing the whole answer.
    try{answer=await streamOpenRouterFinal({model:selected.id,messages:finalMessages,tools:toolSchema,tool_choice:"none",max_tokens:1800},{apiKey,timeout:Math.max(500,Math.min(30000,deadline-Date.now()))});} // Buffer until identity and citation checks pass.
-   catch(error){if(error?.copilotCode||!/no streaming answer/i.test(String(error?.message||"")))throw error;answer="";}
+   catch(error){if(error?.copilotCode==="PROVIDER_TIMEOUT"||error?.copilotCode==="PROVIDER_RATE_LIMIT")throw error;answer="";}
    break;
   }
   onStatus?.("Finding relevant business records…");
