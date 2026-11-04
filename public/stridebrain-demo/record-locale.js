@@ -74,7 +74,8 @@ const hasCjk=value=>/[\u3400-\u9fff]/.test(String(value||""));
 /** Chinese display for an AI rationale written in English; the stored record is unchanged. */
 export function displayRationale(item,locale="en"){
  const raw=String(item?.rationale||"");
- if(locale!=="zh-TW"||!raw||hasCjk(raw))return raw;
+ if(locale!=="zh-TW"||!raw)return raw;
+ if(hasCjk(raw))return displayRecordText(raw,"zh-TW"); // translate English record titles quoted inside a Chinese sentence
  const meta=item.coordination||{},owner=meta.recordedOwner||item.contact||"負責人",id=item.recordId||"這項工作";
  const due=meta.dueDate?"，到期日 "+meta.dueDate:"";
  if(meta.signal==="recorded_blocker")return id+" 目前記錄為受阻"+(meta.recordedBlocker?"（"+displayRecordText(meta.recordedBlocker,"zh-TW")+"）":"")+"，負責人 "+owner+due+"。紀錄中未載明對工期與關鍵路徑的影響。";
