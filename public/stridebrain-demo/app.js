@@ -228,6 +228,9 @@ function gptAnswerCard(result){
   '<p class="disclosure">'+(zh?'示範資料 · ':'Sample data · ')+e(result.asOf||"2026-10-18")+'</p></div>';
 }
 async function ask(question){
+ if(await askOnce(question,false)==="retry")await askOnce(question,true);
+}
+async function askOnce(question,autoRetried){
  const text=String(question||"").trim();if(!text||copilotBusy)return;
  if(copilotAccess.state!=="ready"||copilotMode!=="gpt"){
   copilotDraft=text;view.page="copilot";render();return;
@@ -312,6 +315,12 @@ async function ask(question){
   if(result.context)view.copilotProjectId=model.project(result.context.selectedProjectId)?.id||null;
  }catch(err){
   if(active!==copilotRunId||pack.id!==activeIndustry)return;
+  // One silent retry for temporary failures: drop this attempt's bubbles and ask again once.
+  const retryable=!autoRetried&&(["COPILOT_UNAVAILABLE","PROVIDER_FAILURE","PROVIDER_BAD_RESPONSE","DEMO_CONCURRENCY_UNAVAILABLE","DEMO_QUOTA_UNAVAILABLE","DEMO_BUDGET_UNAVAILABLE"].includes(err?.code)||(!err?.code&&!err?.status));
+  if(retryable&&view.chat[index-1]?.role==="user"&&view.chat[index-1]?.text===text){
+   view.chat.splice(index-1,2);
+   return "retry";
+  }
   // Temporary provider failures must not erase a valid staff session or mix
   // synthetic sample answers into an incomplete real AI conversation.
   copilotConnected=false;
