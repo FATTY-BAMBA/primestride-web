@@ -56,7 +56,7 @@ export function copilot(c){
  const last=v.chat[v.chat.length-1];
  if(last?.role==="assistant"&&!last.pending&&last.mode==="gpt"){
   const next=followUpsFor(last.query,p.id,last.actions||[],last.text||"",c.locale);
-  const q=String(last.query||"").toLowerCase(),handoff=/worry|risk|block|deadline|handoff|approval|priority|受阻|交接|核准|風險|擔心|到期/.test(q)||(last.actions||[]).includes("approvals");
+  const q=String(last.query||"").toLowerCase(),handoff=/worry|risk|block|stuck|delay|late|schedule|deadline|handoff|approval|priority|impact|受阻|交接|核准|風險|擔心|到期|卡|延誤|延期|延遲|影響|交屋|進度|工期|來不及|趕不上|追蹤/.test(q)||(last.actions||[]).includes("approvals")||/受阻|待核准|blocked|pending approval/i.test(String(last.text||""));
   out+='<div class="sb-context-ideas sb-followup-ideas"><span class="sb-context-label">'+(zh?"繼續深入了解":"CONTINUE INVESTIGATING")+'</span><div class="sb-context-idea-row">'+next.map(item=>
    '<button type="button" data-action="ask" data-prompt="'+e(item.prompt)+'" class="sb-context-idea"'+hideIfBusy+'>'+e(item.label)+' ↗</button>'
   ).join("")+'</div></div>';
