@@ -87,8 +87,14 @@ const verifiedLineIdentityFor=(c,contactName)=>{
  const ref=contactIdForName(contactName);
  return c.lineInbox?.identities?.find(x=>x.status==="verified"&&x.contactRef===ref)||null;
 };
+const receiptMeta=(receipt,zh)=>{
+ const id=String(receipt.receiptId||"").replace(/^[a-z]+_/i,"").slice(0,8).toUpperCase();
+ const d=new Date(receipt.acceptedAt||"");const p=n=>String(n).padStart(2,"0");
+ const when=isNaN(d)?"":d.getFullYear()+"/"+p(d.getMonth()+1)+"/"+p(d.getDate())+" "+p(d.getHours())+":"+p(d.getMinutes());
+ return [id?(zh?"收據 #":"Receipt #")+e(id):"",e(when)].filter(Boolean).join(" · ");
+};
 function emailComposer(c,item,project,draft,receipt,zh){
- if(receipt){const providerLabel=receipt.provider==="gmail"?"Google Workspace":"Microsoft 365";return '<div class="sb-email-receipt"><strong>'+e(providerLabel)+' '+(zh?'已接受寄送':'accepted for sending')+'</strong><span>'+e(receipt.to)+' · '+e(receipt.subject)+'</span><small>'+e(receipt.receiptId)+' · '+e(receipt.acceptedAt)+'</small></div>';}
+ if(receipt){const providerLabel=receipt.provider==="gmail"?"Google Workspace":"Microsoft 365",to=receipt.recipientLabel||receipt.to||"";return '<div class="sb-email-receipt"><strong>✓ '+(zh?'已寄出':'Sent')+(to?(zh?'給 ':' to ')+e(to):'')+'</strong><span>'+e(receipt.subject)+' · '+(zh?'經由 ':'via ')+e(providerLabel)+'</span><small>'+receiptMeta(receipt,zh)+'</small></div>';}
  if(c.view.emailDecisionId!==item.id)return '';
  const status=c.emailConnector||{state:"unknown"};
  if(status.state==="checking"||status.state==="unknown")return '<div class="sb-email-composer pending" data-item-id="'+e(item.id)+'"><strong>'+(zh?'正在檢查郵件連線…':'Checking email connection…')+'</strong></div>';
@@ -104,7 +110,7 @@ function emailComposer(c,item,project,draft,receipt,zh){
   '<div class="sb-email-actions">'+button(zh?'取消':'Cancel','agentEmailCancel',item.id,'button-outline')+button(zh?'批准並寄出 ↗':'Approve & send ↗','agentEmailSend',item.id,'button-primary')+'</div></div>';
 }
 function lineComposer(c,item,draft,receipt,zh){
- if(receipt)return '<div class="sb-email-receipt"><strong>LINE '+(zh?'已接受寄送':'accepted for sending')+'</strong><span>'+e(receipt.recipientLabel||receipt.contactRef||'Verified LINE contact')+'</span><small>'+e(receipt.receiptId)+' · '+e(receipt.acceptedAt)+'</small></div>';
+ if(receipt)return '<div class="sb-email-receipt"><strong>✓ '+(zh?'已透過 LINE 送出':'Sent via LINE')+'</strong><span>'+e(receipt.recipientLabel||receipt.contactRef||(zh?'已驗證的 LINE 聯絡人':'Verified LINE contact'))+'</span><small>'+receiptMeta(receipt,zh)+'</small></div>';
  if(c.view.lineDecisionId!==item.id)return '';
  const connection=c.messageConnections?.connections?.find(x=>x.id==="line")||null;
  const identity=verifiedLineIdentityFor(c,item.contact);
