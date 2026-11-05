@@ -4,6 +4,7 @@ import {aiTeamView} from "./views-ai-team.js";
 import {runAgent,selectAgent,recordModelAgentPlan,recordEmailReceipt,recordLineReceipt,updatePreparedAgentAction,approveAndExecuteAgentAction} from "./ai-team.js";
 import {copilotErrorMessage} from "./copilot-errors.js";
 import {toastText} from "./toast-locale.js";
+import {buildDraftHandoffPlan} from "./copilot-draft-handoff.js";
 import {getPack,listPacks} from "./industry-packs.js";
 import {WorkspaceModel,money,calculateVariation,escapeHtml as e,loadDemoState,saveDemoState,resetDemoState,event,setVariationInput,approveVariationGate,commitVariation,buildCustomerReply,reviewCustomerDraft,recordFeedback,markFeedbackReviewed} from "./core-model.js";
 import {overview,copilot,projects,knowledge,renderInspector,renderSourceModal} from "./views-primary.js";
@@ -477,6 +478,18 @@ function persistPreparedActionEdits(itemId,{toastOnChange=false}={}){
 async function perform(el){
  const action=el.dataset.action,id=el.dataset.id||"",value=el.dataset.value||"";
  if(action==="retrySession"){if(!copilotBusy)await restoreStaffPreview();return;}
+ if(action==="copilotDraftHandoff"){
+  const built=buildDraftHandoffPlan(view.chat,model,{locale:interfaceLocale,fallbackProjectId:view.copilotProjectId});
+  if(!built.ok){toast(built.reason);return;}
+  const result=recordModelAgentPlan(state,model,built.plan);
+  if(!result.ok){toast(interfaceLocale==="en"?"The draft could not be handed off.":"草稿無法交辦，請再試一次。");return;}
+  const itemId=result.run.items[0]?.id||null;
+  save();view.page="team";view.agentDecisionId=itemId;render();
+  if(messageConnections.state==="unknown")await refreshMessageConnections();
+  requestAnimationFrame(()=>document.querySelector('[data-decision-id="'+itemId+'"]')?.scrollIntoView({behavior:"smooth",block:"center"}));
+  toast(interfaceLocale==="en"?"Handed to Project Coordinator. Edit and approve before sending.":"已交給專案協調員，修改並確認後再寄出。");
+  return;
+ }
  if(action==="agentHandoff"){
   const result=selectAgent(state,value||"project-coordinator");
   if(!result.ok){toast(result.reason);return;}

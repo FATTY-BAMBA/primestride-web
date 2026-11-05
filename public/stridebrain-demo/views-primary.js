@@ -8,6 +8,7 @@ import {activeAgentRun,listAgents} from "./ai-team.js";
 import {quickActionsFor,ideasFor,followUpsFor} from "./copilot-suggestions.js";
 import {operationalSignals,riskRadarSignals} from "./operational-signals.js";
 import {displayRecordText,displayRationale} from "./record-locale.js";
+import {isDraftAnswer} from "./copilot-draft-handoff.js";
 const localizedName=(value,zh)=>displayRecordText(value,zh?"zh-TW":"en");
 export function overview(c){return renderOverview(c);}
 export function copilot(c){
@@ -60,7 +61,9 @@ export function copilot(c){
   out+='<div class="sb-context-ideas sb-followup-ideas"><span class="sb-context-label">'+(zh?"繼續深入了解":"CONTINUE INVESTIGATING")+'</span><div class="sb-context-idea-row">'+next.map(item=>
    '<button type="button" data-action="ask" data-prompt="'+e(item.prompt)+'" class="sb-context-idea"'+hideIfBusy+'>'+e(item.label)+' ↗</button>'
   ).join("")+'</div></div>';
-  if(handoff)out+='<section class="sb-copilot-handoff"><div><div class="suite-eyebrow">'+(zh?"從問答到主動協調":"FROM ANSWER TO ACTION")+'</div><h3>'+(zh?"不用每天記得問同一個問題":"Don’t rely on remembering the right question")+'</h3><p>'+(zh?"把這類風險交給專案協調員，讓它主動巡檢受阻、交期、核准與交接。":"Hand this class of risk to Project Coordinator so it can proactively review blockers, deadlines, approvals and handoffs.")+'</p></div><button type="button" class="button-primary" data-action="agentHandoff" data-value="project-coordinator">'+(zh?"交給專案協調員 ↗":"Hand off to Project Coordinator ↗")+'</button></section>';
+  const draftReady=isDraftAnswer(last);
+  if(draftReady)out+='<section class="sb-copilot-handoff sb-copilot-draft-handoff"><div><div class="suite-eyebrow">'+(zh?"草稿已準備好":"DRAFT READY")+'</div><h3>'+(zh?"交給專案協調員，修改後再寄出":"Hand it to Project Coordinator to edit and send")+'</h3><p>'+(zh?"草稿會變成一張待辦卡：你可以修改內容、儲存，再批准寄出，每一步都留下紀錄。":"The draft becomes a prepared action: edit it, save it, then approve and send, with a record of each step.")+'</p></div><button type="button" class="button-primary" data-action="copilotDraftHandoff">'+(zh?"交給專案協調員處理此草稿 ↗":"Hand this draft to Project Coordinator ↗")+'</button></section>';
+  if(handoff&&!draftReady)out+='<section class="sb-copilot-handoff"><div><div class="suite-eyebrow">'+(zh?"從問答到主動協調":"FROM ANSWER TO ACTION")+'</div><h3>'+(zh?"不用每天記得問同一個問題":"Don’t rely on remembering the right question")+'</h3><p>'+(zh?"把這類風險交給專案協調員，讓它主動巡檢受阻、交期、核准與交接。":"Hand this class of risk to Project Coordinator so it can proactively review blockers, deadlines, approvals and handoffs.")+'</p></div><button type="button" class="button-primary" data-action="agentHandoff" data-value="project-coordinator">'+(zh?"交給專案協調員 ↗":"Hand off to Project Coordinator ↗")+'</button></section>';
  }
  out+='<div class="sb-copilot-compose">';
  out+='<form id="ask-form" class="sb-composer">'+
