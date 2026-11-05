@@ -17,3 +17,15 @@ test('get_project outlines documents so the quartz estimate and change request a
  assert.match(byId["DOC-1010"],/Quartz Supplier Estimate/);
  assert.match(byId["DOC-1006"],/CHG-101-QZ/);
 });
+
+test('get_project carries the quartz cost facts and stays under the tool result limit',()=>{
+ const result=runCopilotTool("interior","get_project",{project_id:"PRJ-101"});
+ const facts=Object.fromEntries(result.documents.filter(d=>d.keyFacts).map(d=>[d.id,d.keyFacts]));
+ assert.match(facts["DOC-1006"],/NT\$60,000/);
+ assert.match(facts["DOC-1006"],/NT\$84,000/);
+ assert.ok(result.sourceIds.includes("DOC-1006"));
+ for(const [industry,prefix] of [["interior","PRJ-10"],["printing","JOB-20"]])for(let i=1;i<=9;i++){
+  const r=runCopilotTool(industry,"get_project",{project_id:prefix+i});
+  if(r.found)assert.ok(JSON.stringify(r).length<14000,industry+" "+prefix+i+" too large");
+ }
+});
