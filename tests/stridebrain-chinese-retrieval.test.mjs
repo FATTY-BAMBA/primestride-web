@@ -10,3 +10,10 @@ test('long Chinese questions keep translated domain terms and find the quartz ch
  assert.ok(ids.includes('"id":"DOC-1006"'),"materials schedule with CHG-101-QZ should be retrieved: "+ids.join(" "));
  assert.ok(ids.includes('"id":"DOC-1011"'),"client discussion record should be retrieved: "+ids.join(" "));
 });
+
+test('get_project outlines documents so the quartz estimate and change request are discoverable',()=>{
+ const result=runCopilotTool("interior","get_project",{project_id:"PRJ-101"});
+ const byId=Object.fromEntries(result.documents.map(d=>[d.id,d.covers]));
+ assert.match(byId["DOC-1010"],/Quartz Supplier Estimate/);
+ assert.match(byId["DOC-1006"],/CHG-101-QZ/);
+});

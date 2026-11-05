@@ -116,7 +116,10 @@ function project(industry,projectId){
  const latest=latestQuote(seed,p.id);
  const tasks=seed.workOrders.filter(w=>w.projectId===p.id).slice(0,15).map(w=>({id:w.id,title:w.title,status:w.status,owner:w.owner,dueDate:w.dueDate,sourceDocId:w.sourceDocId}));
  const approvals=seed.approvals.filter(a=>a.projectId===p.id).map(a=>({id:a.id,title:a.title,status:a.status,sourceDocId:a.sourceDocId}));
- const docs=seed.documents.filter(d=>d.projectId===p.id).slice(0,12).map(d=>({id:d.id,title:d.title,version:d.version,status:d.status}));
+ // Section headings tell the model what each document actually covers (e.g. "Quartz Supplier Estimate"),
+ // so it opens the right source with get_source instead of judging by a generic title.
+ const outline=body=>text(body).split("\n").filter(l=>/^#{1,3}\s/.test(l)).map(l=>l.replace(/^#+\s*/,"").trim()).join(" / ").slice(0,180);
+ const docs=seed.documents.filter(d=>d.projectId===p.id).slice(0,12).map(d=>({id:d.id,title:d.title,version:d.version,status:d.status,covers:outline(d.body)}));
  return {found:true,isSynthetic:true,reviewFindings:reviewPriorities(seed,{projectId:p.id,limit:1}),project:{id:p.id,name:p.name,stage:p.stage,type:p.type,client:p.client,manager:p.manager,location:p.city,recordedProgress:p.progress,provisionalBudget:p.budget,sampleTargetDate:p.targetDate},latestDraftQuote:latest?{id:latest.id,directCost:latest.directCost,priceExTax:latest.amountExTax,targetMargin:latest.grossMarginTarget,status:latest.status,sourceDocId:latest.sourceDocId}:null,tasks,approvals,documents:docs,sourceIds:distinct([registerSourceId(p.id),latest?registerSourceId(latest.id):null,...approvals.map(x=>registerSourceId(x.id)),...tasks.map(x=>registerSourceId(x.id))])};
 }
 function quote(industry,projectId){
@@ -166,7 +169,7 @@ const tools=[
  {name:"conversation_context",description:"Read a bounded directory of projects and contacts for conversational clarification. Not permission to approve or change records.",properties:{}},
  {name:"operations_snapshot",description:"Fetch demo-workspace metrics as of the snapshot date: projects, pending approvals, blockers, quote versions marked Sent, sum of latest draft quotes, and weighted proposed gross margin. Never use for live today data.",properties:{}},
  {name:"search_projects",description:"Search projects/jobs by name, city, manager, stage or ID in the selected sample workspace.",properties:{query:{type:"string"}}},
- {name:"get_project",description:"Get one matching project/job, sample tasks, approvals, documents and latest draft quote.",properties:{project_id:{type:"string"}}},
+ {name:"get_project",description:"Get one matching project/job, sample tasks, approvals, documents (with a covers outline) and latest draft quote. If a document's covers outline matches the question (e.g. a change request, supplier estimate or materials schedule), read it with get_source before saying the information is missing.",properties:{project_id:{type:"string"}}},
  {name:"get_quote",description:"Get current draft quotation and version history for a project/job. Exact deterministic recorded values, not revenue.",properties:{project_id:{type:"string"}}},
  {name:"list_priorities",description:"Review ALL approvals, open work, deadlines and related document statuses before returning a project-diverse shortlist. Not a business-impact ranking. Read-only.",properties:{limit:{type:"integer"}}},
  {name:"search_company_knowledge",description:"Retrieve source-linked passages from the industry demo corpus and public Taiwan reference notes.",properties:{query:{type:"string"}}},
