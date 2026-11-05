@@ -41,10 +41,13 @@ const tokens=input=>{
   ["打樣",["proof","sample"]],["出血",["bleed","trim"]],
   ["檔案",["artwork","file","pdf"]],["交期",["schedule","delivery"]],
   ["工作單",["work order","task"]],["客戶",["customer","client"]],
-  ["庫存",["inventory","stock"]],["採購",["procurement","supplier"]]
+  ["庫存",["inventory","stock"]],["採購",["procurement","supplier"]],
+  ["費用",["cost","price"]],["完工",["handover","schedule"]],["工期",["schedule","lead time"]],
+  ["交屋",["handover"]],["變更",["change","variation"]]
  ];
  const translated=lexicon.filter(([han])=>q.includes(han)).flatMap(([,terms])=>terms);
- return distinct([...english,...pairs,...translated]).slice(0,32);
+ // Translated domain terms go first so long Chinese questions cannot crowd them out of the 32-token budget.
+ return distinct([...english,...translated,...pairs]).slice(0,32);
 };
 function pack(industry){if(!validIndustry(industry))throw Error("Unknown demo industry");return COLLECTIONS[industry];}
 export function allDemoSources(industry){
