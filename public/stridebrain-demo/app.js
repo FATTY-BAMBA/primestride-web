@@ -3,6 +3,7 @@ import {DEMO_ROLES} from "./experience-views.js";
 import {aiTeamView} from "./views-ai-team.js";
 import {runAgent,selectAgent,recordModelAgentPlan,recordEmailReceipt,recordLineReceipt,updatePreparedAgentAction,approveAndExecuteAgentAction} from "./ai-team.js";
 import {copilotErrorMessage} from "./copilot-errors.js";
+import {toastText} from "./toast-locale.js";
 import {getPack,listPacks} from "./industry-packs.js";
 import {WorkspaceModel,money,calculateVariation,escapeHtml as e,loadDemoState,saveDemoState,resetDemoState,event,setVariationInput,approveVariationGate,commitVariation,buildCustomerReply,reviewCustomerDraft,recordFeedback,markFeedbackReviewed} from "./core-model.js";
 import {overview,copilot,projects,knowledge,renderInspector,renderSourceModal} from "./views-primary.js";
@@ -87,7 +88,7 @@ let messageConnections={state:"unknown",organizationId:"demo-workspace",storage:
 let lineInbox={state:"unknown",identities:[]};
 let view={page:"overview",projectId:null,projectDetail:false,docId:null,quoteId:null,chat:[],search:"",filter:"all",pageIndex:0,flowStep:null,agentDecisionId:null,emailDecisionId:null,lineDecisionId:null};
 function toast(message){
- const el=$("toast");el.textContent=message;el.classList.add("visible");
+ const el=$("toast");el.textContent=toastText(message,interfaceLocale!=="en");el.classList.add("visible");
  if(toastHandle)clearTimeout(toastHandle);toastHandle=setTimeout(()=>el.classList.remove("visible"),3500);
 }
 function context(){return {model,pack,state,view,history:historyData,industryEvidence,documentSession,locale:interfaceLocale,emailConnector,messageConnections,lineInbox,staffAccess:new URLSearchParams(location.search).has("staff"),copilotSession:{access:copilotAccess.state,allowedModelIds:copilotAccess.allowedModelIds,mode:copilotMode,guest:copilotGuest,connected:copilotConnected,busy:copilotBusy,selectedModelId,modelMenuOpen:copilotModelMenuOpen,draft:copilotDraft}};}

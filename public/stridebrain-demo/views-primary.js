@@ -121,7 +121,7 @@ export function projects(c){
   out+='<section class="section">'+section(c.locale!=="en"?"報價版本紀錄":"Quotation revision history",c.locale!=="en"?"每個歷史版本都可查看；營運分析只計入最新總額。":"Each historical version remains inspectable; only latest totals appear in analytics.")+quoteTable(c,q)+'</section>';return out;
  }
  const list=m.searchProjects(v.search);
- return heading(zh?"專案管理":p.projectLabel,zh?"從受阻工作、待確認決策與報價版本，找出要追查的專案。":"One identity for source documents, quotations, work and approvals.",tag(list.length+" example "+p.itemLabelPlural),zh?"專案紀錄":"CONNECTED WORK PORTFOLIO")+'<div class="filter-bar"><input class="input" data-input="search" aria-label="Find work" value="'+e(v.search)+'" placeholder="Search '+e(p.itemLabelPlural)+', team members and cities…"></div><div class="cards-two">'+list.map(pr=>'<div class="sb-project-tile">'+recordCard(pr,c.locale)+renderProjectSignals(c,pr)+'</div>').join("")+'</div>';
+ return heading(zh?"專案管理":p.projectLabel,zh?"從受阻工作、待確認決策與報價版本，找出要追查的專案。":"One identity for source documents, quotations, work and approvals.",tag(zh?list.length+(p.id==="printing"?" 筆示範工單":" 個示範專案"):list.length+" example "+p.itemLabelPlural),zh?"專案紀錄":"CONNECTED WORK PORTFOLIO")+'<div class="filter-bar"><input class="input" data-input="search" aria-label="'+(zh?"搜尋":"Find work")+'" value="'+e(v.search)+'" placeholder="'+(zh?"搜尋專案、成員或城市…":"Search "+e(p.itemLabelPlural)+", team members and cities…")+'"></div><div class="cards-two">'+list.map(pr=>'<div class="sb-project-tile">'+recordCard(pr,c.locale)+renderProjectSignals(c,pr)+'</div>').join("")+'</div>';
 }
 export function knowledge(c){
  const zh=c.locale!=="en",local=v=>displayRecordText(v,c.locale);
