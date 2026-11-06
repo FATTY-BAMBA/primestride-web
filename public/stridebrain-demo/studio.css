@@ -614,3 +614,6 @@ body{font-size:16px;line-height:1.55}
 .sb-cost-coverage-row .button-secondary{flex-shrink:0}
 .sb-coverage-empty{padding:15px;background:white;border-radius:10px}
 @media(max-width:700px){.sb-cost-coverage{padding:17px}.sb-cost-coverage-row{flex-wrap:wrap}.sb-cost-coverage-row .button-secondary{width:100%}}
+
+.top-cta{display:inline-flex;align-items:center;padding:8px 14px;border-radius:999px;background:var(--studio-accent);color:#fff;font-size:14px;font-weight:600;text-decoration:none;white-space:nowrap}.top-cta:hover{background:#086b58}.top-cta:focus-visible{outline:2px solid var(--studio);outline-offset:2px}
+@media(max-width:800px){.top-cta{padding:6px 11px;font-size:12.5px}.breadcrumb #top-company,.breadcrumb .crumb-divider{display:none}.breadcrumb strong{white-space:nowrap}}

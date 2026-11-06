@@ -48,6 +48,7 @@ function applyWorkspaceLanguage(){
   ".nav-section-label":["工作區","WORKSPACE"],
   ".syn-label":["示範資料","SAMPLE DATA"],
   ".top-menu":["探索知識中心 ↗","Explore knowledge ↗"],
+  ".top-cta":["預約 15 分鐘示範","Book a 15-min demo"],
   ".demo-status strong":["示範工作區","DEMO WORKSPACE"],
   ".demo-status small":["示範資料 · 無須建立公司帳戶","Demo data · No company setup required"],
   ".reset-btn":["↺ 重設產業示範","↺ Reset industry demo"],
@@ -62,6 +63,8 @@ function applyWorkspaceLanguage(){
    if(textNode)textNode.textContent=" "+value;else node.append(document.createTextNode(" "+value));
   }else node.textContent=value;
  }
+ const bookDemo=document.querySelector(".top-cta");
+ if(bookDemo)bookDemo.href="https://primestrideai.com/"+(interfaceLocale==="en"?"en":"zh")+"/contact?p=stridebrain";
  const secondaryLabels={"NEW":["新功能","NEW"],"INTERACTIVE":["可互動","INTERACTIVE"],"RESEARCH":["研究資料","RESEARCH"]};
  document.querySelectorAll(".nav-new").forEach(node=>{
   const key=node.dataset.localeKey||node.textContent.trim();
