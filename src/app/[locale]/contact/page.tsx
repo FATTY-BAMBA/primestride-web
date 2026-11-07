@@ -49,6 +49,7 @@ const content = {
     interestOptions: [
       { value: "", label: "I'm not sure yet" },
       { value: "AI 營運大腦", label: "StrideBrain — SME operations platform" },
+      { value: "Spatial Lab", label: "Spatial Lab — 3D design proposals" },
       { value: "Atlas EIP", label: "Atlas EIP — HR" },
       { value: "LyraAI", label: "LyraAI — Interview coaching" },
       { value: "EduSense AI", label: "EduSense AI — Education" },
@@ -85,6 +86,7 @@ const content = {
     interestOptions: [
       { value: "", label: "還不確定" },
       { value: "AI 營運大腦", label: "AI 營運大腦 — 中小企業營運平台" },
+      { value: "Spatial Lab", label: "Spatial Lab — 3D 設計提案" },
       { value: "Atlas EIP", label: "Atlas EIP — 人資" },
       { value: "LyraAI", label: "LyraAI — 面試教練" },
       { value: "EduSense AI", label: "EduSense AI — 教育" },

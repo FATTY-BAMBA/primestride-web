@@ -26,6 +26,7 @@ const SLUG_TO_INTEREST: Record<string, string> = {
   pulse: "Pulse",
   "ai-knowledge-assistant": "AI Knowledge Assistant",
   stridebrain: "AI 營運大腦",
+  "spatial-lab": "Spatial Lab",
   "ai-zhanggui": "AI 營運大腦", // Keep existing campaign links and submission values compatible.
 };
 
